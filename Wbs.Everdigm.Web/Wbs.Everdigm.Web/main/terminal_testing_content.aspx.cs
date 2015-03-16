@@ -1,0 +1,56 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+using Wbs.Everdigm.BLL;
+using Wbs.Everdigm.Database;
+
+namespace Wbs.Everdigm.Web.main
+{
+    public partial class terminal_testing_content : BasePage
+    {
+        protected override void Page_Load(object sender, EventArgs e)
+        {
+            base.Page_Load(sender, e);
+            ShowTerminalInfo();
+        }
+        /// <summary>
+        /// 终端信息业务处理逻辑
+        /// </summary>
+        private TerminalBLL BLLInstance { get { return new TerminalBLL(); } }
+        /// <summary>
+        /// 格式化显示终端信息
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private string ToString(TB_Terminal obj)
+        {
+            return string.Format("{0}(Sim card no.: {1}, Satellite no.: {2})", obj.Number, obj.Sim, obj.Satellite);
+        }
+        /// <summary>
+        /// 显示正在测试的终端的基本信息
+        /// </summary>
+        private void ShowTerminalInfo()
+        {
+            if (string.IsNullOrEmpty(_key)) {
+                ShowNotification("", "Could not begin the test program, paramenter is null.", false);
+            }
+            else
+            {
+                var t = BLLInstance.Find(f => f.Number.Equals(_key) && f.Delete == false);
+                if (null != t)
+                {
+                    terminalInfo.InnerHtml = t.Number;
+                    terminalContent.Value = "Sim card: " + t.Sim + "<br />Satellite: " + t.Satellite+"<br />Equipment: ";
+                }
+                else
+                {
+                    ShowNotification("", "No terminal like \"" + _key + "\" exists.", false);
+                }
+            }
+        }
+    }
+}

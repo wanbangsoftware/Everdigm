@@ -1,0 +1,10 @@
+﻿body {
+    margin: 0;
+    background: #ecf0f1;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.node {
+    padding: 2px;
+}

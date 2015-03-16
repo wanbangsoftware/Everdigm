@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FEF26BC4-AE46-4A7C-9787-4D70DF5B6A40}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Wbs.Everdigm.BLL</RootNamespace>
+    <AssemblyName>Wbs.Everdigm.BLL</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Wbs.Protocol.Tx300">
+      <HintPath>..\Wbs.Everdigm.Web\including\Wbs.Protocol.Tx300.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccountBLL.cs" />
+    <Compile Include="ActionBLL.cs" />
+    <Compile Include="AlarmBLL.cs" />
+    <Compile Include="BaseService.cs" />
+    <Compile Include="CommandBLL.cs" />
+    <Compile Include="CustomerBLL.cs" />
+    <Compile Include="DataBLL.cs" />
+    <Compile Include="DepartmentBLL.cs" />
+    <Compile Include="EposAlarmBLL.cs" />
+    <Compile Include="EquipmentBLL.cs" />
+    <Compile Include="EquipmentModelBLL.cs" />
+    <Compile Include="EquipmentStatusBLL.cs" />
+    <Compile Include="EquipmentStatusCodeBLL.cs" />
+    <Compile Include="EquipmentTypeBLL.cs" />
+    <Compile Include="HistoryBLL.cs" />
+    <Compile Include="InterfaceBaseService.cs" />
+    <Compile Include="PermissionBLL.cs" />
+    <Compile Include="PositionBLL.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoleBLL.cs" />
+    <Compile Include="StoreHistoryBLL.cs" />
+    <Compile Include="TerminalBLL.cs" />
+    <Compile Include="WarehouseBLL.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Wbs.Everdigm.Database\Wbs.Everdigm.Database.csproj">
+      <Project>{20e609ac-7671-4dcc-907d-d46c49a3334a}</Project>
+      <Name>Wbs.Everdigm.Database</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

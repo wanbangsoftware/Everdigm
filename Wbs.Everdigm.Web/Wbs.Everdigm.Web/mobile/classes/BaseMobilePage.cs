@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+using Wbs.Everdigm.BLL;
+using Wbs.Everdigm.Database;
+
+namespace Wbs.Everdigm.Web.mobile
+{
+    /// <summary>
+    /// 移动端页面基类
+    /// </summary>
+    public class BaseMobilePage : BasePage
+    {
+        /// <summary>
+        /// 当前登录的客户的信息
+        /// </summary>
+        protected TB_Customer me = null;
+        protected override void Page_Load(object sender, EventArgs e)
+        {
+            base.Page_Load(sender, e);
+            me = Session[Utility.SessionNameCustomer] as TB_Customer;
+        }
+        /// <summary>
+        /// 客户信息业务处理实体
+        /// </summary>
+        protected CustomerBLL CustomerInstance { get { return new CustomerBLL(); } }
+    }
+}

@@ -1,0 +1,27 @@
+﻿/*************** Pagination ***************/
+
+.pagging {
+    text-align: right;
+    padding: 10px 0 10px 0;
+    font-family: Verdana, Arial, Helvetica, sans-serif "宋体";
+    font-size: 12px !important;
+}
+
+.pagging a {
+    margin: 0 5px 0 0;
+    padding: 3px 6px;
+}
+
+    .pagging a.number {
+        border: 1px solid #ddd;
+    }
+
+    .pagging a.current {
+        background: #0053a2 url('../images/bg-button-green.gif') top left repeat-x !important;
+        border-color: #0053a2 !important;
+        color: #fff !important;
+    }
+
+        .pagging a.current:hover {
+            text-decoration: underline;
+        }

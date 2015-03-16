@@ -1,0 +1,47 @@
+﻿/****************** Links ********************/
+.links {
+    width: 32px;
+    height: 17px;
+    margin: 0 auto;
+}
+
+    .links.tcp {
+        background: url(../images/links/links.png) 0px 0px no-repeat;
+    }
+
+    .links.udp {
+        background: url(../images/links/links.png) 0px -18px no-repeat;
+    }
+
+    .links.sms {
+        background: url(../images/links/links.png) 0px -36px no-repeat;
+    }
+
+    .links.sat {
+        background: url(../images/links/links.png) 0px -54px no-repeat;
+    }
+
+    .links.off {
+        background: url(../images/links/links.png) 0px -72px no-repeat;
+    }
+
+    .links.sleep {
+        background: url(../images/links/links.png) 0px -90px no-repeat;
+    }
+
+    .links.blind {
+        background: url(../images/links/links.png) 0px -108px no-repeat;
+    }
+
+    .links.trouble {
+        background: url(../images/links/links.png) 0px -126px no-repeat;
+    }
+
+    .links.unknown {
+        background: url(../images/links/links.png) 0px -144px no-repeat;
+    }
+
+    .links.not_bind {
+        background: url(../images/links/links.png) 0px -108px no-repeat;
+    }
+

@@ -1,0 +1,64 @@
+/*user center*/
+#footer { border-top: 0 }
+#wrap { background: #FAFCFC }
+.account-banner { padding: 15px 0; text-align: center; overflow: hidden; background: #fff }
+.account-banner img { width: 290px; height: 60px }
+.loginout-btn { border: 1px solid #E3E7E8; border-right: 0; border-left: 0; text-align: center; background: #fff; height: 45px; line-height: 45px }
+.loginout-btn a { color: #667279 }
+.operate-success { padding: 40px 30px; }
+.operate-success .tips-info { padding-left: 45px; line-height: 40px; font-size: 20px; color: #677279; font-weight: bold; position: relative }
+.operate-success .tips-info .icon-success { width: 40px; height: 40px; position: absolute; left: 0 }
+
+/*change passwd & change secret question */
+.change-passwd, .change-secrety, .security-center, .secret-question, .account-balance, .counpon { padding-top: 30px }
+
+/*invest in account */
+.invest-tb li.c1 { width: 70% }
+.invest-tb li.c2 { width: 30%; text-align: right }
+
+/*ad banner*/
+.account-ad { border-bottom: 0 }
+
+/*account*/
+.verify-num,.acc-agree { padding-left: 15px; border: 0; background: #FAFCFC }
+.verify-num .verify-code { width: 60%; height: 40px; line-height: 40px; border: 1px solid #E3E7E8; border-radius: 5px; padding-left: 5px; margin-top: 2px; float: left }
+.verify-num .input { width: 90%; height: 20px; line-height: 20px; padding: 10px 0 10px; border: 0; display: block }
+.verify-num img { width: 103px; height: 40px; margin: 3px 0 2px 5px; vertical-align: middle }
+.regist .acc-agree { line-height: 20px; padding-right:15px }
+.regist .ipt-agree { margin: 3px 3px 5px 0; vertical-align: middle; background:#fff; border:2px solid #B9C0C6 }
+.regist .verify-num{ margin-bottom: 15px }
+.operate-acc { padding-bottom: 30px; position: relative }
+.operate-acc .btn-server { padding: 0 15px; position: absolute; bottom: 0; left: 0 }
+.operate-acc .btn-reg { left: auto; right:0 }
+.regist-itip{ height:80px; line-height:80px; padding:0 0 0 140px; position:relative; color:#333}
+.regist-itip b.novice-50{ display: inline-block; text-indent: -9999px; overflow: hidden; width: 60px; height: 60px; background: url(../../images/sprites.png) no-repeat -80px -60px; background-size:200px 200px; position:absolute; left:50%; top:50%; margin-left:-30px; margin-top:-30px}
+
+/*type tips*/
+.tips-type{ margin:15px; padding:20px; background:#fff; border:1px solid #E3E7E8; border-radius:5px; overflow:hidden;zoom:1}
+.tips-type .type{ padding:10px 10px 0; overflow:hidden}
+
+/*login*/
+.login,.phoneBind,.findpwd,.phoneBind2{ padding-top: 30px }
+.phoneBind2 .itip{ padding-top:0 }
+
+/*regist success*/
+.registSuccess .itip,.findpwd-sendeml .itip{ text-align:center; padding-top:0;}
+
+/*account verify*/
+.link-touch .btn-verify{ width:75px; padding:0 5px; height:25px; line-height:25px; position:absolute; right:10px; top:50%; margin-top:-13px}
+.link-touch .btn-resend{ background:#D2DADD; border:1px solid #D2DADD}
+.findpwd .verify-num{ margin-bottom:30px}
+.resetpwd .itip{ color:#667279}
+
+/*rechange*/
+.rechange .itip-rech{ padding:0 15px 20px}
+.rechange2 .re-desc{ padding:20px 15px; font-size:16px}
+.rechange2 .re-desc-list{ padding:0 15px 20px; overflow:hidden}
+.rechange2 .re-desc-list li{ margin-bottom:15px; padding-left:15px; position:relative}
+.rechange2 .re-desc-list b{ width:8px; height:8px; border-radius:25px; background:#1C4C75; position:absolute; left:0; top:50%; margin-top:-4px}
+
+/*coupon*/
+.coupon .page,.invest-tb .page{ border-bottom:1px solid #E3E7E8}
+
+
+

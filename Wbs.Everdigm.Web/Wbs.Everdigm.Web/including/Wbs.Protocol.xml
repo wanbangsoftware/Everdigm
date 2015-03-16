@@ -1,0 +1,542 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Wbs.Protocol</name>
+    </assembly>
+    <members>
+        <member name="M:Wbs.Protocol.ComputerInfo.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Wbs.Protocol.ComputerInfo.GetCpuID">
+            <summary>
+            获取cpu序列号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Wbs.Protocol.ComputerInfo.GetMacAddress">
+            <summary>
+            获取网卡硬件地址  
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Wbs.Protocol.ComputerInfo.GetIPAddress">
+            <summary>
+            获取IP地址
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Wbs.Protocol.ComputerInfo.GetDiskID">
+            <summary>
+            获取硬盘ID 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Wbs.Protocol.ComputerInfo.GetUserName">
+            <summary>   
+            操作系统的登录用户名   
+            </summary>   
+            <returns></returns>   
+        </member>
+        <member name="M:Wbs.Protocol.ComputerInfo.GetSystemType">
+            <summary>   
+            PC类型   
+            </summary>   
+            <returns></returns>   
+        </member>
+        <member name="M:Wbs.Protocol.ComputerInfo.GetTotalPhysicalMemory">
+            <summary>   
+            物理内存   
+            </summary>   
+            <returns></returns>   
+        </member>
+        <member name="M:Wbs.Protocol.ComputerInfo.GetComputerName">
+            <summary>   
+               电脑名称
+            </summary>   
+            <returns></returns>   
+        </member>
+        <member name="T:Wbs.Protocol.ProtocolTypes">
+            <summary>
+            TX300 协议中通讯包协议类型。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolTypes.TCP">
+            <summary>
+            TCP 协议数据包。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolTypes.TCP_BLIND">
+            <summary>
+            处于盲区中产生的 TCP 数据包。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolTypes.UDP">
+            <summary>
+            UDP 协议数据包。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolTypes.UDP_BLIND">
+            <summary>
+            处于盲区中产生的 UDP 数据包。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolTypes.SMS">
+            <summary>
+            SMS 协议数据包。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolTypes.SMS_BLIND">
+            <summary>
+            处于盲区中产生的 SMS 数据包。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolTypes.LINK_OFF">
+            <summary>
+            连接状态为 OFF。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolTypes.LINK_TCP">
+            <summary>
+            连接状态为 TCP。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolTypes.LINK_UDP">
+            <summary>
+            连接状态为 UDP。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolTypes.LINK_SMS">
+            <summary>
+            连接状态为 SMS。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolTypes.LINK_SLEEP">
+            <summary>
+            睡眠状态。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolTypes.LINK_BLIND">
+            <summary>
+            盲区状态。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolTypes.LINK_TROUBLE">
+            <summary>
+            故障待定状态。
+            </summary>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolTypes.GetProtocolType(System.Byte)">
+            <summary>
+            获取字符串形式的协议类型表示方式。
+            </summary>
+            <param name="type">二进制流表示的协议方式。</param>
+            <returns>字符串形式的协议类型表示方式。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolTypes.GetProtocolType(System.String)">
+            <summary>
+            获取 byte 形式的协议类型。
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolTypes.IsTX300(System.Byte)">
+            <summary>
+            判断是否是 TX300 协议中约定的通讯协议类型。
+            </summary>
+            <param name="b">通讯协议类型值。</param>
+            <returns>返回是否是 TX300 协议中约定的通讯协议类型。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolTypes.GetLinks(System.Byte)">
+            <summary>
+            获取终端当前的连接状态。
+            </summary>
+            <param name="b">状态码。</param>
+            <returns>连接状态描述。</returns>
+        </member>
+        <member name="T:Wbs.Protocol.ResponseStatus">
+            <summary>
+            服务器反馈给终端的状态码。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ResponseStatus.ERROR_NONE">
+            <summary>
+            数据正常。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ResponseStatus.ERROR_TOTAL_LENGTH">
+            <summary>
+            数据总长度与服务器收到的数据长度不一致。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ResponseStatus.ERROR_PROTOCOL_TYPE">
+            <summary>
+            数据包中的数据类型与当前通讯方式不一致。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ResponseStatus.ERROR_TERMINAL_TYPE">
+            <summary>
+            数据包中的终端类型不是约定的代码。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ResponseStatus.ERROR_COMMAND_ID">
+            <summary>
+            未知的命令代码。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ResponseStatus.ERROR_PROTOCOL_VERSION">
+            <summary>
+            TX 协议版本不正确。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ResponseStatus.ERROR_TERMINAL_ID">
+            <summary>
+            终端号码不正确。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ResponseStatus.ERROR_PACKAGE_ID">
+            <summary>
+            数据帧序号不正确。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ResponseStatus.ERROR_CHECK_SUM">
+            <summary>
+            校验和错误。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ResponseStatus.ERROR_UNKNOW">
+            <summary>
+            其他未知的错误类型。
+            </summary>
+        </member>
+        <member name="M:Wbs.Protocol.ResponseStatus.GetResponseStatus">
+            <summary>
+            获取状态码集合。
+            </summary>
+            <returns>返回各种状态码。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.ResponseStatus.GetResponseStatus(System.Byte)">
+            <summary>
+            获取状态码内容。
+            </summary>
+            <param name="b">状态码。</param>
+            <returns>状态码内容。</returns>
+        </member>
+        <member name="T:Wbs.Protocol.ProtocolItems">
+            <summary>
+            提供协议分析以及其基本数据转换功能
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolItems.ServerIpLength">
+            <summary>
+            TX 通讯协议中涉及到的 IP 地址的长度
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolItems.SmsAddressLength">
+            <summary>
+            TX 通讯协议中涉及到的 SMS 地址长度
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolItems.SimNoLength">
+            <summary>
+            Sim 卡号码长度
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolItems.TerminalNoLength">
+            <summary>
+            终端号码长度
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolItems.ModuleNoLength">
+            <summary>
+            模块号码长度
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolItems.scale_char">
+            <summary>
+            进制转换的数据常量。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolItems.HEX">
+            <summary>
+            进制转换中表示 16 进制。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolItems.DEC">
+            <summary>
+            进制转换中表示 10 进制。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolItems.BIN">
+            <summary>
+            进制转换中表示 2 进制。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.ProtocolItems.OCT">
+            <summary>
+            进制转换中表示 8 进制。
+            </summary>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.IntToDigit(System.Int32,System.Byte,System.Int32)">
+            <summary>
+            将 int 数据转换为对应的进制格式，高位在前低位在后顺序。
+            </summary>
+            <param name="mNumber">需要转换的 int 数据。</param>
+            <param name="mScale">需要转换成的进制。</param>
+            <param name="mLength">转换后的数据长度。</param>
+            <returns>返回按照指定进制转换后字符串。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.DigitToInt(System.String,System.Byte)">
+            <summary>
+            将 string 类型的数据转换为对应的 int 数据。
+            </summary>
+            <param name="mDigit">字符串类型的数据。</param>
+            <param name="mScale">需要转换成的进制。</param>
+            <returns>返回按照进制转换后的 int 数值。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.GetBytes(System.String)">
+            <summary>
+            将 16 进制表示的字符串转换成对应的 byte 数组。
+            </summary>
+            <param name="hex">16 进制字符串。</param>
+            <returns>返回 byte 数组。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.GetHex(System.Byte[])">
+            <summary>
+            将二进制流转换为等价的 16 进制字符串。
+            </summary>
+            <param name="b">二进制流。</param>
+            <returns>等价的 16 进制字符串。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.GetHex(System.Byte)">
+            <summary>
+            将 byte 值转换为对应的 16 进制字符串。
+            </summary>
+            <param name="b">待转换的 byte 值。</param>
+            <returns>返回与参数等值的 16 进制字符串。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.GetHex(System.UInt16)">
+            <summary>
+            将 ushort 值转换为等值的 16 进制字符串。
+            </summary>
+            <param name="value">待转换的 ushort 值。</param>
+            <returns>返回与参数等值的 16 进制字符串。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.GetHex(System.UInt32)">
+            <summary>
+            将 uing 值转换为等值的 16 进制字符串。
+            </summary>
+            <param name="value">待转换的 uing 值。</param>
+            <returns>返回与参数等值的 16 进制字符串。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.GetCheckSum(System.Byte[])">
+            <summary>
+            获取指定二进制数组的校验和。
+            </summary>
+            <param name="b">指定的二进制数组。</param>
+            <returns>返回校验和。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.GetXor(System.Byte[])">
+            <summary>
+            获取校验和。
+            </summary>
+            <param name="b">二进制数组。</param>
+            <returns>返回 XOR 校验和。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.expand(System.Byte[],System.Int32)">
+            <summary>
+            扩展 byte 数组。
+            </summary>
+            <param name="b">原二进制数组。</param>
+            <param name="new_len">新的数组长度。</param>
+            <returns>返回新长度的数组。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.reserve(System.Byte[])">
+            <summary>
+            反转字节数组。
+            </summary>
+            <param name="b">字节数组。</param>
+            <returns>顺序颠倒的字节数组。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.reserve(System.String)">
+            <summary>
+            反转字符串。
+            </summary>
+            <param name="s">需要反转的字符串。</param>
+            <returns>返回已经反转的字符串。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.getMacAddress">
+            <summary>
+            获取本机的 MAC 地址。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.GetIPAddress">
+            <summary>
+            获取IP地址
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.getCpuId">
+            <summary>
+            获取本机 CPU ID信息。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.MD5(System.String)">
+            <summary>
+            通过 MD5 加密方法加密字符串。
+            </summary>
+            <param name="encrypt_str">源码字符串。</param>
+            <returns>返回经过 MD5 加密的密文字符串（16进制代码）。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.ProtocolItems.GPRMC2DDMMMM(System.Double)">
+            <summary>
+            将 GPRMC 格式的 GPS 数据转换成度分格式
+            </summary>
+            <param name="gps"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Wbs.Protocol.RSA.Encode(System.String)">
+            <summary>
+            Encode processing.
+            </summary>
+            <param name="bstrMessage">The plaintext to encrypt.</param>
+            <returns>Return the encrypted ciphertext.</returns>
+        </member>
+        <member name="M:Wbs.Protocol.RSA.Decode(System.String)">
+            <summary>
+            Decode processing.
+            </summary>
+            <param name="bstrMessage">The encrypted ciphertext.</param>
+            <returns>Return the plaintext.</returns>
+        </member>
+        <member name="T:Wbs.Protocol.TerminalTypes">
+            <summary>
+            TX300 协议中包涵的终端类型。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.TerminalTypes.DH">
+            <summary>
+            斗山 DH 类中大型车载终端。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.TerminalTypes.DX">
+            <summary>
+            斗山 DX 类中大型车载终端。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.TerminalTypes.LD">
+            <summary>
+            斗山装载机车载终端。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.TerminalTypes.TX10G">
+            <summary>
+            TX10G 类型终端。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.TerminalTypes.TX800">
+            <summary>
+            TX800 类型终端。
+            </summary>
+        </member>
+        <member name="M:Wbs.Protocol.TerminalTypes.GetTerminalType(System.Byte)">
+            <summary>
+            获取字符串描述的终端类型。
+            </summary>
+            <param name="type">二进制流表示的终端类型。</param>
+            <returns>字符串描述的终端类型。</returns>
+        </member>
+        <member name="M:Wbs.Protocol.TerminalTypes.IsTX300(System.Byte)">
+            <summary>
+            检测是否是 TX300 协议中约定的终端类型。
+            </summary>
+            <param name="b">终端类型。</param>
+            <returns>返回是否是 TX300 通讯规约中约定的终端类型值。</returns>
+        </member>
+        <member name="T:Wbs.Protocol.TestTypes">
+            <summary>
+            生产测试类型。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.TestTypes.TEST_CARD">
+            <summary>
+            生产提前准备组 Sim 卡测试。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.TestTypes.TEST_9F">
+            <summary>
+            生产半成品终端 9F 测试。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.TestTypes.TEST_PCB">
+            <summary>
+            生产提前准备组 PCB 版测试。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.TestTypes.TEST_GPS">
+            <summary>
+            生产提前准备组模块 GPS 功能测试。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.TestTypes.TEST_TERMINAL">
+            <summary>
+            生产半成品/成品终端通讯测试。
+            </summary>
+        </member>
+        <member name="T:Wbs.Protocol.UserLoginTypes">
+            <summary>
+            用户登录类型：0，普通登录；1，web登录；2，生产测试平台登录；3，TX系列测试平台登录，4，测卡平台登录。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.UserLoginTypes.LOGIN_NORMAL">
+            <summary>
+            普通登录（未知客户端登录方式）。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.UserLoginTypes.LOGIN_WEB">
+            <summary>
+            WEB 登录方式。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.UserLoginTypes.LOGIN_PRODUCE">
+            <summary>
+            生产测试平台登录方式。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.UserLoginTypes.LOGIN_TX">
+            <summary>
+            TX 系列测试平台登录方式。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.UserLoginTypes.LOGIN_CARD_TEST">
+            <summary>
+            测卡平台登录方式。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.UserLoginTypes.LOGIN_IMS">
+            <summary>
+            万邦 IMS 系统登录。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.UserLoginTypes.LOGIN_NEW_PRODUCE">
+            <summary>
+            万邦新版终端测试系统登录方式。
+            </summary>
+        </member>
+        <member name="F:Wbs.Protocol.UserLoginTypes.LOGIN_WBS_WEB">
+            <summary>
+            万邦软件在线办公系统登录方式
+            </summary>
+        </member>
+        <member name="M:Wbs.Protocol.UserLoginTypes.GetUserLoginType(System.Byte)">
+            <summary>
+            获取用户登录的类型。
+            </summary>
+            <param name="b">用户登录类型代码。</param>
+            <returns>返回用户登录类型。</returns>
+        </member>
+    </members>
+</doc>

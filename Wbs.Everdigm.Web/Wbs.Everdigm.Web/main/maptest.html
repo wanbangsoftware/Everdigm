@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <style type="text/css">
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map_canvas {
+            height: 100%;
+        }
+    </style>
+    <script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript"
+            src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA3ZyjLQqMHZ7jtuVmCxbK11r86K2UuNLM&sensor=false&language=zh-cn">
+    </script>
+    <script type="text/javascript">
+        function initialize() {
+            var point = new google.maps.LatLng(47.908287, 106.9308501);//(37.556016, 121.247957);
+            var mapOptions = {
+                center: point,
+                zoom: 8,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById("map_canvas"),
+                mapOptions);
+
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(47.908287, 106.9308501),
+                map: map,
+                title: "I'm here!"
+            });
+
+            var circleOptions = {
+                center: point,
+                radius: 50,// 单位米
+                map: map,
+                editable: true,
+                draggable: true,
+                fillColor: "#0000FF",
+                strokeColor: "#0000FF"
+            };
+            var circle = new google.maps.Circle(circleOptions);
+            google.maps.event.addListener(circle, "radius_changed", function () {
+                setInfo(circle.getCenter(), circle.getRadius());
+            });
+            google.maps.event.addListener(circle, "center_changed", function () {
+                setInfo(circle.getCenter(), circle.getRadius());
+            });
+            var bounds = circle.getBounds();
+            bounds.extend(marker.getPosition());
+            map.fitBounds(bounds);
+        }
+        function setInfo(center, radius) {
+            $("#info").text("lat: " + center.k + ", lon: " + center.D + ", radius: " + radius);
+        }
+    </script>
+</head>
+<body onload="initialize()">
+    <div id="map_canvas" style="width:100%; height:500px;"></div>
+    <span id="info"></span>
+</body>
+</html>
