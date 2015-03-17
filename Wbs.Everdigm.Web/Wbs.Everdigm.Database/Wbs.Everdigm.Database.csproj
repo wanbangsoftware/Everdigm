@@ -78,6 +78,7 @@
     <Compile Include="TB_Permission.cs" />
     <Compile Include="TB_Position.cs" />
     <Compile Include="TB_Role.cs" />
+    <Compile Include="TB_Satellite.cs" />
     <Compile Include="TB_Terminal.cs" />
     <Compile Include="TB_Warehouse.cs" />
   </ItemGroup>

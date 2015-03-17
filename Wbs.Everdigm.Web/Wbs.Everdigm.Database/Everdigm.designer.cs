@@ -55,9 +55,6 @@ namespace Wbs.Everdigm.Database
     partial void InsertTB_Account(TB_Account instance);
     partial void UpdateTB_Account(TB_Account instance);
     partial void DeleteTB_Account(TB_Account instance);
-    partial void InsertTB_Terminal(TB_Terminal instance);
-    partial void UpdateTB_Terminal(TB_Terminal instance);
-    partial void DeleteTB_Terminal(TB_Terminal instance);
     partial void InsertTB_EquipmentStockHistory(TB_EquipmentStockHistory instance);
     partial void UpdateTB_EquipmentStockHistory(TB_EquipmentStockHistory instance);
     partial void DeleteTB_EquipmentStockHistory(TB_EquipmentStockHistory instance);
@@ -88,6 +85,12 @@ namespace Wbs.Everdigm.Database
     partial void InsertTB_Customer(TB_Customer instance);
     partial void UpdateTB_Customer(TB_Customer instance);
     partial void DeleteTB_Customer(TB_Customer instance);
+    partial void InsertTB_Terminal(TB_Terminal instance);
+    partial void UpdateTB_Terminal(TB_Terminal instance);
+    partial void DeleteTB_Terminal(TB_Terminal instance);
+    partial void InsertTB_Satellite(TB_Satellite instance);
+    partial void UpdateTB_Satellite(TB_Satellite instance);
+    partial void DeleteTB_Satellite(TB_Satellite instance);
     #endregion
 		
 		public EverdigmDataContext(string connection) : 
@@ -178,14 +181,6 @@ namespace Wbs.Everdigm.Database
 			}
 		}
 		
-		public System.Data.Linq.Table<TB_Terminal> TB_Terminal
-		{
-			get
-			{
-				return this.GetTable<TB_Terminal>();
-			}
-		}
-		
 		public System.Data.Linq.Table<TB_EquipmentStockHistory> TB_EquipmentStockHistory
 		{
 			get
@@ -271,6 +266,22 @@ namespace Wbs.Everdigm.Database
 			get
 			{
 				return this.GetTable<TB_Customer>();
+			}
+		}
+		
+		public System.Data.Linq.Table<TB_Terminal> TB_Terminal
+		{
+			get
+			{
+				return this.GetTable<TB_Terminal>();
+			}
+		}
+		
+		public System.Data.Linq.Table<TB_Satellite> TB_Satellite
+		{
+			get
+			{
+				return this.GetTable<TB_Satellite>();
 			}
 		}
 	}

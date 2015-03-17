@@ -27,6 +27,8 @@ namespace Wbs.Everdigm.Database
 
         private System.Nullable<byte> _Revision;
 
+        private System.Nullable<int> _Satellite;
+
         private System.Nullable<System.DateTime> _ProductionDate;
 
         private string _Firmware;
@@ -37,9 +39,9 @@ namespace Wbs.Everdigm.Database
 
         private string _Sim;
 
-        private string _Satellite;
-
         private EntitySet<TB_Equipment> _TB_Equipment;
+
+        private EntityRef<TB_Satellite> _TB_Satellite;
 
         private bool serializing;
 
@@ -55,6 +57,8 @@ namespace Wbs.Everdigm.Database
         partial void OnHasBoundChanged();
         partial void OnRevisionChanging(System.Nullable<byte> value);
         partial void OnRevisionChanged();
+        partial void OnSatelliteChanging(System.Nullable<int> value);
+        partial void OnSatelliteChanged();
         partial void OnProductionDateChanging(System.Nullable<System.DateTime> value);
         partial void OnProductionDateChanged();
         partial void OnFirmwareChanging(string value);
@@ -65,8 +69,6 @@ namespace Wbs.Everdigm.Database
         partial void OnTypeChanged();
         partial void OnSimChanging(string value);
         partial void OnSimChanged();
-        partial void OnSatelliteChanging(string value);
-        partial void OnSatelliteChanged();
         #endregion
 
         public TB_Terminal()
@@ -158,8 +160,33 @@ namespace Wbs.Everdigm.Database
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ProductionDate", DbType = "DateTime")]
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Satellite", DbType = "Int")]
         [global::System.Runtime.Serialization.DataMemberAttribute(Order = 5)]
+        public System.Nullable<int> Satellite
+        {
+            get
+            {
+                return this._Satellite;
+            }
+            set
+            {
+                if ((this._Satellite != value))
+                {
+                    if (this._TB_Satellite.HasLoadedOrAssignedValue)
+                    {
+                        throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+                    }
+                    this.OnSatelliteChanging(value);
+                    this.SendPropertyChanging();
+                    this._Satellite = value;
+                    this.SendPropertyChanged("Satellite");
+                    this.OnSatelliteChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ProductionDate", DbType = "DateTime")]
+        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 6)]
         public System.Nullable<System.DateTime> ProductionDate
         {
             get
@@ -180,7 +207,7 @@ namespace Wbs.Everdigm.Database
         }
 
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Firmware", DbType = "VarChar(7)")]
-        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 6)]
+        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 7)]
         public string Firmware
         {
             get
@@ -201,7 +228,7 @@ namespace Wbs.Everdigm.Database
         }
 
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Number", DbType = "Char(10)")]
-        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 7)]
+        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 8)]
         public string Number
         {
             get
@@ -222,7 +249,7 @@ namespace Wbs.Everdigm.Database
         }
 
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Type", DbType = "VarChar(10)")]
-        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 8)]
+        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 9)]
         public string Type
         {
             get
@@ -243,7 +270,7 @@ namespace Wbs.Everdigm.Database
         }
 
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sim", DbType = "VarChar(11)")]
-        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 9)]
+        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 10)]
         public string Sim
         {
             get
@@ -259,27 +286,6 @@ namespace Wbs.Everdigm.Database
                     this._Sim = value;
                     this.SendPropertyChanged("Sim");
                     this.OnSimChanged();
-                }
-            }
-        }
-
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Satellite", DbType = "VarChar(20)")]
-        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 10)]
-        public string Satellite
-        {
-            get
-            {
-                return this._Satellite;
-            }
-            set
-            {
-                if ((this._Satellite != value))
-                {
-                    this.OnSatelliteChanging(value);
-                    this.SendPropertyChanging();
-                    this._Satellite = value;
-                    this.SendPropertyChanged("Satellite");
-                    this.OnSatelliteChanged();
                 }
             }
         }
@@ -300,6 +306,40 @@ namespace Wbs.Everdigm.Database
             set
             {
                 this._TB_Equipment.Assign(value);
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "TB_Satellite_TB_Terminal", Storage = "_TB_Satellite", ThisKey = "Satellite", OtherKey = "id", IsForeignKey = true)]
+        public TB_Satellite TB_Satellite
+        {
+            get
+            {
+                return this._TB_Satellite.Entity;
+            }
+            set
+            {
+                TB_Satellite previousValue = this._TB_Satellite.Entity;
+                if (((previousValue != value)
+                            || (this._TB_Satellite.HasLoadedOrAssignedValue == false)))
+                {
+                    this.SendPropertyChanging();
+                    if ((previousValue != null))
+                    {
+                        this._TB_Satellite.Entity = null;
+                        previousValue.TB_Terminal.Remove(this);
+                    }
+                    this._TB_Satellite.Entity = value;
+                    if ((value != null))
+                    {
+                        value.TB_Terminal.Add(this);
+                        this._Satellite = value.id;
+                    }
+                    else
+                    {
+                        this._Satellite = default(Nullable<int>);
+                    }
+                    this.SendPropertyChanged("TB_Satellite");
+                }
             }
         }
 
@@ -338,6 +378,7 @@ namespace Wbs.Everdigm.Database
         private void Initialize()
         {
             this._TB_Equipment = new EntitySet<TB_Equipment>(new Action<TB_Equipment>(this.attach_TB_Equipment), new Action<TB_Equipment>(this.detach_TB_Equipment));
+            this._TB_Satellite = default(EntityRef<TB_Satellite>);
             OnCreated();
         }
 
@@ -362,4 +403,5 @@ namespace Wbs.Everdigm.Database
             this.serializing = false;
         }
     }
+	
 }

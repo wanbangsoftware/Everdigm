@@ -116,21 +116,6 @@
       <Association Name="TB_Role_TB_Account" Member="TB_Role" ThisKey="Role" OtherKey="id" Type="TB_Role" IsForeignKey="true" DeleteRule="SET DEFAULT" />
     </Type>
   </Table>
-  <Table Name="dbo.TB_Terminal" Member="TB_Terminal">
-    <Type Name="TB_Terminal">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="HasBound" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Revision" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="ProductionDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Firmware" Type="System.String" DbType="VarChar(7)" CanBeNull="true" />
-      <Column Name="Number" Type="System.String" DbType="Char(10)" CanBeNull="true" />
-      <Column Name="Type" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Sim" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
-      <Column Name="Satellite" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Association Name="TB_Terminal_TB_Equipment" Member="TB_Equipment" ThisKey="id" OtherKey="Terminal" Type="TB_Equipment" />
-    </Type>
-  </Table>
   <Table Name="dbo.TB_EquipmentStockHistory" Member="TB_EquipmentStockHistory">
     <Type Name="TB_EquipmentStockHistory">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -276,9 +261,9 @@
       <Association Name="TB_Equipment_TB_EposFault" Member="TB_EposFault" ThisKey="id" OtherKey="Equipment" Type="TB_EposFault" />
       <Association Name="TB_EquipmentModel_TB_Equipment" Member="TB_EquipmentModel" ThisKey="Model" OtherKey="id" Type="TB_EquipmentModel" IsForeignKey="true" DeleteRule="SET DEFAULT" />
       <Association Name="TB_EquipmentStatusCode_TB_Equipment" Member="TB_EquipmentStatusCode" ThisKey="Status" OtherKey="id" Type="TB_EquipmentStatusCode" IsForeignKey="true" DeleteRule="SET DEFAULT" />
-      <Association Name="TB_Terminal_TB_Equipment" Member="TB_Terminal" ThisKey="Terminal" OtherKey="id" Type="TB_Terminal" IsForeignKey="true" DeleteRule="SET DEFAULT" />
       <Association Name="TB_Warehouse_TB_Equipment" Member="TB_Warehouse" ThisKey="Warehouse" OtherKey="id" Type="TB_Warehouse" IsForeignKey="true" DeleteRule="SET DEFAULT" />
       <Association Name="TB_Customer_TB_Equipment" Member="TB_Customer" ThisKey="Customer" OtherKey="id" Type="TB_Customer" IsForeignKey="true" DeleteRule="SET DEFAULT" />
+      <Association Name="TB_Terminal_TB_Equipment" Member="TB_Terminal" ThisKey="Terminal" OtherKey="id" Type="TB_Terminal" IsForeignKey="true" DeleteRule="SET DEFAULT" />
     </Type>
   </Table>
   <Table Name="dbo.TB_EposFault" Member="TB_EposFault">
@@ -312,6 +297,29 @@
       <Column Name="Address" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Question" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Association Name="TB_Customer_TB_Equipment" Member="TB_Equipment" ThisKey="id" OtherKey="Customer" Type="TB_Equipment" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_Terminal" Member="TB_Terminal">
+    <Type Name="TB_Terminal">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="HasBound" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Revision" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="Satellite" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ProductionDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Firmware" Type="System.String" DbType="VarChar(7)" CanBeNull="true" />
+      <Column Name="Number" Type="System.String" DbType="Char(10)" CanBeNull="true" />
+      <Column Name="Type" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Sim" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Association Name="TB_Terminal_TB_Equipment" Member="TB_Equipment" ThisKey="id" OtherKey="Terminal" Type="TB_Equipment" />
+      <Association Name="TB_Satellite_TB_Terminal" Member="TB_Satellite" ThisKey="Satellite" OtherKey="id" Type="TB_Satellite" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_Satellite" Member="TB_Satellite">
+    <Type Name="TB_Satellite">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CardNo" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Association Name="TB_Satellite_TB_Terminal" Member="TB_Terminal" ThisKey="id" OtherKey="Satellite" Type="TB_Terminal" />
     </Type>
   </Table>
 </Database>
