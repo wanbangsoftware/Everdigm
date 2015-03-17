@@ -1,0 +1,32 @@
+@charset "utf-8";
+/* CSS Document */
+
+html,body{ margin:0; padding:0; height:100%;background:#ecf0f1;}
+.container{ font-family: Arial, Helvetica, sans-serif;font-size:12px; color:#383838; background:#ecf0f1;}
+    .header{ height:100px; background:#ecf0f1 url(../images/pic_logo_bg.png) repeat-x; overflow:hidden; }
+        .header-tag{ height:29px;line-height:29px; margin-top:10px;}
+			.tag{background:url(../images/pic_tag_bg.png) no-repeat;height:29px; width:123px; margin-left:10px;}
+    .box{ width:100%; height:100%;background:#ecf0f1;}
+        .box-first{ float:left;width:100%;height:365px; }
+			.box-first-left{ float:left; margin-left:5px;width:400px;
+							font:14px Arial, Helvetica, sans-serif  bolder; color:#f0f0ff; background-color:#dedede;  }
+				.left-form{border:#0084ff solid 1px; background::#dedede;width:378px; padding:10px;}
+            		.table-box{border:#c4c4c4 solid 1px;background-color:#f2f2f2;
+								font:14px Arial, Helvetica, sans-serif  bolder; color:#1e2936;line-height:40px; }
+           				 .td-box{ padding-left:10px;}
+					.table-box-dashboard{border:#c4c4c4 solid 1px;background-color:#f2f2f2;
+						font:14px Arial, Helvetica, sans-serif  bolder; color:#1e2936;line-height:30px; text-align:center;}
+			.box-first-right{ float:right; margin-right:5px;width:400px;
+							font:14px Arial, Helvetica, sans-serif  bolder; color:#f0f0ff; background-color:#ecf0f1;  }
+				.right-form{border:#0084ff solid 1px; background::#dedede;width:378px;padding:10px;}
+					.table-box-state{border:#c4c4c4 solid 1px;background-color:#f2f2f2;
+						font:14px Arial, Helvetica, sans-serif  bolder; color:#1e2936;line-height:40px;}
+			.box-first-middle{ margin:0 410px;
+							font:14px Arial, Helvetica, sans-serif  bolder; color:#f0f0ff; background-color:#dedede;  }
+				.middle-form{border:#0084ff solid 1px; background::#dedede;}
+        .box-second{float:left;width:100%;background:#f0f0ff; margin-left:5px; margin-right:5px;}
+			.box-second-left{float:left;width:100%;
+							font:14px Arial, Helvetica, sans-serif  bolder; color:#f0f0ff; background-color:#dedede;  }
+			.second-left-form{border:#0084ff solid 1px; background::#dedede;}
+
+.clearfloat { clear:both; height:0; font-size: 1px; line-height: 0px;}
