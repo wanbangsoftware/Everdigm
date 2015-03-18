@@ -217,6 +217,7 @@
     <Content Include="main\equipment_today_works.aspx" />
     <Content Include="main\equipment_work.aspx" />
     <Content Include="main\maptest.html" />
+    <Content Include="main\terminal_satellite.aspx" />
     <Content Include="mobile\css\account.css" />
     <Content Include="mobile\default.aspx" />
     <Content Include="mobile\device.aspx" />
@@ -498,6 +499,9 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="classes\BaseRolePage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="classes\BaseSatellitePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="classes\BaseTerminalPage.cs">
@@ -844,6 +848,13 @@
     </Compile>
     <Compile Include="main\terminal_register.aspx.designer.cs">
       <DependentUpon>terminal_register.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="main\terminal_satellite.aspx.cs">
+      <DependentUpon>terminal_satellite.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\terminal_satellite.aspx.designer.cs">
+      <DependentUpon>terminal_satellite.aspx</DependentUpon>
     </Compile>
     <Compile Include="main\terminal_testing.aspx.cs">
       <DependentUpon>terminal_testing.aspx</DependentUpon>

@@ -33,7 +33,7 @@ namespace Wbs.Everdigm.Web.main
             if (null != t)
             {
                 txtNumber.Value = t.Number;
-                txtSatellite.Value = t.Satellite;
+                //txtSatellite.Value = t.Satellite;
                 txtSimcard.Value = t.Sim;
             }
             else { ShowNotification("./terminal_list.aspx", "Error: Cannot edit null object of Terminal.", false); }
@@ -42,16 +42,27 @@ namespace Wbs.Everdigm.Web.main
         private void BuildObject(TB_Terminal obj)
         {
             obj.Number = txtNumber.Value.Trim();
-            obj.Satellite = txtSatellite.Value.Trim();
+            //obj.Satellite = txtSatellite.Value.Trim();
             obj.Sim = txtSimcard.Value.Trim();
         }
 
         private void NewTerminal()
         {
-            var t = TerminalInstance.Find(f => f.Number.Equals(txtNumber.Value.Trim()) || f.Sim.Equals(txtSimcard.Value.Trim()));
+            TB_Terminal t = null;
+            // 如果没有输入Sim卡号码则查询是否具有相同终端号码的记录
+            if (string.IsNullOrEmpty(txtSimcard.Value.Trim()))
+            {
+                t = TerminalInstance.Find(f => f.Number.Equals(txtNumber.Value.Trim()));
+            }
+            else
+            {
+                // 如果有Sim卡号码输入则查询终端或Sim卡号码是否有相同记录存在
+                t = TerminalInstance.Find(f => f.Number.Equals(txtNumber.Value.Trim()) || f.Sim.Equals(txtSimcard.Value.Trim()));
+            }
+
             if (null != t)
             {
-                ShowNotification("./terminal_register.aspx", "There have one terminal: " + TerminalInstance.ToString(t), false);
+                ShowNotification("./terminal_register.aspx", "Terminal exist: " + TerminalInstance.ToString(t), false);
             }
             else
             {

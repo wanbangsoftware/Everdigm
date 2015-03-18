@@ -137,7 +137,7 @@ namespace Wbs.Everdigm.Web.main
             string html = "";
             if (totalRecords < 1)
             {
-                html = "<tr><td colspan=\"18\">No records, You can change the condition and try again.</td></tr>";
+                html = "<tr><td colspan=\"16\">No records, You can change the condition and try again.</td></tr>";
             }
             else
             {
@@ -170,9 +170,9 @@ namespace Wbs.Everdigm.Web.main
                         "<td class=\"in-tab-txt-b\">" + ((byte?)null == obj.Signal ? "-" : obj.Signal.ToString()) + "</td>" +
                         "<td class=\"in-tab-txt-b\"><div class=\"links " + EquipmentInstance.GetOnlineStyle(obj.OnlineStyle) + "\"></div></td>" +
                         "<td class=\"in-tab-txt-b textoverflow\">" + ((DateTime?)null == obj.LastActionTime ? "" : obj.LastActionTime.Value.ToString("yyyy/MM/dd")) + "</td>" +
-                        "<td class=\"in-tab-txt-b textoverflow\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Number) + "</td>" +
-                        "<td class=\"in-tab-txt-b\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Satellite) + "</td>" +
-                        "<td class=\"in-tab-txt-b\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Sim) + "</td>" +
+                        "<td class=\"in-tab-txt-b textoverflow\" title=\"" + EquipmentInstance.GetTerinalTitleInfo(obj) + "\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Number) + "</td>" +
+                        //"<td class=\"in-tab-txt-b\">" + (n == obj.Terminal ? "-" : (n == obj.TB_Terminal.Satellite ? "-" : obj.TB_Terminal.TB_Satellite.CardNo)) + "</td>" +
+                        //"<td class=\"in-tab-txt-b\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Sim) + "</td>" +
                         "</tr>";
                 }
             }
@@ -181,6 +181,8 @@ namespace Wbs.Everdigm.Web.main
             if (totalRecords > 0)
                 ShowPaggings(pageIndex, totalPages, totalRecords, "./equipment_in_storage.aspx", divPagging);
         }
+
+
         protected void btSave2Hand_Click(object sender, EventArgs e)
         {
             if (!HasSessionLose) {
@@ -253,7 +255,7 @@ namespace Wbs.Everdigm.Web.main
                     history.Equipment = obj.id;
                     history.Status = transfer.id;// 移库状态
                     history.Stocktime = DateTime.Now;
-                    // 入库次数加1
+                    // 入库次数
                     history.StoreTimes = obj.StoreTimes;
                     history.Warehouse = tmp.Warehouse;// 保持目的仓库
                     StoreInstance.Add(history);

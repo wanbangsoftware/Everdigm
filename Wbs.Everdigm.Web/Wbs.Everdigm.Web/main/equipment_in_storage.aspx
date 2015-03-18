@@ -124,8 +124,6 @@
                                     <th class="in-tab-title-b bg-warning">Link</th>
                                     <th class="in-tab-title-b bg-warning">Received</th>
                                     <th class="in-tab-title-b bg-warning">Ter. NO.</th>
-                                    <th class="in-tab-title-b bg-warning">Sat. No.</th>
-                                    <th class="in-tab-title-b bg-warning">Sim No.</th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -156,9 +154,6 @@
                                         <img src="../images/img_connect_gprs.png" /></td>
                                     <td class="in-tab-txt-b textoverflow">2014-09-22</td>
                                     <td class="in-tab-txt-b textoverflow">20140921221</td>
-                                    <td class="in-tab-txt-b">
-                                        <img src="../images/img_connect_install.png" /></td>
-                                    <td class="in-tab-txt-b">23553523</td>
                                 </tr>
                             </tbody>
                         </table>

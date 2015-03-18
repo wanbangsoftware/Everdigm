@@ -33,7 +33,7 @@ namespace Wbs.Everdigm.Web.main
         protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
-            //_maxTimes = IsSuccess ? 2 : 5;
+            _maxTimes = IsSuccess ? 2 : 5;
             notification_title.InnerHtml = IsSuccess ? "SUCCESS" : "FAILED";
             Title = notification_title.InnerHtml;
             url.Value = RedirectUrl;

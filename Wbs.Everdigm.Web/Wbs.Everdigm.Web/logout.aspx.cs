@@ -13,6 +13,8 @@ namespace Wbs.Everdigm.Web
         {
             base.Page_Load(sender, e);
             Session.Clear();
+            Response.Cookies.Clear();
+            Request.Cookies.Clear();
             ShowNotification("../default.aspx", "You have logout successfully.", true, true);
         }
     }

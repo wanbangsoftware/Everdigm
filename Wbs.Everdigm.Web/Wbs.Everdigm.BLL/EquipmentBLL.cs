@@ -60,9 +60,11 @@ namespace Wbs.Everdigm.BLL
         public override string ToString(TB_Equipment entity)
         {
             // 判断终端是否为空
-            var t = (int?)null == entity.Terminal;
-            return string.Format("{0},{1},{2},{3}", (entity.TB_EquipmentModel.Code + entity.Number),
-                (t ? "" : entity.TB_Terminal.Number), (t ? "" : entity.TB_Terminal.Sim), (t ? "" : entity.TB_Terminal.Satellite));
+            var n = (int?)null;
+            var t = n == entity.Terminal;
+            return string.Format("{0}, Sim: {1}, Satellite: {2}", (entity.TB_EquipmentModel.Code + entity.Number),
+                (t ? "" : entity.TB_Terminal.Sim), 
+                (t ? "" : (n == entity.TB_Terminal.Satellite ? "" : entity.TB_Terminal.TB_Satellite.CardNo)));
         }
         /// <summary>
         /// 生成设备的完整号码
@@ -92,6 +94,21 @@ namespace Wbs.Everdigm.BLL
         {
             return entity.TB_EquipmentStatusCode.Name + "(" + entity.TB_EquipmentStatusCode.TB_EquipmentStatusName.Name + ")";
         }
+
+        /// <summary>
+        /// 获取终端信息的title
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public string GetTerinalTitleInfo(TB_Equipment obj)
+        {
+            var n = (int?)null;
+            return n == obj.Terminal ? "" :
+                (("GSM Card: " + obj.TB_Terminal.Sim) +
+                (n == obj.TB_Terminal.Satellite ? "" :
+                ("&#10;SAT Card: " + obj.TB_Terminal.TB_Satellite.CardNo)));
+        }
+
         /// <summary>
         /// 获取链接状态
         /// </summary>

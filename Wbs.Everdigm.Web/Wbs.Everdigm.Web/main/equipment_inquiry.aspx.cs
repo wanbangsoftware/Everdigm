@@ -90,9 +90,9 @@ namespace Wbs.Everdigm.Web.main
                         "<td class=\"in-tab-txt-b\">" + ((byte?)null == obj.Signal ? "-" : obj.Signal.ToString()) + "</td>" +
                         "<td class=\"in-tab-txt-b\"><div class=\"links " + EquipmentInstance.GetOnlineStyle(obj.OnlineStyle) + "\"></div></td>" +
                         "<td class=\"in-tab-txt-b textoverflow\">" + ((DateTime?)null == obj.LastActionTime ? "" : obj.LastActionTime.Value.ToString("yyyy/MM/dd")) + "</td>" +
-                        "<td class=\"in-tab-txt-b textoverflow\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Number) + "</td>" +
-                        "<td class=\"in-tab-txt-b\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Satellite) + "</td>" +
-                        "<td class=\"in-tab-txt-rb\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Sim) + "</td>" +
+                        "<td class=\"in-tab-txt-rb textoverflow\" title=\"" + EquipmentInstance.GetTerinalTitleInfo(obj) + "\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Number) + "</td>" +
+                        //"<td class=\"in-tab-txt-b\">" + (n == obj.Terminal ? "-" : (n == obj.TB_Terminal.Satellite ? "-" : obj.TB_Terminal.TB_Satellite.CardNo)) + "</td>" +
+                        //"<td class=\"in-tab-txt-rb\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Sim) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + (n == obj.Customer ? "-" : obj.TB_Customer.Name) + "</td>" +
                         "<td class=\"in-tab-txt-b\">-</td>" +
                         "</tr>";

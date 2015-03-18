@@ -47,13 +47,6 @@
                                 <td class="td_right">&nbsp;</td>
                                 <td class="td_left">&nbsp;</td>
                             </tr>
-                            <tr>
-                                <td class="td_right">Satellite Model No.:</td>
-                                <td class="td_left">
-                                    <input type="text" runat="server" class="text-input" id="txtSatellite" maxlength="11" /></td>
-                                <td class="td_right">&nbsp;</td>
-                                <td class="td_left">&nbsp;</td>
-                            </tr>
                         </table>
                         <p>
                             <b>Explanation</b>:<br />

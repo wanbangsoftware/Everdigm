@@ -46,11 +46,11 @@ namespace Wbs.Everdigm.Web.main
                     break;
                 case 2:
                     // 卫星号码查询
-                    replace = txtSatellite.Value;
+                    //replace = txtSatellite.Value;
                     break;
             }
 
-            return string.IsNullOrEmpty(replace) ? obj : obj.Replace(replace, ("<span style=\"color: #00FF00;\">" + replace + "</span>"));
+            return string.IsNullOrEmpty(replace) ? obj : obj.Replace(replace, ("<span style=\"color: #FF0000;\">" + replace + "</span>"));
         }
 
         private void ShowTerminals()
@@ -59,8 +59,7 @@ namespace Wbs.Everdigm.Web.main
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             var list = TerminalInstance.FindPageList<TB_Terminal>(pageIndex, PageSize, out totalRecords,
                 f => f.Delete == false && f.Number.Contains(txtNumber.Value) &&
-                    f.Sim.Contains(txtSimcard.Value) &&
-                    f.Satellite.Contains(txtSatellite.Value), "Number");
+                    f.Sim.Contains(txtSimcard.Value), "Number");
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             pageIndex = 0 == pageIndex ? totalPages : pageIndex;
             if (pageIndex > totalPages)
@@ -68,7 +67,7 @@ namespace Wbs.Everdigm.Web.main
                 pageIndex = totalPages;
                 list = TerminalInstance.FindPageList<TB_Terminal>(pageIndex, PageSize, out totalRecords, 
                     f => f.Delete == false && f.Number.Contains(txtNumber.Value) && 
-                        f.Sim.Contains(txtSimcard.Value) && f.Satellite.Contains(txtSatellite.Value), "Number");
+                        f.Sim.Contains(txtSimcard.Value), "Number");
             }
 
             string html = "";
@@ -80,6 +79,7 @@ namespace Wbs.Everdigm.Web.main
             else
             {
                 var cnt = (pageIndex - 1) * PageSize;
+                var n = (int?)null;
                 foreach (var obj in list)
                 {
                     cnt++;
@@ -89,7 +89,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td style=\"text-align: center;\">" + cnt + "</td>" +
                         "<td><a href=\"./terminal_register.aspx?key=" + id + "\" >" + CheckQueryString(obj.Number, 0) + "</a></td>" +
                         "<td>" + CheckQueryString(obj.Sim, 1) + "</td>" +
-                        "<td>" + CheckQueryString(obj.Satellite, 2) + "</td>" +
+                        "<td>" + TerminalInstance.GetSatellite(obj, true) + "</td>" +
                         "<td>" + obj.Firmware + "</td>" +
                         "<td style=\"text-align: center;\">" + obj.Revision.ToString() + "</td>" +
                         "<td style=\"text-align: center;\">" + obj.Type + "</td>" +
@@ -131,6 +131,87 @@ namespace Wbs.Everdigm.Web.main
                         });
                     }
                     ShowNotification("./terminal_list.aspx", "Success: You have delete " + ids.Count() + " terminal(s).");
+                }
+            }
+        }
+        /// <summary>
+        /// 解绑终端和卫星模块
+        /// </summary>
+        private void UnboundSatellite()
+        {
+            var id = int.Parse(hidBoundSatellite.Value.Trim());
+            var t = TerminalInstance.Find(f => f.id == id);
+            if (null == t) { ShowNotification("./terminal_list.aspx", "Unbound fail: Terminal not exists.", false); }
+            else
+            {
+                if ((int?)null == t.Satellite) { ShowNotification("./terminal_list.aspx", "Unbound fail: No Satellite bound on it.", false); }
+                else
+                {
+                    string satno = t.TB_Satellite.CardNo;
+                    TerminalInstance.Update(f => f.id == t.id, act => { act.Satellite = (int?)null; });
+                    SatelliteInstance.Update(f => f.id == t.Satellite, act => { act.Bound = false; });
+                    SaveHistory(new TB_AccountHistory()
+                    {
+                        ActionId = ActionInstance.Find(f => f.Name.Equals("UnboundSat")).id,
+                        ObjectA = "Ter: " + t.Number + " unbound Sat: " + satno
+                    });
+                    ShowNotification("./terminal_list.aspx", "Ter: " + t.Number + " unbound Sat: " + satno + " OK!");
+                }
+            }
+        }
+
+        protected void btBoundSatellite_Click(object sender, EventArgs e)
+        {
+            var value = hidBoundSatellite.Value.Trim();
+            if (string.IsNullOrEmpty(value)) return;
+            // 为终端绑定卫星模块
+            var index = value.IndexOf(',');
+            if (index < 0) {
+                // 没有,分割的是解绑卫星模块
+                UnboundSatellite();
+                return;
+            }
+            var tid = value.Substring(0, index);
+            var gid = value.Substring(index + 1);
+            gid = Utility.Decrypt(gid);
+            var t = TerminalInstance.Find(f => f.id == int.Parse(tid));
+            if (null == t)
+            {
+                ShowNotification("./terminal_list.aspx", "Bound fail: Terminal not exists.", false);
+            }
+            else
+            {
+                if (t.Satellite != (int?)null)
+                {
+                    ShowNotification("./terminal_list.aspx", "Terminal \"" + t.Number + "\" has bound Satellite: " + t.TB_Satellite.CardNo, false);
+                }
+                else
+                {
+                    var g = SatelliteInstance.Find(f => f.id == int.Parse(gid));
+                    if (null == g) { ShowNotification("./terminal_list.aspx", "No Satellite info exists.", false); }
+                    else
+                    {
+                        if (g.Bound == true)
+                        {
+                            var gt = TerminalInstance.Find(f => f.TB_Satellite.id == g.id);
+                            ShowNotification("./terminal_list.aspx", "Satellite \"" + g.CardNo + "\" has bound on Terminal: " + gt.Number, false);
+                        }
+                        else
+                        {
+                            TerminalInstance.Update(f => f.id == t.id, act => {
+                                act.Satellite = g.id;
+                            });
+                            SatelliteInstance.Update(f => f.id == g.id, act => { act.Bound = true; });
+                            // 保存绑定卫星模块的历史记录
+                            SaveHistory(new TB_AccountHistory()
+                            {
+                                ActionId = ActionInstance.Find(f => f.Name.Equals("BoundSat")).id,
+                                ObjectA = TerminalInstance.ToString(t)
+                            });
+                            //ShowTerminals();
+                            ShowNotification("./terminal_list.aspx", "Terminal \"" + t.Number + "\" bound Satellite \"" + g.CardNo + "\" OK!");
+                        }
+                    }
                 }
             }
         }

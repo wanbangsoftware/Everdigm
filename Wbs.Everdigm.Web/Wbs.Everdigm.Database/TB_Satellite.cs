@@ -21,6 +21,10 @@ namespace Wbs.Everdigm.Database
 
         private int _id;
 
+        private System.Nullable<bool> _Bound;
+
+        private System.Nullable<System.DateTime> _RegisterDate;
+
         private string _CardNo;
 
         private EntitySet<TB_Terminal> _TB_Terminal;
@@ -33,6 +37,10 @@ namespace Wbs.Everdigm.Database
         partial void OnCreated();
         partial void OnidChanging(int value);
         partial void OnidChanged();
+        partial void OnBoundChanging(System.Nullable<bool> value);
+        partial void OnBoundChanged();
+        partial void OnRegisterDateChanging(System.Nullable<System.DateTime> value);
+        partial void OnRegisterDateChanged();
         partial void OnCardNoChanging(string value);
         partial void OnCardNoChanged();
         #endregion
@@ -63,8 +71,50 @@ namespace Wbs.Everdigm.Database
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CardNo", DbType = "VarChar(10)")]
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Bound", DbType = "Bit")]
         [global::System.Runtime.Serialization.DataMemberAttribute(Order = 2)]
+        public System.Nullable<bool> Bound
+        {
+            get
+            {
+                return this._Bound;
+            }
+            set
+            {
+                if ((this._Bound != value))
+                {
+                    this.OnBoundChanging(value);
+                    this.SendPropertyChanging();
+                    this._Bound = value;
+                    this.SendPropertyChanged("Bound");
+                    this.OnBoundChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_RegisterDate", DbType = "DateTime")]
+        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 3)]
+        public System.Nullable<System.DateTime> RegisterDate
+        {
+            get
+            {
+                return this._RegisterDate;
+            }
+            set
+            {
+                if ((this._RegisterDate != value))
+                {
+                    this.OnRegisterDateChanging(value);
+                    this.SendPropertyChanging();
+                    this._RegisterDate = value;
+                    this.SendPropertyChanged("RegisterDate");
+                    this.OnRegisterDateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CardNo", DbType = "VarChar(10)")]
+        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 4)]
         public string CardNo
         {
             get
@@ -85,7 +135,7 @@ namespace Wbs.Everdigm.Database
         }
 
         [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "TB_Satellite_TB_Terminal", Storage = "_TB_Terminal", ThisKey = "id", OtherKey = "Satellite")]
-        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 3, EmitDefaultValue = false)]
+        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 5, EmitDefaultValue = false)]
         public EntitySet<TB_Terminal> TB_Terminal
         {
             get

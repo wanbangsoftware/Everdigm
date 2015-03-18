@@ -27,15 +27,15 @@
                             <tr>
                                 <td class="table_header">Number:
                                     <input type="text" id="txtNumber" class="text-input little-input" runat="server" />
-                                    Simcard:
+                                    Sim Card:
                                     <input type="text" id="txtSimcard" class="text-input little-input" runat="server" />
-                                    Satellite:
-                                    <input type="text" id="txtSatellite" class="text-input little-input" runat="server" />
                                     <input type="hidden" runat="server" id="hidPageIndex" />
                                     <asp:Button ID="btQuery" runat="server" Text="Query" CssClass="button" OnClick="btQuery_Click" />
                                     |
                                     <input type="button" id="btAdd" class="button" value="Add" />
                                     <input type="hidden" runat="server" id="hidID" />
+                                    <input type="hidden" runat="server" id="hidBoundSatellite" />
+                                    <asp:Button ID="btBoundSatellite" runat="server" CssClass="hidding" OnClick="btBoundSatellite_Click" />
                                     <asp:Button ID="bt_Delete" runat="server" Text="Delete" CssClass="button" OnClick="btDelete_Click" />
                                 </td>
                             </tr>
@@ -48,7 +48,7 @@
                                     <th style="width: 60px; text-align: center;">ID</th>
                                     <th style="width: 100px;">Number</th>
                                     <th style="width: 100px;">Simcard</th>
-                                    <th style="width: 100px;">Satellite</th>
+                                    <th style="width: 130px;">Satellite</th>
                                     <th style="width: 70px;">Firmware</th>
                                     <th style="width: 60px; text-align: center;">Revision</th>
                                     <th style="width: 50px; text-align: center;">Type</th>

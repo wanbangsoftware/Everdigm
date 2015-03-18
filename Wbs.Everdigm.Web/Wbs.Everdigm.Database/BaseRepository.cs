@@ -162,7 +162,7 @@ namespace Wbs.Everdigm.Database
 
             if (null != orderNames)
                 _list = Sort(_list, orderNames, descending);
-            _list = _list.Skip<T>((pageIndex - 1) * pageSize).Take<T>(pageSize);
+            _list = _list.Skip<T>((pageIndex <= 0 ? 0 : (pageIndex - 1)) * pageSize).Take<T>(pageSize);
             return _list;
         }
 

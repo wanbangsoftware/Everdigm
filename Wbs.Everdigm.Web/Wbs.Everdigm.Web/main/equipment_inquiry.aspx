@@ -71,7 +71,7 @@
                                     <th class="bg-primary"></th>
                                     <th colspan="6" class="in-tab-title-rb bg-primary">Equipment Information</th>
                                     <th colspan="5" class="in-tab-title-rb bg-primary">Storage Information</th>
-                                    <th colspan="6" class="in-tab-title-rb bg-primary">Terminal Information</th>
+                                    <th colspan="4" class="in-tab-title-rb bg-primary">Terminal Information</th>
                                     <th colspan="2" class="in-tab-title-b bg-primary">Customer</th>
                                 </tr>
                                 <tr>
@@ -90,16 +90,14 @@
                                     <th class="in-tab-title-b bg-warning">Signal</th>
                                     <th class="in-tab-title-b bg-warning">Link</th>
                                     <th class="in-tab-title-b bg-warning">Received</th>
-                                    <th class="in-tab-title-b bg-warning">Ter. NO.</th>
-                                    <th class="in-tab-title-b bg-warning">Sat. No.</th>
-                                    <th class="in-tab-title-rb bg-warning">Sim No.</th>
+                                    <th class="in-tab-title-rb bg-warning">Ter. NO.</th>
                                     <th class="in-tab-title-b bg-warning">Number</th>
                                     <th class="in-tab-title-b bg-warning">Contract</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="20">
+                                    <td colspan="18">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>
@@ -124,10 +122,7 @@
                                     <td class="in-tab-txt-b">
                                         <img src="../images/img_connect_gprs.png" /></td>
                                     <td class="in-tab-txt-b textoverflow">2014-09-22</td>
-                                    <td class="in-tab-txt-b textoverflow">20140921221</td>
-                                    <td class="in-tab-txt-b">
-                                        <img src="../images/img_connect_install.png" /></td>
-                                    <td class="in-tab-txt-rb">23553523</td>
+                                    <td class="in-tab-txt-rb textoverflow">20140921221</td>
                                     <td class="in-tab-txt-b">23553523</td>
                                     <td class="in-tab-txt-b">23553523</td>
                                 </tr>

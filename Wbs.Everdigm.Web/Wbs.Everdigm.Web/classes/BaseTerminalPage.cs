@@ -26,6 +26,10 @@ namespace Wbs.Everdigm.Web
         /// </summary>
         protected TerminalBLL TerminalInstance { get { return new TerminalBLL(); } }
         /// <summary>
+        /// 卫星信息业务处理实体
+        /// </summary>
+        protected SatelliteBLL SatelliteInstance { get { return new SatelliteBLL(); } }
+        /// <summary>
         /// 更新终端的信息
         /// </summary>
         /// <param name="obj"></param>

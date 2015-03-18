@@ -10,7 +10,7 @@
 namespace Wbs.Everdigm.Web.main {
     
     
-    public partial class terminal_register {
+    public partial class terminal_satellite {
         
         /// <summary>
         /// form1 控件。
@@ -22,22 +22,22 @@ namespace Wbs.Everdigm.Web.main {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
-        /// btSave 控件。
+        /// cookieName 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btSave;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden cookieName;
         
         /// <summary>
-        /// txtNumber 控件。
+        /// hidPageIndex 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText txtNumber;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidPageIndex;
         
         /// <summary>
         /// hidID 控件。
@@ -49,12 +49,30 @@ namespace Wbs.Everdigm.Web.main {
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidID;
         
         /// <summary>
-        /// txtSimcard 控件。
+        /// btQuery 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText txtSimcard;
+        protected global::System.Web.UI.WebControls.Button btQuery;
+        
+        /// <summary>
+        /// divPagging 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPagging;
+        
+        /// <summary>
+        /// tbodyBody 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl tbodyBody;
     }
 }

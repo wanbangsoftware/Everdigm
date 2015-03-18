@@ -73,7 +73,7 @@ namespace Wbs.Everdigm.Web.main
                     objectInfo.Rows[11].Cells[1].InnerText = (n == obj.Terminal ? "-" : obj.TB_Terminal.Sim);
                     objectInfo.Rows[11].Cells[3].InnerText =
                         (n == obj.Terminal ? "-" :
-                        (string.IsNullOrEmpty(obj.TB_Terminal.Satellite) ? "" : obj.TB_Terminal.Satellite));
+                        ((int?)null == obj.TB_Terminal.Satellite ? "" : obj.TB_Terminal.TB_Satellite.CardNo));
 
                     objectInfo.Rows[12].Cells[1].InnerText =
                         (byte?)null == obj.Signal ? "-" : obj.Signal.Value.ToString();

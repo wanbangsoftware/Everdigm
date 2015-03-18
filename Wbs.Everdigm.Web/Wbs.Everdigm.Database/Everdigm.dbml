@@ -318,6 +318,8 @@
   <Table Name="dbo.TB_Satellite" Member="TB_Satellite">
     <Type Name="TB_Satellite">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Bound" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="RegisterDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="CardNo" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
       <Association Name="TB_Satellite_TB_Terminal" Member="TB_Terminal" ThisKey="id" OtherKey="Satellite" Type="TB_Terminal" />
     </Type>
