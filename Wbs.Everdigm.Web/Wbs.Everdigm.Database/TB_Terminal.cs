@@ -27,6 +27,8 @@ namespace Wbs.Everdigm.Database
 
         private System.Nullable<byte> _Revision;
 
+        private System.Nullable<byte> _OnlineStyle;
+
         private System.Nullable<int> _Satellite;
 
         private System.Nullable<System.DateTime> _ProductionDate;
@@ -57,6 +59,8 @@ namespace Wbs.Everdigm.Database
         partial void OnHasBoundChanged();
         partial void OnRevisionChanging(System.Nullable<byte> value);
         partial void OnRevisionChanged();
+        partial void OnOnlineStyleChanging(System.Nullable<byte> value);
+        partial void OnOnlineStyleChanged();
         partial void OnSatelliteChanging(System.Nullable<int> value);
         partial void OnSatelliteChanged();
         partial void OnProductionDateChanging(System.Nullable<System.DateTime> value);
@@ -160,8 +164,29 @@ namespace Wbs.Everdigm.Database
             }
         }
 
-        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Satellite", DbType = "Int")]
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OnlineStyle", DbType = "TinyInt")]
         [global::System.Runtime.Serialization.DataMemberAttribute(Order = 5)]
+        public System.Nullable<byte> OnlineStyle
+        {
+            get
+            {
+                return this._OnlineStyle;
+            }
+            set
+            {
+                if ((this._OnlineStyle != value))
+                {
+                    this.OnOnlineStyleChanging(value);
+                    this.SendPropertyChanging();
+                    this._OnlineStyle = value;
+                    this.SendPropertyChanged("OnlineStyle");
+                    this.OnOnlineStyleChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Satellite", DbType = "Int")]
+        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 6)]
         public System.Nullable<int> Satellite
         {
             get
@@ -186,7 +211,7 @@ namespace Wbs.Everdigm.Database
         }
 
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ProductionDate", DbType = "DateTime")]
-        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 6)]
+        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 7)]
         public System.Nullable<System.DateTime> ProductionDate
         {
             get
@@ -207,7 +232,7 @@ namespace Wbs.Everdigm.Database
         }
 
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Firmware", DbType = "VarChar(7)")]
-        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 7)]
+        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 8)]
         public string Firmware
         {
             get
@@ -228,7 +253,7 @@ namespace Wbs.Everdigm.Database
         }
 
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Number", DbType = "Char(10)")]
-        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 8)]
+        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 9)]
         public string Number
         {
             get
@@ -249,7 +274,7 @@ namespace Wbs.Everdigm.Database
         }
 
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Type", DbType = "VarChar(10)")]
-        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 9)]
+        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 10)]
         public string Type
         {
             get
@@ -270,7 +295,7 @@ namespace Wbs.Everdigm.Database
         }
 
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Sim", DbType = "VarChar(11)")]
-        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 10)]
+        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 11)]
         public string Sim
         {
             get
@@ -291,7 +316,7 @@ namespace Wbs.Everdigm.Database
         }
 
         [global::System.Data.Linq.Mapping.AssociationAttribute(Name = "TB_Terminal_TB_Equipment", Storage = "_TB_Equipment", ThisKey = "id", OtherKey = "Terminal")]
-        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 11, EmitDefaultValue = false)]
+        [global::System.Runtime.Serialization.DataMemberAttribute(Order = 12, EmitDefaultValue = false)]
         public EntitySet<TB_Equipment> TB_Equipment
         {
             get
@@ -403,5 +428,4 @@ namespace Wbs.Everdigm.Database
             this.serializing = false;
         }
     }
-	
 }

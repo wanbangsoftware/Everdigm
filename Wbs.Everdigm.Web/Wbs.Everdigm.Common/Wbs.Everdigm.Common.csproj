@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command.cs" />
     <Compile Include="CommandStatus.cs" />
     <Compile Include="CommandUtility.cs" />
     <Compile Include="LinkType.cs" />

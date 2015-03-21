@@ -85,13 +85,14 @@ namespace Wbs.Everdigm.Database
     partial void InsertTB_Customer(TB_Customer instance);
     partial void UpdateTB_Customer(TB_Customer instance);
     partial void DeleteTB_Customer(TB_Customer instance);
-    partial void InsertTB_Terminal(TB_Terminal instance);
-    partial void UpdateTB_Terminal(TB_Terminal instance);
-    partial void DeleteTB_Terminal(TB_Terminal instance);
     partial void InsertTB_Satellite(TB_Satellite instance);
     partial void UpdateTB_Satellite(TB_Satellite instance);
     partial void DeleteTB_Satellite(TB_Satellite instance);
+    partial void InsertTB_Terminal(TB_Terminal instance);
+    partial void UpdateTB_Terminal(TB_Terminal instance);
+    partial void DeleteTB_Terminal(TB_Terminal instance);
     #endregion
+		
 		
 		public EverdigmDataContext(string connection) : 
 				base(connection, mappingSource)
@@ -269,19 +270,19 @@ namespace Wbs.Everdigm.Database
 			}
 		}
 		
-		public System.Data.Linq.Table<TB_Terminal> TB_Terminal
-		{
-			get
-			{
-				return this.GetTable<TB_Terminal>();
-			}
-		}
-		
 		public System.Data.Linq.Table<TB_Satellite> TB_Satellite
 		{
 			get
 			{
 				return this.GetTable<TB_Satellite>();
+			}
+		}
+		
+		public System.Data.Linq.Table<TB_Terminal> TB_Terminal
+		{
+			get
+			{
+				return this.GetTable<TB_Terminal>();
 			}
 		}
 	}

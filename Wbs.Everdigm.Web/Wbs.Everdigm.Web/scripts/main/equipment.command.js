@@ -30,6 +30,11 @@ $(document).ready(function () {
     queryCommandHistory();
 });
 
+function showAlertModal(title) {
+    $(".modal-body").html(title);
+    $("#alertModal").modal("show");
+}
+
 function initializeCommandList() {
     $("select").empty();
     var html = "<option value=\"\">Select command:</option>";
@@ -78,6 +83,8 @@ function sendCommand() {
                 if (data.status == 0) {
                     _lastCommandId = data.id;
                     prepareTimer();
+                } else {
+                    showAlertModal(data.desc);
                 }
             });
     }
@@ -91,9 +98,13 @@ function queryCommandHistory() {
     var start = $(inputs[0]).val();
     var end = $(inputs[1]).val();
     var cmd = $("#cmdInfo").val();
-    GetJsonData("../ajax/command.ashx", { "type": "query", "cmd": cmd, "data": id, "start": start, "end": end },
+    GetJsonData("../ajax/command.ashx", { "type": "history", "cmd": cmd, "data": id, "start": start, "end": end },
         function (data) {
-            showHistoryList(data);
+            if (data.hasOwnProperty("desc")) {
+                showAlertModal(data.desc);
+            } else {
+                showHistoryList(data);
+            }
         });
 }
 

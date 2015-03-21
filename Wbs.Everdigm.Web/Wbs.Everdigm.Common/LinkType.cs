@@ -6,7 +6,7 @@ using System.Web;
 /// <summary>
 /// 终端连接状态
 /// </summary>
-public enum LinkType
+public enum LinkType : byte
 {
     /// <summary>
     /// 主电源断之后的OFF

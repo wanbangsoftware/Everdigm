@@ -6,6 +6,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Configuration;
 
+using Wbs.Everdigm.Common;
+
 namespace Wbs.Everdigm.Web.main
 {
     public partial class equipment_command : BaseEquipmentPage
@@ -21,12 +23,11 @@ namespace Wbs.Everdigm.Web.main
         /// </summary>
         private void ShowCustomCommands()
         {
-            var cmds = ConfigurationManager.AppSettings["Custom_Commands"].Split(new char[] { ',' });
+            var commands = CommandUtility.GetCommand(false);
             var html = "";
-            foreach (var cmd in cmds)
+            foreach (var command in commands)
             {
-                var cmmds = cmd.Split(new char[] { '|' });
-                html += "<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"-1\" href=\"#" + cmmds[1] + "\">" + cmmds[0] + "</a></li>";
+                html += "<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"-1\" href=\"#" + command.Code + "\">" + command.Title + "</a></li>";
             }
             menuCommands.InnerHtml = html;
         }
