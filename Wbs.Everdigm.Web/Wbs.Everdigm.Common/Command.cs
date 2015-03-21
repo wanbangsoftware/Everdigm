@@ -16,13 +16,17 @@ namespace Wbs.Everdigm.Common
         /// </summary>
         public string Title { get; set; }
         /// <summary>
-        /// 命令的Code
+        /// 命令的标记
+        /// </summary>
+        public string Flag { get; set; }
+        /// <summary>
+        /// 命令的代码
         /// </summary>
         public string Code { get; set; }
         /// <summary>
-        /// 命令字
+        /// 附加参数
         /// </summary>
-        public string ID { get; set; }
+        public string Param { get; set; }
         /// <summary>
         /// 是否为安保状态的命令
         /// </summary>

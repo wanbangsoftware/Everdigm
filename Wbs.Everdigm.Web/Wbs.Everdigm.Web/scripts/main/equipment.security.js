@@ -1,15 +1,4 @@
-﻿// 计时器
-//var _timer = null;
-//// 获取服务器上命令发送状态的时间间隔
-//var _timerInterval = 5000;
-//// 一个命令发送之后最大尝试获取状态的次数30次，超过这个次数后显示发送结果为失败或超时等
-//var _timerMaxtimes = 30, _timerTimes = 0;
-//// 发送命令之后的命令的id，通过此id查询后续命令的发送状态
-//var _lastCommandId = 0, _lastCommandStatus = -1;
-//// 当前正在测试的命令
-//var currentTestingCommand = "";
-
-$(document).ready(function () {
+﻿$(document).ready(function () {
     $(".btn").click(function () {
         var index = $(".btn").index($(this));
         if (index == 0) {
@@ -43,7 +32,7 @@ function initializeCommandList() {
     $(".dropdown-menu a").each(function () {
         var text = $(this).text();
         var cmd = $(this).attr("href").replace(/#/, "");
-        html += "<option value=\"" + cmd + "\" data-icon=\"" + getCommandIcon (cmd)+ "\">" + text + "</option>";
+        html += "<option value=\"" + cmd + "\">" + text + "</option>";
     });
     $("select").html(html);
 }
@@ -80,7 +69,7 @@ function sendCommand() {
         showAlertModal("Please select a command first.");
         return;
     } else {
-        GetJsonData("../ajax/command.ashx", { "type": "equipment", "cmd": cmd, "data": id },
+        GetJsonData("../ajax/command.ashx", { "type": "security", "cmd": cmd, "data": id },
             function (data) {
                 if (data.status == 0) {
                     currentTestingCommand = cmd;
@@ -121,15 +110,13 @@ function getCommandStatus() {
            });
 }
 
-function appendHistory() { }
-
 function queryCommandHistory() {
     var id = $("#hidKey").val();
     var inputs = $(".input-daterange .input-md");
     var start = $(inputs[0]).val();
     var end = $(inputs[1]).val();
     var cmd = $("select").val();
-    GetJsonData("../ajax/command.ashx", { "type": "history", "cmd": cmd, "data": id, "start": start, "end": end },
+    GetJsonData("../ajax/command.ashx", { "type": "sechistory", "cmd": cmd, "data": id, "start": start, "end": end },
         function (data) {
             if (data.hasOwnProperty("desc")) {
                 showAlertModal(data.desc);
@@ -168,7 +155,7 @@ function showHistoryList(list) {
         html += hisItem.replace(/%time%/, time.pattern(_datetimepatternFMT))
             .replace(/%cmd%/, obj.u_sms_command).replace(/%class%/, stat.classs).replace(/%text%/, stat.text);
     }
-    if (isStringNull(html)) { html = "No records.";}
+    if (isStringNull(html)) { html = "No records."; }
     $(".bs-callout:eq(1)").html(html);
 }
 

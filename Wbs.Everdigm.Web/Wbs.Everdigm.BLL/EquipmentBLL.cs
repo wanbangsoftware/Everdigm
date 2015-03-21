@@ -34,7 +34,7 @@ namespace Wbs.Everdigm.BLL
                 LastActionTime = (DateTime?)null,
                 Latitude = 0.0,
                 StoreTimes = 0,
-                LockStatus = "",
+                LockStatus = "00",
                 Longitude = 0.0,
                 Model = (int?)null,
                 Number = "",

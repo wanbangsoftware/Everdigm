@@ -1,14 +1,14 @@
 ﻿
-var currentTestingCommand = "";
-var isInTestProgress = false;
-// 计时器
-var _timer = null;
-// 获取服务器上命令发送状态的时间间隔
-var _timerInterval = 1000;
-// 一个命令发送之后最大尝试获取状态的次数30次，超过这个次数后显示发送结果为失败或超时等
-var _timerMaxtimes = 150, _timerTimes = 0;
-// 发送命令之后的命令的id，通过此id查询后续命令的发送状态
-var _lastCommandId = 0, _lastCommandStatus = -1;
+//var currentTestingCommand = "";
+//var isInTestProgress = false;
+//// 计时器
+//var _timer = null;
+//// 获取服务器上命令发送状态的时间间隔
+//var _timerInterval = 1000;
+//// 一个命令发送之后最大尝试获取状态的次数30次，超过这个次数后显示发送结果为失败或超时等
+//var _timerMaxtimes = 150, _timerTimes = 0;
+//// 发送命令之后的命令的id，通过此id查询后续命令的发送状态
+//var _lastCommandId = 0, _lastCommandStatus = -1;
 
 $(document).ready(function () {
     $(".alert").alert();
@@ -16,20 +16,13 @@ $(document).ready(function () {
     $("#analyseModal").on("hidden.bs.modal", function () {
         $("#bt_" + currentTestingCommand).button("reset");
         $("[id^=\"bt_\"]").prop("disabled", false);
-    })
-        //.on("show.bs.modal", function (event) {
-        //var modal = $(this)
-        //modal.find(".modal-title").text("Testing progress of: " + currentTestingCommand + ", please wait...");
-    //})
-    ;
+    });
 
     $("[id^=\"bt_\"]").on("click", function () {
         $("[id^=\"bt_\"]").prop("disabled", true);
         var $btn = $(this).button("loading");
         var cmd = $(this).prop("id").replace("bt_", "");
-        // business logic...
-        //$btn.button('reset');
-        //$(".modal-body").html("test ok<br />now bye bye.");
+
         $("#analyseModal").modal("show");
         if (!isInTestProgress) {
             currentTestingCommand = cmd;
@@ -56,7 +49,7 @@ function sendTerminalCommand(cmd) {
                     // 标记已进入测试环节，再点击其他按钮不会再发命令
                     isInTestProgress = true;
                     _lastCommandId = parseInt(data.desc);
-                    prepareTimer();
+                    prepareTimer(timerOnTime);
                     data.desc = "Command will be sent by server.";
                     showWarningMessage(data);
                 } else {
@@ -95,39 +88,22 @@ function calculateTimeused() {
         return;
     }
 }
-function progressComplete() {
-    isInTestProgress = false;
-    _timer.pause();
-    _timerTimes = 0;
-    _lastCommandStatus = -1;
-}
-// 启动计时器
-function prepareTimer() {
-    if (null == _timer) {
-        _timer = $.timer(_timerInterval, function () {
-            _timerTimes++;
-            if (_timerTimes > _timerMaxtimes) {
-                // 大于最大次数之后，停止timer并设置命令发送状态为未发送命令状态以便再发送其他命令
-                progressComplete();
-                //isInTestProgress = false;
-                //_timer.pause();
-                //_timerTimes = 0;
-            } else {
-                // 循环读取服务器上改命令发送记录的状态并显示
-                if (_timerTimes % 5 == 0) {
-                    // 每隔5秒查询一次命令状态
-                    getCommandStatus();
-                }
-            }
-            calculateTimeused();
-        });
-    }
-    else {
-        _timer.resume();
-    }
-}
 
-var cmdStatus = "%time% <code>%code%</code> %desc%<br />";
+function timerOnTime() {
+    _timerTimes++;
+    if (_timerTimes > _timerMaxtimes) {
+        showWarningLine(new Date().pattern("HH:mm:ss"), currentTestingCommand, "Timedout, maybe you should try again.");
+        // 大于最大次数之后，停止timer并设置命令发送状态为未发送命令状态以便再发送其他命令
+        progressComplete();
+    } else {
+        // 循环读取服务器上改命令发送记录的状态并显示
+        if (_timerTimes % 5 == 0) {
+            // 每隔5秒查询一次命令状态
+            getCommandStatus();
+        }
+    }
+    calculateTimeused();
+}
 
 function showWarningMessage(obj) {
     var time = convertDateTimeToJavascriptDate(obj.date).pattern("HH:mm:ss");

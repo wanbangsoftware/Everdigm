@@ -39,9 +39,9 @@ namespace Wbs.Everdigm.Web.ajax
             var ret = "";
             switch (type)
             {
-                case "command": 
+                case "equipment": 
                     // 发送命令并返回命令发送记录的id以供后续查询状态
-                    ret = HandleCommandRequest();
+                    ret = HandleEquipmentCommandRequest();
                     break;
                 case "terminal":
                     // 直接通过终端的信息发送命令
@@ -49,7 +49,14 @@ namespace Wbs.Everdigm.Web.ajax
                     break;
                 case "history": 
                     // 查询命令历史记录
-                    ret = HandleCommandHistoryRequest();
+                    ret = HandleCommandHistoryRequest(false);
+                    break;
+                case "security":
+                    ret = HandleSecurityCommandRequest();
+                    break;
+                case "sechistory":
+                    // 查询保安命令的历史记录
+                    ret = HandleCommandHistoryRequest(true);
                     break;
                 case "query":
                     // 查询命令的发送状态
@@ -141,10 +148,84 @@ namespace Wbs.Everdigm.Web.ajax
             return ret;
         }
         /// <summary>
-        /// 处理发送命令的请求
+        /// 判断当前保安状态是否可以发送指定的保安命令
+        /// </summary>
+        /// <param name="current"></param>
+        /// <param name="tobe"></param>
+        /// <returns></returns>
+        private string HandleSecurityStatus(string current, string tobe)
+        {
+            var ret = "";
+            switch (current)
+            {
+                case "00": break;// 初始状态可以发送任何保安命令
+                case "10":
+                    // 保安命令处于已禁用时只能发送00，其余的都不能发送
+                    if (!tobe.Equals("00") && !tobe.Equals("10"))
+                    {
+                        ret = ResponseMessage(-1, "Cannot send this security command in Disabled status.");
+                    }
+                    break;
+                case "20":
+                    // 代理商保安命令不能发送禁用命令
+                    if (tobe.Equals("10"))
+                    {
+                        ret = ResponseMessage(-1, "Cannot disable security function in Custom Lock status.");
+                    }
+                    break;
+                case "40":
+                    if (tobe.Equals("10"))
+                    {
+                        ret = ResponseMessage(-1, "Cannot disable security function in Full Lock status.");
+                    }
+                    else if (tobe.Equals("20"))
+                    {
+                        ret = ResponseMessage(-1, "Cannot lower the security level in Full Lock status.");
+                    }
+                    break;
+            }
+            return ret;
+        }
+        /// <summary>
+        /// 处理发送保安命令请求
         /// </summary>
         /// <returns></returns>
-        private string HandleCommandRequest()
+        private string HandleSecurityCommandRequest()
+        {
+            var ret = "[]";
+            try
+            {
+                var id = ParseInt(Utility.Decrypt(data));
+                var obj = EquipmentInstance.Find(f => f.id == id);
+                if (null != obj)
+                {
+                    if ((int?)null != obj.Terminal)
+                    {
+                        ret = "";
+                        // 查看是否发送的保安命令
+                        var command = CommandUtility.GetCommand(cmd);
+                        if (command.Security && command.Code.Equals("6007"))
+                        {
+                            ret = HandleSecurityStatus(obj.LockStatus, command.Param);
+                        }
+                        if (string.IsNullOrEmpty(ret))
+                        {
+                            // 查看当前设备的链接状态然后确定命令的发送方式
+                            ret = HandleTerminalCommandRequest(obj.TB_Terminal);
+                        }
+                    }
+                    else { ret = ResponseMessage(-1, "No terminal bond with this equipment."); }
+                }
+                else { ret = ResponseMessage(-1, "Equipment is not exist."); }
+            }
+            catch (Exception e) { ret = ResponseMessage(-1, "Handle Security command error:" + e.Message); }
+            return ret;
+        }
+        /// <summary>
+        /// 处理发送到设备的命令请求
+        /// </summary>
+        /// <returns></returns>
+        private string HandleEquipmentCommandRequest()
         {
             var ret = "[]";
             try
@@ -158,7 +239,7 @@ namespace Wbs.Everdigm.Web.ajax
                         // 查看当前设备的链接状态然后确定命令的发送方式
                         ret = HandleTerminalCommandRequest(obj.TB_Terminal);
                     }
-                    else { ret = ResponseMessage(-1, "No terminal bond with equipment."); }
+                    else { ret = ResponseMessage(-1, "No terminal bond with this equipment."); }
                 }
                 else { ret = ResponseMessage(-1, "Equipment is not exist."); }
             }
@@ -169,8 +250,9 @@ namespace Wbs.Everdigm.Web.ajax
         /// <summary>
         /// 查询命令历史记录
         /// </summary>
+        /// <param name="security">是否查询保安命令</param>
         /// <returns></returns>
-        private string HandleCommandHistoryRequest()
+        private string HandleCommandHistoryRequest(bool security)
         {
             var ret = "[]";
             try
@@ -185,17 +267,53 @@ namespace Wbs.Everdigm.Web.ajax
                         var start = DateTime.Parse(GetParamenter("start") + " 00:00:00");
                         var end = DateTime.Parse(GetParamenter("end") + " 23:59:59");
                         var sim = obj.TB_Terminal.Sim;
+                        if (sim[0] == '8' && sim[1] == '9' && sim.Length < 11) {
+                            sim += "000";
+                        }
+                        // 查询的命令
+                        //string _command = "";
+                        Command command = null;
+                        if (!string.IsNullOrEmpty(cmd)) {
+                            command = CommandUtility.GetCommand(cmd);
+                            //_command = command.Code;
+                        }
                         var list = CommandInstance.FindList<CT_00000>(f => f.u_sms_mobile_no.Equals(sim) &&
-                            f.u_sms_schedule_time >= start && f.u_sms_schedule_time <= end &&
-                            (string.IsNullOrEmpty(cmd) ? f.u_sms_command.IndexOf("0x") >= 0 : f.u_sms_command.Equals("")), "u_sms_schedule_time", true);
+                            f.u_sms_schedule_time >= start && f.u_sms_schedule_time <= end, "u_sms_schedule_time", true);
+                        if (security)
+                        {
+                            list = list.Where<CT_00000>(w => w.u_sms_command == "0x6007" || w.u_sms_command == "0x4000");
+                        }
+                        else
+                        {
+                            list = list.Where(w => w.u_sms_command != "0x6007" && w.u_sms_command != "0x4000");
+                        }
+                        //&&
+                        //    (string.IsNullOrEmpty(_command) ? f.u_sms_command.IndexOf("0x") >= 0 : f.u_sms_command.IndexOf(_command) >= 0),
+                        //    "u_sms_schedule_time", true);
+                        if (null != command)
+                        {
+                            list = list.Where<CT_00000>(w => w.u_sms_command.IndexOf(command.Code) >= 0);
+                            if (security&&command.Code.Equals("6007"))
+                            {
+                                list = list.Where(w => w.u_sms_content.Substring(w.u_sms_content.Length - 2) == command.Param);
+                            }
+                        }
+                        if (list.Count() > 0) { 
+                            // 将command_id替换
+                            List<Command> commands = CommandUtility.GetCommand(false);
+                            foreach (var record in list) {
+                                Command _cmd = CommandUtility.GetCommand(record.u_sms_command.Replace("0x", ""));
+                                record.u_sms_command = null == _cmd ? "" : _cmd.Flag;
+                            }
+                        }
                         ret = JsonConverter.ToJson(list);
                     }
-                    else { ret = ResponseMessage(-1, "No terminal bond with equipment."); }
+                    else { ret = ResponseMessage(-1, "No terminal bond with this equipment."); }
                 }
                 else { ret = ResponseMessage(-1, "Equipment is not exist."); }
             }
             catch(Exception e)
-            { ret = ResponseMessage(-1, "Handle query error:" + e.Message); }
+            { ret = ResponseMessage(-1, "Handle History request error:" + e.Message); }
             return ret;
         }
     }

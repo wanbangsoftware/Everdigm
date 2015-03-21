@@ -8,6 +8,9 @@
         <li role="presentation">
             <a href="equipment_command.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Command</a>
         </li>
+        <li role="presentation">
+            <a href="equipment_security.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Security</a>
+        </li>
         <li role="presentation" class="active">
             <a href="#" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Alarm<span class="caret"></span></a>
         </li>

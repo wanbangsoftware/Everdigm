@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main/EquipmentInfo.Master" AutoEventWireup="true" CodeBehind="equipment_command.aspx.cs" Inherits="Wbs.Everdigm.Web.main.equipment_command" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main/EquipmentInfo.Master" AutoEventWireup="true" CodeBehind="equipment_security.aspx.cs" Inherits="Wbs.Everdigm.Web.main.equipment_security" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="header" runat="server">
     <style type="text/css">
@@ -12,16 +12,16 @@
         }
     </style>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="TitleContentPlaceHolder" runat="server">Equipment: Command</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="TitleContentPlaceHolder" runat="server">Equipment: Security</asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="NavigatorContentPlaceHolder" runat="server">
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist" id="functionBar">
-        <li role="presentation" class="active">
-            <a href="#" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Command<span class="caret"></span>
+        <li role="presentation">
+            <a href="equipment_command.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Command
             </a>
         </li>
-        <li role="presentation">
-            <a href="equipment_security.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Security</a>
+        <li role="presentation" class="active">
+            <a href="#" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Security<span class="caret"></span></a>
         </li>
         <li role="presentation">
             <a href="equipment_alarm.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Alarm</a>
@@ -47,7 +47,7 @@
     <!--Send Command-->
     <div class="panel panel-default" style="margin-top: 2px; margin-bottom: 2px;">
         <div class="panel-heading">
-            <span>Send command</span>
+            <span>Security command</span>
             <ul class="nav nav-tabs" role="tablist" id="commandBar" style="float: right; margin-top: -11px;">
                 <li role="presentation" class="dropdown active">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Select command:</span><span class="caret"></span></a>
@@ -57,27 +57,21 @@
                     <input type="hidden" id="cmdInfo" value="" />
                 </li>
                 <li role="presentation" style="margin-top: 4px;">
-                    <button class="btn btn-info" type="button"><span class="glyphicon glyphicon-repeat"></span> Send</button>
+                    <button class="btn btn-info" type="button"><span class="glyphicon glyphicon-repeat"></span>Send</button>
                 </li>
             </ul>
         </div>
         <div class="panel-body">
             <div class="bs-callout bs-callout-warning" style="margin-top: 2px !important; font-size: 12px !important; margin-bottom: 0px !important; height: 150px; overflow: auto;">
-                <!--11:22:04 <code>position data</code> Command is waiting in send queue.<br />
-                11:22:05 <code>0x1000</code> Command has been send to target.<br />
-                11:22:09 <code>0x1000</code> Target received the command.<br />
-                11:22:20 <code>0x1000</code> Command responsed successfully, you can <code>Analyse</code> this data by click <code>here</code>.<br />
-                11:22:38 <code>0xDD00</code> Command has been send to target.<br />
-                11:22:40 <code>0xDD00</code> Target is not online.<br />-->
             </div>
         </div>
     </div>
     <!--Command History-->
     <div class="panel panel-default" style="margin-top: 2px;">
         <div class="panel-heading">
-            <span>Command History</span>
+            <span>Security Command History</span>
             <div class="input-group" style="float: right; margin-top: -7px;">
-                <select style="float: left; width: 250px;" class="form-control">
+                <select style="float: left; width: 200px;" class="form-control">
                     <option>Select command:</option>
                 </select>
                 <div class="input-daterange input-group" id="datepicker" style="float: left; margin-left: 2px;">
@@ -113,5 +107,5 @@
 <asp:Content ID="Content5" ContentPlaceHolderID="FooterContentPlaceHolder" runat="server">
     <script type="text/javascript" src="../js/jquery.timer.js"></script>
     <script type="text/javascript" src="../scripts/main/command.base.js"></script>
-    <script type="text/javascript" src="../scripts/main/equipment.command.js"></script>
+    <script type="text/javascript" src="../scripts/main/equipment.security.js"></script>
 </asp:Content>

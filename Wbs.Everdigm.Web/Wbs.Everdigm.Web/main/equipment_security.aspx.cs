@@ -4,26 +4,26 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Configuration;
 
 using Wbs.Everdigm.Common;
 
 namespace Wbs.Everdigm.Web.main
 {
-    public partial class equipment_command : BaseEquipmentPage
+    public partial class equipment_security : BaseEquipmentPage
     {
         protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
             if (!IsPostBack)
-            { ShowCustomCommands(); }
+            { ShowSecurityCommands(); }
         }
+
         /// <summary>
         /// 显示普通可发送的命令列表
         /// </summary>
-        private void ShowCustomCommands()
+        private void ShowSecurityCommands()
         {
-            var commands = CommandUtility.GetCommand(false);
+            var commands = CommandUtility.GetCommand(true);
             var html = "";
             foreach (var command in commands)
             {

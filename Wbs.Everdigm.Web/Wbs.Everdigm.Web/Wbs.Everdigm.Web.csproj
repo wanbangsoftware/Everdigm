@@ -81,6 +81,7 @@
   <ItemGroup>
     <Content Include="bootstrap3\bootstrap-datepicker-1.3.0\css\datepicker3.css" />
     <Content Include="bootstrap3\bootstrap-datepicker-1.3.0\js\bootstrap-datepicker.js" />
+    <Content Include="bootstrap3\css\bootstrap-select.min.css" />
     <Content Include="bootstrap3\css\bootstrap-theme.css.map" />
     <Content Include="bootstrap3\css\bootstrap.css.map" />
     <Content Include="bootstrap3\font-awesome-4.3.0\css\font-awesome.css" />
@@ -89,6 +90,8 @@
     <Content Include="bootstrap3\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="bootstrap3\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="bootstrap3\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="bootstrap3\js\bootstrap-select.js" />
+    <Content Include="bootstrap3\js\bootstrap-select.min.js" />
     <Content Include="bootstrap3\models\js\bootstrap-alert.js" />
     <Content Include="bootstrap3\models\js\bootstrap-typeahead.js" />
     <Content Include="css\body_equipment.css" />
@@ -213,6 +216,7 @@
     <Content Include="main\equipment_command.aspx" />
     <Content Include="main\equipment_delivery.aspx" />
     <Content Include="main\equipment_position.aspx" />
+    <Content Include="main\equipment_security.aspx" />
     <Content Include="main\equipment_storage.aspx" />
     <Content Include="main\equipment_today_works.aspx" />
     <Content Include="main\equipment_work.aspx" />
@@ -227,6 +231,7 @@
     <Content Include="mobile\devices.aspx" />
     <Content Include="mobile\css\global-min.css" />
     <Content Include="mobile\css\home.css" />
+    <Content Include="scripts\main\command.base.js" />
     <Content Include="scripts\main\customers.js" />
     <Content Include="scripts\main\equipment.alarm.js" />
     <Content Include="scripts\main\equipment.base.js" />
@@ -234,6 +239,7 @@
     <Content Include="scripts\main\equipment.delivery.js" />
     <Content Include="scripts\main\equipment.info.js" />
     <Content Include="scripts\main\equipment.position.js" />
+    <Content Include="scripts\main\equipment.security.js" />
     <Content Include="scripts\main\equipment.storage.js" />
     <Content Include="scripts\main\equipment.terminal.base.js" />
     <Content Include="scripts\main\equipment.work.js" />
@@ -694,6 +700,13 @@
     </Compile>
     <Compile Include="main\equipment_position.aspx.designer.cs">
       <DependentUpon>equipment_position.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="main\equipment_security.aspx.cs">
+      <DependentUpon>equipment_security.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\equipment_security.aspx.designer.cs">
+      <DependentUpon>equipment_security.aspx</DependentUpon>
     </Compile>
     <Compile Include="main\equipment_status.aspx.cs">
       <DependentUpon>equipment_status.aspx</DependentUpon>

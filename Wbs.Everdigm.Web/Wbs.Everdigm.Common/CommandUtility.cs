@@ -35,8 +35,9 @@ namespace Wbs.Everdigm.Common
                     commands.Add(new Command()
                     {
                         Title = c[0],
-                        Code = c[1],
-                        ID = c[2],
+                        Flag = c[1],
+                        Code = c[2],
+                        Param = "",
                         Security = false,
                         Content = ConfigurationManager.AppSettings["0x" + c[2]]
                     });
@@ -44,14 +45,16 @@ namespace Wbs.Everdigm.Common
                 // 初始化保安命令列表
                 cmds = SECURITY_CMD.Split(new char[] { ',' });
                 var sec = "6007";
-                foreach (var cmd in cmds) {
+                foreach (var cmd in cmds)
+                {
                     var c = cmd.Split(new char[] { '|' });
                     commands.Add(new Command()
                     {
                         Title = c[0],
-                        Code = c[1],
-                        ID = sec,
+                        Flag = c[1],
+                        Code = sec,
                         Security = true,
+                        Param = c[2],
                         Content = ConfigurationManager.AppSettings["0x" + sec]
                     });
                 }
@@ -59,8 +62,9 @@ namespace Wbs.Everdigm.Common
                 commands.Add(new Command()
                 {
                     Title = "Terminal: Reset",
-                    Code = "reset",
-                    ID = "4000",
+                    Flag = "reset",
+                    Code = "4000",
+                    Param = "",
                     Security = true,
                     Content = ConfigurationManager.AppSettings["0x4000"]
                 });
@@ -75,14 +79,22 @@ namespace Wbs.Everdigm.Common
             return commands.FindAll(f => f.Security == security);
         }
         /// <summary>
+        /// 获取服务器上可以发送的所有命令列表
+        /// </summary>
+        /// <returns></returns>
+        public static List<Command> GetCommand() {
+            InitializeCommands();
+            return commands;
+        }
+        /// <summary>
         /// 根据指定的code获取command详细消息
         /// </summary>
-        /// <param name="code"></param>
+        /// <param name="flagOrCode">通过命令的区别码或命令的代码查询</param>
         /// <returns></returns>
-        private static Command GetCommand(string code)
+        public static Command GetCommand(string flagOrCode)
         {
             InitializeCommands();
-            return commands.FirstOrDefault<Command>(f => f.Code.Equals(code));
+            return commands.FirstOrDefault<Command>(f => f.Flag.Equals(flagOrCode) || f.Code.Equals(flagOrCode));
         }
         /// <summary>
         /// 发送命令
@@ -94,6 +106,13 @@ namespace Wbs.Everdigm.Common
         public static int SendCommand(string Sim, string code, bool sms) {
             Command cmd = GetCommand(code);
             string content = cmd.Content;
+            if (cmd.Code.Equals("6007")) { 
+                // 保安命令
+                // DX 的保安命令需要增加一个日期
+                content += DateTime.Now.ToString("yyMMddHHmm") + cmd.Param;
+                // DX 的保安命令长度不一样
+                content = "1700" + content.Substring(4);
+            }
             string sim = (Sim[0] == '8' && Sim[1] == '9' && Sim.Length < 11) ? (Sim + "000") : Sim;
             content = content.Replace(SIMNO, sim);
             if (sms) {
