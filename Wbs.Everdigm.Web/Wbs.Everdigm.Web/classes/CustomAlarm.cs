@@ -25,8 +25,8 @@ namespace Wbs.Everdigm.Web
         /// 实例化一个自定义报警信息
         /// </summary>
         /// <param name="obj"></param>
-        public CustomAlarm(TB_Alarm obj) {
-            this.Time = obj.TB_Position.ReceiveTime.Value;
+        public CustomAlarm(TB_Data_Alarm obj) {
+            this.Time = obj.TB_Data_Position.ReceiveTime.Value;
             this.Alarm = _0x2000.GetAlarm(obj.Code);
         }
     }

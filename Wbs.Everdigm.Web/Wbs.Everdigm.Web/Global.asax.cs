@@ -22,7 +22,7 @@ namespace Wbs.Everdigm.Web
             }
 
             // 开启系统服务接受终端发送的数据
-            //StaticService.StartService();
+            StaticService.StartService();
         }
 
         protected void Session_Start(object sender, EventArgs e)

@@ -38,9 +38,17 @@ namespace Wbs.Sockets
         /// </summary>
         private BufferManager bm_bufferManager;
         /// <summary>
-        /// 服务器监听 Socket。
+        /// 服务器监听的TCP Socket。
         /// </summary>
-        private Socket listenSocket;
+        private Socket tcpSocket;
+        /// <summary>
+        /// 服务器监听的UDP Server
+        /// </summary>
+        private UdpClient udpServer = null;
+        /// <summary>
+        /// 标记是否也一同启动UDP服务
+        /// </summary>
+        private bool useUdp = false;
         /// <summary>
         /// 异步接受缓冲池
         /// </summary>
@@ -79,6 +87,14 @@ namespace Wbs.Sockets
         {
             get { return dwLocalPort; }
             set { dwLocalPort = value; }
+        }
+        /// <summary>
+        /// 设置是否一同启动UDP服务
+        /// </summary>
+        public bool StartUDP
+        {
+            get { return useUdp; }
+            set { useUdp = value; }
         }
         /// <summary>
         /// 设置服务允许的最大链接客户端数量
@@ -138,15 +154,57 @@ namespace Wbs.Sockets
         /// <param name="localEndPoint"></param>
         private void Start(IPEndPoint localEndPoint)
         {
-            listenSocket = new Socket(localEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            listenSocket.Bind(localEndPoint);
+            tcpSocket = new Socket(localEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            tcpSocket.Bind(localEndPoint);
             // 监听服务器侧端口，允许 100 个等待队列。
-            listenSocket.Listen(100);
+            tcpSocket.Listen(100);
 
             //history(Now() + " server has been start and listen on port: " + dwLocalPort.ToString());
 
             // 投递 Accept 信息。
             StartAccept(null);
+
+            // 是否一同启动UDP服务
+            if (useUdp) {
+                udpServer = new UdpClient(localEndPoint);
+                UDPState state = new UDPState();
+                state.End = localEndPoint;
+                state.Client = udpServer;
+                udpServer.BeginReceive(new AsyncCallback(UDP_ReceiveCallback), state);
+            }
+        }
+        /// <summary>
+        /// UDP状态
+        /// </summary>
+        private class UDPState {
+            public IPEndPoint End { get; set; }
+            public UdpClient Client { get; set; }
+        }
+        /// <summary>
+        /// UDP异步接受的回调
+        /// </summary>
+        /// <param name="args"></param>
+        private void UDP_ReceiveCallback(IAsyncResult args)
+        {
+            if (args.IsCompleted)
+            {
+                if (null != OnReceivedData)
+                {
+                    UDPState state = args.AsyncState as UDPState;
+                    IPEndPoint end = state.End;
+                    var aude = new AsyncUserDataEvent();
+                    aude.Data = _bufferPool.Get();
+                    aude.Data.Buffer = state.Client.EndReceive(args, ref end);
+                    aude.Data.DataType = AsyncUserDataType.ReceivedData;
+                    aude.Data.IP = end.Address.ToString();
+                    aude.Data.PackageType = AsyncDataPackageType.UDP;
+                    aude.Data.Port = end.Port;
+                    aude.Data.ReceiveTime = DateTime.Now;
+                    OnReceivedData(this, aude);
+                    // 重新投递接受请求？
+                    udpServer.BeginReceive(new AsyncCallback(UDP_ReceiveCallback), state);
+                }
+            }
         }
         /// <summary>
         /// 投递 Accept 操作以便允许客户端连接进来。
@@ -168,7 +226,7 @@ namespace Wbs.Sockets
             // 当达到最大连接数量时，新进入的连接需要在队列中等待。
             m_maxNumberAcceptedClients.WaitOne();
             // 在监听端口上开始异步 Accept 操作。
-            bool willRaiseEvent = listenSocket.AcceptAsync(acceptEventArg);
+            bool willRaiseEvent = tcpSocket.AcceptAsync(acceptEventArg);
             // 当有客户端链接进来时执行客户端节点连接操作并绑定客户端节点信息。
             if (!willRaiseEvent)
             {
@@ -323,7 +381,37 @@ namespace Wbs.Sockets
             if (!_bufferPool.Push(buffer))
                 buffer.Dispose();
         }
-
+        /// <summary>
+        /// 发送数据到客户端
+        /// </summary>
+        /// <param name="socket"></param>
+        /// <param name="buffer"></param>
+        /// <returns>0==链接不存在1=发送成功2=网络处理错误</returns>
+        public byte Send(int socket, byte[] buffer)
+        {
+            byte ret = 0;
+            lock (_clients)
+            {
+                foreach (var client in _clients)
+                {
+                    if (client.SocketHandle == socket)
+                    {
+                        try
+                        {
+                            var args = saea_readWritePool.Pop();
+                            args.UserToken = client;
+                            args.SetBuffer(buffer, 0, buffer.Length);
+                            client.Socket.SendAsync(args);
+                            ret = 1;
+                        }
+                        catch
+                        { ret = 2; }
+                        break;
+                    }
+                }
+            }
+            return ret;
+        }
         /// <summary>
         /// 关闭一个连接。
         /// </summary>
@@ -378,9 +466,13 @@ namespace Wbs.Sockets
         public void Stop()
         {
             // 关闭监听端口以便阻止新的客户端连接进来。
-            if (null != listenSocket)
+            if (null != tcpSocket)
             {
-                listenSocket.Close();
+                tcpSocket.Close();
+            }
+            // 关闭UDP
+            if (null != udpServer) {
+                udpServer.Close();
             }
             // 关闭所有链接
             lock(_clients)

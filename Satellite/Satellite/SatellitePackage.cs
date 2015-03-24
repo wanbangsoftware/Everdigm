@@ -994,6 +994,9 @@ namespace Satellite
             PW = Data[index];
             index++;
 
+            IN = Data[index];
+            index++;
+
             PW1 = Data[index];
             index++;
 
@@ -1017,7 +1020,7 @@ namespace Satellite
             var ret = "";
             var str = CustomConvert.IntToDigit(IN, CustomConvert.BIN, 8);
             ret += "入站许可：" + (str[0] == '1' ? "可以" : "不可以");
-            ret += "抑制状态：" + (str[1] == '1' ? "抑制" : "非抑制");
+            ret += "\t抑制状态：" + (str[1] == '1' ? "抑制" : "非抑制");
             return ret;
         }
         /// <summary>

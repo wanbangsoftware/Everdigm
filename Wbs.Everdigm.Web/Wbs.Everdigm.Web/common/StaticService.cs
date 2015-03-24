@@ -24,6 +24,7 @@ namespace Wbs.Everdigm.Web
             if (null == _server)
             {
                 _server = new SocketServer(port);
+                _server.StartUDP = true;
                 _server.Start();
             }
         }

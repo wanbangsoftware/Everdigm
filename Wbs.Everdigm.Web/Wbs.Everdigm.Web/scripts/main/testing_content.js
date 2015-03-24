@@ -50,7 +50,7 @@ function sendTerminalCommand(cmd) {
                     isInTestProgress = true;
                     _lastCommandId = parseInt(data.desc);
                     prepareTimer(timerOnTime);
-                    data.desc = "Command will be sent by server.";
+                    data.desc = "will be sent by server.";
                     showWarningMessage(data);
                 } else {
                     showWarningMessage(data);

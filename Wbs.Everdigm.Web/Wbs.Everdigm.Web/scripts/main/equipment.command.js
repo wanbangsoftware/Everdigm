@@ -88,7 +88,7 @@ function sendCommand() {
                     //var btn = $(".btn:eq(0)");
                     setButtonsSendingState(true);
                     prepareTimer(timerOnTime);
-                    data.desc = "Command will be sent by server.";
+                    data.desc = "will be sent by server.";
                     showWarningMessage(data);
                 } else {
                     //showAlertModal(data.desc);

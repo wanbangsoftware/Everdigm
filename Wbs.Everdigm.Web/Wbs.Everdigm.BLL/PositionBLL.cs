@@ -11,18 +11,18 @@ namespace Wbs.Everdigm.BLL
     /// <summary>
     /// 位置信息业务处理逻辑
     /// </summary>
-    public class PositionBLL : BaseService<TB_Position>
+    public class PositionBLL : BaseService<TB_Data_Position>
     {
         public PositionBLL()
-            : base(new BaseRepository<TB_Position>())
+            : base(new BaseRepository<TB_Data_Position>())
         { }
         /// <summary>
         /// 生成一个新的位置信息实体
         /// </summary>
         /// <returns></returns>
-        public override TB_Position GetObject()
+        public override TB_Data_Position GetObject()
         {
-            return new TB_Position()
+            return new TB_Data_Position()
             {
                 id = 0,
                 Address = "",
@@ -42,6 +42,7 @@ namespace Wbs.Everdigm.BLL
                 StationCode = "0000",
                 StoreTimes = 0,
                 Type = "Unknown",
+                Terminal = "",
                 Updated = 0
             };
         }
@@ -50,7 +51,7 @@ namespace Wbs.Everdigm.BLL
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public override string ToString(TB_Position entity)
+        public override string ToString(TB_Data_Position entity)
         {
             return string.Format("{0}", entity.Address);
         }

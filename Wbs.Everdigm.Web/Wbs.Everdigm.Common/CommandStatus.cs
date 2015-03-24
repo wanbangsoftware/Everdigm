@@ -51,5 +51,9 @@ public enum CommandStatus : byte
     /// <summary>
     /// 已有保安状态下禁止发送的保安命令，如在本社保安命令下再发送代理商保安命令
     /// </summary>
-    SecurityError
+    SecurityError,
+    /// <summary>
+    /// 发送失败：终端的TCP链接已丢失
+    /// </summary>
+    LinkLosed
 }

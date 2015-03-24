@@ -65,18 +65,6 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Wbs.Protocol">
-      <HintPath>including\Wbs.Protocol.dll</HintPath>
-    </Reference>
-    <Reference Include="Wbs.Protocol.Items">
-      <HintPath>including\Wbs.Protocol.Items.dll</HintPath>
-    </Reference>
-    <Reference Include="Wbs.Protocol.Tx300">
-      <HintPath>including\Wbs.Protocol.Tx300.dll</HintPath>
-    </Reference>
-    <Reference Include="Wbs.Protocol.WbsDateTime">
-      <HintPath>including\Wbs.Protocol.WbsDateTime.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootstrap3\bootstrap-datepicker-1.3.0\css\datepicker3.css" />
@@ -517,8 +505,10 @@
     <Compile Include="common\BasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="common\DataHandler.cs" />
     <Compile Include="common\ErrorChart.cs" />
     <Compile Include="common\JsonConverter.cs" />
+    <Compile Include="common\PartialDataHandlerBLLs.cs" />
     <Compile Include="common\SocketServer.cs" />
     <Compile Include="common\StaticService.cs" />
     <Compile Include="common\TodayWorktimeChart.cs" />
@@ -944,6 +934,22 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Protocol.Tx300\Wbs.Protocol.Tx300.csproj">
+      <Project>{2e35ad34-e5cc-4799-9ced-102f9a7af8c8}</Project>
+      <Name>Wbs.Protocol.Tx300</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Protocol.WbsDateTime\Wbs.Protocol.WbsDateTime.csproj">
+      <Project>{6085d4fd-633d-43ee-98d7-fd887913b148}</Project>
+      <Name>Wbs.Protocol.WbsDateTime</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Protocol\Wbs.Protocol.csproj">
+      <Project>{956772bb-347d-49c5-ae80-afa5f42fb192}</Project>
+      <Name>Wbs.Protocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Utilities\Wbs.Utilities.csproj">
+      <Project>{36073bfc-ac86-49c8-82ae-5ac8de80dcc4}</Project>
+      <Name>Wbs.Utilities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Wbs.Everdigm.BLL\Wbs.Everdigm.BLL.csproj">
       <Project>{fef26bc4-ae46-4a7c-9787-4d70df5b6a40}</Project>
       <Name>Wbs.Everdigm.BLL</Name>

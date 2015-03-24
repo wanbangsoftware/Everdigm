@@ -102,29 +102,37 @@ namespace Wbs.Everdigm.Common
         /// <param name="Sim"></param>
         /// <param name="code"></param>
         /// <param name="sms"></param>
+        /// <param name="sender">发送者的ID，一般为当前登陆者的ID</param>
         /// <returns></returns>
-        public static int SendCommand(string Sim, string code, bool sms) {
+        public static int SendCommand(TB_Terminal terminal, string code, bool sms, int sender)
+        {
             Command cmd = GetCommand(code);
             string content = cmd.Content;
-            if (cmd.Code.Equals("6007")) { 
+            if (cmd.Code.Equals("6007"))
+            {
                 // 保安命令
                 // DX 的保安命令需要增加一个日期
                 content += DateTime.Now.ToString("yyMMddHHmm") + cmd.Param;
                 // DX 的保安命令长度不一样
                 content = "1700" + content.Substring(4);
             }
-            string sim = (Sim[0] == '8' && Sim[1] == '9' && Sim.Length < 11) ? (Sim + "000") : Sim;
+            string sim = terminal.Sim;
+            sim = (sim[0] == '8' && sim[1] == '9' && sim.Length < 11) ? (sim + "000") : sim;
             content = content.Replace(SIMNO, sim);
-            if (sms) {
-                return SendSMSCommand(sim, content);
+            if (sms)
+            {
+                return SendSMSCommand(terminal, content, sender);
             }
-            else {
+            else
+            {
                 var CommandInstance = new CommandBLL();
                 var command = CommandInstance.GetObject();
-                command.u_sms_mobile_no = sim;
-                command.u_sms_status = (byte)CommandStatus.Waiting;
-                command.u_sms_content = content;
-                return CommandInstance.Add(command).u_sms_id;
+                command.DestinationNo = sim;
+                command.Status = (byte)CommandStatus.Waiting;
+                command.Content = content;
+                command.SendUser = sender;
+                command.Terminal = terminal.id;
+                return CommandInstance.Add(command).id;
             }
         }
         /// <summary>
@@ -132,23 +140,27 @@ namespace Wbs.Everdigm.Common
         /// </summary>
         /// <param name="Sim">sim卡号码（11位数字，everdigm的sim卡号码后面带三个0，如89001435000）</param>
         /// <param name="Content">命令内容</param>
+        /// <param name="sender">命令发送者的ID</param>
         /// <returns>命令记录的id，后续通过这个id查询命令状态</returns>
-        private static int SendSMSCommand(string Sim, string Content)
+        private static int SendSMSCommand(TB_Terminal terminal, string Content, int sender)
         {
+            string simno = terminal.Sim;
             // 判断Unitel的卡号，前面两位是89，且长度是8位数字
-            string simno = Sim[0] == '8' && Sim[1] == '9' ? Sim.Substring(0, 8) : Sim;
+            simno = simno[0] == '8' && simno[1] == '9' ? simno.Substring(0, 8) : simno;
             string ret = SMSUtility.SendSMS(simno, Content);
             var CommandInstance = new CommandBLL();
             // 查看发送成功与否的状态
             CommandStatus cs = ret.Equals("SUCCESS") ? CommandStatus.SentBySMS : CommandStatus.SentFail;
 
             // 新建一个命令发送类实体
-            CT_00000 ct = CommandInstance.GetObject();
-            ct.u_sms_mobile_no = simno;
-            ct.u_sms_status = (byte)cs;
-            ct.u_sms_content = Content;
+            TB_Command ct = CommandInstance.GetObject();
+            ct.DestinationNo = simno;
+            ct.Status = (byte)cs;
+            ct.Content = Content;
+            ct.Terminal = terminal.id;
+            ct.SendUser = sender;
 
-            return CommandInstance.Add(ct).u_sms_id;
+            return CommandInstance.Add(ct).id;
         }
         /// <summary>
         /// 获取命令的发送状态描述
@@ -159,7 +171,7 @@ namespace Wbs.Everdigm.Common
             string ret = "";
             switch (status)
             {
-                case CommandStatus.Waiting: ret = "Waiting in queue for send"; break;
+                case CommandStatus.Waiting: ret = "Waiting in send queue..."; break;
                 case CommandStatus.ReSending: ret = "Waiting for re-send again"; break;
                 case CommandStatus.SentByTCP: ret = "Has been sent by TCP"; break;
                 case CommandStatus.SentBySMS: ret = "Has been sent by SMS"; break;
@@ -170,6 +182,7 @@ namespace Wbs.Everdigm.Common
                 case CommandStatus.Timedout: ret = "Timeout"; break;
                 case CommandStatus.EposFail: ret = "EPOS response fail."; break;
                 case CommandStatus.SecurityError: ret = "Cannot send this security command"; break;
+                case CommandStatus.LinkLosed: ret = "TCP link lose"; break;
             }
             return ret;
         }

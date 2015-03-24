@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncDataType.cs" />
     <Compile Include="AsyncUserDataBuffer.cs" />
     <Compile Include="AsyncUserDataEvent.cs" />
     <Compile Include="AsyncUserDataType.cs" />

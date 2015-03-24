@@ -9,7 +9,7 @@ var _timerMaxtimes = 150, _timerTimes = 0;
 // 发送命令之后的命令的id，通过此id查询后续命令的发送状态
 var _lastCommandId = 0, _lastCommandStatus = -1;
 
-var cmdStatus = "%time% <code>%code%</code> %desc%<br />";
+var cmdStatus = "%time% Command <code>%code%</code> %desc%<br />";
 
 // 启动计时器
 function prepareTimer(timerFunction) {

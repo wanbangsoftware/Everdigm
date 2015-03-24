@@ -17,6 +17,7 @@ namespace Wbs.Sockets
         int audb_port;
         int audb_socketHandle;
         AsyncUserDataType audb_dataType;
+        AsyncDataPackageType audb_packageType = AsyncDataPackageType.TCP;
         /// <summary>
         /// 创建一个新的用户数据结构实例。
         /// </summary>
@@ -116,7 +117,7 @@ namespace Wbs.Sockets
             audb_buffer = null;
             audb_ip = "";
             audb_port = 0;
-            audb_receiveTime = new DateTime();
+            audb_receiveTime = DateTime.Now;
             audb_dataType = AsyncUserDataType.None;
             audb_socketHandle = 0;
         }
@@ -142,6 +143,14 @@ namespace Wbs.Sockets
         {
             get { return audb_dataType; }
             set { audb_dataType = value; }
+        }
+        /// <summary>
+        /// 本缓冲区中数据的数据包类型（UDP或TCP）
+        /// </summary>
+        public AsyncDataPackageType PackageType
+        {
+            get { return audb_packageType; }
+            set { audb_packageType = value; }
         }
         /// <summary>
         /// 发送本数据包的客户端绑定 IP 地址。

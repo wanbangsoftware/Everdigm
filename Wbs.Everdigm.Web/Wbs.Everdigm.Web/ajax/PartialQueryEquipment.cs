@@ -74,7 +74,7 @@ namespace Wbs.Everdigm.Web.ajax
                 var id = ParseInt(Utility.Decrypt(data));
                 var start = DateTime.Parse(GetParamenter("start") + " 00:00:00");
                 var end = DateTime.Parse(GetParamenter("end") + " 23:59:59");
-                var eposList = EposInstance.FindList<TB_EposFault>(f => f.Equipment == id &&
+                var eposList = EposInstance.FindList<TB_Data_EposFault>(f => f.Equipment == id &&
                     f.ReceiveTime >= start && f.ReceiveTime <= end, "ReceiveTime", true);
                 ret = JsonConverter.ToJson(eposList);
             }
@@ -94,8 +94,8 @@ namespace Wbs.Everdigm.Web.ajax
                 var id = ParseInt(Utility.Decrypt(data));
                 var start = DateTime.Parse(GetParamenter("start") + " 00:00:00");
                 var end = DateTime.Parse(GetParamenter("end") + " 23:59:59");
-                var armList = AlarmInstance.FindList<TB_Alarm>(f => f.Equipment == id &&
-                    f.TB_Position.ReceiveTime >= start && f.TB_Position.ReceiveTime <= end, null);
+                var armList = AlarmInstance.FindList<TB_Data_Alarm>(f => f.Equipment == id &&
+                    f.TB_Data_Position.ReceiveTime >= start && f.TB_Data_Position.ReceiveTime <= end, null);
                 var list = new List<CustomAlarm>();
                 foreach (var arm in armList)
                 {
@@ -119,7 +119,7 @@ namespace Wbs.Everdigm.Web.ajax
                 var id = ParseInt(Utility.Decrypt(data));
                 var start = DateTime.Parse(GetParamenter("start") + " 00:00:00");
                 var end = DateTime.Parse(GetParamenter("end") + " 23:59:59");
-                var posList = PositionInstance.FindList<TB_Position>(f => f.Equipment == id &&
+                var posList = PositionInstance.FindList<TB_Data_Position>(f => f.Equipment == id &&
                     f.ReceiveTime >= start && f.ReceiveTime <= end, "ReceiveTime", true);
                 ret = JsonConverter.ToJson(posList);
             }

@@ -74,15 +74,15 @@ namespace Wbs.Everdigm.Web.ajax
         /// <returns></returns>
         private string HandleQueryCommandStatusRequest() {
             string ret = "";
-            var cmd = CommandInstance.Find(f => f.u_sms_id == ParseInt(data));
+            var cmd = CommandInstance.Find(f => f.id == ParseInt(data));
             if (null == cmd) { ret = ResponseMessage(-1, "No such command record exists."); }
             else {
-                byte status = cmd.u_sms_status.Value;
+                byte status = cmd.Status.Value;
                 CommandStatus state = (CommandStatus)status;
                 if (state == CommandStatus.Returned) {
                     var list = DataInstance.FindList<TB_HISTORIES>(f =>
-                        f.command_id.Equals(cmd.u_sms_command) &&
-                        f.receive_time > cmd.u_sms_schedule_time, "receive_time", true);
+                        f.command_id.Equals(cmd.Command) &&
+                        f.receive_time > cmd.ActualSendTime, "receive_time", true);
                     var data = list.FirstOrDefault<TB_HISTORIES>();
                     var desc = CommandUtility.GetCommandStatus(state);
                     if (null != data)
@@ -114,9 +114,27 @@ namespace Wbs.Everdigm.Web.ajax
             }
             return ret;
         }
-        private string SendCommand(TB_Terminal obj, bool sms) {
-            var id = CommandUtility.SendCommand(obj.Sim, cmd, sms);
-            return ResponseMessage(0, id.ToString());
+        /// <summary>
+        /// 当前登陆者的信息
+        /// </summary>
+        private TB_Account User { get { return ctx.Session[Utility.SessionName] as TB_Account; } }
+        /// <summary>
+        /// 发送命令
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="sms"></param>
+        /// <returns></returns>
+        private string SendCommand(TB_Terminal obj, bool sms)
+        {
+            if (null == User)
+            {
+                return ResponseMessage(-1, "Your session has expired, Please try to login again.");
+            }
+            else
+            {
+                var id = CommandUtility.SendCommand(obj, cmd, sms, User.id);
+                return ResponseMessage(0, id.ToString());
+            }
         }
         /// <summary>
         /// 处理终端的命令发送情况
@@ -277,33 +295,33 @@ namespace Wbs.Everdigm.Web.ajax
                             command = CommandUtility.GetCommand(cmd);
                             //_command = command.Code;
                         }
-                        var list = CommandInstance.FindList<CT_00000>(f => f.u_sms_mobile_no.Equals(sim) &&
-                            f.u_sms_schedule_time >= start && f.u_sms_schedule_time <= end, "u_sms_schedule_time", true);
+                        var list = CommandInstance.FindList<TB_Command>(f => f.DestinationNo.Equals(sim) &&
+                            f.ScheduleTime >= start && f.ScheduleTime <= end, "ScheduleTime", true);
                         if (security)
                         {
-                            list = list.Where<CT_00000>(w => w.u_sms_command == "0x6007" || w.u_sms_command == "0x4000");
+                            list = list.Where(w => w.Command == "0x6007" || w.Command == "0x4000");
                         }
                         else
                         {
-                            list = list.Where(w => w.u_sms_command != "0x6007" && w.u_sms_command != "0x4000");
+                            list = list.Where(w => w.Command != "0x6007" && w.Command != "0x4000");
                         }
                         //&&
                         //    (string.IsNullOrEmpty(_command) ? f.u_sms_command.IndexOf("0x") >= 0 : f.u_sms_command.IndexOf(_command) >= 0),
                         //    "u_sms_schedule_time", true);
                         if (null != command)
                         {
-                            list = list.Where<CT_00000>(w => w.u_sms_command.IndexOf(command.Code) >= 0);
+                            list = list.Where(w => w.Command.IndexOf(command.Code) >= 0);
                             if (security&&command.Code.Equals("6007"))
                             {
-                                list = list.Where(w => w.u_sms_content.Substring(w.u_sms_content.Length - 2) == command.Param);
+                                list = list.Where(w => w.Content.Substring(w.Content.Length - 2) == command.Param);
                             }
                         }
                         if (list.Count() > 0) { 
                             // 将command_id替换
                             List<Command> commands = CommandUtility.GetCommand(false);
                             foreach (var record in list) {
-                                Command _cmd = CommandUtility.GetCommand(record.u_sms_command.Replace("0x", ""));
-                                record.u_sms_command = null == _cmd ? "" : _cmd.Flag;
+                                Command _cmd = CommandUtility.GetCommand(record.Command.Replace("0x", ""));
+                                record.Command = (null == _cmd ? "" : _cmd.Flag);
                             }
                         }
                         ret = JsonConverter.ToJson(list);
