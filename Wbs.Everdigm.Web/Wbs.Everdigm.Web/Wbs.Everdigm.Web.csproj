@@ -505,12 +505,8 @@
     <Compile Include="common\BasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="common\DataHandler.cs" />
     <Compile Include="common\ErrorChart.cs" />
     <Compile Include="common\JsonConverter.cs" />
-    <Compile Include="common\PartialDataHandlerBLLs.cs" />
-    <Compile Include="common\SocketServer.cs" />
-    <Compile Include="common\StaticService.cs" />
     <Compile Include="common\TodayWorktimeChart.cs" />
     <Compile Include="common\Utility.cs" />
     <Compile Include="default.aspx.cs">
@@ -961,10 +957,6 @@
     <ProjectReference Include="..\Wbs.Everdigm.Database\Wbs.Everdigm.Database.csproj">
       <Project>{20e609ac-7671-4dcc-907d-d46c49a3334a}</Project>
       <Name>Wbs.Everdigm.Database</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Wbs.Sockets\Wbs.Sockets.csproj">
-      <Project>{70d482df-af02-4abc-83d9-7551b782f21b}</Project>
-      <Name>Wbs.Sockets</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

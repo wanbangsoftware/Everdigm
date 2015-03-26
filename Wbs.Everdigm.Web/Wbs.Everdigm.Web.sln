@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Everdigm.Common", "Wbs.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Everdigm.BLL", "Wbs.Everdigm.BLL\Wbs.Everdigm.BLL.csproj", "{FEF26BC4-AE46-4A7C-9787-4D70DF5B6A40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Sockets", "Wbs.Sockets\Wbs.Sockets.csproj", "{70D482DF-AF02-4ABC-83D9-7551B782F21B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Protocol", "..\..\..\TX300\WBS\Wbs.Protocol\Wbs.Protocol.csproj", "{956772BB-347D-49C5-AE80-AFA5F42FB192}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Protocol.Tx300", "..\..\..\TX300\WBS\Wbs.Protocol.Tx300\Wbs.Protocol.Tx300.csproj", "{2E35AD34-E5CC-4799-9CED-102F9A7AF8C8}"
@@ -21,7 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Protocol.WbsDateTime", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Utilities", "..\..\..\TX300\WBS\Wbs.Utilities\Wbs.Utilities.csproj", "{36073BFC-AC86-49C8-82AE-5AC8DE80DCC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.NamedPipe", "Wbs.NamedPipe\Wbs.NamedPipe.csproj", "{50443749-8899-4F20-A444-2C52F9A0765D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Everdigm.Network", "Wbs.Everdigm.Network\Wbs.Everdigm.Network.csproj", "{33E77E14-20F7-4EDE-BFDE-22785E58A12A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Sockets", "Wbs.Sockets\Wbs.Sockets.csproj", "{70D482DF-AF02-4ABC-83D9-7551B782F21B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,10 +45,6 @@ Global
 		{FEF26BC4-AE46-4A7C-9787-4D70DF5B6A40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEF26BC4-AE46-4A7C-9787-4D70DF5B6A40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEF26BC4-AE46-4A7C-9787-4D70DF5B6A40}.Release|Any CPU.Build.0 = Release|Any CPU
-		{70D482DF-AF02-4ABC-83D9-7551B782F21B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{70D482DF-AF02-4ABC-83D9-7551B782F21B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{70D482DF-AF02-4ABC-83D9-7551B782F21B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{70D482DF-AF02-4ABC-83D9-7551B782F21B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{956772BB-347D-49C5-AE80-AFA5F42FB192}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{956772BB-347D-49C5-AE80-AFA5F42FB192}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{956772BB-347D-49C5-AE80-AFA5F42FB192}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -65,10 +61,14 @@ Global
 		{36073BFC-AC86-49C8-82AE-5AC8DE80DCC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36073BFC-AC86-49C8-82AE-5AC8DE80DCC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36073BFC-AC86-49C8-82AE-5AC8DE80DCC4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{50443749-8899-4F20-A444-2C52F9A0765D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{50443749-8899-4F20-A444-2C52F9A0765D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{50443749-8899-4F20-A444-2C52F9A0765D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{50443749-8899-4F20-A444-2C52F9A0765D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33E77E14-20F7-4EDE-BFDE-22785E58A12A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33E77E14-20F7-4EDE-BFDE-22785E58A12A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33E77E14-20F7-4EDE-BFDE-22785E58A12A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33E77E14-20F7-4EDE-BFDE-22785E58A12A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70D482DF-AF02-4ABC-83D9-7551B782F21B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70D482DF-AF02-4ABC-83D9-7551B782F21B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70D482DF-AF02-4ABC-83D9-7551B782F21B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70D482DF-AF02-4ABC-83D9-7551B782F21B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

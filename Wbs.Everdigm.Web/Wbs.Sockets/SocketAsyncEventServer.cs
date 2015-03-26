@@ -197,7 +197,7 @@ namespace Wbs.Sockets
             byte[] buffer=new byte[1024];
             while (!stoped)
             {
-                try {
+                //try {
                     if (null != udpSocket)
                     {
                         len = 0;
@@ -220,10 +220,10 @@ namespace Wbs.Sockets
                             }
                         }
                     }
-                }
-                catch(Exception e)
+                //}
+                //catch(Exception e)
                 {
-                    string a = e.Message;
+                    //string a = e.Message;
                 }
             }
         }

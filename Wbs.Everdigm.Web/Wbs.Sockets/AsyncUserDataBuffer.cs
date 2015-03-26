@@ -10,14 +10,14 @@ namespace Wbs.Sockets
     /// </summary>
     public class AsyncUserDataBuffer : IDisposable
     {
-        DateTime audb_receiveTime;
+        //DateTime audb_receiveTime;
         byte[] audb_buffer;
         //bool audb_isUsed;
-        string audb_ip;
-        int audb_port;
-        int audb_socketHandle;
-        AsyncUserDataType audb_dataType;
-        AsyncDataPackageType audb_packageType = AsyncDataPackageType.TCP;
+        //string audb_ip;
+        //int audb_port;
+        //int audb_socketHandle;
+        //AsyncUserDataType audb_dataType;
+        //AsyncDataPackageType audb_packageType = AsyncDataPackageType.TCP;
         /// <summary>
         /// 创建一个新的用户数据结构实例。
         /// </summary>
@@ -47,7 +47,7 @@ namespace Wbs.Sockets
         /// <param name="type">小于0为连接断开事件，大于0为连接事件，等于0为收到数据事件</param>
         public void SetDataEvent(SocketAsyncEventArgs args, int type)
         {
-            audb_receiveTime = DateTime.Now;
+            ReceiveTime = DateTime.Now;
             if (type == 0)
             {
                 audb_buffer = new byte[args.BytesTransferred];
@@ -57,12 +57,12 @@ namespace Wbs.Sockets
             {
                 audb_buffer = null;
             }
-            audb_dataType = (0 == type ? AsyncUserDataType.ReceivedData :
+            DataType = (0 == type ? AsyncUserDataType.ReceivedData :
                 (0 > type ? AsyncUserDataType.ClientDisconnected : 
                 AsyncUserDataType.ClientConnected));
-            audb_ip = (args.UserToken as AsyncUserToken).IP;
-            audb_port = (args.UserToken as AsyncUserToken).Port;
-            audb_socketHandle = (args.UserToken as AsyncUserToken).SocketHandle;
+            IP = (args.UserToken as AsyncUserToken).IP;
+            Port = (args.UserToken as AsyncUserToken).Port;
+            SocketHandle = (args.UserToken as AsyncUserToken).SocketHandle;
         }
         /// <summary>
         /// 客户端连接或断开事件
@@ -96,11 +96,7 @@ namespace Wbs.Sockets
         /// <summary>
         /// 数据的接收时间。
         /// </summary>
-        public DateTime ReceiveTime
-        {
-            get { return audb_receiveTime; }
-            set { audb_receiveTime = value; }
-        }
+        public DateTime ReceiveTime { get; set; }
         /// <summary>
         /// 数据缓冲区。
         /// </summary>
@@ -115,11 +111,12 @@ namespace Wbs.Sockets
         private void init()
         {
             audb_buffer = null;
-            audb_ip = "";
-            audb_port = 0;
-            audb_receiveTime = DateTime.Now;
-            audb_dataType = AsyncUserDataType.None;
-            audb_socketHandle = 0;
+            IP = "";
+            Port = 0;
+            ReceiveTime = DateTime.Now;
+            DataType = AsyncUserDataType.None;
+            SocketHandle = 0;
+            PackageType = AsyncDataPackageType.TCP;
         }
         /// <summary>
         /// 获取或设定一个值，表示本数据已经被服务器处理过或者正在队列中等候处理。
@@ -139,42 +136,22 @@ namespace Wbs.Sockets
         /// <summary>
         /// 本缓冲区中的数据类型。
         /// </summary>
-        public AsyncUserDataType DataType
-        {
-            get { return audb_dataType; }
-            set { audb_dataType = value; }
-        }
+        public AsyncUserDataType DataType { get; set; }
         /// <summary>
         /// 本缓冲区中数据的数据包类型（UDP或TCP）
         /// </summary>
-        public AsyncDataPackageType PackageType
-        {
-            get { return audb_packageType; }
-            set { audb_packageType = value; }
-        }
+        public AsyncDataPackageType PackageType { get; set; }
         /// <summary>
         /// 发送本数据包的客户端绑定 IP 地址。
         /// </summary>
-        public string IP
-        {
-            get { return audb_ip; }
-            set { audb_ip = value; }
-        }
+        public string IP { get; set; }
         /// <summary>
         /// 发送本数据包的客户端绑定端口。
         /// </summary>
-        public int Port
-        {
-            get { return audb_port; }
-            set { audb_port = value; }
-        }
+        public int Port { get; set; }
         /// <summary>
         /// 发送本数据包的客户端 socket 句柄。
         /// </summary>
-        public int SocketHandle
-        {
-            get { return audb_socketHandle; }
-            set { audb_socketHandle = value; }
-        }
+        public int SocketHandle { get; set; }
     }
 }

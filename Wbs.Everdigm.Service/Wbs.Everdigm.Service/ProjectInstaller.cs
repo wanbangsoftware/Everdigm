@@ -20,8 +20,8 @@ namespace Wbs.Everdigm.Service
 
         private void EverdigmNetworkServiceInstaller_AfterInstall(object sender, InstallEventArgs e)
         {
-            ServiceController con = new ServiceController(SERVICE_NAME);
-            con.Start();
+            //ServiceController con = new ServiceController(SERVICE_NAME);
+            //con.Start();
         }
 
         private void EverdigmNetworkServiceInstaller_BeforeUninstall(object sender, InstallEventArgs e)

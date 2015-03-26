@@ -5,7 +5,7 @@ using System.Web;
 
 using Wbs.Everdigm.BLL;
 
-namespace Wbs.Everdigm.Web
+namespace Wbs.Everdigm.Network
 {
     /// <summary>
     /// DataHandler的BLL集合

@@ -7,7 +7,7 @@ using System.Web;
 using Wbs.Sockets;
 using System.Threading;
 
-namespace Wbs.Everdigm.Web
+namespace Wbs.Everdigm.Network
 {
     /// <summary>
     /// 网络通信服务
