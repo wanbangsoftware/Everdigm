@@ -55,5 +55,9 @@ public enum CommandStatus : byte
     /// <summary>
     /// 发送失败：终端的TCP链接已丢失
     /// </summary>
-    LinkLosed
+    LinkLosed,
+    /// <summary>
+    /// TCP发送数据时网络处理错误
+    /// </summary>
+    TCPNetworkError
 }

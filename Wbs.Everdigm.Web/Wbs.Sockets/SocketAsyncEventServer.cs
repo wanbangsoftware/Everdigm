@@ -42,9 +42,17 @@ namespace Wbs.Sockets
         /// </summary>
         private Socket tcpSocket;
         /// <summary>
+        /// 监听UDP的Socket
+        /// </summary>
+        private Socket udpSocket;
+        /// <summary>
         /// 服务器监听的UDP Server
         /// </summary>
         private UdpClient udpServer = null;
+        /// <summary>
+        /// 处理UDP数据的线程
+        /// </summary>
+        private Thread udpSocketHandler = null;
         /// <summary>
         /// 标记是否也一同启动UDP服务
         /// </summary>
@@ -73,6 +81,10 @@ namespace Wbs.Sockets
         /// 读、写两个操作。
         /// </summary>
         private const int preAlloc = 2;
+        /// <summary>
+        /// 标记服务是否已停止
+        /// </summary>
+        private bool stoped = false;
         /// <summary>
         /// 创建一个伺服器并指定端口
         /// </summary>
@@ -166,17 +178,60 @@ namespace Wbs.Sockets
 
             // 是否一同启动UDP服务
             if (useUdp) {
-                udpServer = new UdpClient(localEndPoint);
-                UDPState state = new UDPState();
-                state.End = localEndPoint;
-                state.Client = udpServer;
-                udpServer.BeginReceive(new AsyncCallback(UDP_ReceiveCallback), state);
+                udpSocket = new Socket(localEndPoint.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
+                udpSocket.Bind(localEndPoint);
+                udpSocketHandler = new Thread(new ThreadStart(handleUdpReceive));
+                udpSocketHandler.Start();
+                //udpServer = new UdpClient(localEndPoint);
+                //UDPState state = new UDPState();
+                //state.End = localEndPoint;
+                //state.Client = udpServer;
+                //udpServer.BeginReceive(new AsyncCallback(UDP_ReceiveCallback), state);
+            }
+        }
+        /// <summary>
+        /// 处理UDP接受的线程
+        /// </summary>
+        private void handleUdpReceive() {
+            int len = 0;
+            byte[] buffer=new byte[1024];
+            while (!stoped)
+            {
+                try {
+                    if (null != udpSocket)
+                    {
+                        len = 0;
+                        EndPoint clientEP = new IPEndPoint(IPAddress.Any, 0);
+                        len = udpSocket.ReceiveFrom(buffer, ref clientEP);
+                        if (len > 17)
+                        {
+                            if (null != OnReceivedData)
+                            {
+                                var aude = new AsyncUserDataEvent();
+                                aude.Data = _bufferPool.Get();
+                                aude.Data.Buffer = new byte[len];
+                                Buffer.BlockCopy(buffer, 0, aude.Data.Buffer, 0, len);
+                                aude.Data.DataType = AsyncUserDataType.ReceivedData;
+                                aude.Data.IP = (clientEP as IPEndPoint).Address.ToString();
+                                aude.Data.PackageType = AsyncDataPackageType.UDP;
+                                aude.Data.Port = (clientEP as IPEndPoint).Port;
+                                aude.Data.ReceiveTime = DateTime.Now;
+                                OnReceivedData(this, aude);
+                            }
+                        }
+                    }
+                }
+                catch(Exception e)
+                {
+                    string a = e.Message;
+                }
             }
         }
         /// <summary>
         /// UDP状态
         /// </summary>
-        private class UDPState {
+        private class UDPState
+        {
             public IPEndPoint End { get; set; }
             public UdpClient Client { get; set; }
         }
@@ -190,19 +245,26 @@ namespace Wbs.Sockets
             {
                 if (null != OnReceivedData)
                 {
-                    UDPState state = args.AsyncState as UDPState;
-                    IPEndPoint end = state.End;
-                    var aude = new AsyncUserDataEvent();
-                    aude.Data = _bufferPool.Get();
-                    aude.Data.Buffer = state.Client.EndReceive(args, ref end);
-                    aude.Data.DataType = AsyncUserDataType.ReceivedData;
-                    aude.Data.IP = end.Address.ToString();
-                    aude.Data.PackageType = AsyncDataPackageType.UDP;
-                    aude.Data.Port = end.Port;
-                    aude.Data.ReceiveTime = DateTime.Now;
-                    OnReceivedData(this, aude);
-                    // 重新投递接受请求？
-                    udpServer.BeginReceive(new AsyncCallback(UDP_ReceiveCallback), state);
+                    try
+                    {
+                        UDPState state = args.AsyncState as UDPState;
+                        if (null == state) return;
+                        if (null == state.Client) return;
+
+                        IPEndPoint end = state.End;
+                        var aude = new AsyncUserDataEvent();
+                        aude.Data = _bufferPool.Get();
+                        aude.Data.Buffer = state.Client.EndReceive(args, ref end);
+                        aude.Data.DataType = AsyncUserDataType.ReceivedData;
+                        aude.Data.IP = end.Address.ToString();
+                        aude.Data.PackageType = AsyncDataPackageType.UDP;
+                        aude.Data.Port = end.Port;
+                        aude.Data.ReceiveTime = DateTime.Now;
+                        OnReceivedData(this, aude);
+                        // 重新投递接受请求？
+                        udpServer.BeginReceive(new AsyncCallback(UDP_ReceiveCallback), state);
+                    }
+                    catch { }
                 }
             }
         }
@@ -270,6 +332,7 @@ namespace Wbs.Sockets
                     var aude = new AsyncUserDataEvent();
                     aude.Data = _bufferPool.Get();
                     aude.Data.SetDataEvent(readEventArgs, true);
+                    aude.Data.PackageType = AsyncDataPackageType.TCP;
                     OnConnected(this, aude);
                 }
 
@@ -330,6 +393,7 @@ namespace Wbs.Sockets
                     var aude = new AsyncUserDataEvent();
                     aude.Data = _bufferPool.Get();
                     aude.Data.SetDataEvent(e, 0);
+                    aude.Data.PackageType = AsyncDataPackageType.TCP;
                     OnReceivedData(this, aude);
                 }
 
@@ -382,7 +446,7 @@ namespace Wbs.Sockets
                 buffer.Dispose();
         }
         /// <summary>
-        /// 发送数据到客户端
+        /// 发送数据到客户端(返回0==链接不存在1=发送成功2=网络处理错误)
         /// </summary>
         /// <param name="socket"></param>
         /// <param name="buffer"></param>
@@ -413,6 +477,26 @@ namespace Wbs.Sockets
             return ret;
         }
         /// <summary>
+        /// 通过UDP方式发送出去
+        /// </summary>
+        /// <param name="port"></param>
+        /// <param name="ip"></param>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
+        public byte Send(int port, string ip, byte[] buffer)
+        {
+            byte ret = 0;
+            EndPoint ep=new IPEndPoint(IPAddress.Parse(ip),port);
+            try
+            {
+                udpSocket.SendTo(buffer, ep);
+                ret = 1;
+            }
+            catch
+            { ret = 2; }
+            return ret;
+        }
+        /// <summary>
         /// 关闭一个连接。
         /// </summary>
         /// <param name="e"></param>
@@ -428,6 +512,7 @@ namespace Wbs.Sockets
                 var aude = new AsyncUserDataEvent();
                 aude.Data = _bufferPool.Get();
                 aude.Data.SetDataEvent(e, false);
+                aude.Data.PackageType = AsyncDataPackageType.TCP;
                 OnDisconnected(this, aude);
             }
 
@@ -465,6 +550,17 @@ namespace Wbs.Sockets
         /// </summary>
         public void Stop()
         {
+            stoped = true;
+            if (null != udpSocket)
+            {
+                udpSocket.Close();
+            }
+            if (null != udpSocketHandler)
+            {
+                udpSocketHandler.Abort();
+                udpSocketHandler.Join();
+                udpSocketHandler = null;
+            }
             // 关闭监听端口以便阻止新的客户端连接进来。
             if (null != tcpSocket)
             {

@@ -32,6 +32,9 @@ namespace Wbs.Everdigm.BLL
                 ProductionDate = DateTime.Now,
                 Revision = 1,
                 Satellite = (int?)null,
+                OnlineStyle = 0,
+                OnlineTime = (DateTime?)null,
+                Socket = 0,
                 Sim = "",
                 Type = "DX"
             };

@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Web;
+using System.IO;
+using System.IO.Pipes;
 
+using Wbs.Utilities;
 using Wbs.Sockets;
 using System.Threading;
 
-namespace Wbs.Everdigm.Web
+namespace Wbs.Everdigm.Service
 {
     /// <summary>
     /// 网络通信服务
@@ -70,7 +73,7 @@ namespace Wbs.Everdigm.Web
             var count = Environment.ProcessorCount;
             for (int i = 0; i < count; i++)
             {
-                ThreadPool.QueueUserWorkItem(ThreadHandlePorc);
+                ThreadPool.QueueUserWorkItem(ThreadHandlePorc, i);
             }
         }
         /// <summary>
@@ -131,11 +134,16 @@ namespace Wbs.Everdigm.Web
         /// </summary>
         private void ThreadHandlePorc(Object state)
         {
+            // 标记本线程是否可以处理命令记录
+            bool CanHandleCommand = ((int)state) == 0;
+
             AsyncUserDataBuffer obj;
             // 处理数据的Handler
             DataHandler _handler = new DataHandler();
             _handler.Server = _tcpServer;
             int timer = 0, sleeper = 10;
+
+            string message = "";
 
             while (true)
             {
@@ -154,39 +162,61 @@ namespace Wbs.Everdigm.Web
                     try
                     {
                         _handler.HandleData(obj);
+                        // 显示结果
+                        //if (null != _pipeServer)
+                        //{
+                        //    message = "";
+                        //    switch (obj.DataType)
+                        //    {
+                        //        case AsyncUserDataType.ClientConnected:
+                        //            message = string.Format("{0} :: client {1}:{2} connected(socket: {3}) {4}",
+                        //                obj.ReceiveTime.ToString("yyyy/MM/dd HH:mm:ss"),
+                        //                obj.IP, obj.Port, obj.SocketHandle, obj.PackageType);
+                        //            break;
+                        //        case AsyncUserDataType.ClientDisconnected:
+                        //            message = string.Format("{0} :: client {1}:{2} disconnected(socket: {3}) {4}",
+                        //                obj.ReceiveTime.ToString("yyyy/MM/dd HH:mm:ss"),
+                        //                obj.IP, obj.Port, obj.SocketHandle, obj.PackageType);
+                        //            break;
+                        //        case AsyncUserDataType.ReceivedData:
+                        //            message = string.Format("{0} :: received data from {1}:{2}(socket: {3}), data: {4} {5}",
+                        //                obj.ReceiveTime.ToString("yyyy/MM/dd HH:mm:ss"),
+                        //                obj.IP, obj.Port, obj.SocketHandle, CustomConvert.GetHex(obj.Buffer), obj.PackageType);
+                        //            break;
+                        //    }
+                        //    if (!string.IsNullOrEmpty(message))
+                        //    { DisplayServerMessages(message); }
+                        //}
                     }
                     finally
                     {
                         _tcpServer.RecycleBuffer(obj);
                     }
                 }
-                // 处理TCP下发送的命令
-                if (timer % 1000 == 0)
+                // 如果本线程可以处理命令记录则继续查看是否可以发送命令
+                if (CanHandleCommand)
                 {
-                    lock (Locker)
+                    // 处理TCP下发送的命令
+                    if (timer % 1000 == 0)
                     {
-                        _handler.CheckCommand();
-                    }
-                    //foreach (var cmd in list)
-                    //{
-                    //    var ret = _tcpServer.Send(cmd.TB_Terminal.Socket.Value, Wbs.Utilities.CustomConvert.GetBytes(cmd.Content));
-                    //    _handler.UpdateCommand(cmd, 0 == ret ? CommandStatus.LinkLosed : 
-                    //        (1 == ret ? CommandStatus.SentByTCP : CommandStatus.SentFail));
-                    //}
-                }
-                // 检测是否应该处理旧链接，每分钟处理一次
-                if (timer % 2000 == 0)
-                {
-                    timer = 0;
-                    lock (Locker)
-                    {
-                        if (_handler.CanClearOlderLinks)
+                        lock (Locker)
                         {
-                            _handler.HandleOlderClients();
+                            _handler.CheckCommand();
+                        }
+                    }
+                    // 检测是否应该处理旧链接，每分钟处理一次
+                    if (timer % 2000 == 0)
+                    {
+                        timer = 0;
+                        lock (Locker)
+                        {
+                            if (_handler.CanClearOlderLinks)
+                            {
+                                _handler.HandleOlderClients();
+                            }
                         }
                     }
                 }
-                // 处理命令
             }
         }
     }

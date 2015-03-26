@@ -10,7 +10,9 @@ namespace Wbs.Everdigm.Database
     public partial class EverdigmDataContext
     {
         public EverdigmDataContext() :
-            base(ConfigurationManager.ConnectionStrings["EverdigmDatabaseConnectionString"].ToString())
+            base(null == ConfigurationManager.ConnectionStrings["EverdigmDatabaseConnectionString"] ?
+            ConfigurationManager.AppSettings["EverdigmDatabaseConnectionString"] :
+            ConfigurationManager.ConnectionStrings["EverdigmDatabaseConnectionString"].ToString())
         {
             OnCreated();
         }

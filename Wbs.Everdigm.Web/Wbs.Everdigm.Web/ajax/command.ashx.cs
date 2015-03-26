@@ -87,7 +87,8 @@ namespace Wbs.Everdigm.Web.ajax
                     var desc = CommandUtility.GetCommandStatus(state);
                     if (null != data)
                     {
-                        desc += ", you can click <code data-data=\"" + data.message_content + "\">here</code> to Analyse it";
+                        desc += ", you can click <code class='analyse' data-data='" + 
+                            data.command_id + "," + data.message_content + "'>here</code> to Analyse it";
                     }
                     ret = ResponseMessage(status, desc);
                 }

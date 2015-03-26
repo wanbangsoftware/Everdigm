@@ -154,13 +154,34 @@ namespace Wbs.Everdigm.Common
 
             // 新建一个命令发送类实体
             TB_Command ct = CommandInstance.GetObject();
+            simno = (simno[0] == '8' && simno[1] == '9' && simno.Length < 11) ? (simno + "000") : simno;
             ct.DestinationNo = simno;
             ct.Status = (byte)cs;
             ct.Content = Content;
+            ct.ActualSendTime = DateTime.Now;
             ct.Terminal = terminal.id;
             ct.SendUser = sender;
 
             return CommandInstance.Add(ct).id;
+        }
+        /// <summary>
+        /// 直接发送SMS命令
+        /// </summary>
+        /// <param name="cmd"></param>
+        public static void SendSMSCommand(TB_Command cmd)
+        {
+            string simno = cmd.DestinationNo;
+            // 判断Unitel的卡号，前面两位是89，且长度是8位数字
+            simno = simno[0] == '8' && simno[1] == '9' ? simno.Substring(0, 8) : simno;
+            string ret = SMSUtility.SendSMS(simno, cmd.Content);
+            var CommandInstance = new CommandBLL();
+            // 查看发送成功与否的状态
+            CommandStatus cs = ret.Equals("SUCCESS") ? CommandStatus.SentBySMS : CommandStatus.SentFail;
+            CommandInstance.Update(f => f.id == cmd.id, act =>
+            {
+                act.Status = (byte)cs;
+                act.ActualSendTime = DateTime.Now;
+            });
         }
         /// <summary>
         /// 获取命令的发送状态描述
@@ -183,6 +204,7 @@ namespace Wbs.Everdigm.Common
                 case CommandStatus.EposFail: ret = "EPOS response fail."; break;
                 case CommandStatus.SecurityError: ret = "Cannot send this security command"; break;
                 case CommandStatus.LinkLosed: ret = "TCP link lose"; break;
+                case CommandStatus.TCPNetworkError: ret = "TCP network handle error"; break;
             }
             return ret;
         }

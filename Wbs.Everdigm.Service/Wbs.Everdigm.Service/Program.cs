@@ -17,7 +17,7 @@ namespace Wbs.Everdigm.Service
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[] 
             { 
-                new Service1() 
+                new EverdigmNetworkService() 
             };
             ServiceBase.Run(ServicesToRun);
         }

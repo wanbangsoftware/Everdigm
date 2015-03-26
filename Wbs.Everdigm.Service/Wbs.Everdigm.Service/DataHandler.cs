@@ -12,7 +12,7 @@ using Wbs.Sockets;
 using Wbs.Everdigm.Common;
 using Wbs.Utilities;
 
-namespace Wbs.Everdigm.Web
+namespace Wbs.Everdigm.Service
 {
     /// <summary>
     /// 数据处理类

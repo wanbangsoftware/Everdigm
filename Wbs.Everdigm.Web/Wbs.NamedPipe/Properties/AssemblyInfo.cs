@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的常规信息通过以下
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("Wbs.Everdigm.Service")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Wbs.NamedPipe")]
+[assembly: AssemblyDescription("提供命名管道访问服务的功能")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("wanbangsoftware")]
-[assembly: AssemblyProduct("Wbs.Everdigm.Service")]
+[assembly: AssemblyProduct("Wbs.NamedPipe")]
 [assembly: AssemblyCopyright("Copyright © 2004 - 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("25c03050-d9d8-40e2-afc6-28c3862382b0")]
+[assembly: Guid("45cc0320-1d48-49f3-98b0-07e31aca29f2")]
 
 // 程序集的版本信息由下面四个值组成: 
 //
