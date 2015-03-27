@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
 
+using Wbs.Utilities;
+
 namespace Wbs.Sockets
 {
     /// <summary>
@@ -39,6 +41,44 @@ namespace Wbs.Sockets
         public AsyncUserDataBuffer(SocketAsyncEventArgs args)
         {
             SetDataEvent(args, 0);
+        }
+        /// <summary>
+        /// 组包
+        /// </summary>
+        /// <param name="args"></param>
+        public void ResizeData(SocketAsyncEventArgs args)
+        {
+            var len = audb_buffer.Length;
+            audb_buffer = CustomConvert.expand(audb_buffer, len + args.BytesTransferred);
+            System.Buffer.BlockCopy(args.Buffer, args.Offset, audb_buffer, len, args.BytesTransferred);
+        }
+        /// <summary>
+        /// 扩展组包收到的UDP数据
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="len"></param>
+        public void ResizeData(byte[] buffer, int len)
+        {
+            var old = audb_buffer.Length;
+            audb_buffer = CustomConvert.expand(audb_buffer, old + len);
+            System.Buffer.BlockCopy(buffer, 0, audb_buffer, old, len);
+        }
+        /// <summary>
+        /// 设置接收到的UDP消息内容
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="buffer"></param>
+        /// <param name="len"></param>
+        public void SetDataEvent(AsyncUserToken token, byte[] buffer, int len)
+        {
+            ReceiveTime = DateTime.Now;
+            audb_buffer = new byte[len];
+            System.Buffer.BlockCopy(buffer, 0, audb_buffer, 0, len);
+            DataType = AsyncUserDataType.ReceivedData;
+            IP = token.IP;
+            Port = token.Port;
+            SocketHandle = 0;
+            PackageType = AsyncDataPackageType.UDP;
         }
         /// <summary>
         /// 设置异步接收到的消息内容

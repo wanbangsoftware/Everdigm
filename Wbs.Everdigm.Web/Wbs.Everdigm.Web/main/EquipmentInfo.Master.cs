@@ -67,8 +67,7 @@ namespace Wbs.Everdigm.Web.main
                     objectInfo.Rows[8].Cells[1].InnerText = obj.TB_Warehouse.Name;
 
                     objectInfo.Rows[10].Cells[1].InnerText = (n == obj.Terminal ? "-" : obj.TB_Terminal.Number);
-                    objectInfo.Rows[10].Cells[3].InnerHtml =
-                        "<div class=\"links " + EquipmentInstance.GetOnlineStyle(obj.OnlineStyle) + "\"></div>";
+                    objectInfo.Rows[10].Cells[3].InnerHtml = EquipmentInstance.GetOnlineStyle(obj.OnlineStyle);
 
                     objectInfo.Rows[11].Cells[1].InnerText = (n == obj.Terminal ? "-" : obj.TB_Terminal.Sim);
                     objectInfo.Rows[11].Cells[3].InnerText =

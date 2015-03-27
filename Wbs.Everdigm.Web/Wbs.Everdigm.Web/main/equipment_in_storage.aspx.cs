@@ -38,23 +38,29 @@ namespace Wbs.Everdigm.Web.main
                 var exist = EquipmentInstance.Find(f => f.Model == equipment.Model && f.Number.Equals(equipment.Number));
                 if (null == exist)
                 {
-                    EquipmentInstance.Add(equipment);
+                    var newEquipment = EquipmentInstance.GetObject();
+                    newEquipment.Model = equipment.Model;
+                    newEquipment.Status = equipment.Status;
+                    newEquipment.Warehouse = equipment.Warehouse;
+                    newEquipment.Number = equipment.Number;
+                    newEquipment.StoreTimes = equipment.StoreTimes;
+                    EquipmentInstance.Add(newEquipment);
 
                     // 保存入库信息
                     var history = StoreInstance.GetObject();
-                    history.Equipment = equipment.id;
-                    history.Status = equipment.Status;
+                    history.Equipment = newEquipment.id;
+                    history.Status = newEquipment.Status;
                     history.Stocktime = DateTime.Parse(inDate.Value);
                     // 默认第1次入库
-                    history.StoreTimes = equipment.StoreTimes;
-                    history.Warehouse = equipment.Warehouse;
+                    history.StoreTimes = newEquipment.StoreTimes;
+                    history.Warehouse = newEquipment.Warehouse;
                     StoreInstance.Add(history);
 
                     // 保存入库操作历史记录
                     SaveHistory(new TB_AccountHistory()
                     {
                         ActionId = ActionInstance.Find(f => f.Name.Equals("InStore")).id,
-                        ObjectA = EquipmentInstance.ToString(equipment)
+                        ObjectA = EquipmentInstance.ToString(newEquipment)
                     });
 
                     // 重新显示新的设备列表
@@ -168,7 +174,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td class=\"in-tab-txt-b\" title=\"" + StoreInstance.GetStatusTitle(_out) + "\">" + StoreInstance.GetStatus(_out) + "</td>" +
                         "<td class=\"in-tab-txt-rb textoverflow\">" + (_house ? ("<a href=\"#h\" id=\"a_" + id + "\">" + obj.TB_Warehouse.Name + "</a>") : obj.TB_Warehouse.Name) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + ((byte?)null == obj.Signal ? "-" : obj.Signal.ToString()) + "</td>" +
-                        "<td class=\"in-tab-txt-b\"><div class=\"links " + EquipmentInstance.GetOnlineStyle(obj.OnlineStyle) + "\"></div></td>" +
+                        "<td class=\"in-tab-txt-b\">" + EquipmentInstance.GetOnlineStyle(obj.OnlineStyle) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\">" + ((DateTime?)null == obj.LastActionTime ? "" : obj.LastActionTime.Value.ToString("yyyy/MM/dd")) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\" title=\"" + EquipmentInstance.GetTerinalTitleInfo(obj) + "\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Number) + "</td>" +
                         //"<td class=\"in-tab-txt-b\">" + (n == obj.Terminal ? "-" : (n == obj.TB_Terminal.Satellite ? "-" : obj.TB_Terminal.TB_Satellite.CardNo)) + "</td>" +

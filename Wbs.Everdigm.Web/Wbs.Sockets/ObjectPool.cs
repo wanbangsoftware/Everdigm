@@ -41,7 +41,10 @@ namespace Wbs.Sockets
         /// 获取缓冲池当前的大小
         /// </summary>
         public int Count { get { return _bag.Count; } }
-
+        //public T Get(Func<T> find) {
+        //    var obj=_bag.Select(find);
+        //    //return _bag.
+        //}
         /// <summary>
         /// 获取缓冲池中的对象
         /// </summary>
@@ -49,7 +52,6 @@ namespace Wbs.Sockets
         public T Get()
         {
             var obj = default(T);
-
             if (!_bag.TryTake(out obj))
                 return _createFunc();
             return obj;

@@ -8,7 +8,7 @@ using Wbs.Sockets;
 using System.Threading;
 using Wbs.Utilities;
 
-namespace Wbs.Everdigm.Network
+namespace Wbs.Everdigm.Desktop
 {
     /// <summary>
     /// 网络通信服务
@@ -35,6 +35,13 @@ namespace Wbs.Everdigm.Network
         /// 设定是否同时启动UDP服务
         /// </summary>
         public bool StartUDP { get; set; }
+
+        private bool started = false;
+
+        /// <summary>
+        /// 标记服务是否已启动
+        /// </summary>
+        public bool Started { get { return started; } }
 
         /// <summary>
         /// 全局标记服务是否已停止
@@ -86,8 +93,14 @@ namespace Wbs.Everdigm.Network
             InitializeDataPool();
             InitializeServer();
             InitializeThreadPool();
-            // 启动服务
-            _tcpServer.Start();
+            try
+            {
+                // 启动服务
+                _tcpServer.Start();
+                started = true;
+            }
+            catch
+            { }
         }
         /// <summary>
         /// 初始化并启动服务
@@ -103,6 +116,7 @@ namespace Wbs.Everdigm.Network
         {
             _tcpServer.Stop();
             HasServiceStoped = true;
+            started = false;
         }
         /// <summary>
         /// 处理客户端连接成功的事件
@@ -136,6 +150,18 @@ namespace Wbs.Everdigm.Network
             return dt.ToString("[yyyy/MM/dd HH:mm:ss] ");
         }
         /// <summary>
+        /// 数据处理时出错的信息
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="message"></param>
+        private void DataHandler_OnUnhandledMessage(object sender, string message)
+        {
+            if (null != OnMessage)
+            {
+                OnMessage(this, message);
+            }
+        }
+        /// <summary>
         /// 线程的执行过程
         /// </summary>
         private void ThreadHandlePorc(Object state)
@@ -143,6 +169,7 @@ namespace Wbs.Everdigm.Network
             AsyncUserDataBuffer obj;
             // 处理数据的Handler
             DataHandler _handler = new DataHandler();
+            _handler.OnUnhandledMessage += new EventHandler<string>(DataHandler_OnUnhandledMessage);
             _handler.Server = _tcpServer;
             int timer = 0, sleeper = 10;
 
@@ -162,26 +189,29 @@ namespace Wbs.Everdigm.Network
                 {
                     try
                     {
+                        string message = "";
+                        switch (obj.DataType)
+                        {
+                            case AsyncUserDataType.ClientConnected:
+                                message = string.Format("{0}client {1}:{2} connected. [{3}]",
+                                    DateTime(obj.ReceiveTime), obj.IP, obj.Port, obj.PackageType);
+                                break;
+                            case AsyncUserDataType.ClientDisconnected:
+                                message = string.Format("{0}client {1}:{2} disconnected. [{3}]",
+                                    DateTime(obj.ReceiveTime), obj.IP, obj.Port, obj.PackageType);
+                                break;
+                            case AsyncUserDataType.ReceivedData:
+                                message = string.Format("{0}received data from {1}:{2}, data: {3} [{4}]",
+                                    DateTime(obj.ReceiveTime), obj.IP, obj.Port,
+                                    CustomConvert.GetHex(obj.Buffer), obj.PackageType);
+                                break;
+                        }
+
+                        // 处理数据
                         _handler.HandleData(obj);
+
                         if (null != OnMessage)
                         {
-                            string message = "";
-                            switch (obj.DataType)
-                            {
-                                case AsyncUserDataType.ClientConnected:
-                                    message = string.Format("{0}client {1}:{2} connected. {3}",
-                                        DateTime(obj.ReceiveTime), obj.IP, obj.Port, obj.PackageType);
-                                    break;
-                                case AsyncUserDataType.ClientDisconnected:
-                                    message = string.Format("{0}client {1}:{2} disconnected. {3}",
-                                        DateTime(obj.ReceiveTime), obj.IP, obj.Port, obj.PackageType);
-                                    break;
-                                case AsyncUserDataType.ReceivedData:
-                                    message = string.Format("{0}received data from {1}:{2}, data: {3} {4}",
-                                        DateTime(obj.ReceiveTime), obj.IP, obj.Port,
-                                        CustomConvert.GetHex(obj.Buffer), obj.PackageType);
-                                    break;
-                            }
                             if (!string.IsNullOrEmpty(message))
                             {
                                 OnMessage(this, message);
@@ -200,12 +230,6 @@ namespace Wbs.Everdigm.Network
                     {
                         _handler.CheckCommand();
                     }
-                    //foreach (var cmd in list)
-                    //{
-                    //    var ret = _tcpServer.Send(cmd.TB_Terminal.Socket.Value, Wbs.Utilities.CustomConvert.GetBytes(cmd.Content));
-                    //    _handler.UpdateCommand(cmd, 0 == ret ? CommandStatus.LinkLosed : 
-                    //        (1 == ret ? CommandStatus.SentByTCP : CommandStatus.SentFail));
-                    //}
                 }
                 // 检测是否应该处理旧链接，每分钟处理一次
                 if (timer % 2000 == 0)

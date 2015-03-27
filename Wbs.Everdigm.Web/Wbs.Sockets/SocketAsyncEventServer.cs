@@ -6,6 +6,8 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 
+using Wbs.Utilities;
+
 namespace Wbs.Sockets
 {
     /// <summary>
@@ -33,6 +35,10 @@ namespace Wbs.Sockets
         /// 数据结构缓冲池
         /// </summary>
         private ObjectPool<AsyncUserDataBuffer> _bufferPool;
+        /// <summary>
+        /// 数据接收缓冲区
+        /// </summary>
+        private Dictionary<AsyncUserToken, AsyncUserDataBuffer> _bufferReceived = new Dictionary<AsyncUserToken, AsyncUserDataBuffer>();
         /// <summary>
         /// 缓冲区
         /// </summary>
@@ -197,33 +203,79 @@ namespace Wbs.Sockets
             byte[] buffer=new byte[1024];
             while (!stoped)
             {
-                //try {
+                try {
                     if (null != udpSocket)
                     {
                         len = 0;
                         EndPoint clientEP = new IPEndPoint(IPAddress.Any, 0);
                         len = udpSocket.ReceiveFrom(buffer, ref clientEP);
-                        if (len > 17)
+                        //byte[] recv = new byte[len];
+                        //Buffer.BlockCopy(buffer, 0, recv, 0, len);
+
+                        AsyncUserToken token = new AsyncUserToken();
+                        token.IP = (clientEP as IPEndPoint).Address.ToString();
+                        token.Port = (clientEP as IPEndPoint).Port;
+                        lock (_bufferReceived)
                         {
-                            if (null != OnReceivedData)
+                            if (_bufferReceived.ContainsKey(token))
                             {
-                                var aude = new AsyncUserDataEvent();
-                                aude.Data = _bufferPool.Get();
-                                aude.Data.Buffer = new byte[len];
-                                Buffer.BlockCopy(buffer, 0, aude.Data.Buffer, 0, len);
-                                aude.Data.DataType = AsyncUserDataType.ReceivedData;
-                                aude.Data.IP = (clientEP as IPEndPoint).Address.ToString();
-                                aude.Data.PackageType = AsyncDataPackageType.UDP;
-                                aude.Data.Port = (clientEP as IPEndPoint).Port;
-                                aude.Data.ReceiveTime = DateTime.Now;
-                                OnReceivedData(this, aude);
+                                // 组包
+                                var data = _bufferReceived[token];
+                                data.Buffer = CustomConvert.expand(data.Buffer, data.Buffer.Length + len);
+                                Buffer.BlockCopy(buffer, 0, data.Buffer, data.Buffer.Length - len, len);
+                                if (data.Buffer.Length >= data.Buffer[0])
+                                {
+                                    // 包长度足够之后从暂存缓存中移除节点
+                                    _bufferReceived.Remove(token);
+                                    // 发送消息
+                                    OnReceivedData(this, new AsyncUserDataEvent() { Data = data });
+                                }
+                            }
+                            else
+                            {
+                                if (len >= buffer[0])
+                                {
+                                    // 如果收到的是完整的包则直接发给前台处理
+                                    if (null != OnReceivedData)
+                                    {
+                                        var aude = new AsyncUserDataEvent();
+                                        aude.Data = _bufferPool.Get();
+                                        aude.Data.SetDataEvent(token, buffer, len);
+                                        aude.Data.PackageType = AsyncDataPackageType.UDP;
+                                        OnReceivedData(this, aude);
+                                    }
+                                }
+                                else
+                                {
+                                    //var aude = new AsyncUserDataEvent();
+                                    var data = _bufferPool.Get();
+                                    data.SetDataEvent(token, buffer, len);
+                                    data.PackageType = AsyncDataPackageType.UDP;
+                                    _bufferReceived.Add(token, data);
+                                }
                             }
                         }
+                        //if (len > 17)
+                        //{
+                        //    if (null != OnReceivedData)
+                        //    {
+                        //        var aude = new AsyncUserDataEvent();
+                        //        aude.Data = _bufferPool.Get();
+                        //        aude.Data.Buffer = new byte[len];
+                        //        Buffer.BlockCopy(buffer, 0, aude.Data.Buffer, 0, len);
+                        //        aude.Data.DataType = AsyncUserDataType.ReceivedData;
+                        //        aude.Data.IP = (clientEP as IPEndPoint).Address.ToString();
+                        //        aude.Data.PackageType = AsyncDataPackageType.UDP;
+                        //        aude.Data.Port = (clientEP as IPEndPoint).Port;
+                        //        aude.Data.ReceiveTime = DateTime.Now;
+                        //        OnReceivedData(this, aude);
+                        //    }
+                        //}
                     }
-                //}
-                //catch(Exception e)
+                }
+                catch (Exception e)
                 {
-                    //string a = e.Message;
+                    string a = e.Message;
                 }
             }
         }
@@ -388,15 +440,48 @@ namespace Wbs.Sockets
             // 如果 BytesTransferred 不为 0 且没有发送 SocketError，则说明收到客户端发送的信息。
             if (e.BytesTransferred > 0 && e.SocketError == SocketError.Success)
             {
-                if (null != OnReceivedData)
+                lock (_bufferReceived)// 锁定缓冲区
                 {
-                    var aude = new AsyncUserDataEvent();
-                    aude.Data = _bufferPool.Get();
-                    aude.Data.SetDataEvent(e, 0);
-                    aude.Data.PackageType = AsyncDataPackageType.TCP;
-                    OnReceivedData(this, aude);
+                    var token = e.UserToken as AsyncUserToken;
+                    //var socket = (e.UserToken as AsyncUserToken).SocketHandle;
+                    // 如果缓冲区中有这个socket的数据，说明之前的数据收到的不完整，需要再组包
+                    if (_bufferReceived.ContainsKey(token))
+                    {
+                        // 组包
+                        var data = _bufferReceived[token];
+                        data.ResizeData(e);
+                        if (data.Buffer.Length >= data.Buffer[0])
+                        {
+                            // 包长度足够之后从暂存缓存中移除节点
+                            _bufferReceived.Remove(token);
+                            // 发送消息
+                            OnReceivedData(this, new AsyncUserDataEvent() { Data = data });
+                        }
+                    }
+                    else
+                    {
+                        if (e.BytesTransferred >= e.Buffer[e.Offset])
+                        {
+                            // 如果收到的是完整的包则直接发给前台处理
+                            if (null != OnReceivedData)
+                            {
+                                var aude = new AsyncUserDataEvent();
+                                aude.Data = _bufferPool.Get();
+                                aude.Data.SetDataEvent(e, 0);
+                                aude.Data.PackageType = AsyncDataPackageType.TCP;
+                                OnReceivedData(this, aude);
+                            }
+                        }
+                        else
+                        {
+                            //var aude = new AsyncUserDataEvent();
+                            var data = _bufferPool.Get();
+                            data.SetDataEvent(e, 0);
+                            data.PackageType = AsyncDataPackageType.TCP;
+                            _bufferReceived.Add(token, data);
+                        }
+                    }
                 }
-
                 //回传收到的信息。
                 //e.SetBuffer(e.Offset, e.BytesTransferred);
                 //e.SetBuffer(0, 0);
@@ -486,9 +571,9 @@ namespace Wbs.Sockets
         public byte Send(int port, string ip, byte[] buffer)
         {
             byte ret = 0;
-            EndPoint ep=new IPEndPoint(IPAddress.Parse(ip),port);
             try
             {
+                EndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
                 udpSocket.SendTo(buffer, ep);
                 ret = 1;
             }

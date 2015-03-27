@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1C73FC61-F05B-47B7-9999-E258CA7BE369}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Wbs.Everdigm.Desktop</RootNamespace>
+    <AssemblyName>Wbs.Everdigm.Desktop</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FormMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMain.Designer.cs">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Handlers\DataHandler.cs" />
+    <Compile Include="Handlers\PartialDataHandlerBLLs.cs" />
+    <Compile Include="Handlers\SocketServer.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormMain.resx">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="favicon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Protocol.Tx300\Wbs.Protocol.Tx300.csproj">
+      <Project>{2e35ad34-e5cc-4799-9ced-102f9a7af8c8}</Project>
+      <Name>Wbs.Protocol.Tx300</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Protocol.WbsDateTime\Wbs.Protocol.WbsDateTime.csproj">
+      <Project>{6085d4fd-633d-43ee-98d7-fd887913b148}</Project>
+      <Name>Wbs.Protocol.WbsDateTime</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Protocol\Wbs.Protocol.csproj">
+      <Project>{956772bb-347d-49c5-ae80-afa5f42fb192}</Project>
+      <Name>Wbs.Protocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Utilities\Wbs.Utilities.csproj">
+      <Project>{36073bfc-ac86-49c8-82ae-5ac8de80dcc4}</Project>
+      <Name>Wbs.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wbs.Everdigm.BLL\Wbs.Everdigm.BLL.csproj">
+      <Project>{fef26bc4-ae46-4a7c-9787-4d70df5b6a40}</Project>
+      <Name>Wbs.Everdigm.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wbs.Everdigm.Common\Wbs.Everdigm.Common.csproj">
+      <Project>{045579c5-9b92-485a-962c-5e5f190d4143}</Project>
+      <Name>Wbs.Everdigm.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wbs.Everdigm.Database\Wbs.Everdigm.Database.csproj">
+      <Project>{20e609ac-7671-4dcc-907d-d46c49a3334a}</Project>
+      <Name>Wbs.Everdigm.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wbs.Sockets\Wbs.Sockets.csproj">
+      <Project>{70d482df-af02-4abc-83d9-7551b782f21b}</Project>
+      <Name>Wbs.Sockets</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

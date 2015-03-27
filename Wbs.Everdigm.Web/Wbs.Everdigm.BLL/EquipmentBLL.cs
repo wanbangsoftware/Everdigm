@@ -123,25 +123,28 @@ namespace Wbs.Everdigm.BLL
             switch (type)
             {
                 case 0x00:// OFF
-                    ret = "off";
+                    ret = "<span class=\"label label-default\">off</span>";
                     break;
                 case 0x10:// TCP
-                    ret = "tcp";
+                    ret = "<span class=\"label label-info\">tcp</span>";
                     break;
                 case 0x20:// UDP
-                    ret = "udp";
+                    ret = "<span class=\"label label-success\">udp</span>";
                     break;
                 case 0x30:// SMS
-                    ret = "sms";
+                    ret = "<span class=\"label label-warning\">sms</span>";
                     break;
-                case 0x40:
-                    ret = "sleep";
+                case 0x40:// SLEEP
+                    ret = "<span class=\"label label-warning\">sleep</span>";
                     break;
-                case 0x50:
-                    ret = "blind";
+                case 0x50:// BLIND
+                    ret = "<span class=\"label label-danger\">blind</span>";
                     break;
-                case 0xFF:
-                    ret = "trouble";
+                case 0x60:// SATELLITE
+                    ret = "<span class=\"label label-primary\">satellite</span>";
+                    break;
+                case 0xFF:// TROUBLE
+                    ret = "<span class=\"label label-danger\">trouble</span>";
                     break;
             }
             return ret;

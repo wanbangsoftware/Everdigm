@@ -62,7 +62,7 @@ function setButtonsSendingState(sending) {
 function timerOnTime() {
     _timerTimes++;
     if (_timerTimes > _timerMaxtimes) {
-        progressComplete();
+        testProgressComplete();
         showWarningLine(new Date().pattern("HH:mm:ss"), currentTestingCommand, "Timedout, maybe you should try again.");
     } else {
         // 循环读取服务器上改命令发送记录的状态并显示
@@ -98,9 +98,10 @@ function sendCommand() {
     }
 }
 
-function progressComplete() {
-    _timer.pause();
-    _lastCommandStatus = -1;
+function testProgressComplete() {
+    //_timer.pause();
+    //_lastCommandStatus = -1;
+    progressComplete();
     setButtonsSendingState(false);
 }
 
@@ -113,7 +114,7 @@ function getCommandStatus() {
                }
                if (data.status < 0 || data.status >= 6) {
                    // 状态获取失败
-                   progressComplete();
+                   testProgressComplete();
                    if (data.status == 7) {
                        // 发送成功
                    }
@@ -163,10 +164,10 @@ function showHistoryList(list) {
     var html = "";
     for (var i in list) {
         var obj = list[i];
-        var stat = historyStatus(obj.u_sms_status);
-        var time = convertDateTimeToJavascriptDate(obj.u_sms_schedule_time);
+        var stat = historyStatus(obj.Status);
+        var time = convertDateTimeToJavascriptDate(obj.ScheduleTime);
         html += hisItem.replace(/%time%/, time.pattern(_datetimepatternFMT))
-            .replace(/%cmd%/, obj.u_sms_command).replace(/%class%/, stat.classs).replace(/%text%/, stat.text);
+            .replace(/%cmd%/, obj.Command).replace(/%class%/, stat.classs).replace(/%text%/, stat.text);
     }
     if (isStringNull(html)) { html = "No records.";}
     $(".bs-callout:eq(1)").html(html);

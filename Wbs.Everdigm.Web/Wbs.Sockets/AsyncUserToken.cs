@@ -60,6 +60,7 @@ namespace Wbs.Sockets
         public string IP
         {
             get { return aut_ip; }
+            set { aut_ip = value; }
         }
         /// <summary>
         /// 获取绑定的用户节点的端口号码。
@@ -67,6 +68,7 @@ namespace Wbs.Sockets
         public int Port
         {
             get { return aut_port; }
+            set { aut_port = value; }
         }
         /// <summary>
         /// 获取绑定的用户节点的句柄。
@@ -97,14 +99,16 @@ namespace Wbs.Sockets
         }
         
         /// <summary>
-        /// 比较两个用户节点的SocketHandle是否相同
+        /// 比较两个用户节点的IP和Port是否相同
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
         public bool Equals(AsyncUserToken token)
         {
             if (null == token) return false;
-            return token.SocketHandle.Equals(this.SocketHandle);
+            if (token.aut_ip.Equals(this.aut_ip) && token.aut_port.Equals(this.aut_port))
+                return true;
+            return false;//token.SocketHandle.Equals(this.SocketHandle);
         }
 
         public override int GetHashCode()

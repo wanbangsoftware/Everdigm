@@ -150,10 +150,10 @@ function showHistoryList(list) {
     var html = "";
     for (var i in list) {
         var obj = list[i];
-        var stat = historyStatus(obj.u_sms_status);
-        var time = convertDateTimeToJavascriptDate(obj.u_sms_schedule_time);
+        var stat = historyStatus(obj.Status);
+        var time = convertDateTimeToJavascriptDate(obj.ScheduleTime);
         html += hisItem.replace(/%time%/, time.pattern(_datetimepatternFMT))
-            .replace(/%cmd%/, obj.u_sms_command).replace(/%class%/, stat.classs).replace(/%text%/, stat.text);
+            .replace(/%cmd%/, obj.Dommand).replace(/%class%/, stat.classs).replace(/%text%/, stat.text);
     }
     if (isStringNull(html)) { html = "No records."; }
     $(".bs-callout:eq(1)").html(html);

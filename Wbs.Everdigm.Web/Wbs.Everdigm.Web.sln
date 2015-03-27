@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Everdigm.Network", "Wbs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Sockets", "Wbs.Sockets\Wbs.Sockets.csproj", "{70D482DF-AF02-4ABC-83D9-7551B782F21B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Everdigm.Desktop", "Wbs.Everdigm.Desktop\Wbs.Everdigm.Desktop.csproj", "{1C73FC61-F05B-47B7-9999-E258CA7BE369}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{70D482DF-AF02-4ABC-83D9-7551B782F21B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70D482DF-AF02-4ABC-83D9-7551B782F21B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70D482DF-AF02-4ABC-83D9-7551B782F21B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C73FC61-F05B-47B7-9999-E258CA7BE369}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C73FC61-F05B-47B7-9999-E258CA7BE369}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C73FC61-F05B-47B7-9999-E258CA7BE369}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C73FC61-F05B-47B7-9999-E258CA7BE369}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

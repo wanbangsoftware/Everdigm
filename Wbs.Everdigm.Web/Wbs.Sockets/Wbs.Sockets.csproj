@@ -55,6 +55,12 @@
     <Compile Include="SocketAsyncEventArgsPool.cs" />
     <Compile Include="SocketAsyncEventServer.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Utilities\Wbs.Utilities.csproj">
+      <Project>{36073bfc-ac86-49c8-82ae-5ac8de80dcc4}</Project>
+      <Name>Wbs.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
