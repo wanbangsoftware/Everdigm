@@ -57,7 +57,7 @@ namespace Wbs.Everdigm.Web.main
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             var list = HistoryInstance.FindPageList<TB_AccountHistory>(pageIndex, PageSize, out totalRecords,
                 f => user.Contains(f.Account.Value) &&
-                    f.ActionTime >= then && f.ActionTime <= now && f.Account == Account.id, "ActionTime", true);
+                    f.ActionTime >= then && f.ActionTime <= now, "ActionTime", true);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             pageIndex = 0 == pageIndex ? totalPages : pageIndex;
             if (pageIndex >= totalPages)

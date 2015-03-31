@@ -147,7 +147,7 @@ namespace Wbs.Everdigm.Desktop
         }
         private string DateTime(DateTime dt)
         {
-            return dt.ToString("[yyyy/MM/dd HH:mm:ss] ");
+            return dt.ToString("[yyyy/MM/dd HH:mm:ss.fff] ");
         }
         /// <summary>
         /// 数据处理时出错的信息
@@ -155,6 +155,14 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="sender"></param>
         /// <param name="message"></param>
         private void DataHandler_OnUnhandledMessage(object sender, string message)
+        {
+            HandleDisplayMessage(message);
+        }
+        /// <summary>
+        /// 向主界面提交显示信息申请
+        /// </summary>
+        /// <param name="message"></param>
+        private void HandleDisplayMessage(string message)
         {
             if (null != OnMessage)
             {
@@ -201,8 +209,7 @@ namespace Wbs.Everdigm.Desktop
                                     DateTime(obj.ReceiveTime), obj.IP, obj.Port, obj.PackageType);
                                 break;
                             case AsyncUserDataType.ReceivedData:
-                                message = string.Format("{0}received data from {1}:{2}, data: {3} [{4}]",
-                                    DateTime(obj.ReceiveTime), obj.IP, obj.Port,
+                                message = string.Format("{0}received data: {1} [{2}]", DateTime(obj.ReceiveTime), 
                                     CustomConvert.GetHex(obj.Buffer), obj.PackageType);
                                 break;
                         }
@@ -210,12 +217,9 @@ namespace Wbs.Everdigm.Desktop
                         // 处理数据
                         _handler.HandleData(obj);
 
-                        if (null != OnMessage)
+                        if (!string.IsNullOrEmpty(message))
                         {
-                            if (!string.IsNullOrEmpty(message))
-                            {
-                                OnMessage(this, message);
-                            }
+                            HandleDisplayMessage(message);
                         }
                     }
                     finally
@@ -228,7 +232,14 @@ namespace Wbs.Everdigm.Desktop
                 {
                     lock (Locker)
                     {
-                        _handler.CheckCommand();
+                        try
+                        {
+                            _handler.CheckCommand();
+                        }
+                        catch(Exception e)
+                        {
+                            HandleDisplayMessage("Cannot handle CheckCommand: " + e.Message);
+                        }
                     }
                 }
                 // 检测是否应该处理旧链接，每分钟处理一次
@@ -239,7 +250,12 @@ namespace Wbs.Everdigm.Desktop
                     {
                         if (_handler.CanClearOlderLinks)
                         {
-                            _handler.HandleOlderClients();
+                            try
+                            {
+                                _handler.HandleOlderClients();
+                            }
+                            catch(Exception e)
+                            { HandleDisplayMessage("Cannot handle OlderClients: " + e.Message); }
                         }
                     }
                 }

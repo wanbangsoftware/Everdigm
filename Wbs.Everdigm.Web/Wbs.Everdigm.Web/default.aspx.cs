@@ -28,9 +28,12 @@ namespace Wbs.Everdigm.Web
                     updateAccount(account);
                 }
                 else {
-                    Session.Clear();
-                    Request.Cookies.Clear();
-                    Response.Cookies.Clear();
+                    if (!IsPostBack)
+                    {
+                        Session.Clear();
+                        Request.Cookies.Clear();
+                        Response.Cookies.Clear();
+                    }
                 }
             }
         }

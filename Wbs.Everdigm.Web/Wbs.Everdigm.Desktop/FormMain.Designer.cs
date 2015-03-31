@@ -44,6 +44,7 @@
             this.tsmiStopService = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.browser = new System.Windows.Forms.WebBrowser();
             this.tsMain.SuspendLayout();
             this.ssMain.SuspendLayout();
             this.cmsNotifyMenu.SuspendLayout();
@@ -161,11 +162,21 @@
             this.tsmiExit.Text = "Exit";
             this.tsmiExit.Click += new System.EventHandler(this.tsmiExit_Click);
             // 
+            // browser
+            // 
+            this.browser.Location = new System.Drawing.Point(474, 157);
+            this.browser.MinimumSize = new System.Drawing.Size(20, 20);
+            this.browser.Name = "browser";
+            this.browser.Size = new System.Drawing.Size(250, 250);
+            this.browser.TabIndex = 3;
+            this.browser.Visible = false;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(728, 432);
+            this.Controls.Add(this.browser);
             this.Controls.Add(this.rtbHistory);
             this.Controls.Add(this.ssMain);
             this.Controls.Add(this.tsMain);
@@ -203,6 +214,7 @@
         private System.Windows.Forms.ToolStripMenuItem tsmiStopService;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem tsmiExit;
+        private System.Windows.Forms.WebBrowser browser;
     }
 }
 

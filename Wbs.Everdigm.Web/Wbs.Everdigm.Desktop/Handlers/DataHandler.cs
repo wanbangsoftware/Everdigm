@@ -11,6 +11,11 @@ using Wbs.Protocol.WbsDateTime;
 using Wbs.Sockets;
 using Wbs.Everdigm.Common;
 using Wbs.Utilities;
+using System.Net;
+using System.IO;
+using System.Threading.Tasks;
+using System.Configuration;
+using Geocoding.Google;
 
 namespace Wbs.Everdigm.Desktop
 {
@@ -19,6 +24,10 @@ namespace Wbs.Everdigm.Desktop
     /// </summary>
     public partial class DataHandler
     {
+        /// <summary>
+        /// Google API Key
+        /// </summary>
+        private string GOOGLE_API_KEY = ConfigurationManager.AppSettings["GOOGLE_API_KEY"];
         /// <summary>
         /// 无法处理的数据
         /// </summary>
@@ -50,6 +59,8 @@ namespace Wbs.Everdigm.Desktop
         {
             LastOlderLinkHandledTime = DateTime.Now;
         }
+        private string IP { get; set; }
+        private int Port { get; set; }
         /// <summary>
         /// 处理收到的数据
         /// </summary>
@@ -58,6 +69,12 @@ namespace Wbs.Everdigm.Desktop
         {
             try
             {
+                //if (data.PackageType == AsyncDataPackageType.UDP)
+                {
+                    IP = data.IP;
+                    Port = data.Port;
+                }
+
                 switch (data.DataType)
                 {
                     case AsyncUserDataType.ClientConnected: break;
@@ -91,6 +108,8 @@ namespace Wbs.Everdigm.Desktop
                 ShowUnhandledMessage(Now + e.StackTrace + Environment.NewLine + CustomConvert.GetHex(data.Buffer));
                 HandleException(e.StackTrace, CustomConvert.GetHex(data.Buffer));
             }
+            IP = "";
+            Port = 0;
         }
         /// <summary>
         /// 向主界面提交未处理的消息
@@ -144,6 +163,18 @@ namespace Wbs.Everdigm.Desktop
                     UpdateCommand(cmd, (1 == ret ? CommandStatus.SentByTCP : CommandStatus.TCPNetworkError));
                 }
             }
+            // 待发送的命令发送完之后，清理超时的命令
+            ClearTimedoutCommands();
+        }
+        /// <summary>
+        /// 清理超时的命令为发送失败状态
+        /// </summary>
+        private void ClearTimedoutCommands() {
+            CommandInstance.Update(f => f.ScheduleTime <= DateTime.Now.AddMinutes(-10) &&
+                f.Status >= (byte)CommandStatus.Waiting && f.Status <= (byte)CommandStatus.SentToDest, act =>
+                {
+                    act.Status = (byte)CommandStatus.Timedout;
+                });
         }
         /// <summary>
         /// 更新命令的发送状态
@@ -227,6 +258,7 @@ namespace Wbs.Everdigm.Desktop
                 Buffer.BlockCopy(data.Buffer, index, temp, 0, len - index);
                 TX300 x300 = new TX300();
                 x300.Content = temp;
+                temp = null;
                 x300.package_to_msg();
                 // 保存历史记录
                 //SaveTX300History(x300, data.ReceiveTime);
@@ -249,11 +281,11 @@ namespace Wbs.Everdigm.Desktop
                         if (data.PackageType == AsyncDataPackageType.TCP)
                             ret = _server.Send(data.SocketHandle, cc00);
                         else
-                            ret = _server.Send(data.Port, data.IP, cc00);
+                            ret = _server.Send(Port, IP, cc00);
                         if (1 != ret)
                         {
                             ShowUnhandledMessage(Now + string.Format("Cannot send data to {0}:{1}: {2} [{3}]",
-                                data.IP, data.Port, CustomConvert.GetHex(cc00), data.PackageType));
+                                IP, Port, CustomConvert.GetHex(cc00), data.PackageType));
                         }
                         cc00 = null;
                     }
@@ -270,16 +302,17 @@ namespace Wbs.Everdigm.Desktop
                         if (data.PackageType == AsyncDataPackageType.TCP)
                             ret = _server.Send(data.SocketHandle, resp.Content);
                         else
-                            ret = _server.Send(data.Port, data.IP, resp.Content);
+                            ret = _server.Send(Port, IP, resp.Content);
                         if (1 != ret)
                         {
                             ShowUnhandledMessage(Now + string.Format("Cannot send data to {0}:{1}: {2} [{3}]",
-                                data.IP, data.Port, CustomConvert.GetHex(resp.Content), data.PackageType));
+                                IP, Port, CustomConvert.GetHex(resp.Content), data.PackageType));
                         }
                     }
                 }
                 HandleCommandResponsed(x300);
                 index += x300.TotalLength;
+                x300 = null;
             }
         }
         /// <summary>
@@ -399,7 +432,9 @@ namespace Wbs.Everdigm.Desktop
                     break;
                 case 0x6000: break;
                 case 0x6001: break;
-                case 0x6004: break;
+                case 0x6004:
+                    Handle0x6004(obj, equipment, terminal);
+                    break;
                 case 0x6007: 
                     Handle0x6007(obj, equipment, terminal); 
                     break;
@@ -435,12 +470,12 @@ namespace Wbs.Everdigm.Desktop
             byte[] version = new byte[7];
             byte rev = 0;
             if (obj.CommandID == 0xDD00) { Buffer.BlockCopy(obj.MsgContent, 0, version, 0, 7); }
-            else if (obj.CommandID == 0x1001)
-            {
-                Buffer.BlockCopy(obj.MsgContent, 25, version, 0, 7);
-                // revision
-                rev = obj.MsgContent[32];
-            }
+            //else if (obj.CommandID == 0x1001)
+            //{
+            //    Buffer.BlockCopy(obj.MsgContent, 25, version, 0, 7);
+            //    // revision
+            //    rev = obj.MsgContent[32];
+            //}
             else { Buffer.BlockCopy(obj.MsgContent, 0, version, 0, 7); }
             string ver = ASCIIEncoding.ASCII.GetString(version);
             version = null;
@@ -514,13 +549,17 @@ namespace Wbs.Everdigm.Desktop
             _0x1001 x1001 = new _0x1001();
             x1001.Content = obj.MsgContent;
             x1001.Unpackage();
-            if (null != equipment) {
-                EquipmentInstance.Update(f => f.id == equipment.id, act => {
-                    act.Signal = x1001.CSQ_1 > 0 ? x1001.CSQ_1 : (x1001.CSQ_2 > 0 ? x1001.CSQ_2 : byte.MinValue);
-                    if (x1001.WorkTime > 0)
-                    {
-                        act.Runtime = (int)x1001.WorkTime;
-                    }
+            if (null != equipment)
+            {
+                EquipmentInstance.Update(f => f.id == equipment.id, act =>
+                {
+                    act.Signal = (x1001.CSQ_1 > 0 && x1001.CSQ_1 <= 31) ? x1001.CSQ_1 :
+                        ((x1001.CSQ_2 > 0 && x1001.CSQ_2 <= 31) ? x1001.CSQ_2 : byte.MinValue);
+                    // 去掉 0x1001 里面的运转时间更新
+                    //if (x1001.WorkTime > 0)
+                    //{
+                    //    act.Runtime = (int)x1001.WorkTime;
+                    //}
                 });
             }
 
@@ -584,8 +623,11 @@ namespace Wbs.Everdigm.Desktop
             {
                 EquipmentInstance.Update(f => f.id == equipment.id, act =>
                 {
-                    act.Voltage = string.Format("G{0}", ((int)Math.Floor(x5000.GeneratorVoltage * 10)).ToString("0000"));
-
+                    act.Voltage = string.Format("G{0}0", ((int)Math.Floor(x5000.GeneratorVoltage * 10)).ToString("000"));
+                    if (x5000.WorkTime > 0)
+                    {
+                        act.Runtime = (int)x5000.WorkTime;
+                    }
                     if (x5000.GPSInfo.Available)
                     {
                         act.Latitude = x5000.GPSInfo.Latitude;
@@ -596,6 +638,28 @@ namespace Wbs.Everdigm.Desktop
             }
             if (x5000.GPSInfo.Available)
                 SaveGpsInfo(x5000.GPSInfo, equipment, obj.TerminalID, "0x5000");
+        }
+        /// <summary>
+        /// 处理运转时间消息
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="equipment"></param>
+        /// <param name="terminal"></param>
+        private void Handle0x6004(TX300 obj, TB_Equipment equipment, TB_Terminal terminal)
+        {
+            _0x6004DX x6004 = new _0x6004DX();
+            x6004.Content = obj.MsgContent;
+            x6004.Unpackage();
+            if (null != equipment)
+            {
+                if (x6004.TotalWorkTime > 0)
+                {
+                    EquipmentInstance.Update(f => f.id == equipment.id, act =>
+                    {
+                        act.Runtime = (int)x6004.TotalWorkTime;
+                    });
+                }
+            }
         }
         /// <summary>
         /// 处理保安命令
@@ -650,6 +714,7 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="obj"></param>
         private void SaveGpsInfo(GPSInfo obj, TB_Equipment equipment, string terminal, string type)
         {
+            if (!obj.Available) return;
             TB_Data_Position pos = PositionInstance.GetObject();
             pos.Altitude = obj.Altitude;
             pos.Direction = obj.Direction;
@@ -664,7 +729,25 @@ namespace Wbs.Everdigm.Desktop
             pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
             pos.Terminal = terminal;
             pos.Type = type;
-            PositionInstance.Add(pos);
+            pos = PositionInstance.Add(pos);
+            // 更新定位信息
+            ShowUnhandledMessage("position: " + pos.id);
+            //HandleGpsAddress(pos);
+        }
+        private void HandleGpsAddress(TB_Data_Position pos)
+        {
+            // 查询、更新地理位置
+            GoogleGeocoder geocoder = new GoogleGeocoder() { ApiKey = GOOGLE_API_KEY, Language = "en" };
+            //var addr = geocoder.ReverseGeocode(pos.Latitude.Value, pos.Longitude.Value);
+            var addr = geocoder.ReverseGeocode(pos.Latitude.Value, pos.Longitude.Value);
+            //addr.Start();
+            //addr.Wait();
+            var add = addr.First();
+            PositionInstance.Update(f => f.id == pos.id, act =>
+            {
+                act.Address = addr.First().FormattedAddress;
+                act.Updated = 2;
+            });
         }
         /// <summary>
         /// 处理TX10G的数据

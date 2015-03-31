@@ -49,7 +49,7 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist" id="queryBar">
                     <li role="presentation" class="active"><a href="#new" role="tab" data-toggle="tab">New Product</a></li>
-                    <li role="presentation"><a href="#second-lease" role="tab" data-toggle="tab">2 Hand/Lease</a></li>
+                    <li role="presentation"><a href="#second-lease" role="tab" data-toggle="tab">Rental Fleet</a></li>
                     <li role="presentation"><a href="#change-warehouse" role="tab" data-toggle="tab">Change Warehouse</a></li>
                     <li role="presentation" class="dropdown" id="ddTypes">
                         <a id="dropTypes" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Type:</span><span class="caret"></span>
@@ -111,8 +111,8 @@
                                     <th class="in-tab-title-b bg-warning">#</th>
                                     <th class="in-tab-title-b bg-warning">Type</th>
                                     <th class="in-tab-title-b bg-warning">Model</th>
-                                    <th class="in-tab-title-b bg-warning">Time</th>
-                                    <th class="in-tab-title-b bg-warning">eng.</th>
+                                    <th class="in-tab-title-b bg-warning">SMH</th>
+                                    <th class="in-tab-title-b bg-warning">Eng.</th>
                                     <th class="in-tab-title-b bg-warning">Location</th>
                                     <th class="in-tab-title-rb bg-warning">Status</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">In Date</th>

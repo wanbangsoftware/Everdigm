@@ -130,7 +130,7 @@ namespace Wbs.Everdigm.Common
                 command.DestinationNo = sim;
                 command.Status = (byte)CommandStatus.Waiting;
                 command.Content = content;
-                command.SendUser = sender;
+                command.SendUser = (0 == sender ? (int?)null : sender);
                 command.Terminal = terminal.id;
                 return CommandInstance.Add(command).id;
             }
@@ -160,7 +160,7 @@ namespace Wbs.Everdigm.Common
             ct.Content = Content;
             ct.ActualSendTime = DateTime.Now;
             ct.Terminal = terminal.id;
-            ct.SendUser = sender;
+            ct.SendUser = (0 == sender ? (int?)null : sender);
 
             return CommandInstance.Add(ct).id;
         }

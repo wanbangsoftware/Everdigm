@@ -49,7 +49,7 @@ namespace Wbs.Everdigm.Web.main
                     objectInfo.Rows[3].Cells[1].InnerHtml = EquipmentInstance.GetRuntime(obj.Runtime);
                     objectInfo.Rows[3].Cells[3].InnerText = EquipmentInstance.GetEngStatus(obj.Voltage);
 
-                    objectInfo.Rows[4].Cells[1].InnerText = "";
+                    objectInfo.Rows[4].Cells[1].InnerText = obj.GpsAddress;
 
                     var StoreInstance = new StoreHistoryBLL();
                     // 入库记录
@@ -64,10 +64,10 @@ namespace Wbs.Everdigm.Web.main
                     objectInfo.Rows[7].Cells[3].InnerText = StoreInstance.GetStatus(_out);
                     objectInfo.Rows[7].Cells[3].Attributes["title"] = StoreInstance.GetStatusTitle(_out);
 
-                    objectInfo.Rows[8].Cells[1].InnerText = obj.TB_Warehouse.Name;
+                    objectInfo.Rows[8].Cells[1].InnerText = (int?)null == obj.Warehouse ? "-" : obj.TB_Warehouse.Name;
 
                     objectInfo.Rows[10].Cells[1].InnerText = (n == obj.Terminal ? "-" : obj.TB_Terminal.Number);
-                    objectInfo.Rows[10].Cells[3].InnerHtml = EquipmentInstance.GetOnlineStyle(obj.OnlineStyle);
+                    objectInfo.Rows[10].Cells[3].InnerHtml = Utility.GetOnlineStyle(obj.OnlineStyle);
 
                     objectInfo.Rows[11].Cells[1].InnerText = (n == obj.Terminal ? "-" : obj.TB_Terminal.Sim);
                     objectInfo.Rows[11].Cells[3].InnerText =

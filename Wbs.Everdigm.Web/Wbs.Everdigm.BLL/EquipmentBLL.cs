@@ -110,46 +110,6 @@ namespace Wbs.Everdigm.BLL
         }
 
         /// <summary>
-        /// 获取链接状态
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public string GetOnlineStyle(byte? type)
-        {
-            var ret = "";
-            if ((byte?)null == type)
-                ret = "unknown";
-
-            switch (type)
-            {
-                case 0x00:// OFF
-                    ret = "<span class=\"label label-default\">off</span>";
-                    break;
-                case 0x10:// TCP
-                    ret = "<span class=\"label label-info\">tcp</span>";
-                    break;
-                case 0x20:// UDP
-                    ret = "<span class=\"label label-success\">udp</span>";
-                    break;
-                case 0x30:// SMS
-                    ret = "<span class=\"label label-warning\">sms</span>";
-                    break;
-                case 0x40:// SLEEP
-                    ret = "<span class=\"label label-warning\">sleep</span>";
-                    break;
-                case 0x50:// BLIND
-                    ret = "<span class=\"label label-danger\">blind</span>";
-                    break;
-                case 0x60:// SATELLITE
-                    ret = "<span class=\"label label-primary\">satellite</span>";
-                    break;
-                case 0xFF:// TROUBLE
-                    ret = "<span class=\"label label-danger\">trouble</span>";
-                    break;
-            }
-            return ret;
-        }
-        /// <summary>
         /// 获取发动机的启动状态
         /// </summary>
         /// <param name="voltage"></param>
@@ -168,7 +128,8 @@ namespace Wbs.Everdigm.BLL
         public string GetRuntime(int? time)
         {
             if ((int?)null == time) return "0";
-            return (time / 60) + "h" + (time % 60) + "m";
+            double t = (time.Value / 60.0) + (time.Value % 60 / 100.0);
+            return string.Format("{0:0,0.00}", t);
         }
 
     }

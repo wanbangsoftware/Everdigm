@@ -350,4 +350,12 @@
       <Association Name="TB_Satellite_TB_Terminal" Member="TB_Satellite" ThisKey="Satellite" OtherKey="id" Type="TB_Satellite" IsForeignKey="true" />
     </Type>
   </Table>
+  <Table Name="dbo.TB_Setting" Member="TB_Setting">
+    <Type Name="TB_Setting">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AddTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ColumnName" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="ColumnValue" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+    </Type>
+  </Table>
 </Database>

@@ -56,16 +56,25 @@ namespace Wbs.Everdigm.Web.main
         {
             var t = TypeInstance.GetObject();
             BuildType(t);
-            TypeInstance.Add(t);
-
-            // 保存历史记录
-            SaveHistory(new TB_AccountHistory
+            var check = TypeInstance.Find(f => f.Name.Equals(t.Name));
+            if (null != check)
             {
-                ActionId = ActionInstance.Find(f => f.Name.Equals("AddEquipmentType")).id,
-                ObjectA = "[id=" + t.id + "] " + t.Name + ", " + t.Code
-            });
+                ShowNotification("./equipment_type.aspx", "Cannot add new Equipment type, The name of \"" + t.Name + "(" + t.Code + ")\" is exist.", false);
+                return;
+            }
+            else
+            {
+                TypeInstance.Add(t);
 
-            ShowNotification("./equipment_type.aspx", "You have added a new Equipment type: " + t.Name + "(" + t.Code + ").");
+                // 保存历史记录
+                SaveHistory(new TB_AccountHistory
+                {
+                    ActionId = ActionInstance.Find(f => f.Name.Equals("AddEquipmentType")).id,
+                    ObjectA = "[id=" + t.id + "] " + t.Name + ", " + t.Code
+                });
+
+                ShowNotification("./equipment_type.aspx", "You have added a new Equipment type: " + t.Name + "(" + t.Code + ").");
+            }
         }
 
         private void EditType()

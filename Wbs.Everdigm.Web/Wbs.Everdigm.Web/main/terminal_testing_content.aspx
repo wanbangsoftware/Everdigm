@@ -23,7 +23,7 @@
     <form id="form1" runat="server">
         <div class="alert alert-danger alert-dismissible fade in" role="alert">
             You are in testing progress of Terminal 
-            <strong id="terminalInfo" runat="server" style="cursor: pointer;" data-toggle="popover" data-placement="bottom" data-trigger="focus"></strong>now. Please select testing progress blow...
+            <strong id="terminalInfo" runat="server" style="cursor: pointer;" data-toggle="popover" data-placement="bottom" data-trigger="focus"></strong> now. Please select testing progress blow...
             <input type="hidden" id="terminalContent" runat="server" />
         </div>
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">

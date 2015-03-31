@@ -77,10 +77,10 @@ namespace Wbs.Everdigm.Web.main
                     html += "<tr>" +
                         "<td class=\"in-tab-txt-b\">" + cnt + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + (n == obj.Model ? "-" : obj.TB_EquipmentModel.TB_EquipmentType.Code) + "</td>" +
-                        "<td class=\"in-tab-txt-b textoverflow\">" + (n == obj.Model ? "-" : ("<a href=\"./equipment_command.aspx?key=" + id + "\">" + EquipmentInstance.GetFullNumber(obj) + "</a>")) + "</td>" +
-                        "<td class=\"in-tab-txt-b\">" + EquipmentInstance.GetRuntime(obj.Runtime) + "</td>" +
+                        "<td class=\"in-tab-txt-b textoverflow\" style=\"text-align: left !important;\">" + (n == obj.Model ? "-" : ("<a href=\"./equipment_command.aspx?key=" + id + "\">" + EquipmentInstance.GetFullNumber(obj) + "</a>")) + "</td>" +
+                        "<td class=\"in-tab-txt-b\" style=\"text-align: right !important;\">" + EquipmentInstance.GetRuntime(obj.Runtime) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + EquipmentInstance.GetEngStatus(obj.Voltage) + "</td>" +
-                        "<td class=\"in-tab-txt-b textoverflow\">山东省烟台市</td>" +
+                        "<td class=\"in-tab-txt-b textoverflow\" title=\"" + obj.GpsAddress + "\">" + obj.GpsAddress + "</td>" +
                         "<td class=\"in-tab-txt-rb\" title=\"" + EquipmentInstance.GetStatusTitle(obj) + "\">" + EquipmentInstance.GetStatus(obj) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\">" + (null == _in ? "-" : _in.Stocktime.Value.ToString("yyyy/MM/dd")) + "</td>" +
                         "<td class=\"in-tab-txt-b\" title=\"" + StoreInstance.GetStatusTitle(_in) + "\">" + StoreInstance.GetStatus(_in) + "</td>" +
@@ -88,13 +88,13 @@ namespace Wbs.Everdigm.Web.main
                         "<td class=\"in-tab-txt-b\" title=\"" + StoreInstance.GetStatusTitle(_out) + "\">" + StoreInstance.GetStatus(_out) + "</td>" +
                         "<td class=\"in-tab-txt-rb textoverflow\">" + (n == obj.Warehouse ? "-" : obj.TB_Warehouse.Name) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + ((byte?)null == obj.Signal ? "-" : obj.Signal.ToString()) + "</td>" +
-                        "<td class=\"in-tab-txt-b\">" + EquipmentInstance.GetOnlineStyle(obj.OnlineStyle) + "</td>" +
+                        "<td class=\"in-tab-txt-b\">" + Utility.GetOnlineStyle(obj.OnlineStyle) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\">" + ((DateTime?)null == obj.LastActionTime ? "" : obj.LastActionTime.Value.ToString("yyyy/MM/dd")) + "</td>" +
                         "<td class=\"in-tab-txt-rb textoverflow\" title=\"" + EquipmentInstance.GetTerinalTitleInfo(obj) + "\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Number) + "</td>" +
                         //"<td class=\"in-tab-txt-b\">" + (n == obj.Terminal ? "-" : (n == obj.TB_Terminal.Satellite ? "-" : obj.TB_Terminal.TB_Satellite.CardNo)) + "</td>" +
                         //"<td class=\"in-tab-txt-rb\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Sim) + "</td>" +
+                        "<td class=\"in-tab-txt-b\">" + (n == obj.Customer ? "-" : obj.TB_Customer.Code) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + (n == obj.Customer ? "-" : obj.TB_Customer.Name) + "</td>" +
-                        "<td class=\"in-tab-txt-b\">-</td>" +
                         "</tr>";
                 }
             }

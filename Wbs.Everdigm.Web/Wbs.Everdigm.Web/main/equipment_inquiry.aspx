@@ -78,8 +78,8 @@
                                     <th class="in-tab-title-b bg-warning">#</th>
                                     <th class="in-tab-title-b bg-warning">Type</th>
                                     <th class="in-tab-title-b bg-warning">Model</th>
-                                    <th class="in-tab-title-b bg-warning">Time</th>
-                                    <th class="in-tab-title-b bg-warning">eng.</th>
+                                    <th class="in-tab-title-b bg-warning">SMH</th>
+                                    <th class="in-tab-title-b bg-warning">Eng.</th>
                                     <th class="in-tab-title-b bg-warning">Location</th>
                                     <th class="in-tab-title-rb bg-warning">Status</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">In Date</th>
@@ -92,7 +92,7 @@
                                     <th class="in-tab-title-b bg-warning">Received</th>
                                     <th class="in-tab-title-rb bg-warning">Ter. NO.</th>
                                     <th class="in-tab-title-b bg-warning">Number</th>
-                                    <th class="in-tab-title-b bg-warning">Contract</th>
+                                    <th class="in-tab-title-b bg-warning">Name</th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -108,7 +108,7 @@
                                 <tr>
                                     <td class="in-tab-txt-b">1</td>
                                     <td class="in-tab-txt-b">EX.</td>
-                                    <td class="in-tab-txt-b textoverflow">DL215-9-21442</td>
+                                    <td class="in-tab-txt-b textoverflow" style="text-align: left !important;">DL215-9-21442</td>
                                     <td class="in-tab-txt-b">2430</td>
                                     <td class="in-tab-txt-b">OFF</td>
                                     <td class="in-tab-txt-b textoverflow">山东省烟台市</td>

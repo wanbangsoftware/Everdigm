@@ -22,7 +22,7 @@ namespace Wbs.Everdigm.BLL
         /// <returns></returns>
         public override TB_EquipmentType GetObject()
         {
-            return new TB_EquipmentType { Code = "", id = 0, Name = "" };
+            return new TB_EquipmentType { Code = "", id = 0, Name = "", Delete = false };
         }
         public override string ToString(TB_EquipmentType entity)
         {

@@ -58,14 +58,25 @@ namespace Wbs.Everdigm.Web
                 if (!string.IsNullOrEmpty(hidAddress.Value))
                 {
                     // 地址不为空时更新成功
+                    var pos = PositionInstance.Find(f => f.id == id);
                     PositionInstance.Update(f => f.id == id && f.Updated == 1, act =>
                     {
                         act.Address = hidAddress.Value;
                         act.Updated = 2;
                     });
+                    // 更新设备的最新定位信息
+                    if (pos.Equipment != (int?)null)
+                    {
+                        var EquipmentInstance = new EquipmentBLL();
+                        EquipmentInstance.Update(f => f.id == pos.Equipment, act =>
+                        {
+                            act.GpsAddress = hidAddress.Value;
+                            act.GpsUpdated = true;
+                        });
+                    }
                 }
                 else
-                { 
+                {
                     // 地址不为空时更新失败，其他时候会将其更新成待更新状态
                     PositionInstance.Update(f => f.id == id && f.Updated == 1, act =>
                     {

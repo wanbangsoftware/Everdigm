@@ -70,7 +70,11 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\TX10G\LGServiceMonitor\Dlls\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -82,6 +86,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command.cs" />
     <Compile Include="DataHandler.cs" />
     <Compile Include="DataPackage.cs" />
     <Compile Include="FormMain.cs">
@@ -127,29 +132,9 @@
     <Content Include="satellite.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Protocol.Tx300\Wbs.Protocol.Tx300.csproj">
-      <Project>{2e35ad34-e5cc-4799-9ced-102f9a7af8c8}</Project>
-      <Name>Wbs.Protocol.Tx300</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Protocol.WbsDateTime\Wbs.Protocol.WbsDateTime.csproj">
-      <Project>{6085d4fd-633d-43ee-98d7-fd887913b148}</Project>
-      <Name>Wbs.Protocol.WbsDateTime</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Protocol\Wbs.Protocol.csproj">
-      <Project>{956772bb-347d-49c5-ae80-afa5f42fb192}</Project>
-      <Name>Wbs.Protocol</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Utilities\Wbs.Utilities.csproj">
       <Project>{36073bfc-ac86-49c8-82ae-5ac8de80dcc4}</Project>
       <Name>Wbs.Utilities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Wbs.Everdigm.Web\Wbs.Everdigm.BLL\Wbs.Everdigm.BLL.csproj">
-      <Project>{fef26bc4-ae46-4a7c-9787-4d70df5b6a40}</Project>
-      <Name>Wbs.Everdigm.BLL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Wbs.Everdigm.Web\Wbs.Everdigm.Database\Wbs.Everdigm.Database.csproj">
-      <Project>{20e609ac-7671-4dcc-907d-d46c49a3334a}</Project>
-      <Name>Wbs.Everdigm.Database</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

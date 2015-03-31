@@ -28,6 +28,7 @@ namespace Wbs.Everdigm.BLL
             {
                 id = 0,
                 Code = "0000000000000000",
+                Terminal = "",
                 Equipment = (int?)null,
                 Position = (int?)null,
                 StoreTimes = 0

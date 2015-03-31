@@ -100,6 +100,9 @@ namespace Wbs.Everdigm.Database
     partial void InsertTB_Terminal(TB_Terminal instance);
     partial void UpdateTB_Terminal(TB_Terminal instance);
     partial void DeleteTB_Terminal(TB_Terminal instance);
+    partial void InsertTB_Setting(TB_Setting instance);
+    partial void UpdateTB_Setting(TB_Setting instance);
+    partial void DeleteTB_Setting(TB_Setting instance);
     #endregion
 		
 		public EverdigmDataContext(string connection) : 
@@ -307,6 +310,14 @@ namespace Wbs.Everdigm.Database
 			get
 			{
 				return this.GetTable<TB_Terminal>();
+			}
+		}
+		
+		public System.Data.Linq.Table<TB_Setting> TB_Setting
+		{
+			get
+			{
+				return this.GetTable<TB_Setting>();
 			}
 		}
 	}
@@ -8721,6 +8732,157 @@ namespace Wbs.Everdigm.Database
 		public void OnSerialized(StreamingContext context)
 		{
 			this.serializing = false;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TB_Setting")]
+	[global::System.Runtime.Serialization.DataContractAttribute()]
+	public partial class TB_Setting : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private System.Nullable<System.DateTime> _AddTime;
+		
+		private string _ColumnName;
+		
+		private string _ColumnValue;
+		
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnAddTimeChanging(System.Nullable<System.DateTime> value);
+    partial void OnAddTimeChanged();
+    partial void OnColumnNameChanging(string value);
+    partial void OnColumnNameChanged();
+    partial void OnColumnValueChanging(string value);
+    partial void OnColumnValueChanged();
+    #endregion
+		
+		public TB_Setting()
+		{
+			this.Initialize();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AddTime", DbType="DateTime")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+		public System.Nullable<System.DateTime> AddTime
+		{
+			get
+			{
+				return this._AddTime;
+			}
+			set
+			{
+				if ((this._AddTime != value))
+				{
+					this.OnAddTimeChanging(value);
+					this.SendPropertyChanging();
+					this._AddTime = value;
+					this.SendPropertyChanged("AddTime");
+					this.OnAddTimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ColumnName", DbType="VarChar(20)")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+		public string ColumnName
+		{
+			get
+			{
+				return this._ColumnName;
+			}
+			set
+			{
+				if ((this._ColumnName != value))
+				{
+					this.OnColumnNameChanging(value);
+					this.SendPropertyChanging();
+					this._ColumnName = value;
+					this.SendPropertyChanged("ColumnName");
+					this.OnColumnNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ColumnValue", DbType="VarChar(20)")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=4)]
+		public string ColumnValue
+		{
+			get
+			{
+				return this._ColumnValue;
+			}
+			set
+			{
+				if ((this._ColumnValue != value))
+				{
+					this.OnColumnValueChanging(value);
+					this.SendPropertyChanging();
+					this._ColumnValue = value;
+					this.SendPropertyChanged("ColumnValue");
+					this.OnColumnValueChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void Initialize()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Runtime.Serialization.OnDeserializingAttribute()]
+		[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+		public void OnDeserializing(StreamingContext context)
+		{
+			this.Initialize();
 		}
 	}
 }

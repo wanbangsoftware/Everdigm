@@ -6,6 +6,9 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 
 using Wbs.Everdigm.Database;
+using System.Configuration;
+using Wbs.Utilities;
+using Wbs.Everdigm.Common;
 
 namespace Wbs.Everdigm.Web.main
 {
@@ -73,7 +76,7 @@ namespace Wbs.Everdigm.Web.main
             string html = "";
             if (totalRecords < 1)
             {
-                html = "<tr><td colspan=\"11\">No records, You can change the condition and try again or " +
+                html = "<tr><td colspan=\"12\">No records, You can change the condition and try again or " +
                     " <a href=\"./terminal_register.aspx\">ADD</a> new one.</td></tr>";
             }
             else
@@ -95,7 +98,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td style=\"text-align: center;\">" + obj.Type + "</td>" +
                         "<td>" + obj.ProductionDate.Value.ToString("yyyy/MM/dd") + "</td>" +
                         "<td style=\"text-align: center;\">" + (obj.HasBound == true ? "yes" : "-") + "</td>" +
-                        "<td></td>" +
+                        "<td>" + Utility.GetOnlineStyle(obj.OnlineStyle) + "</td>" +
                         "</tr>";
                 }
             }
@@ -150,6 +153,8 @@ namespace Wbs.Everdigm.Web.main
                     string satno = t.TB_Satellite.CardNo;
                     TerminalInstance.Update(f => f.id == t.id, act => { act.Satellite = (int?)null; });
                     SatelliteInstance.Update(f => f.id == t.Satellite, act => { act.Bound = false; });
+                    // 发送解绑卫星模块的命令
+                    SendDD02Command(false, t);
                     SaveHistory(new TB_AccountHistory()
                     {
                         ActionId = ActionInstance.Find(f => f.Name.Equals("UnboundSat")).id,
@@ -158,6 +163,35 @@ namespace Wbs.Everdigm.Web.main
                     ShowNotification("./terminal_list.aspx", "Ter: " + t.Number + " unbound Sat: " + satno + " OK!");
                 }
             }
+        }
+        private void SendDD02Command(bool bound,TB_Terminal terminal)
+        {
+            var str = GetDD02Command(bound, terminal.Sim);
+            var CommandInstance = new Wbs.Everdigm.BLL.CommandBLL();
+            var obj = CommandInstance.GetObject();
+            obj.Content = str;
+            var sim = terminal.Sim;
+            sim = (sim[0] == '8' && sim[1] == '9' && sim.Length < 11) ? (sim + "000") : sim;
+            obj.DestinationNo = sim;
+            obj.Terminal = terminal.id;
+            obj = CommandInstance.Add(obj);
+            CommandUtility.SendSMSCommand(obj);
+        }
+        private string GetDD02Command(bool bound, string sim)
+        {
+            sim = (sim[0] == '8' && sim[1] == '9' && sim.Length < 11) ? (sim + "000") : sim;
+            var str = ConfigurationManager.AppSettings["0xDD02"];
+            str = str.Replace("13953598693", sim);
+            var data = Utility.GetBytes(str);
+            data[data.Length - 4] = (byte)(bound ? 1 : 0);
+            if (bound)
+            {
+                var server = ConfigurationManager.AppSettings["SATELLITE_SERVER"];
+                var b = BitConverter.GetBytes(int.Parse(server));
+                b = CustomConvert.reserve(b);
+                System.Buffer.BlockCopy(b, 1, data, data.Length - 3, 3);
+            }
+            return Utility.GetHex(data);
         }
 
         protected void btBoundSatellite_Click(object sender, EventArgs e)
@@ -202,6 +236,8 @@ namespace Wbs.Everdigm.Web.main
                                 act.Satellite = g.id;
                             });
                             SatelliteInstance.Update(f => f.id == g.id, act => { act.Bound = true; });
+                            // 发送绑定卫星模块的命令
+                            SendDD02Command(true, t);
                             // 保存绑定卫星模块的历史记录
                             SaveHistory(new TB_AccountHistory()
                             {

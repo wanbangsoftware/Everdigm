@@ -11,8 +11,10 @@ using System.Windows.Forms;
 using System.IO;
 using System.IO.Ports;
 using System.Timers;
-using Wbs.Protocol;
 using Wbs.Utilities;
+using System.Net;
+using System.Configuration;
+using Newtonsoft.Json;
 
 namespace Satellite
 {
@@ -22,6 +24,10 @@ namespace Satellite
         /// 保存历史记录的时间间隔：10分钟保存一次
         /// </summary>
         private static int SAVE_HISTORY_INTERVAL = 10;
+        /// <summary>
+        /// 服务器地址
+        /// </summary>
+        private string SERVER = ConfigurationManager.AppSettings["SERVER_ADDRESS"];
         /// <summary>
         /// 标记窗体是否关闭
         /// </summary>
@@ -89,28 +95,73 @@ namespace Satellite
             }
         }
         /// <summary>
+        /// 更新自检信息回来的设备参数
+        /// </summary>
+        /// <param name="obj"></param>
+        private void UpdateZJXX(SatellitePackage obj)
+        {
+            this.BeginInvoke((MyInvoker)delegate
+            {
+                tstbOrigin.Text = obj.OriginAddress;
+                tsslNumber.Text = "Original No.: " + obj.OriginAddress;
+                ZJXX z = obj as ZJXX;
+                tsslCapacity.Text = "Capacity: " + string.Format("[{0}:{1}][{2}:{3}][{4}:{5}][{6}:{7}][{8}:{9}][{10}:{11}]",
+                    1, z.PW1, 2, z.PW2, 3, z.PW3, 4, z.PW4, 5, z.PW5, 6, z.PW6);
+            });
+        }
+        /// <summary>
+        /// 处理接收到的通讯信息
+        /// </summary>
+        /// <param name="obj"></param>
+        private void HandleTXXX(TXXX obj)
+        {
+            if (null == obj) return;
+            // 数据长度大于TX通讯协议数据包头的话才继续处理
+            if (obj.Message.Length >= 17)
+            {
+                Task task = new Task(() =>
+                {
+                    string ret = "";
+                    string url = SERVER + "type=data&cmd=" + obj.OriginAddress + "&data=" + CustomConvert.GetHex(obj.Message);
+                    try
+                    {
+                        // 正式调用URL发送SMS信息，测试期可以注释掉，运营期时再恢复
+                        HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(url);
+                        HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+                        StreamReader reader = new StreamReader(resp.GetResponseStream(), System.Text.Encoding.GetEncoding("utf-8"));
+                        ret = reader.ReadToEnd();
+                        reader.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        ret = "exception: " + e.ToString();
+                    }
+                });
+                task.Start();
+            }
+        }
+        /// <summary>
         /// 数据处理完毕事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="list"></param>
         private void OnDataHandled(object sender, HandledData e)
         {
+            // 读出本地的卡号
+            switch (e.Data.Command)
+            {
+                case "$ZJXX":
+                    // 自检信息
+                    UpdateZJXX(e.Data);
+                    break;
+                case "$TXXX":
+                    // 通讯信息
+                    HandleTXXX(e.Data as TXXX);
+                    break;
+            }
             // 显示分析的详细内容
             if (tsmiAnalyseData.Checked)
-            {
-                // 读出本地的卡号
-                if (e.Data.Command.Equals("$ZJXX"))
-                {
-                    this.BeginInvoke((MyInvoker)delegate
-                    {
-                        tstbOrigin.Text = e.Data.OriginAddress;
-                        tsslNumber.Text = "Original No.: " + e.Data.OriginAddress;
-                        ZJXX z = e.Data as ZJXX;
-                        tsslCapacity.Text = "Capacity: " + string.Format("[{0}:{1}][{2}:{3}][{4}:{5}][{6}:{7}][{8}:{9}][{10}:{11}]",
-                            1, z.PW1, 2, z.PW2, 3, z.PW3, 4, z.PW4, 5, z.PW5, 6, z.PW6);
-                    });
-                }
-                foreach (var str in e.Message)
+            {                foreach (var str in e.Message)
                 {
                     ShowHistory(str, false);
                 }
@@ -232,6 +283,52 @@ namespace Satellite
             });
         }
         /// <summary>
+        /// 获取需要通过卫星方式发送的命令并发送出去
+        /// </summary>
+        private void HandleSatelliteCommand()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                string ret = "";
+                string url = SERVER + "type=command";
+                try
+                {
+                    // 正式调用URL发送SMS信息，测试期可以注释掉，运营期时再恢复
+                    HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(url);
+                    HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+                    StreamReader reader = new StreamReader(resp.GetResponseStream(), System.Text.Encoding.GetEncoding("utf-8"));
+                    ret = reader.ReadToEnd();
+                    reader.Close();
+                    resp.Close();
+                    if (!string.IsNullOrEmpty(ret))
+                    {
+                        var cmd = JsonConvert.DeserializeObject<Command>(ret);
+                        if (cmd.Status > 0)
+                        {
+                            // 发送命令
+                            this.BeginInvoke((MyInvoker)delegate
+                            {
+                                try
+                                {
+                                    SendData(cmd.Destination, cmd.Content, true);
+                                    url = SERVER + "type=command&cmd=" + cmd.Id;
+                                    req = (HttpWebRequest)HttpWebRequest.Create(url);
+                                    resp = (HttpWebResponse)req.GetResponse();
+                                    reader = new StreamReader(resp.GetResponseStream(), System.Text.Encoding.GetEncoding("utf-8"));
+                                }
+                                catch
+                                { }
+                            });
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    ret = "exception: " + e.ToString();
+                }
+            });
+        }
+        /// <summary>
         /// 计时器的执行方法
         /// </summary>
         /// <param name="source"></param>
@@ -251,6 +348,10 @@ namespace Satellite
             }
             else
             {
+                if (interval.Seconds > 0 && interval.Seconds % SAVE_HISTORY_INTERVAL == 0) { 
+                    // 每10秒获取一次需要卫星方式发送的命令
+                    HandleSatelliteCommand();
+                }
                 if (dataSaved) 
                     dataSaved = false;
                 if (gpsSaved) 
@@ -561,6 +662,24 @@ namespace Satellite
         {
             tsmiSendAsHexData.Checked = !tsmiSendAsHexData.Checked;
         }
+        private void SendData(string target, string content, bool asHex)
+        {
+            TXSQ txsq = new TXSQ();
+            txsq.OriginAddress = tstbOrigin.Text;
+            txsq.Type.TransferType = 1;
+            txsq.TargetAddress = target;
+            txsq.Reply = 0;
+            txsq.Message = asHex ? CustomConvert.GetBytes(content) : ASCIIEncoding.ASCII.GetBytes(content);
+            //tsmiSendAsHexData.Checked ? CustomConvert.GetBytes(str) : ASCIIEncoding.ASCII.GetBytes(str);
+            txsq.Package();
+
+            //ShowHistory(CustomConvert.GetHex(txsq.Content));
+            DataPackage data = _handler.GetBlankDataPackage();
+            data.Data = txsq.Content;
+            data.Time = DateTime.Now;
+            data.Type = DataType.Send;
+            _handler.AddMessage(data);
+        }
         /// <summary>
         /// 发送数据
         /// </summary>
@@ -572,21 +691,7 @@ namespace Satellite
                 !string.IsNullOrEmpty(tstbTarget.Text) &&
                 !string.IsNullOrEmpty(tstbData.Text))
             {
-                var str = tstbData.Text.Trim();
-                TXSQ txsq = new TXSQ();
-                txsq.OriginAddress = tstbOrigin.Text;
-                txsq.Type.TransferType = 1;
-                txsq.TargetAddress = tstbTarget.Text;
-                txsq.Reply = 0;
-                txsq.Message = tsmiSendAsHexData.Checked ? CustomConvert.GetBytes(str) : ASCIIEncoding.ASCII.GetBytes(str);
-                txsq.Package();
-
-                //ShowHistory(CustomConvert.GetHex(txsq.Content));
-                DataPackage data = _handler.GetBlankDataPackage();
-                data.Data = txsq.Content;
-                data.Time = DateTime.Now;
-                data.Type = DataType.Send;
-                _handler.AddMessage(data);
+                SendData(tstbTarget.Text.Trim(), tstbData.Text.Trim(), tsmiSendAsHexData.Checked);
             }
             else
             {

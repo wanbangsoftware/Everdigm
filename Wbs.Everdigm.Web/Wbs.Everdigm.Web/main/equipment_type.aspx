@@ -56,7 +56,7 @@
                                     <th style="width: 40px; text-align: center;">
                                         <input type="checkbox" id="cbAll" /></th>
                                     <th style="width: 40px; text-align: center;">ID</th>
-                                    <th style="width: 200px;">Name</th>
+                                    <th style="width: 300px;">Name</th>
                                     <th style="width: 180px;">Code</th>
                                     <th>-</th>
                                 </tr>

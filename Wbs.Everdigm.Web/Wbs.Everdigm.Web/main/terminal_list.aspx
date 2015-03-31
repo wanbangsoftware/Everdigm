@@ -45,21 +45,22 @@
                                 <tr>
                                     <th style="width: 40px; text-align: center;">
                                         <input type="checkbox" id="cbAll" /></th>
-                                    <th style="width: 60px; text-align: center;">ID</th>
+                                    <th style="width: 40px; text-align: center;">ID</th>
                                     <th style="width: 100px;">Number</th>
                                     <th style="width: 100px;">Simcard</th>
                                     <th style="width: 130px;">Satellite</th>
                                     <th style="width: 70px;">Firmware</th>
-                                    <th style="width: 60px; text-align: center;">Revision</th>
+                                    <th style="width: 30px; text-align: center;">Rev</th>
                                     <th style="width: 50px; text-align: center;">Type</th>
-                                    <th style="width: 100px;">Register</th>
+                                    <th style="width: 70px;">Register</th>
                                     <th style="width: 50px; text-align: center;">Bound</th>
+                                    <th style="width: 70px;">Link</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="11">
+                                    <td colspan="12">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>
@@ -79,6 +80,7 @@
                                     <td style="text-align: center;">DX</td>
                                     <td>2015-01-08</td>
                                     <td style="text-align: center;">-</td>
+                                    <td>OFF</td>
                                     <td></td>
                                 </tr>
                             </tbody>

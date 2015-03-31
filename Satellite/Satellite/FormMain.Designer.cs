@@ -54,6 +54,7 @@
             this.ssMain = new System.Windows.Forms.StatusStrip();
             this.tsslTimer = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslNumber = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsslCapacity = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsSend = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.tstbOrigin = new System.Windows.Forms.ToolStripTextBox();
@@ -69,7 +70,6 @@
             this.scContainer = new System.Windows.Forms.SplitContainer();
             this.rtbHistory = new System.Windows.Forms.RichTextBox();
             this.rtbGPS = new System.Windows.Forms.RichTextBox();
-            this.tsslCapacity = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsMain.SuspendLayout();
             this.ssMain.SuspendLayout();
             this.tsSend.SuspendLayout();
@@ -201,6 +201,8 @@
             // 
             // tsmiSendAsHexData
             // 
+            this.tsmiSendAsHexData.Checked = true;
+            this.tsmiSendAsHexData.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tsmiSendAsHexData.Name = "tsmiSendAsHexData";
             this.tsmiSendAsHexData.Size = new System.Drawing.Size(178, 22);
             this.tsmiSendAsHexData.Text = "Send as Hex data";
@@ -284,6 +286,13 @@
             this.tsslNumber.Name = "tsslNumber";
             this.tsslNumber.Size = new System.Drawing.Size(132, 21);
             this.tsslNumber.Text = "Original No.: 000000";
+            // 
+            // tsslCapacity
+            // 
+            this.tsslCapacity.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+            this.tsslCapacity.Name = "tsslCapacity";
+            this.tsslCapacity.Size = new System.Drawing.Size(64, 21);
+            this.tsslCapacity.Text = "Capacity:";
             // 
             // tsSend
             // 
@@ -389,7 +398,7 @@
             // 
             this.scContainer.Panel2.Controls.Add(this.rtbGPS);
             this.scContainer.Size = new System.Drawing.Size(884, 385);
-            this.scContainer.SplitterDistance = 355;
+            this.scContainer.SplitterDistance = 354;
             this.scContainer.TabIndex = 4;
             // 
             // rtbHistory
@@ -398,7 +407,7 @@
             this.rtbHistory.Location = new System.Drawing.Point(0, 0);
             this.rtbHistory.Name = "rtbHistory";
             this.rtbHistory.ReadOnly = true;
-            this.rtbHistory.Size = new System.Drawing.Size(884, 355);
+            this.rtbHistory.Size = new System.Drawing.Size(884, 354);
             this.rtbHistory.TabIndex = 2;
             this.rtbHistory.Tag = "0";
             this.rtbHistory.Text = "";
@@ -409,17 +418,10 @@
             this.rtbGPS.Location = new System.Drawing.Point(0, 0);
             this.rtbGPS.Name = "rtbGPS";
             this.rtbGPS.ReadOnly = true;
-            this.rtbGPS.Size = new System.Drawing.Size(884, 26);
+            this.rtbGPS.Size = new System.Drawing.Size(884, 27);
             this.rtbGPS.TabIndex = 0;
             this.rtbGPS.Tag = "0";
             this.rtbGPS.Text = "";
-            // 
-            // tsslCapacity
-            // 
-            this.tsslCapacity.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
-            this.tsslCapacity.Name = "tsslCapacity";
-            this.tsslCapacity.Size = new System.Drawing.Size(64, 21);
-            this.tsslCapacity.Text = "Capacity:";
             // 
             // FormMain
             // 

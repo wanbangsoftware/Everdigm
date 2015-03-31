@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,7 +19,7 @@ namespace Wbs.Everdigm.Desktop
         /// <summary>
         /// 标记是否真的关闭窗口
         /// </summary>
-        private bool Close = false;
+        private bool IsClose = false;
         /// <summary>
         /// 服务
         /// </summary>
@@ -27,6 +28,13 @@ namespace Wbs.Everdigm.Desktop
         /// 自定义委托类型
         /// </summary>
         private delegate void MyInvoker();
+        /// <summary>
+        /// 保存历史记录的计时器
+        /// </summary>
+        private System.Threading.Timer _timerSave;
+
+        private string MAP_URL = ConfigurationManager.AppSettings["FETCH_MAP_URL"];
+
         public FormMain()
         {
             InitializeComponent();
@@ -90,20 +98,98 @@ namespace Wbs.Everdigm.Desktop
             {
                 try
                 {
-                    if (tsmiShowHistory.Checked)
+                    if (history.IndexOf("position: ") == 0) { 
+                        // 捕获位置信息
+                        browser.Navigate(MAP_URL + history.Replace("position: ", "") + "&time=" + DateTime.Now.Ticks);
+                    }
+                    else
                     {
-                        rtbHistory.AppendText((showTime ? Now : "") + history + Environment.NewLine);
-                        rtbHistory.SelectionStart = rtbHistory.Text.Length;
-                        rtbHistory.ScrollToCaret();
+                        if (tsmiShowHistory.Checked)
+                        {
+                            rtbHistory.AppendText((showTime ? Now : "") + history + Environment.NewLine);
+                            rtbHistory.SelectionStart = rtbHistory.Text.Length;
+                            rtbHistory.ScrollToCaret();
+                        }
                     }
                 }
                 catch { }
             });
         }
-
+        private uint _timerCounter = 0;
         private void FormMain_Load(object sender, EventArgs e)
         {
             StartService();
+            _timerSave = new System.Threading.Timer(new TimerCallback(SaveHistory), null, 0, 10000);
+        }
+        /// <summary>
+        /// 保存历史记录
+        /// </summary>
+        /// <param name="sender"></param>
+        private void SaveHistory(object sender)
+        {
+            _timerCounter++;
+            // 一小时保存一次
+            if (_timerCounter % 360 == 0)
+            {
+                _timerCounter = 0;
+                SaveFile();
+            }
+        }
+        /// <summary>
+        /// 保存
+        /// </summary>
+        private void SaveFile()
+        {
+            rtbHistory.BeginInvoke((MyInvoker)delegate
+            {
+                if (rtbHistory.Text.Length < 1) return;
+
+                var ret = SaveFile("data\\" + DateTime.Now.ToString("yyyyMMdd") + "_history.txt", rtbHistory.Text);
+                if (string.IsNullOrEmpty(ret))
+                {
+                    rtbHistory.Clear();
+                }
+                else
+                {
+                    ShowHistory(ret, true);
+                }
+            });
+        }
+
+        /// <summary>
+        /// 保存文件
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        private string SaveFile(string path, string text)
+        {
+            var ret = "";
+            if (string.IsNullOrEmpty(text)) return ret;
+
+            var filePath = Application.StartupPath + "\\" + path;
+            var p = filePath.Substring(0, filePath.LastIndexOf("\\"));
+            if (!Directory.Exists(p))
+            {
+                Directory.CreateDirectory(p);
+            }
+            using (FileStream fs = File.Open(filePath, FileMode.Append, FileAccess.Write))
+            {
+                try
+                {
+                    var bytes = Encoding.UTF8.GetBytes(text);
+                    fs.Write(bytes, 0, bytes.Length);
+                }
+                catch (Exception e)
+                {
+                    ret = "保存文件失败：" + e.Message;
+                }
+                finally
+                {
+                    fs.Close();
+                }
+            }
+            return ret;
         }
 
         private void tsmiShowHistory_Click(object sender, EventArgs e)
@@ -113,9 +199,10 @@ namespace Wbs.Everdigm.Desktop
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (Close)
+            if (IsClose)
             {
                 StopService();
+                SaveFile();
             }
             else
             {
@@ -146,7 +233,7 @@ namespace Wbs.Everdigm.Desktop
 
         private void tsmiExit_Click(object sender, EventArgs e)
         {
-            Close = true;
+            IsClose = true;
             this.Close();
         }
 

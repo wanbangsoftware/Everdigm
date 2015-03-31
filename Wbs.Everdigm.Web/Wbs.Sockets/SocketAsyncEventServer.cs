@@ -200,7 +200,7 @@ namespace Wbs.Sockets
         /// </summary>
         private void handleUdpReceive() {
             int len = 0;
-            byte[] buffer=new byte[1024];
+            byte[] buffer = new byte[1024];
             while (!stoped)
             {
                 try {
