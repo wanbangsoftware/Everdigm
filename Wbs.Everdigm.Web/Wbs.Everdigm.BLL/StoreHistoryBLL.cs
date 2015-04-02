@@ -33,8 +33,8 @@ namespace Wbs.Everdigm.BLL
             var list = FindList<TB_EquipmentStockHistory>(f => 
                 f.Equipment == equipment && f.StoreTimes == storeTimes &&
                 (storeIn ? 
-                (f.TB_EquipmentStatusCode.TB_EquipmentStatusName.IsInventory == true) :
-                (f.TB_EquipmentStatusCode.TB_EquipmentStatusName.IsOutstorage == true)), "Stocktime");
+                (f.TB_EquipmentStatusName.IsItInventory == true) :
+                (f.TB_EquipmentStatusName.IsItOutstorage == true)), "Stocktime");
             return list.FirstOrDefault();
         }
         /// <summary>
@@ -45,7 +45,7 @@ namespace Wbs.Everdigm.BLL
         public string GetStatus(TB_EquipmentStockHistory obj)
         {
             if (null == obj) return "-";
-            return obj.TB_EquipmentStatusCode.TB_EquipmentStatusName.Code + obj.TB_EquipmentStatusCode.Code;
+            return obj.TB_EquipmentStatusName.Code;
         }
         /// <summary>
         /// 获取设备库存状态信息描述
@@ -55,7 +55,7 @@ namespace Wbs.Everdigm.BLL
         public string GetStatusTitle(TB_EquipmentStockHistory obj)
         {
             if (null == obj) return "-";
-            return obj.TB_EquipmentStatusCode.Name + "(" + obj.TB_EquipmentStatusCode.TB_EquipmentStatusName.Name + ")";
+            return obj.TB_EquipmentStatusName.Name;
         }
         /// <summary>
         /// 生成一个空的出入库历史记录实例
@@ -78,7 +78,7 @@ namespace Wbs.Everdigm.BLL
         {
             return string.Format("{0},{1},{2},{3},{4}", entity.Stocktime.Value.ToString("yyyy/MM/dd"),
                 (entity.TB_Equipment.TB_EquipmentModel.Code + entity.TB_Equipment.Number),
-                (entity.TB_EquipmentStatusCode.TB_EquipmentStatusName.Name + "(" + entity.TB_EquipmentStatusCode.Name + ")"),
+                (entity.TB_EquipmentStatusName.Name),
                 entity.StoreTimes, entity.TB_Warehouse.Name);
         }
     }

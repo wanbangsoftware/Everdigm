@@ -889,7 +889,11 @@ body#login {
     vertical-align: middle;
     width: 30%;
 }
-
+.td_left1 {
+    text-align: left;
+    padding: 3px;
+    vertical-align: middle;
+}
 .align_left {
     text-align: left;
     padding: 3px;

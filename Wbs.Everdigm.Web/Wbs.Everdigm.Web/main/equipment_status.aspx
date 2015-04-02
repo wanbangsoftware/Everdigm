@@ -69,6 +69,14 @@
                                     <label><asp:CheckBox ID="cbIsWaiting" runat="server" />&nbsp;Set situation as waiting storage in</label>
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="td_right">Is Rental:</td>
+                                <td class="td_left">
+                                    <label><asp:CheckBox ID="cbIsRental" runat="server" />&nbsp;Set situation as rental</label>
+                                </td>
+                                <td class="td_right"></td>
+                                <td class="td_left"></td>
+                            </tr>
                         </table>
                         <table id="tbTable" width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #ccc; margin-top: 2px;">
                             <thead>
@@ -78,16 +86,17 @@
                                     <th style="width: 40px; text-align: center;">ID</th>
                                     <th style="width: 200px;">Name</th>
                                     <th style="width: 180px;">Code</th>
-                                    <th>Is Inventory</th>
-                                    <th>Is Out Storage</th>
-                                    <th>Is Overhaul</th>
-                                    <th>Is Waiting</th>
+                                    <th>Is it Inventory?</th>
+                                    <th>Is it Out Storage?</th>
+                                    <th>Is it Overhaul?</th>
+                                    <th>Is it Waiting?</th>
+                                    <th>Is it Rental?</th>
                                     <th>-</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="9">
+                                    <td colspan="10">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>

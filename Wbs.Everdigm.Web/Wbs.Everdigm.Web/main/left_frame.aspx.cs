@@ -22,6 +22,7 @@ namespace Wbs.Everdigm.Web.main
         }
         private void ShowPermissions()
         {
+            name.InnerText = Account.Name;
             tvSystemMenu.Nodes.Clear();
             ShowPermissionsInTreeView(tvSystemMenu, 0, -1, GetIdList(Account.TB_Role.Permission));
         }

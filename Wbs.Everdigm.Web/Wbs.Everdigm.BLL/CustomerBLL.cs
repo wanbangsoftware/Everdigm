@@ -30,7 +30,18 @@ namespace Wbs.Everdigm.BLL
                 Name = "",
                 Phone = "",
                 Code = "",
-                Delete = false
+                Answer = "",
+                Password = "",
+                Question = "",
+                RegisterDate = DateTime.Now,
+                SignInDevice = "",
+                SignInIP = "",
+                SignInTime = (DateTime?)null,
+                Delete = false,
+                Director = "",
+                Fax = "",
+                RegisterID = "",
+                SiteAddress = ""
             };
         }
         /// <summary>

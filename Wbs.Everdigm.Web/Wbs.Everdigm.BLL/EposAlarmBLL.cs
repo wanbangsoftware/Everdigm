@@ -34,6 +34,7 @@ namespace Wbs.Everdigm.BLL
                 Equipment = (int?)null,
                 FMIHex = "00",
                 FMIName = "",
+                Terminal = "",
                 ReceiveTime = DateTime.Now,
                 StoreTimes = 0
             };

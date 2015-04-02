@@ -41,10 +41,8 @@ namespace Wbs.Everdigm.Web.main
                     objectInfo.Rows[1].Cells[3].InnerHtml = obj.TB_EquipmentModel.Code;
 
                     objectInfo.Rows[2].Cells[1].InnerHtml = obj.Number;
-                    objectInfo.Rows[2].Cells[3].InnerHtml =
-                        obj.TB_EquipmentStatusCode.TB_EquipmentStatusName.Code + obj.TB_EquipmentStatusCode.Code;
-                    objectInfo.Rows[2].Cells[3].Attributes["title"] =
-                        obj.TB_EquipmentStatusCode.Name + "(" + obj.TB_EquipmentStatusCode.TB_EquipmentStatusName.Name + ")";
+                    objectInfo.Rows[2].Cells[3].InnerHtml = obj.TB_EquipmentStatusName.Code;
+                    objectInfo.Rows[2].Cells[3].Attributes["title"] = obj.TB_EquipmentStatusName.Name;
 
                     objectInfo.Rows[3].Cells[1].InnerHtml = EquipmentInstance.GetRuntime(obj.Runtime);
                     objectInfo.Rows[3].Cells[3].InnerText = EquipmentInstance.GetEngStatus(obj.Voltage);
@@ -77,7 +75,7 @@ namespace Wbs.Everdigm.Web.main
                     objectInfo.Rows[12].Cells[1].InnerText =
                         (byte?)null == obj.Signal ? "-" : obj.Signal.Value.ToString();
                     objectInfo.Rows[12].Cells[3].InnerText =
-                        (DateTime?)null == obj.LastActionTime ? "-" : obj.LastActionTime.Value.ToString("yyyy/MM/dd");
+                        (DateTime?)null == obj.LastActionTime ? "-" : obj.LastActionTime.Value.ToString("yyyy/MM/dd HH:mm");
                 }
             }
         }

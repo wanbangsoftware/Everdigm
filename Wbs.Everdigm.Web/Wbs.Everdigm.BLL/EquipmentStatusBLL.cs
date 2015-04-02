@@ -27,10 +27,11 @@ namespace Wbs.Everdigm.BLL
                 Code = "",
                 Name = "",
                 id = 0,
-                IsInventory = false,
-                IsOutstorage = false,
-                IsOverhaul = false,
-                IsWaiting = false
+                IsItInventory = false,
+                IsItOutstorage = false,
+                IsItOverhaul = false,
+                IsItWaiting = false,
+                IsItRental = false
             };
         }
         public override string ToString(TB_EquipmentStatusName entity)

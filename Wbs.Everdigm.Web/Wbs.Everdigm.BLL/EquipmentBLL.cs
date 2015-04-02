@@ -38,7 +38,7 @@ namespace Wbs.Everdigm.BLL
                 Longitude = 0.0,
                 Model = (int?)null,
                 Number = "",
-                OnlineStyle = 0,
+                OnlineStyle = (byte?)null,
                 OnlineTime = (DateTime?)null,
                 Port = 0,
                 RegisterTime = DateTime.Now,
@@ -83,7 +83,14 @@ namespace Wbs.Everdigm.BLL
         /// <returns></returns>
         public string GetStatus(TB_Equipment entity)
         {
-            return entity.TB_EquipmentStatusCode.TB_EquipmentStatusName.Code + entity.TB_EquipmentStatusCode.Code;
+            if (entity.TB_EquipmentStatusName.IsItOutstorage == true || entity.TB_EquipmentStatusName.IsItRental == true)
+            {
+                return "<span class=\"label label-warning\">" + entity.TB_EquipmentStatusName.Code + "</span>";
+            }
+            else if (entity.TB_EquipmentStatusName.IsItOverhaul == true)
+                return "<span class=\"label label-danger\">" + entity.TB_EquipmentStatusName.Code + "</span>";
+
+            return "<span class=\"label label-success\">" + entity.TB_EquipmentStatusName.Code + "</span>";
         }
         /// <summary>
         /// 获取设备的状态信息描述
@@ -92,7 +99,7 @@ namespace Wbs.Everdigm.BLL
         /// <returns></returns>
         public string GetStatusTitle(TB_Equipment entity)
         {
-            return entity.TB_EquipmentStatusCode.Name + "(" + entity.TB_EquipmentStatusCode.TB_EquipmentStatusName.Name + ")";
+            return entity.TB_EquipmentStatusName.Name;
         }
 
         /// <summary>
@@ -107,6 +114,16 @@ namespace Wbs.Everdigm.BLL
                 (("GSM Card: " + obj.TB_Terminal.Sim) +
                 (n == obj.TB_Terminal.Satellite ? "" :
                 ("&#10;SAT Card: " + obj.TB_Terminal.TB_Satellite.CardNo)));
+        }
+        /// <summary>
+        /// 获取信号强度标识
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public string GetSignal(TB_Equipment obj)
+        {
+            //string signal=obj.Signal
+            return "<span class=\"glyphicon glyphicon-signal label label-primary\" aria-hidden=\"true\"></span>";
         }
 
         /// <summary>

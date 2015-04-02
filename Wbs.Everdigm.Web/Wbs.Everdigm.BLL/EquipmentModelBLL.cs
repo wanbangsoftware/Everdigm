@@ -25,7 +25,7 @@ namespace Wbs.Everdigm.BLL
         /// <returns></returns>
         public override TB_EquipmentModel GetObject()
         {
-            return new TB_EquipmentModel { Code = "", id = 0, Name = "", Type = (int?)null };
+            return new TB_EquipmentModel { Code = "", id = 0, Name = "", Type = (int?)null, Delete = false };
         }
         public override string ToString(TB_EquipmentModel entity)
         {

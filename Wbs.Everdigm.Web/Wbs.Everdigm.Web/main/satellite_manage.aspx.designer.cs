@@ -10,7 +10,7 @@
 namespace Wbs.Everdigm.Web.main {
     
     
-    public partial class equipment_status {
+    public partial class satellite_manage {
         
         /// <summary>
         /// form1 控件。
@@ -58,13 +58,13 @@ namespace Wbs.Everdigm.Web.main {
         protected global::System.Web.UI.WebControls.Button btQuery;
         
         /// <summary>
-        /// txtName 控件。
+        /// txtNumber 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText txtName;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtNumber;
         
         /// <summary>
         /// hidID 控件。
@@ -74,60 +74,6 @@ namespace Wbs.Everdigm.Web.main {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidID;
-        
-        /// <summary>
-        /// txtCode 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText txtCode;
-        
-        /// <summary>
-        /// cbIsInventory 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbIsInventory;
-        
-        /// <summary>
-        /// cbIsOutstorage 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbIsOutstorage;
-        
-        /// <summary>
-        /// cbIsOverhaul 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbIsOverhaul;
-        
-        /// <summary>
-        /// cbIsWaiting 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbIsWaiting;
-        
-        /// <summary>
-        /// cbIsRental 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbIsRental;
         
         /// <summary>
         /// divPagging 控件。

@@ -24,13 +24,13 @@ namespace Wbs.Everdigm.Web.main
 
         private void ShowOutStorageSituations()
         {
-            ddlSituation.Items.Clear();
-            ddlSituation.Items.Add(new ListItem() { Text = "Deliver as:", Value = "", Selected = true });
-            var list = CodeInstance.FindList(f => f.TB_EquipmentStatusName.IsOutstorage == true).OrderBy(o => o.Name);
-            foreach (var obj in list)
-            {
-                ddlSituation.Items.Add(new ListItem() { Text = obj.Name, Value = obj.id.ToString() });
-            }
+            //ddlSituation.Items.Clear();
+            //ddlSituation.Items.Add(new ListItem() { Text = "Deliver as:", Value = "", Selected = true });
+            //var list = CodeInstance.FindList(f => f.TB_EquipmentStatusName.IsOutstorage == true).OrderBy(o => o.Name);
+            //foreach (var obj in list)
+            //{
+            //    ddlSituation.Items.Add(new ListItem() { Text = obj.Name, Value = obj.id.ToString() });
+            //}
         }
 
         protected void btSave_Click(object sender, EventArgs e)
@@ -42,7 +42,7 @@ namespace Wbs.Everdigm.Web.main
                     !string.IsNullOrEmpty(hidEquipmentId.Value.Trim()))
                 {
                     var obj = EquipmentInstance.Find(f => f.id == ParseInt(hidEquipmentId.Value.Trim()));
-                    if (obj.TB_EquipmentStatusCode.TB_EquipmentStatusName.IsInventory == false)
+                    if (obj.TB_EquipmentStatusName.IsItInventory == false)
                     {
                         // 如果不在库存状态则提示失败
                         ShowNotification("./equipment_delivery.aspx", "Error: equipment \"" +

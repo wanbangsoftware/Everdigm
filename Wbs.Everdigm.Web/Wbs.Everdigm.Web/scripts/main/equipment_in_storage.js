@@ -9,6 +9,7 @@
             case "#new":
                 if (ex.test("N")) {
                     $(this).addClass("active");
+                    $("#openModal").children("span:eq(1)").html("New product");
                     $("#openModal").attr("data-target", "#modalNewProduct").show();
                 }
                 else
@@ -17,6 +18,7 @@
             case "#second-lease":
                 if (ex.test("S,L")) {
                     $(this).addClass("active");
+                    $("#openModal").children("span:eq(1)").html("Check in");
                     $("#openModal").attr("data-target", "#modalOldProduct").show();
                 }
                 else
@@ -103,21 +105,21 @@
                 case "h":
                     // 更改仓库信息
                     var tr = $(this).parent().parent();
-                    $("#equipmentWarehouseInfoBar li:eq(0) a").html("<strong>Number: </strong>" + tr.children("td:eq(2)").html());
+                    $("#equipmentWarehouseInfoBar li:eq(0) a").html("<strong>Number: </strong>" + tr.children("td:eq(2)").text());
                     $("#equipmentWarehouseInfoBar li:eq(1) a").html("<strong>Warehouse: </strong>" + $(this).text());
-                    $("#equipmentWarehouseConfirmBar li:eq(0) a").html("<strong>Number: </strong>" + tr.children("td:eq(2)").html());
+                    $("#equipmentWarehouseConfirmBar li:eq(0) a").html("<strong>Number: </strong>" + tr.children("td:eq(2)").text());
                     $("#equipmentWarehouseConfirmBar li:eq(1) a").html("<strong>Warehouse: </strong>" + $(this).text());
                     var id = $(this).prop("id").substr(2);
                     var status = tr.children("td:eq(6)").html();
-                    if (status.indexOf("T") >= 0) {
-                        // 转库中的话，显示转库完毕确认界面
-                        $("#openModal").attr("data-target", "#modalWarehousingConfirm");
-                        $("#hidConfirmWarehouse").val(id);
-                    }
-                    else {
+                    //if (status.indexOf("T") >= 0) {
+                    //    // 转库中的话，显示转库完毕确认界面
+                    //    $("#openModal").attr("data-target", "#modalWarehousingConfirm");
+                    //    $("#hidConfirmWarehouse").val(id);
+                    //}
+                    //else {
                         $("#openModal").attr("data-target", "#modalWarehousingProduct");
                         $("#hidWarehouseEquipmentId").val(id);
-                    }
+                    //}
                     $("#openModal").click();
                     break;
             }
@@ -141,33 +143,37 @@
 // 查询已出库的2手/租赁设备以便入库操作
 function queryOldInStore(callback) {
     var model = getModel($("#ddModelOld span:eq(0)").text());
+    var obj = {};
     if (model.length > 0) {
-        var obj = {};
         obj.Model = model[0].id;
-        obj.Number = $("#txtQueryOld").val();
-        GetJsonData("../ajax/query.ashx", { "type": "equipment", "cmd": "old-in-store", "data": $.toJSON(obj) },
-        function (data) {
-            callback(data);
-        });
     }
+    obj.Number = $("#txtQueryOld").val();
+    GetJsonData("../ajax/query.ashx", { "type": "equipment", "cmd": "old-in-store", "data": $.toJSON(obj) },
+    function (data) {
+        callback(data);
+    });
 }
 function displayOldOutStoredEquipment(obj) {
     var tbody = $("#oldEquipmentInfo");
-    tbody.children("tr:eq(0)").children("td:eq(1)").html(null == obj ? "" : ($("#ddModelOld span:eq(0)").text() + obj.Number));
     if (null != obj) {
         $("#hidOldInstorageId").val(obj.id);
-        var code = getStatusCode(obj.Status)[0];
-        var status = getStatusStatus(code.Status)[0];
+        var model = getModel(obj.Model)[0];
+        tbody.children("tr:eq(0)").children("td:eq(1)").html(null == obj ? "" : (model.Code + obj.Number));
+        //var code = getStatusCode(obj.Status)[0];
+        var status = getStatusStatus(obj.Status)[0];
         // 如果不是出库状态的话，显示红色提示，不能入库
-        if (status.IsOutstorage != true) {
+        if (status.IsItRental != true) {
             tbody.children("tr:eq(1)").children("td:eq(1)").html("<span style=\"color: #ff0000;\">" +
-                status.Name + "(" + code.Name + ")</span>Cannot change status");
+                status.Name + "</span> Cannot change status");
             $("#oldInStorageSave").addClass("disabled");
         } else {
-            tbody.children("tr:eq(1)").children("td:eq(1)").html(status.Name + "(" + code.Name + ")");
+            tbody.children("tr:eq(1)").children("td:eq(1)").html(status.Name);
             $("#oldInStorageSave").removeClass("disabled");
         }
+        // Location
+        tbody.children("tr:eq(2)").children("td:eq(1)").html("" == obj.GpsAddress ? "not available" : obj.GpsAddress);
     } else {
+        tbody.children("tr:eq(0)").children("td:eq(1)").html("");
         tbody.children("tr:eq(1)").children("td:eq(1)").html("");
     }
 }
@@ -184,17 +190,17 @@ function newInStorageSave() {
     obj.CCDate = $("#ccDate").val();
     obj.InDate = $("#inDate").val();
     // store status
-    value = $("#dropStorage span:eq(0)").text();
-    var store = jLinq.from(equipmentTypesModels.codes).equals("Status", 2).equals("Name", value).select();
-    if (store.length < 1) {
-        alert("Please select store type.");
-        return;
-    }
-    if (value.indexOf("N") < 0) {
-        alert("New product cannot be store as lease or second-hands situation.");
-        return;
-    }
-    obj.Status = store[0].id;
+    //value = $("#dropStorage span:eq(0)").text();
+    //var store = jLinq.from(equipmentTypesModels.codes).equals("Status", 2).equals("Name", value).select();
+    //if (store.length < 1) {
+    //    alert("Please select store type.");
+    //    return;
+    //}
+    //if (value.indexOf("N") < 0) {
+    //    alert("New product cannot be store as lease or second-hands situation.");
+    //    return;
+    //}
+    //obj.Status = store[0].id;
 
     // warehouse
     value = $("#dropWarehouse span:eq(0)").text();
@@ -238,13 +244,13 @@ function oldInStorageSave() {
     }
     obj.Warehouse = house[0].id;
     // store status
-    value = $("#dropStorageOld span:eq(0)").text();
-    var store = getStatusCode(value);
-    if (store.length < 1) {
-        alert("Please select store type.");
-        return;
-    }
-    obj.Status = store[0].id;
+    //value = $("#dropStorageOld span:eq(0)").text();
+    //var store = getStatusCode(value);
+    //if (store.length < 1) {
+    //    alert("Please select store type.");
+    //    return;
+    //}
+    //obj.Status = store[0].id;
     $("#hidOldInstorage").val($.toJSON(obj));
     $("#btSaveOldInStorage").click();
 }

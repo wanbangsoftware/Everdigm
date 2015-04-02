@@ -63,12 +63,12 @@ function initializeTypesModels() {
     initializeMenu("Type", "", equipmentTypesModels.types);
     initializeMenu("Warehouse", "", equipmentTypesModels.warehouses);
     // 新品入库默认为库存状态(有3种库存状态：新品、2手、租赁)
-    initializeMenu("Storage", "", jLinq.from(equipmentTypesModels.codes).equals("Status", 2).select());
+    //initializeMenu("Storage", "", jLinq.from(equipmentTypesModels.codes).equals("Status", 2).select());
     // 2手/租赁入库UI
     initializeMenu("Type", "Old", equipmentTypesModels.types);
     initializeMenu("Warehouse", "Old", equipmentTypesModels.warehouses);
     // 2手/租赁入库默认为检修状态
-    initializeMenu("Storage", "Old", jLinq.from(equipmentTypesModels.codes).equals("Status", 4).select());
+    //initializeMenu("Storage", "Old", jLinq.from(equipmentTypesModels.codes).equals("Status", 4).select());
 
     // 更改库存
     initializeMenu("Warehouse", "Warehousing", equipmentTypesModels.warehouses);

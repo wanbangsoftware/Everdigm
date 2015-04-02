@@ -48,7 +48,7 @@
                                     <input type="text" runat="server" class="text-input" id="txtParent" readonly="readonly" style="cursor: pointer;" />
                                     <input type="hidden" runat="server" id="hidParent" />
                                 </td>
-                                <td class="td_right">Is Default: </td>
+                                <td class="td_right">Is it Default? </td>
                                 <td class="td_left"><input type="checkbox" runat="server" id="isDefault" /></td>
                             </tr>
                             <tr>

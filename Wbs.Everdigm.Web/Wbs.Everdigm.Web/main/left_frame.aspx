@@ -12,9 +12,10 @@
 <body>
     <form id="form1" runat="server">
         <div style="padding-left: 10px;">
+            <label style="font-size:14px;">Welcome <a id="name" runat="server">Admin</a></label>
             <asp:TreeView ID="tvSystemMenu" runat="server" ShowLines="true" Font-Size="13px" LineImagesFolder="../tree_images" NodeStyle-CssClass="node" Font-Names="Arial" ExpandDepth="1">
                 <HoverNodeStyle BackColor="#CCCCCC" CssClass="node" BorderColor="#0099FF" BorderStyle="Solid" BorderWidth="1px" />
-                
+
                 <NodeStyle CssClass="node" />
                 <SelectedNodeStyle BackColor="#66CCFF" CssClass="node" BorderColor="#0099FF" BorderStyle="Solid" BorderWidth="1px" />
             </asp:TreeView>

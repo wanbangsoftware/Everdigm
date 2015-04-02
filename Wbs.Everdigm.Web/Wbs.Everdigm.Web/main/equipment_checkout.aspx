@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="equipment_inquiry.aspx.cs" Inherits="Wbs.Everdigm.Web.main.equipment_inquiry" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="equipment_checkout.aspx.cs" Inherits="Wbs.Everdigm.Web.main.equipment_checkout" %>
 
 <!DOCTYPE html>
 
@@ -11,6 +11,37 @@
     <link href="../bootstrap3/bootstrap-datepicker-1.3.0/css/datepicker3.css" rel="stylesheet" />
     <link href="../css/body_equipment.css" rel="stylesheet" />
     <link href="../css/pagging.css" rel="stylesheet" />
+    <link href="../bootstrap3/css/bootstrap-select.min.css" rel="stylesheet" />
+    <style type="text/css">
+        .datepicker {
+            z-index: 1200 !important;
+        }
+
+        body.modal-open .datepicker {
+            z-index: 1200 !important;
+        }
+
+        body.modal-open .dropdown-menu {
+            z-index: 1200 !important;
+        }
+
+        .modal {
+            overflow: visible;
+        }
+
+        .modal-body {
+            overflow-y: visible;
+        }
+
+        .custom-modal-header {
+            -webkit-border-top-left-radius: 5px;
+            -webkit-border-top-right-radius: 5px;
+            -moz-border-radius-topleft: 5px;
+            -moz-border-radius-topright: 5px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+    </style>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -19,7 +50,7 @@
             <input type="hidden" runat="server" value="0" id="hidPageIndex" />
             <input type="hidden" runat="server" id="hidTotalPages" value="0" />
             <!-- Default panel contents -->
-            <div class="panel-heading"><strong>Equipment: Inquiry</strong></div>
+            <div class="panel-heading"><strong>Equipment: Check out</strong></div>
             <div class="panel-body">
                 <!--默认查询新品库存列表-->
                 <input type="hidden" id="hidQueryType" runat="server" value="N" />
@@ -70,7 +101,6 @@
                                 <tr>
                                     <th class="bg-primary"></th>
                                     <th colspan="6" class="in-tab-title-rb bg-primary">Equipment Information</th>
-                                    <th colspan="2" class="in-tab-title-rb bg-primary">Customer</th>
                                     <th colspan="4" class="in-tab-title-rb bg-primary">Terminal Information</th>
                                     <th colspan="5" class="in-tab-title-b bg-primary">Storage Information</th>
                                 </tr>
@@ -82,8 +112,6 @@
                                     <th class="in-tab-title-b bg-warning">Eng.</th>
                                     <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Location</th>
                                     <th class="in-tab-title-rb bg-warning">Status</th>
-                                    <th class="in-tab-title-b bg-warning">Number</th>
-                                    <th class="in-tab-title-rb bg-warning">Name</th>
                                     <th class="in-tab-title-b bg-warning">Signal</th>
                                     <th class="in-tab-title-b bg-warning">Link</th>
                                     <th class="in-tab-title-b bg-warning">Received</th>
@@ -97,7 +125,7 @@
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="18">
+                                    <td colspan="16">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>
@@ -113,8 +141,6 @@
                                     <td class="in-tab-txt-b">OFF</td>
                                     <td class="in-tab-txt-b textoverflow">山东省烟台市</td>
                                     <td class="in-tab-txt-rb">W</td>
-                                    <td class="in-tab-txt-b">23553523</td>
-                                    <td class="in-tab-txt-rb">23553523</td>
                                     <td class="in-tab-txt-b">ON</td>
                                     <td class="in-tab-txt-b">
                                         <img src="../images/img_connect_gprs.png" /></td>
@@ -130,6 +156,64 @@
                         </table>
                     </div>
                 </div>
+                <p>
+                    Click model number to open checkout dialog.
+                </p>
+            </div>
+        </div>
+        <!--小模态框-出库界面-->
+        <div class="modal fade" id="modalCheckout" tabindex="-1" role="dialog" aria-labelledby="NewStorageIn" data-backdrop="static" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header custom-modal-header bg-primary">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title"><strong id="titleCheckout">Check out: </strong></h4>
+                    </div>
+                    <div class="modal-body" style="height: 200px;">
+                        <div class="col-sm-12 show-grid" id="continue">
+                            <div class="col-sm-12 show-grid">
+                                <table class="table table-hover">
+                                    <tbody id="popupTbody">
+                                        <tr>
+                                            <td class="popup-td" colspan="2" style="width: 50%;">
+                                                <div class="input-group" style="width: 180px;">
+                                                    <input type="text" class="form-control" id="number" placeholder="Customer number" maxlength="10" data-provide="typeahead">
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-warning" type="button" id="queryCustomer"><span class="glyphicon glyphicon-search"></span></button>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td class="popup-td" colspan="2" style="width: 50%;">
+                                                <asp:DropDownList ID="ddlOuttype" runat="server" CssClass="form-control selectpicker" Width="180px">
+                                                </asp:DropDownList>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="popup-td">Name:</td>
+                                            <td class="popup-td"></td>
+                                            <td class="popup-td">Phone:</td>
+                                            <td class="popup-td"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="popup-td">Fax:</td>
+                                            <td class="popup-td"></td>
+                                            <td class="popup-td"></td>
+                                            <td class="popup-td"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <span style="color: #ff0000;" id="spanWarningNewInstorage"></span>
+                        <asp:Button ID="btCheckoutStorage" CssClass="hidden" runat="server" Text="Button" OnClick="btCheckoutStorage_Click" />
+                        <input type="hidden" id="hidCheckEquipmentId" runat="server" />
+                        <input type="hidden" id="hidCheckCustomerId" runat="server" />
+                        <button type="button" class="btn btn-success disabled" id="newCheckoutSave"><span class="glyphicon glyphicon-ok"></span>Checkout!</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
     </form>
@@ -143,9 +227,11 @@
     <script type="text/javascript" src="../bootstrap3/models/js/bootstrap-dialog.min.js"></script>
     <script type="text/javascript" src="../bootstrap3/models/js/bootstrap-typeahead.js"></script>
     <script type="text/javascript" src="../js/javascript.date.pattern.js"></script>
+    <script type="text/javascript" src="../bootstrap3/js/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="../js/common.js"></script>
     <script type="text/javascript" src="../scripts/main/pagination.js"></script>
     <script type="text/javascript" src="../scripts/main/equipment.base.js"></script>
     <script type="text/javascript" src="../scripts/main/equipments.js"></script>
+    <script type="text/javascript" src="../scripts/main/equipment.checkout.js"></script>
 </body>
 </html>

@@ -75,7 +75,7 @@ namespace Wbs.Everdigm.Web.main
             string html = "";
             if (totalRecords < 1)
             {
-                html = "<tr><td colspan=\"9\">No records, You can change the condition and try again " +
+                html = "<tr><td colspan=\"7\">No records, You can change the condition and try again " +
                     "or <a href=\"./customer_new.aspx\">ADD</a> some customer's informations.</td></tr>";
             }
             else
@@ -90,9 +90,8 @@ namespace Wbs.Everdigm.Web.main
                         "<td style=\"text-align: center;\">" + cnt + "</td>" +
                         "<td><a href=\"./customer_new.aspx?key=" + id + "\" >" + obj.Name + "</a></td>" +
                         "<td>" + obj.Code + "</td>" +
-                        "<td>" + obj.RegisterDate.Value.ToString("yyyy/MM/dd") + "</td>" +
                         "<td>" + obj.Phone + "</td>" +
-                        "<td>" + obj.IdCard + "</td>" +
+                        "<td>" + obj.Fax + "</td>" +
                         "<td>" + obj.Address + "</td>" +
                         "<td></td>" +
                         "</tr>";

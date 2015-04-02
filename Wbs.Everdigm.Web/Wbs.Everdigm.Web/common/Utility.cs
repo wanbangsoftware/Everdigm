@@ -422,33 +422,33 @@ namespace Wbs.Everdigm.Web
         {
             var ret = "";
             if ((byte?)null == type)
-                ret = "unknown";
+                ret = "Unknown";
 
             switch (type)
             {
                 case 0x00:// OFF
-                    ret = "<span class=\"label label-default\">battery off</span>";
+                    ret = "<span class=\"label label-default\">Battery off</span>";
                     break;
                 case 0x10:// TCP
-                    ret = "<span class=\"label label-info\">tcp</span>";
+                    ret = "<span class=\"label label-info\">TCP</span>";
                     break;
                 case 0x20:// UDP
-                    ret = "<span class=\"label label-success\">udp</span>";
+                    ret = "<span class=\"label label-success\">UDP</span>";
                     break;
                 case 0x30:// SMS
-                    ret = "<span class=\"label label-warning\">sms</span>";
+                    ret = "<span class=\"label label-warning\">SMS</span>";
                     break;
                 case 0x40:// SLEEP
-                    ret = "<span class=\"label label-warning\">sleep</span>";
+                    ret = "<span class=\"label label-warning\">Sleep</span>";
                     break;
                 case 0x50:// BLIND
-                    ret = "<span class=\"label label-danger\">blind</span>";
+                    ret = "<span class=\"label label-danger\">Blind</span>";
                     break;
                 case 0x60:// SATELLITE
-                    ret = "<span class=\"label label-primary\">satellite</span>";
+                    ret = "<span class=\"label label-primary\">Satellite</span>";
                     break;
                 case 0xFF:// TROUBLE
-                    ret = "<span class=\"label label-danger\">trouble</span>";
+                    ret = "<span class=\"label label-danger\">Trouble</span>";
                     break;
             }
             return ret;

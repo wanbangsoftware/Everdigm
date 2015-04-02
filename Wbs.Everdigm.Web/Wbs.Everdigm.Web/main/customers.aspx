@@ -41,21 +41,20 @@
                         <table id="tbTable" width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #ccc; margin-top: 2px;">
                             <thead>
                                 <tr>
-                                    <th style="width: 40px; text-align: center;">
+                                    <th style="width: 30px; text-align: center;">
                                         <input type="checkbox" id="cbAll" /></th>
-                                    <th style="width: 60px; text-align: center;">ID</th>
-                                    <th style="width: 100px;">Name</th>
-                                    <th style="width: 100px;">Customer No.</th>
-                                    <th style="width: 120px;">Register Date</th>
-                                    <th style="width: 90px;">Phone</th>
-                                    <th style="width: 150px;">ID Card</th>
+                                    <th style="width: 30px; text-align: center;">ID</th>
+                                    <th style="width: 250px;">Name</th>
+                                    <th style="width: 100px;">Code</th>
+                                    <th style="width: 120px;">Phone</th>
+                                    <th style="width: 80px;">Fax</th>
                                     <th>Address</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="9">
+                                    <td colspan="8">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>
@@ -72,6 +71,7 @@
                                     <td>2000-01-01</td>
                                     <td>13333333333</td>
                                     <td>1234567890ABCDEF</td>
+                                    <td>123</td>
                                     <td>China</td>
                                     <td></td>
                                 </tr>

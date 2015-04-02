@@ -55,7 +55,16 @@ namespace Wbs.Everdigm.Web.main
 
             return string.IsNullOrEmpty(replace) ? obj : obj.Replace(replace, ("<span style=\"color: #FF0000;\">" + replace + "</span>"));
         }
-
+        private string GetEquipment(TB_Terminal terminal, TB_Equipment equipment)
+        {
+            if (null == equipment)
+                return "<a href=\"./equipment_terminal.aspx?key=" + Utility.UrlEncode(Utility.Encrypt(terminal.id.ToString())) + "\">bind</a>";
+            
+            if (string.IsNullOrEmpty(terminal.Sim))
+                return "no sim card";
+            
+            return "<a href=\"#unbind_" + terminal.id + "\">" + EquipmentInstance.GetFullNumber(equipment) + "</a>";
+        }
         private void ShowTerminals()
         {
             var totalRecords = 0;
@@ -76,7 +85,7 @@ namespace Wbs.Everdigm.Web.main
             string html = "";
             if (totalRecords < 1)
             {
-                html = "<tr><td colspan=\"12\">No records, You can change the condition and try again or " +
+                html = "<tr><td colspan=\"13\">No records, You can change the condition and try again or " +
                     " <a href=\"./terminal_register.aspx\">ADD</a> new one.</td></tr>";
             }
             else
@@ -87,6 +96,7 @@ namespace Wbs.Everdigm.Web.main
                 {
                     cnt++;
                     var id = Utility.UrlEncode(Utility.Encrypt(obj.id.ToString()));
+                    var equipment = EquipmentInstance.Find(f => f.TB_Terminal.id == obj.id);
                     html += "<tr>" +
                         "<td style=\"text-align: center;\"><input type=\"checkbox\" id=\"cb_" + id + "\" /></td>" +
                         "<td style=\"text-align: center;\">" + cnt + "</td>" +
@@ -97,8 +107,10 @@ namespace Wbs.Everdigm.Web.main
                         "<td style=\"text-align: center;\">" + obj.Revision.ToString() + "</td>" +
                         "<td style=\"text-align: center;\">" + obj.Type + "</td>" +
                         "<td>" + obj.ProductionDate.Value.ToString("yyyy/MM/dd") + "</td>" +
-                        "<td style=\"text-align: center;\">" + (obj.HasBound == true ? "yes" : "-") + "</td>" +
+                        "<td style=\"text-align: center;\">" + (obj.HasBound == true ? "yes" : "no") + "</td>" +
+                        "<td>" + GetEquipment(obj, equipment) + "</td>" +
                         "<td>" + Utility.GetOnlineStyle(obj.OnlineStyle) + "</td>" +
+                        "<td></td>" +
                         "</tr>";
                 }
             }
@@ -144,10 +156,10 @@ namespace Wbs.Everdigm.Web.main
         {
             var id = int.Parse(hidBoundSatellite.Value.Trim());
             var t = TerminalInstance.Find(f => f.id == id);
-            if (null == t) { ShowNotification("./terminal_list.aspx", "Unbound fail: Terminal not exists.", false); }
+            if (null == t) { ShowNotification("./terminal_list.aspx", "Unbind fail: Terminal not exists.", false); }
             else
             {
-                if ((int?)null == t.Satellite) { ShowNotification("./terminal_list.aspx", "Unbound fail: No Satellite bound on it.", false); }
+                if ((int?)null == t.Satellite) { ShowNotification("./terminal_list.aspx", "Unbind fail: No Satellite bound on it.", false); }
                 else
                 {
                     string satno = t.TB_Satellite.CardNo;
@@ -157,10 +169,10 @@ namespace Wbs.Everdigm.Web.main
                     SendDD02Command(false, t);
                     SaveHistory(new TB_AccountHistory()
                     {
-                        ActionId = ActionInstance.Find(f => f.Name.Equals("UnboundSat")).id,
-                        ObjectA = "Ter: " + t.Number + " unbound Sat: " + satno
+                        ActionId = ActionInstance.Find(f => f.Name.Equals("UnbindSat")).id,
+                        ObjectA = "Ter: " + t.Number + " unbind Sat: " + satno
                     });
-                    ShowNotification("./terminal_list.aspx", "Ter: " + t.Number + " unbound Sat: " + satno + " OK!");
+                    ShowNotification("./terminal_list.aspx", "Ter: " + t.Number + " unbind Sat: " + satno + " OK!");
                 }
             }
         }
@@ -241,7 +253,7 @@ namespace Wbs.Everdigm.Web.main
                             // 保存绑定卫星模块的历史记录
                             SaveHistory(new TB_AccountHistory()
                             {
-                                ActionId = ActionInstance.Find(f => f.Name.Equals("BoundSat")).id,
+                                ActionId = ActionInstance.Find(f => f.Name.Equals("BindSat")).id,
                                 ObjectA = TerminalInstance.ToString(t)
                             });
                             //ShowTerminals();
@@ -250,6 +262,33 @@ namespace Wbs.Everdigm.Web.main
                     }
                 }
             }
+        }
+
+        protected void btUnbindEquipment_Click(object sender, EventArgs e)
+        {
+            var value = hidBoundSatellite.Value.Trim();
+            if (string.IsNullOrEmpty(value)) return;
+            var id = int.Parse(value);
+            var terminal = TerminalInstance.Find(f => f.id == id);
+            if (null == terminal) return;
+
+            var equipment = EquipmentInstance.Find(f => f.Terminal == id);
+            // 更新设备的终端为空
+            EquipmentInstance.Update(f => f.Terminal == id, act => {
+                act.Terminal = (int?)null;
+            });
+            // 更新终端的绑定状态为false
+            TerminalInstance.Update(f => f.id == id, act => {
+                act.HasBound = false;
+            });
+            // 保存解绑终端历史
+            SaveHistory(new TB_AccountHistory()
+            {
+                ActionId = ActionInstance.Find(f => f.Name.Equals("Unbind")).id,
+                ObjectA = "unbind terminal " + terminal.Number + " and equipment " + EquipmentInstance.GetFullNumber(equipment)
+            });
+
+            ShowNotification("./terminal_list.aspx", "You have unbind the terminal and equipment.");
         }
     }
 }

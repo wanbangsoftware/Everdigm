@@ -200,6 +200,7 @@
     <Content Include="main\customer_new.aspx" />
     <Content Include="main\equipment_alarm.aspx" />
     <Content Include="main\equipment_as.aspx" />
+    <Content Include="main\equipment_checkout.aspx" />
     <Content Include="main\equipment_command.aspx" />
     <Content Include="main\equipment_delivery.aspx" />
     <Content Include="main\equipment_position.aspx" />
@@ -208,6 +209,7 @@
     <Content Include="main\equipment_today_works.aspx" />
     <Content Include="main\equipment_work.aspx" />
     <Content Include="main\maptest.html" />
+    <Content Include="main\satellite_manage.aspx" />
     <Content Include="main\terminal_satellite.aspx" />
     <Content Include="mobile\css\account.css" />
     <Content Include="mobile\default.aspx" />
@@ -222,6 +224,7 @@
     <Content Include="scripts\main\customers.js" />
     <Content Include="scripts\main\equipment.alarm.js" />
     <Content Include="scripts\main\equipment.base.js" />
+    <Content Include="scripts\main\equipment.checkout.js" />
     <Content Include="scripts\main\equipment.command.js" />
     <Content Include="scripts\main\equipment.delivery.js" />
     <Content Include="scripts\main\equipment.info.js" />
@@ -267,6 +270,7 @@
     <Content Include="bootstrap3\font-awesome-4.3.0\scss\_stacked.scss" />
     <Content Include="bootstrap3\font-awesome-4.3.0\scss\_variables.scss" />
     <Content Include="ajax\satellite.ashx" />
+    <Content Include="bootstrap3\js\bootstrap-select.js.map" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -390,7 +394,6 @@
     <Content Include="main\equipment_in_storage.aspx" />
     <Content Include="main\equipment_model.aspx" />
     <Content Include="main\equipment_status.aspx" />
-    <Content Include="main\equipment_status_code.aspx" />
     <Content Include="main\equipment_terminal.aspx" />
     <Content Include="main\equipment_type.aspx" />
     <Content Include="main\images.aspx" />
@@ -648,6 +651,13 @@
     <Compile Include="main\equipment_as.aspx.designer.cs">
       <DependentUpon>equipment_as.aspx</DependentUpon>
     </Compile>
+    <Compile Include="main\equipment_checkout.aspx.cs">
+      <DependentUpon>equipment_checkout.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\equipment_checkout.aspx.designer.cs">
+      <DependentUpon>equipment_checkout.aspx</DependentUpon>
+    </Compile>
     <Compile Include="main\equipment_command.aspx.cs">
       <DependentUpon>equipment_command.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -703,13 +713,6 @@
     </Compile>
     <Compile Include="main\equipment_status.aspx.designer.cs">
       <DependentUpon>equipment_status.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="main\equipment_status_code.aspx.cs">
-      <DependentUpon>equipment_status_code.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="main\equipment_status_code.aspx.designer.cs">
-      <DependentUpon>equipment_status_code.aspx</DependentUpon>
     </Compile>
     <Compile Include="main\equipment_storage.aspx.cs">
       <DependentUpon>equipment_storage.aspx</DependentUpon>
@@ -836,6 +839,13 @@
     </Compile>
     <Compile Include="main\role_pop.aspx.designer.cs">
       <DependentUpon>role_pop.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="main\satellite_manage.aspx.cs">
+      <DependentUpon>satellite_manage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\satellite_manage.aspx.designer.cs">
+      <DependentUpon>satellite_manage.aspx</DependentUpon>
     </Compile>
     <Compile Include="main\terminal_list.aspx.cs">
       <DependentUpon>terminal_list.aspx</DependentUpon>

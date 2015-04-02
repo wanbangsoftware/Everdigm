@@ -25,7 +25,7 @@ namespace Wbs.Everdigm.BLL
         /// <returns></returns>
         public override TB_Warehouse GetObject()
         {
-            return new TB_Warehouse { Address = "", Code = "", Name = "", id = 0 };
+            return new TB_Warehouse { Address = "", Code = "", Name = "", id = 0, Delete = false };
         }
         public override string ToString(TB_Warehouse entity)
         {

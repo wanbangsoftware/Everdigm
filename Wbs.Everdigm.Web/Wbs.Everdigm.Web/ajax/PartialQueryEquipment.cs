@@ -34,13 +34,19 @@ namespace Wbs.Everdigm.Web.ajax
                         f.Number.IndexOf(query.Number) >= 0).ToList();
                     ret = JsonConverter.ToJson(queryList);
                     break;
+                case "notbind":
+                    var obj = JsonConverter.ToObject<TB_Equipment>(data);
+                    var list = EquipmentInstance.FindList(f =>
+                        (obj.Model > 0 ? f.Model == obj.Model : f.Model > 0) &&
+                        f.Number.IndexOf(obj.Number) >= 0 && f.Terminal == (int?)null).ToList();
+                    break;
                 case "old-in-store":
                     // 2手或租赁设备入库查询
                     var queryObj = JsonConverter.ToObject<TB_Equipment>(data);
                     if (queryObj.Number.IndexOf('-') >= 0)
                         queryObj.Number = queryObj.Number.Substring(queryObj.Number.LastIndexOf('-') + 1);
-                    var olds = EquipmentInstance.FindList(f => f.Model == queryObj.Model && 
-                        f.Number.IndexOf(queryObj.Number) >= 0).Take(5).OrderBy(o => o.Number).ToList();
+                    var olds = EquipmentInstance.FindList(f => (queryObj.Model > 0 ? f.Model == queryObj.Model : f.Model > 0) &&
+                        f.Number.IndexOf(queryObj.Number) >= 0).OrderBy(o => o.Number).Take(5).ToList();
                     ret = JsonConverter.ToJson(olds);
                     break;
                 case "storage":

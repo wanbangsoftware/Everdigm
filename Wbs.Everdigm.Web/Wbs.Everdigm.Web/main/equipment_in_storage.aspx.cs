@@ -40,11 +40,11 @@ namespace Wbs.Everdigm.Web.main
                 {
                     var newEquipment = EquipmentInstance.GetObject();
                     newEquipment.Model = equipment.Model;
-                    newEquipment.Status = equipment.Status;
+                    newEquipment.Status = StatusInstance.Find(f => f.IsItInventory == true).id;
                     newEquipment.Warehouse = equipment.Warehouse;
                     newEquipment.Number = equipment.Number;
                     newEquipment.StoreTimes = equipment.StoreTimes;
-                    EquipmentInstance.Add(newEquipment);
+                    newEquipment = EquipmentInstance.Add(newEquipment);
 
                     // 保存入库信息
                     var history = StoreInstance.GetObject();
@@ -87,32 +87,32 @@ namespace Wbs.Everdigm.Web.main
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        protected List<int> GetQueryStatus(string query)
-        {
-            var list = new List<int>();
-            IQueryable<TB_EquipmentStatusCode> status;
-            // 查询库存
-            if (query.Equals("I"))
-            {
-                // 查询库存状态码列表
-                status = CodeInstance.FindList(f => f.TB_EquipmentStatusName.IsInventory == true);
-            }
-            else if (query.Equals("N")) {
-                // 新品
-                status = CodeInstance.FindList(f => f.Code.Equals("N"));
-            }
-            else
-            {
-                // 2手或租赁
-                status = CodeInstance.FindList(f => f.Code.IndexOf("L") >= 0 || f.Code.IndexOf("S") >= 0);
-            }
+        //protected List<int> GetQueryStatus(string query)
+        //{
+        //    var list = new List<int>();
+        //    IQueryable<TB_EquipmentStatusCode> status;
+        //    // 查询库存
+        //    if (query.Equals("I"))
+        //    {
+        //        // 查询库存状态码列表
+        //        status = CodeInstance.FindList(f => f.TB_EquipmentStatusName.IsInventory == true);
+        //    }
+        //    else if (query.Equals("N")) {
+        //        // 新品
+        //        status = CodeInstance.FindList(f => f.Code.Equals("N"));
+        //    }
+        //    else
+        //    {
+        //        // 2手或租赁
+        //        status = CodeInstance.FindList(f => f.Code.IndexOf("L") >= 0 || f.Code.IndexOf("S") >= 0);
+        //    }
 
-            foreach (var s in status)
-            {
-                list.Add(s.id);
-            }
-            return list;
-        }
+        //    foreach (var s in status)
+        //    {
+        //        list.Add(s.id);
+        //    }
+        //    return list;
+        //}
         /// <summary>
         /// 按照查询条件显示设备列表
         /// </summary>
@@ -123,10 +123,14 @@ namespace Wbs.Everdigm.Web.main
             pageIndex = (0 >= pageIndex ? 1 : pageIndex);
             var model = ParseInt(selectedModels.Value);
             var house = ParseInt(hidQueryWarehouse.Value);
-            var type = GetQueryStatus(hidQueryType.Value);
+            //var type = GetQueryStatus(hidQueryType.Value);
+            var type = hidQueryType.Value;
             var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
                 f => (model <= 0 ? f.Model >= 0 : f.Model == model) &&
-                    (house <= 0 ? f.Warehouse >= 0 : f.Warehouse == house) && type.Contains(f.Status.Value) &&
+                    (house <= 0 ? f.Warehouse >= 0 : f.Warehouse == house) && //type.Contains(f.Status.Value) &&
+                    f.TB_EquipmentStatusName.IsItInventory == true &&
+                    // 新品查询入库次数为1的产品，移库时查询所有库存
+                    ("N" == type ? f.StoreTimes == 1 : ("I" == type ? (f.StoreTimes > 0) : f.StoreTimes > 1)) &&
                     (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0), null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             hidTotalPages.Value = totalPages.ToString();
@@ -136,7 +140,10 @@ namespace Wbs.Everdigm.Web.main
                 pageIndex = totalPages;
                 list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
                     f => (model <= 0 ? f.Model >= 0 : f.Model == model) &&
-                        (house <= 0 ? f.Warehouse >= 0 : f.Warehouse == house) && type.Contains(f.Status.Value) &&
+                        (house <= 0 ? f.Warehouse >= 0 : f.Warehouse == house) && //type.Contains(f.Status.Value) &&
+                        f.TB_EquipmentStatusName.IsItInventory == true &&
+                        // 新品查询入库次数为1的产品，移库时查询所有库存
+                        ("N" == type ? f.StoreTimes == 1 : ("I" == type ? (f.StoreTimes > 0) : f.StoreTimes > 1)) &&
                         (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0), null);
             }
 
@@ -167,7 +174,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td class=\"in-tab-txt-b\" style=\"text-align: right !important;\">" + EquipmentInstance.GetRuntime(obj.Runtime) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + EquipmentInstance.GetEngStatus(obj.Voltage) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\" title=\"" + obj.GpsAddress + "\">" + obj.GpsAddress + "</td>" +
-                        "<td class=\"in-tab-txt-rb\" title=\"" + EquipmentInstance.GetStatusTitle(obj) + "\">" + EquipmentInstance.GetStatus(obj) + "</td>" +
+                        "<td class=\"in-tab-txt-rb\">" + EquipmentInstance.GetStatus(obj) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\">" + (null == _in ? "-" : _in.Stocktime.Value.ToString("yyyy/MM/dd")) + "</td>" +
                         "<td class=\"in-tab-txt-b\" title=\"" + StoreInstance.GetStatusTitle(_in) + "\">" + StoreInstance.GetStatus(_in) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\">" + (null == _out ? "-" : _out.Stocktime.Value.ToString("yyyy/MM/dd")) + "</td>" +
@@ -175,7 +182,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td class=\"in-tab-txt-rb textoverflow\">" + (_house ? ("<a href=\"#h\" id=\"a_" + id + "\">" + obj.TB_Warehouse.Name + "</a>") : obj.TB_Warehouse.Name) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + ((byte?)null == obj.Signal ? "-" : obj.Signal.ToString()) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + Utility.GetOnlineStyle(obj.OnlineStyle) + "</td>" +
-                        "<td class=\"in-tab-txt-b textoverflow\">" + ((DateTime?)null == obj.LastActionTime ? "" : obj.LastActionTime.Value.ToString("yyyy/MM/dd")) + "</td>" +
+                        "<td class=\"in-tab-txt-b textoverflow\">" + ((DateTime?)null == obj.LastActionTime ? "" : obj.LastActionTime.Value.ToString("yyyy/MM/dd HH:mm")) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\" title=\"" + EquipmentInstance.GetTerinalTitleInfo(obj) + "\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Number) + "</td>" +
                         //"<td class=\"in-tab-txt-b\">" + (n == obj.Terminal ? "-" : (n == obj.TB_Terminal.Satellite ? "-" : obj.TB_Terminal.TB_Satellite.CardNo)) + "</td>" +
                         //"<td class=\"in-tab-txt-b\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Sim) + "</td>" +
@@ -197,12 +204,18 @@ namespace Wbs.Everdigm.Web.main
                 if (null != exist)
                 {
                     EquipmentInstance.Update(f => f.id == exist.id, act => {
-                        act.Status = obj.Status;
                         // 保存仓库信息
                         act.Warehouse = obj.Warehouse;
                         // 客户信息清除
                         act.Customer = (int?)null;
                         act.StoreTimes = exist.StoreTimes + 1;
+                        // 需要维修
+                        if (cbRepair.Checked)
+                        {
+                            act.Status = StatusInstance.Find(f => f.IsItOverhaul == true).id;
+                        }
+                        else
+                        { act.Status = StatusInstance.Find(f => f.IsItInventory == true).id; }
                     });
 
                     // 保存入库信息
@@ -237,7 +250,7 @@ namespace Wbs.Everdigm.Web.main
                 var id = ParseInt(Utility.Decrypt(hidWarehouseEquipmentId.Value));
                 var obj = EquipmentInstance.Find(f => f.id == id);
                 var tmp = JsonConverter.ToObject<TB_Equipment>(hidWarehouseTo.Value);
-                if (obj.TB_EquipmentStatusCode.TB_EquipmentStatusName.IsInventory == false)
+                if (obj.TB_EquipmentStatusName.IsItInventory == false)
                 {
                     ShowNotification("./equipment_in_storage.aspx", "The equipment is not in storage status.", false);
                 }
@@ -247,19 +260,19 @@ namespace Wbs.Everdigm.Web.main
                 }
                 else
                 {
-                    var transfer = CodeInstance.Find(f =>
-                            f.TB_EquipmentStatusName.IsInventory == true && f.Code.Equals("T"));
+                    //var transfer = CodeInstance.Find(f =>
+                    //        f.TB_EquipmentStatusName.IsInventory == true && f.Code.Equals("T"));
                     EquipmentInstance.Update(f => f.id == obj.id, act =>
                     {
                         act.Warehouse = tmp.Warehouse;
                         // 状态变为库存转移状态
-                        act.Status = transfer.id;
+                        //act.Status = transfer.id;
                     });
 
                     // 保存转库信息
                     var history = StoreInstance.GetObject();
                     history.Equipment = obj.id;
-                    history.Status = transfer.id;// 移库状态
+                    history.Status = obj.Status;//transfer.id;// 移库状态
                     history.Stocktime = DateTime.Now;
                     // 入库次数
                     history.StoreTimes = obj.StoreTimes;
@@ -286,11 +299,11 @@ namespace Wbs.Everdigm.Web.main
                 var obj = EquipmentInstance.Find(f => f.id == id);
                 var _in = StoreInstance.GetStoreInfo(obj.id, obj.StoreTimes.Value, true);
                 // 新品入库
-                var n = CodeInstance.Find(f => f.TB_EquipmentStatusName.IsInventory == true && f.Code.Equals("N"));
-                EquipmentInstance.Update(f => f.id == id, act =>
-                {
-                    act.Status = (null == _in || _in.TB_EquipmentStatusCode.Code.Equals("T")) ? n.id : _in.TB_EquipmentStatusCode.id;
-                });
+                //var n = CodeInstance.Find(f => f.TB_EquipmentStatusName.IsInventory == true && f.Code.Equals("N"));
+                //EquipmentInstance.Update(f => f.id == id, act =>
+                //{
+                //    act.Status = (null == _in || _in.TB_EquipmentStatusCode.Code.Equals("T")) ? n.id : _in.TB_EquipmentStatusCode.id;
+                //});
 
                 // 保存操作历史
                 SaveHistory(new TB_AccountHistory()

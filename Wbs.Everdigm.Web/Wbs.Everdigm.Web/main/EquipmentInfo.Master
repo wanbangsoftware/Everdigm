@@ -37,69 +37,69 @@
                                 <td colspan="4" class="alert-info">Equipment Information</td>
                             </tr>
                             <tr>
-                                <td class="popup-td right">Type:</td>
+                                <td class="popup-td">Type:</td>
                                 <td class="popup-td">-</td>
-                                <td class="popup-td right">Model:</td>
-                                <td class="popup-td">-</td>
-                            </tr>
-                            <tr>
-                                <td class="popup-td right">Number:</td>
-                                <td class="popup-td">-</td>
-                                <td class="popup-td right">Status:</td>
+                                <td class="popup-td">Model:</td>
                                 <td class="popup-td">-</td>
                             </tr>
                             <tr>
-                                <td class="popup-td right">Runtime:</td>
+                                <td class="popup-td">Number:</td>
                                 <td class="popup-td">-</td>
-                                <td class="popup-td right">Eng.:</td>
+                                <td class="popup-td">Status:</td>
                                 <td class="popup-td">-</td>
                             </tr>
                             <tr>
-                                <td class="popup-td right">Location:</td>
+                                <td class="popup-td">Runtime:</td>
+                                <td class="popup-td">-</td>
+                                <td class="popup-td">Eng.:</td>
+                                <td class="popup-td">-</td>
+                            </tr>
+                            <tr>
+                                <td class="popup-td">Location:</td>
                                 <td class="popup-td" colspan="3">-</td>
                             </tr>
                             <tr>
                                 <td colspan="4" class="alert-info">Storage Information</td>
                             </tr>
                             <tr>
-                                <td class="popup-td right">In date:</td>
+                                <td class="popup-td">In date:</td>
                                 <td class="popup-td">-</td>
-                                <td class="popup-td right">In Type:</td>
-                                <td class="popup-td">-</td>
-                            </tr>
-                            <tr>
-                                <td class="popup-td right">Out date:</td>
-                                <td class="popup-td">-</td>
-                                <td class="popup-td right">Out type:</td>
+                                <td class="popup-td">In Type:</td>
                                 <td class="popup-td">-</td>
                             </tr>
                             <tr>
-                                <td class="popup-td right">Warehouse:</td>
+                                <td class="popup-td">Out date:</td>
                                 <td class="popup-td">-</td>
-                                <td class="popup-td right">C.C. date:</td>
+                                <td class="popup-td">Out type:</td>
+                                <td class="popup-td">-</td>
+                            </tr>
+                            <tr>
+                                <td class="popup-td">Warehouse:</td>
+                                <td class="popup-td">-</td>
+                                <td class="popup-td">C.C. date:</td>
                                 <td class="popup-td">-</td>
                             </tr>
                             <tr>
                                 <td colspan="4" class="alert-info">Terminal Information</td>
                             </tr>
                             <tr>
-                                <td class="popup-td right">Number:</td>
+                                <td class="popup-td">Number:</td>
                                 <td class="popup-td">-</td>
-                                <td class="popup-td right">Connect:</td>
+                                <td class="popup-td">Link:</td>
                                 <td class="popup-td">
                                     <div class="links unknown"></div>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="popup-td right">Sim No.:</td>
+                                <td class="popup-td">Sim No.:</td>
                                 <td class="popup-td">-</td>
-                                <td class="popup-td right">Satellite:</td>
+                                <td class="popup-td">Satellite:</td>
                                 <td class="popup-td">-</td>
                             </tr>
                             <tr>
-                                <td class="popup-td right">Signal:</td>
+                                <td class="popup-td">Signal:</td>
                                 <td class="popup-td">-</td>
-                                <td class="popup-td right">Received:</td>
+                                <td class="popup-td">Received:</td>
                                 <td class="popup-td">-</td>
                             </tr>
                             <tr>

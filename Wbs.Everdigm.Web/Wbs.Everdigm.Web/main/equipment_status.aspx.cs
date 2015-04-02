@@ -38,17 +38,20 @@ namespace Wbs.Everdigm.Web.main
         /// </summary>
         private void checkCheckBoxes()
         {
-            var _in = StatusInstance.Find(f => f.IsInventory == true);
+            var _in = StatusInstance.Find(f => f.IsItInventory == true);
             cbIsInventory.Enabled = null == _in;
 
-            var wait = StatusInstance.Find(f => f.IsWaiting == true);
+            var wait = StatusInstance.Find(f => f.IsItWaiting == true);
             cbIsWaiting.Enabled = null == wait;
 
-            var _out = StatusInstance.Find(f => f.IsOutstorage == true);
+            var _out = StatusInstance.Find(f => f.IsItOutstorage == true);
             cbIsOutstorage.Enabled = null == _out;
 
-            var over = StatusInstance.Find(f => f.IsOverhaul == true);
+            var over = StatusInstance.Find(f => f.IsItOverhaul == true);
             cbIsOverhaul.Enabled = null == over;
+
+            var rental = StatusInstance.Find(f => f.IsItRental == true);
+            cbIsRental.Enabled = null == rental;
         }
 
         private void ShowEdit()
@@ -58,21 +61,25 @@ namespace Wbs.Everdigm.Web.main
             {
                 txtCode.Value = s.Code;
                 txtName.Value = s.Name;
-                cbIsInventory.Checked = s.IsInventory.Value;
-                if (s.IsInventory == true)
+                cbIsInventory.Checked = s.IsItInventory.Value;
+                if (s.IsItInventory == true)
                     cbIsInventory.Enabled = true;
 
-                cbIsOutstorage.Checked = s.IsOutstorage.Value;
-                if (s.IsOutstorage == true)
+                cbIsOutstorage.Checked = s.IsItOutstorage.Value;
+                if (s.IsItOutstorage == true)
                     cbIsOutstorage.Enabled = true;
 
-                cbIsOverhaul.Checked = s.IsOverhaul.Value;
-                if (s.IsOverhaul == true)
+                cbIsOverhaul.Checked = s.IsItOverhaul.Value;
+                if (s.IsItOverhaul == true)
                     cbIsOverhaul.Enabled = true;
 
-                cbIsWaiting.Checked = s.IsWaiting.Value;
-                if (s.IsWaiting == true)
+                cbIsWaiting.Checked = s.IsItWaiting.Value;
+                if (s.IsItWaiting == true)
                     cbIsWaiting.Enabled = true;
+
+                cbIsRental.Checked = s.IsItRental.Value;
+                if (s.IsItRental == true)
+                    cbIsRental.Enabled = true;
             }
             else
             {
@@ -84,10 +91,11 @@ namespace Wbs.Everdigm.Web.main
         {
             obj.Code = txtCode.Value.Trim();
             obj.Name = txtName.Value.Trim();
-            obj.IsInventory = cbIsInventory.Checked;
-            obj.IsOutstorage = cbIsOutstorage.Checked;
-            obj.IsOverhaul = cbIsOverhaul.Checked;
-            obj.IsWaiting = cbIsWaiting.Checked;
+            obj.IsItInventory = cbIsInventory.Checked;
+            obj.IsItOutstorage = cbIsOutstorage.Checked;
+            obj.IsItOverhaul = cbIsOverhaul.Checked;
+            obj.IsItWaiting = cbIsWaiting.Checked;
+            obj.IsItRental = cbIsRental.Checked;
         }
 
         private void NewStatus()
@@ -174,10 +182,11 @@ namespace Wbs.Everdigm.Web.main
                         "<td style=\"width: 40px; text-align: center;\">" + cnt + "</td>" +
                         "<td><a href=\"./equipment_status.aspx?key=" + id + "\" >" + ("" == obj.Name ? "-" : obj.Name) + "</a></td>" +
                         "<td>" + obj.Code + "</td>" +
-                        "<td>" + (obj.IsInventory == true ? "Yes" : "-") + "</td>" +
-                        "<td>" + (obj.IsOutstorage == true ? "Yes" : "-") + "</td>" +
-                        "<td>" + (obj.IsOverhaul == true ? "Yes" : "-") + "</td>" +
-                        "<td>" + (obj.IsWaiting == true ? "Yes" : "-") + "</td>" +
+                        "<td>" + (obj.IsItInventory == true ? "Yes" : "-") + "</td>" +
+                        "<td>" + (obj.IsItOutstorage == true ? "Yes" : "-") + "</td>" +
+                        "<td>" + (obj.IsItOverhaul == true ? "Yes" : "-") + "</td>" +
+                        "<td>" + (obj.IsItWaiting == true ? "Yes" : "-") + "</td>" +
+                        "<td>" + (obj.IsItRental == true ? "Yes" : "-") + "</td>" +
                         "<td></td>" +
                         "</tr>";
                 }

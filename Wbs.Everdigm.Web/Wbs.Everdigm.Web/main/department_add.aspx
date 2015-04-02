@@ -47,7 +47,7 @@
                                     <input type="text" runat="server" class="text-input click-input" id="txtDepartment" readonly="readonly" />
                                     <input type="hidden" runat="server" id="hidDepartment" />
                                 </td>
-                                <td class="td_right">Is Default:</td>
+                                <td class="td_right">Is it default?</td>
                                 <td class="td_left">
                                     <label><asp:CheckBox ID="cbIsDefault" runat="server" />&nbsp;Set as default dept.</label>
                                 </td>

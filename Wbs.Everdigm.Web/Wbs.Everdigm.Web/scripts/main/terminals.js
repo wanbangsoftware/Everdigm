@@ -29,9 +29,15 @@
                 }, 500, 300);
             } else if (type == "del") {
                 //
-                if (confirm("Are you sure to unbound the satellite?")) {
+                if (confirm("Are you sure to unbind the satellite and terminal?")) {
                     $("#hidBoundSatellite").val(id);
                     $("#btBoundSatellite").click();
+                }
+            } else if (type == "unbind") {
+                // unbind terminal & equeipment
+                if (confirm("Are you sure to unbind this equipment and terminal?")) {
+                    $("#hidBoundSatellite").val(id);
+                    $("#btUnbindEquipment").click();
                 }
             }
         }

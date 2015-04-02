@@ -50,6 +50,7 @@ namespace Wbs.Everdigm.Web
             {
                 TX300 x300 = new TX300(content);
                 x300.package_to_msg();
+                x300.TerminalID = sender + "000";
                 save(x300);
                 if (x300.CommandID == 0xBB0F)
                 {

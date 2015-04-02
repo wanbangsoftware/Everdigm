@@ -31,6 +31,14 @@
         .modal-body {
             overflow-y: visible;
         }
+        .custom-modal-header {
+            -webkit-border-top-left-radius: 5px;
+            -webkit-border-top-right-radius: 5px;
+            -moz-border-radius-topleft: 5px;
+            -moz-border-radius-topright: 5px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -41,7 +49,7 @@
             <input type="hidden" runat="server" id="hidTotalPages" value="0" />
             <!-- Default panel contents -->
             <div class="panel-heading">
-                <strong>Equipment: Warehousing</strong>
+                <strong>Equipment: Check in</strong>
             </div>
             <div class="panel-body" style="padding-bottom: 0px !important;">
                 <!--默认查询新品库存列表-->
@@ -88,7 +96,7 @@
                     <li role="presentation" style="width: 100px; margin-top: 3px; padding-left: 5px;">
                         <div class="input-group">
                             <span class="input-group-btn">
-                                <button class="btn btn-primary" id="openModal" type="button" data-toggle="modal" data-target="#modalNewProduct"><span class="glyphicon glyphicon-floppy-open"></span> Storage</button>
+                                <button class="btn btn-primary" id="openModal" type="button" data-toggle="modal" data-target="#modalNewProduct"><span class="glyphicon glyphicon-floppy-open"></span> <span>Storage</span></button>
                             </span>
                         </div>
                         <!-- /input-group -->
@@ -111,9 +119,9 @@
                                     <th class="in-tab-title-b bg-warning">#</th>
                                     <th class="in-tab-title-b bg-warning">Type</th>
                                     <th class="in-tab-title-b bg-warning">Model</th>
-                                    <th class="in-tab-title-b bg-warning">SMH</th>
+                                    <th class="in-tab-title-b bg-warning" style="text-align: right !important;">SMH</th>
                                     <th class="in-tab-title-b bg-warning">Eng.</th>
-                                    <th class="in-tab-title-b bg-warning">Location</th>
+                                    <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Location</th>
                                     <th class="in-tab-title-rb bg-warning">Status</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">In Date</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">In Type</th>
@@ -165,7 +173,7 @@
         <div class="modal fade" id="modalNewProduct" tabindex="-1" role="dialog" aria-labelledby="NewStorageIn" data-backdrop="static" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header custom-modal-header bg-primary">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title" id="NewStorageIn"><strong>New Product: </strong></h4>
                     </div>
@@ -208,17 +216,6 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="popup-td right">Store as:
-                                            </td>
-                                            <td class="popup-td">
-                                                <div role="presentation" class="dropdown" id="ddStorage">
-                                                    <a id="dropStorage" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Storage:</span><span class="caret"></span>
-                                                    </a>
-                                                    <ul id="menuStorage" class="dropdown-menu" role="menu" aria-labelledby="dropStorage">
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
                                             <td class="popup-td right">Warehouse:</td>
                                             <td class="popup-td">
                                                 <div role="presentation" class="dropdown" id="ddWarehouse">
@@ -229,6 +226,8 @@
                                                     </ul>
                                                 </div>
                                             </td>
+                                            <td class="popup-td right"></td>
+                                            <td class="popup-td"></td>
                                         </tr>
                                         <tr>
                                             <td class="popup-td right">Number:</td>
@@ -258,11 +257,11 @@
         <div class="modal fade" id="modalOldProduct" tabindex="-1" role="dialog" aria-labelledby="NewStorageIn" data-backdrop="static" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header custom-modal-header bg-success">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title"><strong>2 Hand/Lease Storage: </strong></h4>
+                        <h4 class="modal-title"><strong>Rental Fleet storage: </strong></h4>
                     </div>
-                    <div class="modal-body" style="height: 200px;">
+                    <div class="modal-body" style="height: 230px;">
                         <div class="col-sm-12 show-grid">
                             <ul class="nav nav-tabs col-sm-12 show-grid" role="tablist">
                                 <!--输入查询2手或租赁出去的设备信息-->
@@ -293,25 +292,19 @@
                                 <table class="table table-hover">
                                     <tbody id="oldEquipmentInfo">
                                         <tr>
-                                            <td class="popup-td right">Number:</td>
-                                            <td class="popup-td" colspan="3"></td>
+                                            <td class="popup-td right">Equipment:</td>
+                                            <td class="popup-td"></td>
+                                            <td class="popup-td" colspan="2"><input type="checkbox" id="cbRepair" runat="server" />Need nspection & repair</td>
                                         </tr>
                                         <tr>
                                             <td class="popup-td right">Status:</td>
                                             <td class="popup-td" colspan="3"></td>
                                         </tr>
                                         <tr>
-                                            <td class="popup-td right">Storage type:
-                                            </td>
-                                            <td class="popup-td">
-                                                <div role="presentation" class="dropdown" id="ddStorageOld">
-                                                    <a id="dropStorageOld" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Storage:</span><span class="caret"></span>
-                                                    </a>
-                                                    <ul id="menuStorageOld" class="dropdown-menu" role="menu" aria-labelledby="dropStorageOld">
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
+                                            <td class="popup-td right">Location:</td>
+                                            <td class="popup-td" colspan="3"></td>
+                                        </tr>
+                                        <tr>
                                             <td class="popup-td right">Store In:</td>
                                             <td class="popup-td">
                                                 <div role="presentation" class="dropdown" id="ddWarehouseOld">
@@ -322,6 +315,8 @@
                                                     </ul>
                                                 </div>
                                             </td>
+                                            <td class="popup-td right"></td>
+                                            <td class="popup-td"></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -343,7 +338,7 @@
         <div class="modal fade" id="modalWarehousingProduct" tabindex="-1" style="height: 500px;" role="dialog" aria-labelledby="NewStorageIn" data-backdrop="static" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header custom-modal-header bg-danger">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title"><strong>Change Warehouse: </strong></h4>
                     </div>

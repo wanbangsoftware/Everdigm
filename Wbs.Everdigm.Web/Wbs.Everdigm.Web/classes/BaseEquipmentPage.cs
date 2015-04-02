@@ -38,7 +38,7 @@ namespace Wbs.Everdigm.Web
         /// <summary>
         /// 设备状态码业务处理实体
         /// </summary>
-        protected EquipmentStatusCodeBLL CodeInstance { get { return new EquipmentStatusCodeBLL(); } }
+        //protected EquipmentStatusCodeBLL CodeInstance { get { return new EquipmentStatusCodeBLL(); } }
         /// <summary>
         /// 设备信息业务处理实体
         /// </summary>
@@ -97,24 +97,25 @@ namespace Wbs.Everdigm.Web
             StatusInstance.Update(f => f.id == obj.id, act => {
                 act.Code = obj.Code;
                 act.Name = obj.Name;
-                act.IsInventory = obj.IsInventory;
-                act.IsOutstorage = obj.IsOutstorage;
-                act.IsOverhaul = obj.IsOverhaul;
-                act.IsWaiting = obj.IsWaiting;
+                act.IsItInventory = obj.IsItInventory;
+                act.IsItOutstorage = obj.IsItOutstorage;
+                act.IsItOverhaul = obj.IsItOverhaul;
+                act.IsItWaiting = obj.IsItWaiting;
+                act.IsItRental = obj.IsItRental;
             });
         }
         /// <summary>
         /// 更新设备状态码信息
         /// </summary>
         /// <param name="obj"></param>
-        protected void Update(TB_EquipmentStatusCode obj)
-        {
-            CodeInstance.Update(f => f.id == obj.id, act => {
-                act.Code = obj.Code;
-                act.Name = obj.Name;
-                act.Status = obj.Status;
-            });
-        }
+        //protected void Update(TB_EquipmentStatusCode obj)
+        //{
+        //    CodeInstance.Update(f => f.id == obj.id, act => {
+        //        act.Code = obj.Code;
+        //        act.Name = obj.Name;
+        //        act.Status = obj.Status;
+        //    });
+        //}
         /// <summary>
         /// 在下拉列表框里显示设备类别列表
         /// </summary>

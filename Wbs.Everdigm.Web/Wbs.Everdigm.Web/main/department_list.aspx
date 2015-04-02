@@ -45,11 +45,11 @@
                                     <th style="width: 40px; text-align: center;">
                                         <input type="checkbox" id="cbAll" /></th>
                                     <th style="width: 40px; text-align: center;">ID</th>
-                                    <th style="width: 150px;">Name</th>
-                                    <th style="width: 100px;">Phone</th>
-                                    <th style="width: 100px;">Fax</th>
+                                    <th style="width: 200px;">Name</th>
+                                    <th style="width: 150px;">Phone</th>
+                                    <th style="width: 150px;">Fax</th>
                                     <th style="width: 50px;">Default</th>
-                                    <th style="width: 150px;">Parent</th>
+                                    <th style="width: 200px;">Parent</th>
                                     <th style="width:50px;">Users</th>
                                     <th style="width:50px;">Room</th>
                                     <th>Address</th>

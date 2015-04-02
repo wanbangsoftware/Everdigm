@@ -22,6 +22,10 @@ namespace Wbs.Everdigm.Web
             }
         }
         /// <summary>
+        /// 设备业务BLL
+        /// </summary>
+        protected EquipmentBLL EquipmentInstance { get { return new EquipmentBLL(); } }
+        /// <summary>
         /// 终端信息业务处理实例
         /// </summary>
         protected TerminalBLL TerminalInstance { get { return new TerminalBLL(); } }

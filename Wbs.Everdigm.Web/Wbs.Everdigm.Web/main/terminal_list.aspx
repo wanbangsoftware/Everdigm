@@ -37,6 +37,7 @@
                                     <input type="hidden" runat="server" id="hidBoundSatellite" />
                                     <asp:Button ID="btBoundSatellite" runat="server" CssClass="hidding" OnClick="btBoundSatellite_Click" />
                                     <asp:Button ID="bt_Delete" runat="server" Text="Delete" CssClass="button" OnClick="btDelete_Click" />
+                                    <asp:Button ID="btUnbindEquipment" runat="server" CssClass="hidding" OnClick="btUnbindEquipment_Click" />
                                 </td>
                             </tr>
                         </table>
@@ -47,20 +48,21 @@
                                         <input type="checkbox" id="cbAll" /></th>
                                     <th style="width: 40px; text-align: center;">ID</th>
                                     <th style="width: 100px;">Number</th>
-                                    <th style="width: 100px;">Simcard</th>
+                                    <th style="width: 100px;">Sim card</th>
                                     <th style="width: 130px;">Satellite</th>
                                     <th style="width: 70px;">Firmware</th>
                                     <th style="width: 30px; text-align: center;">Rev</th>
                                     <th style="width: 50px; text-align: center;">Type</th>
                                     <th style="width: 70px;">Register</th>
-                                    <th style="width: 50px; text-align: center;">Bound</th>
+                                    <th style="width: 80px; text-align: center;">Has bound?</th>
+                                    <th style="width: 140px;">Equipment</th>
                                     <th style="width: 70px;">Link</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="12">
+                                    <td colspan="13">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>
@@ -80,6 +82,7 @@
                                     <td style="text-align: center;">DX</td>
                                     <td>2015-01-08</td>
                                     <td style="text-align: center;">-</td>
+                                    <td>DX225LCA-00012</td>
                                     <td>OFF</td>
                                     <td></td>
                                 </tr>
@@ -87,6 +90,8 @@
                         </table>
                         <p>
                             <b>Explanation</b>:<br />
+                            1. Click Equipment number(if exist) to unbind terminal.<br />
+                            2. Click Add to bind satellite device.
                         </p>
                     </div>
                 </div>

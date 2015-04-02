@@ -57,7 +57,6 @@
     <Compile Include="EquipmentBLL.cs" />
     <Compile Include="EquipmentModelBLL.cs" />
     <Compile Include="EquipmentStatusBLL.cs" />
-    <Compile Include="EquipmentStatusCodeBLL.cs" />
     <Compile Include="EquipmentTypeBLL.cs" />
     <Compile Include="ErrorBLL.cs" />
     <Compile Include="HistoryBLL.cs" />

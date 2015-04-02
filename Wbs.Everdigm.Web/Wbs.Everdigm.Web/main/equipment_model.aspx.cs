@@ -37,7 +37,7 @@ namespace Wbs.Everdigm.Web.main
         {
             ddlType.Items.Clear();
             ddlType.Items.Add(new ListItem { Text = "Equipment Type:", Value = "" });
-            var types = TypeInstance.FindList(null).OrderBy(o=>o.Name);
+            var types = TypeInstance.FindList(f => f.Delete == false).OrderBy(o => o.Name);
             if (types.Count() > 0)
             {
                 types = types.OrderBy(o => o.Name);

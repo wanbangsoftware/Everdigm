@@ -19,7 +19,8 @@ namespace Wbs.Everdigm.BLL
             return new TB_AccountAction
             {
                 Description = "",
-                Name = ""
+                Name = "",
+                id = 0
             };
         }
         public override string ToString(TB_AccountAction entity)

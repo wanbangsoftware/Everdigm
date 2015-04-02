@@ -43,11 +43,11 @@ namespace Wbs.Everdigm.Web.ajax
             // 设备状态类别
             var statuses = new EquipmentStatusBLL().FindList(null).OrderBy(o => o.Name).ToList();
             // 设备状态码
-            var codes = new EquipmentStatusCodeBLL().FindList(null).OrderBy(o => o.Status).ThenBy(t => t.Name).ToList();
+            //var codes = new EquipmentStatusCodeBLL().FindList(null).OrderBy(o => o.Status).ThenBy(t => t.Name).ToList();
 
             var ret = "{\"types\":" + JsonConverter.ToJson(types) + ",\"models\":" +
                 JsonConverter.ToJson(models) + ",\"warehouses\":" + JsonConverter.ToJson(houses) +
-                ",\"statuses\":" + JsonConverter.ToJson(statuses) + ",\"codes\":" + JsonConverter.ToJson(codes) + "}";
+                ",\"statuses\":" + JsonConverter.ToJson(statuses) + "}";
             ResponseJson(ret);
         }
     }

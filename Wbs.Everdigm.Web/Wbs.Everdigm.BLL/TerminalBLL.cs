@@ -49,9 +49,9 @@ namespace Wbs.Everdigm.BLL
         {
             var n = (int?)null;
             if (n == obj.Satellite) {
-                return wantAdd ? "<a href=\"#add_" + obj.id + "\">Add</a>" : "-";
+                return wantAdd ? "<a href=\"#add_" + obj.id + "\">add</a>" : "-";
             }
-            return obj.TB_Satellite.CardNo + (wantAdd ? (" (<a href=\"#del_" + obj.id + "\">Unbound</a>)") : "");
+            return obj.TB_Satellite.CardNo + (wantAdd ? (" (<a href=\"#del_" + obj.id + "\">Unbind</a>)") : "");
         }
         /// <summary>
         /// 将终端实例显示为字符串

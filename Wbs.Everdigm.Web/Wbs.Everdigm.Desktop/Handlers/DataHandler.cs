@@ -564,16 +564,22 @@ namespace Wbs.Everdigm.Desktop
             }
 
             var pos = GetGpsinfoFrom1001(x1001, true);
-            pos.Equipment = null == equipment ? (int?)null : equipment.id;
-            pos.Terminal = obj.TerminalID;
-            pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
-            PositionInstance.Add(pos);
+            if ((pos.Longitude > 0 && pos.Longitude < 180) && (pos.Latitude > 0 && pos.Latitude < 90))
+            {
+                pos.Equipment = null == equipment ? (int?)null : equipment.id;
+                pos.Terminal = obj.TerminalID;
+                pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
+                PositionInstance.Add(pos);
+            }
 
             pos = GetGpsinfoFrom1001(x1001, false);
-            pos.Equipment = null == equipment ? (int?)null : equipment.id;
-            pos.Terminal = obj.TerminalID;
-            pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
-            PositionInstance.Add(pos);
+            if ((pos.Longitude > 0 && pos.Longitude < 180) && (pos.Latitude > 0 && pos.Latitude < 90))
+            {
+                pos.Equipment = null == equipment ? (int?)null : equipment.id;
+                pos.Terminal = obj.TerminalID;
+                pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
+                PositionInstance.Add(pos);
+            }
         }
         /// <summary>
         /// 处理报警信息
