@@ -604,6 +604,10 @@ form .little-input {
     width: 80px !important;
 }
 
+form .little-big-imput {
+    width: 150px !important;
+}
+
 form .click-input {
     cursor: pointer;
 }

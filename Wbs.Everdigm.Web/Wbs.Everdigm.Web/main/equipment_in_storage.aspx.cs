@@ -172,7 +172,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td class=\"in-tab-txt-b\">" + (n == obj.Model ? "-" : obj.TB_EquipmentModel.TB_EquipmentType.Code) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\" style=\"text-align: left !important;\">" + (n == obj.Model ? "-" : ("<a href=\"./equipment_command.aspx?key=" + id + "\">" + EquipmentInstance.GetFullNumber(obj) + "</a>")) + "</td>" +
                         "<td class=\"in-tab-txt-b\" style=\"text-align: right !important;\">" + EquipmentInstance.GetRuntime(obj.Runtime) + "</td>" +
-                        "<td class=\"in-tab-txt-b\">" + EquipmentInstance.GetEngStatus(obj.Voltage) + "</td>" +
+                        "<td class=\"in-tab-txt-b\">" + EquipmentInstance.GetEngStatus(obj) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\" title=\"" + obj.GpsAddress + "\">" + obj.GpsAddress + "</td>" +
                         "<td class=\"in-tab-txt-rb\">" + EquipmentInstance.GetStatus(obj) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\">" + (null == _in ? "-" : _in.Stocktime.Value.ToString("yyyy/MM/dd")) + "</td>" +
@@ -195,7 +195,11 @@ namespace Wbs.Everdigm.Web.main
                 ShowPaggings(pageIndex, totalPages, totalRecords, "./equipment_in_storage.aspx", divPagging);
         }
 
-
+        /// <summary>
+        /// 保存2手设备回收状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btSave2Hand_Click(object sender, EventArgs e)
         {
             if (!HasSessionLose) {
@@ -203,6 +207,11 @@ namespace Wbs.Everdigm.Web.main
                 var exist = EquipmentInstance.Find(f => f.id == obj.id);
                 if (null != exist)
                 {
+                    // 保存之前的状态
+                    var history = StoreInstance.GetObject();
+                    history.Equipment = exist.id;
+                    history.Status = exist.Status;
+
                     EquipmentInstance.Update(f => f.id == exist.id, act => {
                         // 保存仓库信息
                         act.Warehouse = obj.Warehouse;
@@ -217,15 +226,12 @@ namespace Wbs.Everdigm.Web.main
                         else
                         { act.Status = StatusInstance.Find(f => f.IsItInventory == true).id; }
                     });
-
+                    exist = EquipmentInstance.Find(f => f.id == exist.id);
                     // 保存入库信息
-                    var history = StoreInstance.GetObject();
-                    history.Equipment = obj.id;
-                    history.Status = obj.Status;
                     history.Stocktime = DateTime.Now;
                     // 入库次数加1
                     history.StoreTimes = exist.StoreTimes + 1;
-                    history.Warehouse = obj.Warehouse;
+                    history.Warehouse = exist.Warehouse;
                     StoreInstance.Add(history);
 
                     // 保存入库操作历史记录

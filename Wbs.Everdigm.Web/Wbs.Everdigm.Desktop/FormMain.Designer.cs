@@ -45,6 +45,8 @@
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiExit = new System.Windows.Forms.ToolStripMenuItem();
             this.browser = new System.Windows.Forms.WebBrowser();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmiStopFetchingAddress = new System.Windows.Forms.ToolStripMenuItem();
             this.tsMain.SuspendLayout();
             this.ssMain.SuspendLayout();
             this.cmsNotifyMenu.SuspendLayout();
@@ -63,7 +65,9 @@
             // tsdbSettings
             // 
             this.tsdbSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiShowHistory});
+            this.tsmiShowHistory,
+            this.toolStripMenuItem2,
+            this.tsmiStopFetchingAddress});
             this.tsdbSettings.Image = ((System.Drawing.Image)(resources.GetObject("tsdbSettings.Image")));
             this.tsdbSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsdbSettings.Name = "tsdbSettings";
@@ -75,7 +79,7 @@
             this.tsmiShowHistory.Checked = true;
             this.tsmiShowHistory.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tsmiShowHistory.Name = "tsmiShowHistory";
-            this.tsmiShowHistory.Size = new System.Drawing.Size(152, 22);
+            this.tsmiShowHistory.Size = new System.Drawing.Size(316, 22);
             this.tsmiShowHistory.Text = "Show History";
             this.tsmiShowHistory.Click += new System.EventHandler(this.tsmiShowHistory_Click);
             // 
@@ -104,6 +108,7 @@
             this.rtbHistory.Size = new System.Drawing.Size(728, 381);
             this.rtbHistory.TabIndex = 2;
             this.rtbHistory.Text = "";
+            this.rtbHistory.WordWrap = false;
             // 
             // notifyIcon
             // 
@@ -171,6 +176,18 @@
             this.browser.TabIndex = 3;
             this.browser.Visible = false;
             // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(313, 6);
+            // 
+            // tsmiStopFetchingAddress
+            // 
+            this.tsmiStopFetchingAddress.Name = "tsmiStopFetchingAddress";
+            this.tsmiStopFetchingAddress.Size = new System.Drawing.Size(316, 22);
+            this.tsmiStopFetchingAddress.Text = "Stop Fetching Address from Google map";
+            this.tsmiStopFetchingAddress.Click += new System.EventHandler(this.tsmiStopFetchingAddress_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -215,6 +232,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem tsmiExit;
         private System.Windows.Forms.WebBrowser browser;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem tsmiStopFetchingAddress;
     }
 }
 

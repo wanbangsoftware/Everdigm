@@ -100,7 +100,10 @@ namespace Wbs.Everdigm.Desktop
                 {
                     if (history.IndexOf("position: ") == 0) { 
                         // 捕获位置信息
-                        browser.Navigate(MAP_URL + history.Replace("position: ", "") + "&time=" + DateTime.Now.Ticks);
+                        if (!tsmiStopFetchingAddress.Checked)
+                        {
+                            browser.Navigate(MAP_URL + history.Replace("position: ", "") + "&time=" + DateTime.Now.Ticks);
+                        }
                     }
                     else
                     {
@@ -243,6 +246,11 @@ namespace Wbs.Everdigm.Desktop
             {
                 tsmiShowMainForm_Click(sender, e);
             }
+        }
+
+        private void tsmiStopFetchingAddress_Click(object sender, EventArgs e)
+        {
+            tsmiStopFetchingAddress.Checked = !tsmiStopFetchingAddress.Checked;
         }
     }
 }

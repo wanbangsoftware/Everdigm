@@ -36,6 +36,7 @@ namespace Wbs.Everdigm.BLL
                 StoreTimes = 0,
                 LockStatus = "00",
                 Longitude = 0.0,
+                Rpm = 0,
                 Model = (int?)null,
                 Number = "",
                 OnlineStyle = (byte?)null,
@@ -131,10 +132,11 @@ namespace Wbs.Everdigm.BLL
         /// </summary>
         /// <param name="voltage"></param>
         /// <returns></returns>
-        public string GetEngStatus(string voltage)
+        public string GetEngStatus(TB_Equipment obj)
         {
+            var voltage = obj.Voltage;
             if (null == voltage) return "OFF";
-            if (voltage.IndexOf("G2") >= 0) return "ON";
+            if (voltage.IndexOf("G2") >= 0) return "ON(" + obj.Rpm + ")";
             return "OFF";
         }
         /// <summary>
@@ -144,9 +146,12 @@ namespace Wbs.Everdigm.BLL
         /// <returns></returns>
         public string GetRuntime(int? time)
         {
-            if ((int?)null == time) return "0";
-            double t = (time.Value / 60.0) + (time.Value % 60 / 100.0);
-            return string.Format("{0:0,0.00}", t);
+            if ((int?)null == time || 0 == time) return "0";
+            if (time.Value < 60) return time.Value.ToString() + "m";
+            int hour = time.Value / 60, minute = time.Value % 60;
+            if(hour<1000)
+                return string.Format("{0}h{1:00}m", hour, minute);
+            return string.Format("{0:0,0}h{1:00}m", hour, minute);
         }
 
     }

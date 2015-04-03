@@ -29,7 +29,7 @@
                                     Name:
                                     <input type="text" class="text-input little-input" id="txtName" runat="server" />
                                     Parent:
-                                    <input type="text" runat="server" title="click to choose" class="text-input little-input click-input" id="txtParent" readonly="readonly" />
+                                    <input type="text" runat="server" title="click to choose" class="text-input little-big-imput click-input" id="txtParent" readonly="readonly" />
                                     <input type="hidden" runat="server" id="hidParent" />
                                     <input type="hidden" id="hidPageIndex" runat="server" />
                                     <asp:Button ID="btQuery" runat="server" Text="Query" CssClass="button" OnClick="btQuery_Click" />

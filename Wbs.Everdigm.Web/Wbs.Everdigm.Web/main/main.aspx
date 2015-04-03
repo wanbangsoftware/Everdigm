@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="../images/favicon.ico" />
     <title>Everdigm Terminal Control System</title>
 </head>
-<frameset rows="105,*,21" cols="*" framespacing="0" frameborder="no" border="0">
+<frameset rows="<%=TopHeight %>" cols="*" framespacing="0" frameborder="no" border="0" id="main_frame" name="main_frame">
     <frame src="top_frame.aspx" name="top_frame" scrolling="no" noresize="noresize" id="top_frame" />
     <frameset rows="*" cols="<%=MenuWidth %>" framespacing="0" frameborder="no" border="0" name="body_frame" id="body_frame">
         <frame src="left_frame.aspx" name="left_frame" scrolling="auto" noresize="noresize" id="left_frame" />
@@ -21,7 +21,7 @@
 </frameset>
 <noframes>
     <body>
-        您的浏览器不支持框架方式浏览网页。
+        Your navigator didn't support framset.
     </body>
 </noframes>
 </html>

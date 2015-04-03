@@ -82,7 +82,7 @@ namespace Wbs.Everdigm.Desktop
             var count = Environment.ProcessorCount;
             for (int i = 0; i < count; i++)
             {
-                ThreadPool.QueueUserWorkItem(ThreadHandlePorc);
+                ThreadPool.QueueUserWorkItem(ThreadHandlePorc, i);
             }
         }
         /// <summary>
@@ -174,12 +174,13 @@ namespace Wbs.Everdigm.Desktop
         /// </summary>
         private void ThreadHandlePorc(Object state)
         {
+            var stat = (int)state;
             AsyncUserDataBuffer obj;
             // 处理数据的Handler
             DataHandler _handler = new DataHandler();
             _handler.OnUnhandledMessage += new EventHandler<string>(DataHandler_OnUnhandledMessage);
             _handler.Server = _tcpServer;
-            int timer = 0, sleeper = 10;
+            int timer = 0, sleeper = 10, gpsHandler = 0;
 
             while (true)
             {
@@ -209,13 +210,16 @@ namespace Wbs.Everdigm.Desktop
                                     DateTime(obj.ReceiveTime), obj.IP, obj.Port, obj.PackageType);
                                 break;
                             case AsyncUserDataType.ReceivedData:
-                                message = string.Format("{0}received data: {1} [{2}]", DateTime(obj.ReceiveTime), 
-                                    CustomConvert.GetHex(obj.Buffer), obj.PackageType);
+                                message = string.Format("{0}received data(length: {1}): {2} [{3}]", DateTime(obj.ReceiveTime),
+                                    (null == obj.Buffer ? 0 : obj.Buffer.Length), CustomConvert.GetHex(obj.Buffer), obj.PackageType);
                                 break;
                         }
 
                         // 处理数据
-                        _handler.HandleData(obj);
+                        if (null != obj.Buffer)
+                        {
+                            _handler.HandleData(obj);
+                        }
 
                         if (!string.IsNullOrEmpty(message))
                         {
@@ -230,11 +234,22 @@ namespace Wbs.Everdigm.Desktop
                 // 处理TCP下发送的命令
                 if (timer % 1000 == 0)
                 {
+                    // 每秒钟增加1次，每10秒处理一次未获取到定位位置的记录
+                    gpsHandler++;
+
                     lock (Locker)
                     {
                         try
                         {
                             _handler.CheckCommand();
+                            if (gpsHandler % sleeper == 0) {
+                                gpsHandler = 0;
+                                // 处理一次定位信息
+                                if (stat == 0)
+                                {
+                                    _handler.HandleGpsAddress();
+                                }
+                            }
                         }
                         catch(Exception e)
                         {

@@ -12,7 +12,7 @@
     <form id="form1" runat="server">
         <div class="container">
             <div class=" header">
-                <img alt="" src="../images/img_top.png" />
+                <img alt="" src="../images/img_top.png" id="bannerImage" />
             </div>
         </div>
     </form>

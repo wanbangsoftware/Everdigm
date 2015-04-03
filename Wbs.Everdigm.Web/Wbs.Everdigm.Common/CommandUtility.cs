@@ -201,10 +201,12 @@ namespace Wbs.Everdigm.Common
                 case CommandStatus.SentFail: ret = "Send fail: can not attach destination"; break;
                 case CommandStatus.Returned: ret = "Data has returned"; break;
                 case CommandStatus.Timedout: ret = "Timeout"; break;
-                case CommandStatus.EposFail: ret = "EPOS response fail."; break;
+                case CommandStatus.EposFail: ret = "EPOS no response"; break;
                 case CommandStatus.SecurityError: ret = "Cannot send this security command"; break;
                 case CommandStatus.LinkLosed: ret = "TCP link lose"; break;
                 case CommandStatus.TCPNetworkError: ret = "TCP network handle error"; break;
+                case CommandStatus.EngNotStart: ret = "Eng. not start"; break;
+                case CommandStatus.NoFunction: ret = "Terminal has no function to handle this command"; break;
             }
             return ret;
         }

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="equipment_checkout.aspx.cs" Inherits="Wbs.Everdigm.Web.main.equipment_checkout" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="equipment_overhaul.aspx.cs" Inherits="Wbs.Everdigm.Web.main.equipment_overhaul" %>
 
 <!DOCTYPE html>
 
@@ -50,7 +50,7 @@
             <input type="hidden" runat="server" value="0" id="hidPageIndex" />
             <input type="hidden" runat="server" id="hidTotalPages" value="0" />
             <!-- Default panel contents -->
-            <div class="panel-heading"><strong>Equipment: Check out</strong></div>
+            <div class="panel-heading"><strong>Equipment: Inspection & repair</strong></div>
             <div class="panel-body">
                 <!--默认查询新品库存列表-->
                 <input type="hidden" id="hidQueryType" runat="server" value="N" />
@@ -83,7 +83,7 @@
                     <li role="presentation" class="tablist-item-input">
                         <div class="input-group">
                             <input type="text" id="txtQueryNumber" runat="server" class="form-control" placeholder="number">
-                            <asp:Button ID="btQuery" CssClass="hidden" runat="server" Text="Query" Width="0" Height="0" OnClick="btQuery_Click" />
+                            <asp:Button ID="btQuery" CssClass="hidden" runat="server" Text="Query" OnClick="btQuery_Click" />
                             <span class="input-group-btn">
                                 <button class="btn btn-warning" type="button" id="query"><span class="glyphicon glyphicon-search"></span></button>
                             </span>
@@ -156,61 +156,23 @@
                         </table>
                     </div>
                 </div>
-                <p>
-                    Click model number to open checkout dialog.
-                </p>
             </div>
         </div>
-        <!--小模态框-出库界面-->
+        <!--小模态框-维修确认对话框-->
         <div class="modal fade" id="modalCheckout" tabindex="-1" role="dialog" aria-labelledby="NewStorageIn" data-backdrop="static" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header custom-modal-header bg-primary">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title"><strong id="titleCheckout">Check out: </strong></h4>
+                        <h4 class="modal-title"><strong id="title">Inspection & repair</strong></h4>
                     </div>
-                    <div class="modal-body" style="height: 200px;">
-                        <div class="col-sm-12 show-grid" id="continue">
-                            <div class="col-sm-12 show-grid">
-                                <table class="table table-hover">
-                                    <tbody id="popupTbody">
-                                        <tr>
-                                            <td class="popup-td" colspan="2" style="width: 50%;">
-                                                <div class="input-group" style="width: 180px;">
-                                                    <input type="text" class="form-control" id="number" placeholder="Customer number" maxlength="10" data-provide="typeahead">
-                                                    <span class="input-group-btn">
-                                                        <button class="btn btn-warning" type="button" id="queryCustomer"><span class="glyphicon glyphicon-search"></span></button>
-                                                    </span>
-                                                </div>
-                                            </td>
-                                            <td class="popup-td" colspan="2" style="width: 50%;">
-                                                <asp:DropDownList ID="ddlOuttype" runat="server" CssClass="form-control selectpicker" Width="180px">
-                                                </asp:DropDownList>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="popup-td">Name:</td>
-                                            <td class="popup-td"></td>
-                                            <td class="popup-td">Phone:</td>
-                                            <td class="popup-td"></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="popup-td">Fax:</td>
-                                            <td class="popup-td"></td>
-                                            <td class="popup-td"></td>
-                                            <td class="popup-td"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                    <div class="modal-body">
+                        Save "inspection & repair" record and return this equipment into warehouse.
                     </div>
                     <div class="modal-footer">
-                        <span style="color: #ff0000;" id="spanWarningNewInstorage"></span>
-                        <asp:Button ID="btCheckoutStorage" CssClass="hidden" runat="server" Text="Button" OnClick="btCheckoutStorage_Click" />
-                        <input type="hidden" id="hidCheckEquipmentId" runat="server" />
-                        <input type="hidden" id="hidCheckCustomerId" runat="server" />
-                        <button type="button" class="btn btn-success disabled" id="newCheckoutSave"><span class="glyphicon glyphicon-ok"></span>Checkout!</button>
+                        <input type="hidden" id="hidRepairId" runat="server" />
+                        <asp:Button ID="btRepairComplete" CssClass="hidden" runat="server" OnClick="btRepairComplete_Click" />
+                        <button type="button" class="btn btn-primary" id="btRepairSave"><span class="glyphicon glyphicon-ok"></span> Return to warehouse</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -232,6 +194,6 @@
     <script type="text/javascript" src="../scripts/main/pagination.js"></script>
     <script type="text/javascript" src="../scripts/main/equipment.base.js"></script>
     <script type="text/javascript" src="../scripts/main/equipments.js"></script>
-    <script type="text/javascript" src="../scripts/main/equipment.checkout.js"></script>
+    <script type="text/javascript" src="../scripts/main/equipment.overhaul.js"></script>
 </body>
 </html>

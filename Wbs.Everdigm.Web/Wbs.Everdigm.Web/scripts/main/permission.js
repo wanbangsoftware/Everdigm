@@ -16,6 +16,7 @@
         showDialogWindows("./permission_pop.aspx", function (ret) {
             $("#txtParent").val(ret.names);
             $("#hidParent").val(ret.ids);
+            $("#btQuery").click();
         });
     });
 });

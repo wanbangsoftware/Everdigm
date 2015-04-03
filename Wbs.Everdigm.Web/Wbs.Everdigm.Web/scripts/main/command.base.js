@@ -11,6 +11,10 @@ var _lastCommandId = 0, _lastCommandStatus = -1;
 
 var cmdStatus = "%time% Command <code>%code%</code> %desc%<br />";
 
+$(document).ready(function () {
+
+});
+
 // 启动计时器
 function prepareTimer(timerFunction) {
     if (null == _timer) {

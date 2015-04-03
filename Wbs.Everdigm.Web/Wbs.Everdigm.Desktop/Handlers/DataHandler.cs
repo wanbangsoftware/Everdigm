@@ -105,8 +105,9 @@ namespace Wbs.Everdigm.Desktop
             }
             catch (Exception e)
             {
-                ShowUnhandledMessage(Now + e.StackTrace + Environment.NewLine + CustomConvert.GetHex(data.Buffer));
-                HandleException(e.StackTrace, CustomConvert.GetHex(data.Buffer));
+                ShowUnhandledMessage(Now + e.Message + Environment.NewLine + 
+                    e.StackTrace + Environment.NewLine + CustomConvert.GetHex(data.Buffer));
+                HandleException(e.Message + Environment.NewLine + e.StackTrace, CustomConvert.GetHex(data.Buffer));
             }
             IP = "";
             Port = 0;
@@ -122,7 +123,7 @@ namespace Wbs.Everdigm.Desktop
                 OnUnhandledMessage(this, message);
             }
         }
-        private string Now { get { return DateTime.Now.ToString("[yyyy/MM/dd HH:mm:ss] "); } }
+        private string Now { get { return DateTime.Now.ToString("[yyyy/MM/dd HH:mm:ss.fff] "); } }
         /// <summary>
         /// 将异常保存在数据库中备查
         /// </summary>
@@ -134,6 +135,16 @@ namespace Wbs.Everdigm.Desktop
             obj.ErrorData = data;
             obj.ErrorMessage = trace;
             ErrorInstance.Add(obj);
+        }
+        /// <summary>
+        /// 处理接受且还未处理地址信息的定位记录
+        /// </summary>
+        public void HandleGpsAddress() {
+            var pos = PositionInstance.Find(f => f.Updated < 2);
+            if (null != pos)
+            {
+                ShowUnhandledMessage("position: " + pos.id);
+            }
         }
         /// <summary>
         /// 检索是否有TCP在线终端的命令待发送。
@@ -157,9 +168,11 @@ namespace Wbs.Everdigm.Desktop
                 if (ret == 0) { 
                     // TCP链接丢失，重新用SMS方式发送
                     CommandUtility.SendSMSCommand(cmd);
+                    ShowUnhandledMessage(Now + "Send Command(SentBySMS): " + cmd.Content);
                 }
                 else
                 {
+                    ShowUnhandledMessage(Now + "Send command(" + (1 == ret ? CommandStatus.SentByTCP : CommandStatus.TCPNetworkError) + "): " + cmd.Content);
                     UpdateCommand(cmd, (1 == ret ? CommandStatus.SentByTCP : CommandStatus.TCPNetworkError));
                 }
             }
@@ -170,7 +183,7 @@ namespace Wbs.Everdigm.Desktop
         /// 清理超时的命令为发送失败状态
         /// </summary>
         private void ClearTimedoutCommands() {
-            CommandInstance.Update(f => f.ScheduleTime <= DateTime.Now.AddMinutes(-10) &&
+            CommandInstance.Update(f => f.ScheduleTime <= DateTime.Now.AddMinutes(-5) &&
                 f.Status >= (byte)CommandStatus.Waiting && f.Status <= (byte)CommandStatus.SentToDest, act =>
                 {
                     act.Status = (byte)CommandStatus.Timedout;
@@ -223,6 +236,7 @@ namespace Wbs.Everdigm.Desktop
                 act.Socket = 0;
                 act.OnlineStyle = (byte)LinkType.SMS;
                 act.Voltage = "G0000";
+                act.Rpm = 0;
             });
             // 处理终端连接
             TerminalInstance.Update(f => f.OnlineStyle < (byte)LinkType.SMS && f.OnlineTime < DateTime.Now.AddMinutes(-75), act => {
@@ -430,7 +444,9 @@ namespace Wbs.Everdigm.Desktop
                 case 0x5000: 
                     Handle0x5000(obj, equipment, terminal); 
                     break;
-                case 0x6000: break;
+                case 0x6000:
+                    Handle0x6000(obj, equipment, terminal);
+                    break;
                 case 0x6001: break;
                 case 0x6004:
                     Handle0x6004(obj, equipment, terminal);
@@ -447,11 +463,13 @@ namespace Wbs.Everdigm.Desktop
                     HandleTerminalVersion(obj, terminal);
                     break;
                 case 0xDD00:
-                    HandleTerminalVersion(obj, terminal);
+                    //HandleTerminalVersion(obj, terminal);
+                    Handle0xDD00(obj, equipment, terminal);
                     break;
                 case 0xDD02: 
                     break;
                 case 0xEE00:
+                    Handle0xEE00(obj, equipment, terminal);
                     HandleTerminalVersion(obj, terminal);
                     break;
                 case 0xFF00: 
@@ -469,7 +487,7 @@ namespace Wbs.Everdigm.Desktop
             // 处理终端版本信息
             byte[] version = new byte[7];
             byte rev = 0;
-            if (obj.CommandID == 0xDD00) { Buffer.BlockCopy(obj.MsgContent, 0, version, 0, 7); }
+            if (obj.CommandID == 0xDD00) { Buffer.BlockCopy(obj.MsgContent, 1, version, 0, 7); }
             //else if (obj.CommandID == 0x1001)
             //{
             //    Buffer.BlockCopy(obj.MsgContent, 25, version, 0, 7);
@@ -630,6 +648,8 @@ namespace Wbs.Everdigm.Desktop
                 EquipmentInstance.Update(f => f.id == equipment.id, act =>
                 {
                     act.Voltage = string.Format("G{0}0", ((int)Math.Floor(x5000.GeneratorVoltage * 10)).ToString("000"));
+                    if (x5000.GeneratorVoltage < 20)
+                    { act.Rpm = 0; }
                     if (x5000.WorkTime > 0)
                     {
                         act.Runtime = (int)x5000.WorkTime;
@@ -644,6 +664,23 @@ namespace Wbs.Everdigm.Desktop
             }
             if (x5000.GPSInfo.Available)
                 SaveGpsInfo(x5000.GPSInfo, equipment, obj.TerminalID, "0x5000");
+        }
+        /// <summary>
+        /// 处理仪表盘数据
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="equipment"></param>
+        /// <param name="terminal"></param>
+        private void Handle0x6000(TX300 obj, TB_Equipment equipment, TB_Terminal terminal)
+        {
+            _0x6000 x6000 = new _0x6000();
+            x6000.Content = obj.MsgContent;
+            x6000.Unpackage();
+            if (null != equipment) {
+                EquipmentInstance.Update(f => f.id == equipment.id, act => {
+                    act.Rpm = (short)x6000.RPM;
+                });
+            }
         }
         /// <summary>
         /// 处理运转时间消息
@@ -684,6 +721,68 @@ namespace Wbs.Everdigm.Desktop
                     act.LockStatus = CustomConvert.GetHex(x6007.Code);
                 });
             }
+        }
+        /// <summary>
+        /// 处理DD00命令
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="equipment"></param>
+        /// <param name="terminal"></param>
+        private void Handle0xDD00(TX300 obj, TB_Equipment equipment, TB_Terminal terminal)
+        {
+            _0xDD00 xdd00 = new _0xDD00();
+            xdd00.Content = obj.MsgContent;
+            xdd00.Unpackage();
+            if (null != equipment)
+            {
+                EquipmentInstance.Update(f => f.id == equipment.id, act => { act.Signal = xdd00.CSQ; });
+            }
+            if (null != terminal)
+            {
+                TerminalInstance.Update(f => f.id == terminal.id, act => { act.Firmware = xdd00.Firmware; });
+            }
+        }
+        /// <summary>
+        /// 处理EE00命令
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="equipment"></param>
+        /// <param name="terminal"></param>
+        private void Handle0xEE00(TX300 obj, TB_Equipment equipment, TB_Terminal terminal)
+        {
+            _0xEE00 xee00 = new _0xEE00();
+            xee00.Content = obj.MsgContent;
+            xee00.Unpackage();
+            // 更新终端发送命令的结果
+            if (null != equipment&&xee00.ErrorCommand.Equals("0x6007"))
+            {
+                // 更新锁车状态
+                EquipmentInstance.Update(f => f.id == equipment.id, act => {
+                    act.LockStatus = xee00.ErrorParamenter;
+                });
+            } 
+            // 更新命令的发送状态
+            CommandInstance.Update(f => f.DestinationNo == obj.TerminalID &&
+                     f.Command == xee00.ErrorCommand &&
+                     f.ScheduleTime >= DateTime.Now.AddMinutes(-3) &&
+                     f.Status >= (byte)CommandStatus.SentByTCP && f.Status <= (byte)CommandStatus.SentToDest,
+                     act =>
+                     {
+                         byte b = 0x10;
+                         switch (xee00.Error)
+                         {
+                             case 0x20:
+                                 b=(byte)CommandStatus.EposFail;
+                                 break;
+                             case 0x30:
+                                 b = (byte)CommandStatus.EngNotStart;
+                                 break;
+                             default:
+                                 b = (byte)CommandStatus.NoFunction;
+                                 break;
+                         }
+                         act.Status = b;
+                     });
         }
         /// <summary>
         /// 处理终端OFF的信息

@@ -59,5 +59,13 @@ public enum CommandStatus : byte
     /// <summary>
     /// TCP发送数据时网络处理错误
     /// </summary>
-    TCPNetworkError
+    TCPNetworkError,
+    /// <summary>
+    /// 终端没有处理命令的方法
+    /// </summary>
+    NoFunction,
+    /// <summary>
+    /// Eng未启动
+    /// </summary>
+    EngNotStart
 }

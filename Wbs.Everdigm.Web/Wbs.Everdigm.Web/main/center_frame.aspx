@@ -9,10 +9,12 @@
     <link href="../css/center_frame.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript">
         var col = "<%=_cols_%>";
+        var row = "<%=_rows_%>";
     </script>
 </head>
 <body>
     <form id="form1" runat="server">
+        <a class="index_close_top" title="hide top banner" id="control_top_frame"></a>
         <a class="index_close_left" title="hide left menu" id="control_left_frame"></a>
     </form>
     <script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>

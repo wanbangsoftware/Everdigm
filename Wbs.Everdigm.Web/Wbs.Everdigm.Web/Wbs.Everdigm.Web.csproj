@@ -95,6 +95,7 @@
     <Content Include="images\icon_cpt.png" />
     <Content Include="images\icon_fl.png" />
     <Content Include="images\icon_wld.png" />
+    <Content Include="images\img_top_1.png" />
     <Content Include="images\links\links.png" />
     <Content Include="images\links\links_off.png" />
     <Content Include="images\links\links_sms.png" />
@@ -104,6 +105,7 @@
     <Content Include="ajax\query.ashx" />
     <Content Include="ajax\equipment_models.ashx" />
     <Content Include="images\sprites.png" />
+    <Content Include="images\updown.png" />
     <Content Include="js\CryptoJS.v3.1.2\components\aes-min.js" />
     <Content Include="js\CryptoJS.v3.1.2\components\aes.js" />
     <Content Include="js\CryptoJS.v3.1.2\components\cipher-core-min.js" />
@@ -203,9 +205,11 @@
     <Content Include="main\equipment_checkout.aspx" />
     <Content Include="main\equipment_command.aspx" />
     <Content Include="main\equipment_delivery.aspx" />
+    <Content Include="main\equipment_overhaul.aspx" />
     <Content Include="main\equipment_position.aspx" />
     <Content Include="main\equipment_security.aspx" />
     <Content Include="main\equipment_storage.aspx" />
+    <Content Include="main\equipment_summary.aspx" />
     <Content Include="main\equipment_today_works.aspx" />
     <Content Include="main\equipment_work.aspx" />
     <Content Include="main\maptest.html" />
@@ -228,6 +232,7 @@
     <Content Include="scripts\main\equipment.command.js" />
     <Content Include="scripts\main\equipment.delivery.js" />
     <Content Include="scripts\main\equipment.info.js" />
+    <Content Include="scripts\main\equipment.overhaul.js" />
     <Content Include="scripts\main\equipment.position.js" />
     <Content Include="scripts\main\equipment.security.js" />
     <Content Include="scripts\main\equipment.storage.js" />
@@ -693,6 +698,13 @@
     <Compile Include="main\equipment_model.aspx.designer.cs">
       <DependentUpon>equipment_model.aspx</DependentUpon>
     </Compile>
+    <Compile Include="main\equipment_overhaul.aspx.cs">
+      <DependentUpon>equipment_overhaul.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\equipment_overhaul.aspx.designer.cs">
+      <DependentUpon>equipment_overhaul.aspx</DependentUpon>
+    </Compile>
     <Compile Include="main\equipment_position.aspx.cs">
       <DependentUpon>equipment_position.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -720,6 +732,13 @@
     </Compile>
     <Compile Include="main\equipment_storage.aspx.designer.cs">
       <DependentUpon>equipment_storage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="main\equipment_summary.aspx.cs">
+      <DependentUpon>equipment_summary.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\equipment_summary.aspx.designer.cs">
+      <DependentUpon>equipment_summary.aspx</DependentUpon>
     </Compile>
     <Compile Include="main\equipment_terminal.aspx.cs">
       <DependentUpon>equipment_terminal.aspx</DependentUpon>

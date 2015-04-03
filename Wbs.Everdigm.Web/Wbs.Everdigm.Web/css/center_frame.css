@@ -32,3 +32,29 @@
     .index_close_left_1:hover {
         background: url(/images/leftright.png) 0px 0px no-repeat;
     }
+.index_close_top {
+    text-decoration: none;
+    width: 11px;
+    height: 22px;
+    float: left;
+    background: url(/images/updown.png) 0px 0px no-repeat;
+    margin-top: 0px;
+    display: inline;
+    cursor: pointer;
+}
+    .index_close_top:hover {
+        background: url(/images/updown.png) 0px -22px no-repeat;
+    }
+.index_close_top_1 {
+    text-decoration: none;
+    width: 11px;
+    height: 22px;
+    float: left;
+    background: url(/images/updown.png) -11px 0px no-repeat;
+    margin-top: 0px;
+    display: inline;
+    cursor: pointer;
+}
+    .index_close_top_1:hover {
+        background: url(/images/updown.png) -11px -22px no-repeat;
+    }

@@ -120,7 +120,7 @@
                                     <th class="in-tab-title-b bg-warning">Type</th>
                                     <th class="in-tab-title-b bg-warning">Model</th>
                                     <th class="in-tab-title-b bg-warning" style="text-align: right !important;">SMH</th>
-                                    <th class="in-tab-title-b bg-warning">Eng.</th>
+                                    <th class="in-tab-title-b bg-warning textoverflow">Eng.(RPM)</th>
                                     <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Location</th>
                                     <th class="in-tab-title-rb bg-warning">Status</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">In Date</th>
