@@ -14,20 +14,22 @@ namespace Wbs.Everdigm.Web
     {
         protected override void Page_Load(object sender, EventArgs e)
         {
-            // 如果是移动端则转移动端登陆界面
-            if (Utility.IsMobile(this.Context))
+            base.Page_Load(sender, e);
+            bool isMobile = Utility.IsMobile(this.Context);
+            bool toDesktop = true;
+            if (isMobile && !_key.ToLower().Equals("desktop"))
             {
-                Response.Redirect("./mobile/default.aspx");
+                toDesktop = false;
             }
-            else
+            if (toDesktop)
             {
-                base.Page_Load(sender, e);
                 var account = Session[Utility.SessionName] as TB_Account;
                 if (null != account)
                 {
                     updateAccount(account);
                 }
-                else {
+                else
+                {
                     if (!IsPostBack)
                     {
                         Session.Clear();
@@ -35,6 +37,11 @@ namespace Wbs.Everdigm.Web
                         Response.Cookies.Clear();
                     }
                 }
+            }
+            else
+            {
+                // 如果是移动端则转移动端登陆界面
+                Response.Redirect("./mobile/default.aspx");
             }
         }
 

@@ -33,6 +33,21 @@
             this.tsMain = new System.Windows.Forms.ToolStrip();
             this.tsdbSettings = new System.Windows.Forms.ToolStripDropDownButton();
             this.tsmiShowHistory = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmiStopFetchingAddress = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.tstbIridiumServer = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.tstbIridiumPort = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
+            this.tscbIMEI = new System.Windows.Forms.ToolStripComboBox();
+            this.tsbtSend = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.tstbData = new System.Windows.Forms.ToolStripTextBox();
+            this.tsbtAnalyse = new System.Windows.Forms.ToolStripButton();
             this.ssMain = new System.Windows.Forms.StatusStrip();
             this.tsslServerState = new System.Windows.Forms.ToolStripStatusLabel();
             this.rtbHistory = new System.Windows.Forms.RichTextBox();
@@ -45,8 +60,6 @@
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiExit = new System.Windows.Forms.ToolStripMenuItem();
             this.browser = new System.Windows.Forms.WebBrowser();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsmiStopFetchingAddress = new System.Windows.Forms.ToolStripMenuItem();
             this.tsMain.SuspendLayout();
             this.ssMain.SuspendLayout();
             this.cmsNotifyMenu.SuspendLayout();
@@ -55,10 +68,23 @@
             // tsMain
             // 
             this.tsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsdbSettings});
+            this.tsdbSettings,
+            this.toolStripSeparator1,
+            this.toolStripLabel1,
+            this.tstbIridiumServer,
+            this.toolStripSeparator2,
+            this.toolStripLabel2,
+            this.tstbIridiumPort,
+            this.toolStripSeparator3,
+            this.toolStripLabel3,
+            this.tscbIMEI,
+            this.tsbtSend,
+            this.toolStripSeparator4,
+            this.tstbData,
+            this.tsbtAnalyse});
             this.tsMain.Location = new System.Drawing.Point(0, 0);
             this.tsMain.Name = "tsMain";
-            this.tsMain.Size = new System.Drawing.Size(728, 25);
+            this.tsMain.Size = new System.Drawing.Size(998, 25);
             this.tsMain.TabIndex = 0;
             this.tsMain.Text = "toolStrip1";
             // 
@@ -83,13 +109,112 @@
             this.tsmiShowHistory.Text = "Show History";
             this.tsmiShowHistory.Click += new System.EventHandler(this.tsmiShowHistory_Click);
             // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(313, 6);
+            // 
+            // tsmiStopFetchingAddress
+            // 
+            this.tsmiStopFetchingAddress.Name = "tsmiStopFetchingAddress";
+            this.tsmiStopFetchingAddress.Size = new System.Drawing.Size(316, 22);
+            this.tsmiStopFetchingAddress.Text = "Stop Fetching Address from Google map";
+            this.tsmiStopFetchingAddress.Click += new System.EventHandler(this.tsmiStopFetchingAddress_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(92, 22);
+            this.toolStripLabel1.Text = "Iridium server:";
+            // 
+            // tstbIridiumServer
+            // 
+            this.tstbIridiumServer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tstbIridiumServer.Name = "tstbIridiumServer";
+            this.tstbIridiumServer.Size = new System.Drawing.Size(100, 25);
+            this.tstbIridiumServer.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tstbIridiumServer_KeyPress);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(35, 22);
+            this.toolStripLabel2.Text = "Port:";
+            // 
+            // tstbIridiumPort
+            // 
+            this.tstbIridiumPort.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tstbIridiumPort.MaxLength = 5;
+            this.tstbIridiumPort.Name = "tstbIridiumPort";
+            this.tstbIridiumPort.Size = new System.Drawing.Size(50, 25);
+            this.tstbIridiumPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tstbIridiumPort_KeyPress);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabel3
+            // 
+            this.toolStripLabel3.Name = "toolStripLabel3";
+            this.toolStripLabel3.Size = new System.Drawing.Size(38, 22);
+            this.toolStripLabel3.Text = "IMEI:";
+            // 
+            // tscbIMEI
+            // 
+            this.tscbIMEI.DropDownWidth = 130;
+            this.tscbIMEI.Items.AddRange(new object[] {
+            "300234061921380",
+            "300234062060500"});
+            this.tscbIMEI.Name = "tscbIMEI";
+            this.tscbIMEI.Size = new System.Drawing.Size(130, 25);
+            // 
+            // tsbtSend
+            // 
+            this.tsbtSend.Image = ((System.Drawing.Image)(resources.GetObject("tsbtSend.Image")));
+            this.tsbtSend.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbtSend.Name = "tsbtSend";
+            this.tsbtSend.Size = new System.Drawing.Size(57, 22);
+            this.tsbtSend.Text = "Send";
+            this.tsbtSend.Click += new System.EventHandler(this.tsbtSend_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tstbData
+            // 
+            this.tstbData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tstbData.Name = "tstbData";
+            this.tstbData.Size = new System.Drawing.Size(100, 25);
+            // 
+            // tsbtAnalyse
+            // 
+            this.tsbtAnalyse.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsbtAnalyse.Image = ((System.Drawing.Image)(resources.GetObject("tsbtAnalyse.Image")));
+            this.tsbtAnalyse.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbtAnalyse.Name = "tsbtAnalyse";
+            this.tsbtAnalyse.Size = new System.Drawing.Size(56, 22);
+            this.tsbtAnalyse.Text = "Analyse";
+            this.tsbtAnalyse.Click += new System.EventHandler(this.tsbtAnalyse_Click);
+            // 
             // ssMain
             // 
             this.ssMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsslServerState});
             this.ssMain.Location = new System.Drawing.Point(0, 406);
             this.ssMain.Name = "ssMain";
-            this.ssMain.Size = new System.Drawing.Size(728, 26);
+            this.ssMain.Size = new System.Drawing.Size(998, 26);
             this.ssMain.TabIndex = 1;
             this.ssMain.Text = "statusStrip1";
             // 
@@ -105,7 +230,7 @@
             this.rtbHistory.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rtbHistory.Location = new System.Drawing.Point(0, 25);
             this.rtbHistory.Name = "rtbHistory";
-            this.rtbHistory.Size = new System.Drawing.Size(728, 381);
+            this.rtbHistory.Size = new System.Drawing.Size(998, 381);
             this.rtbHistory.TabIndex = 2;
             this.rtbHistory.Text = "";
             this.rtbHistory.WordWrap = false;
@@ -176,23 +301,11 @@
             this.browser.TabIndex = 3;
             this.browser.Visible = false;
             // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(313, 6);
-            // 
-            // tsmiStopFetchingAddress
-            // 
-            this.tsmiStopFetchingAddress.Name = "tsmiStopFetchingAddress";
-            this.tsmiStopFetchingAddress.Size = new System.Drawing.Size(316, 22);
-            this.tsmiStopFetchingAddress.Text = "Stop Fetching Address from Google map";
-            this.tsmiStopFetchingAddress.Click += new System.EventHandler(this.tsmiStopFetchingAddress_Click);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(728, 432);
+            this.ClientSize = new System.Drawing.Size(998, 432);
             this.Controls.Add(this.browser);
             this.Controls.Add(this.rtbHistory);
             this.Controls.Add(this.ssMain);
@@ -234,6 +347,19 @@
         private System.Windows.Forms.WebBrowser browser;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem tsmiStopFetchingAddress;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.ToolStripTextBox tstbIridiumServer;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private System.Windows.Forms.ToolStripTextBox tstbIridiumPort;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripTextBox tstbData;
+        private System.Windows.Forms.ToolStripButton tsbtAnalyse;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel3;
+        private System.Windows.Forms.ToolStripButton tsbtSend;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripComboBox tscbIMEI;
     }
 }
 

@@ -36,9 +36,13 @@ namespace Wbs.Sockets
         /// </summary>
         private ObjectPool<AsyncUserDataBuffer> _bufferPool;
         /// <summary>
-        /// 数据接收缓冲区
+        /// UDP数据接收缓冲区
         /// </summary>
-        private Dictionary<AsyncUserToken, AsyncUserDataBuffer> _bufferReceived = new Dictionary<AsyncUserToken, AsyncUserDataBuffer>();
+        private Dictionary<string, AsyncUserDataBuffer> _UDP_Buffer_Received = new Dictionary<string, AsyncUserDataBuffer>();
+        /// <summary>
+        /// TCP数据接收缓冲区
+        /// </summary>
+        private Dictionary<int, AsyncUserDataBuffer> _TCP_Buffer_Received = new Dictionary<int, AsyncUserDataBuffer>();
         /// <summary>
         /// 缓冲区
         /// </summary>
@@ -212,21 +216,24 @@ namespace Wbs.Sockets
 
                         lock (udpSocket)
                         {
-                            AsyncUserToken token = new AsyncUserToken();
-                            token.IP = (clientEP as IPEndPoint).Address.ToString();
-                            token.Port = (clientEP as IPEndPoint).Port;
-                            lock (_bufferReceived)
+                            var ip = (clientEP as IPEndPoint).Address.ToString();
+                            var port = (clientEP as IPEndPoint).Port;
+                            var token = ip + ":" + port.ToString();
+                            //AsyncUserToken token = new AsyncUserToken();
+                            //token.IP = (clientEP as IPEndPoint).Address.ToString();
+                            //token.Port = (clientEP as IPEndPoint).Port;
+                            lock (_UDP_Buffer_Received)
                             {
-                                if (_bufferReceived.ContainsKey(token))
+                                if (_UDP_Buffer_Received.ContainsKey(token))
                                 {
                                     // 组包
-                                    var data = _bufferReceived[token];
+                                    var data = _UDP_Buffer_Received[token];
                                     data.Buffer = CustomConvert.expand(data.Buffer, data.Buffer.Length + len);
                                     Buffer.BlockCopy(buffer, 0, data.Buffer, data.Buffer.Length - len, len);
                                     if (data.Buffer.Length >= data.Buffer[0])
                                     {
                                         // 包长度足够之后从暂存缓存中移除节点
-                                        _bufferReceived.Remove(token);
+                                        _UDP_Buffer_Received.Remove(token);
                                         // 发送消息
                                         OnReceivedData(this, new AsyncUserDataEvent() { Data = data });
                                     }
@@ -240,7 +247,7 @@ namespace Wbs.Sockets
                                         {
                                             var aude = new AsyncUserDataEvent();
                                             aude.Data = _bufferPool.Get();
-                                            aude.Data.SetDataEvent(token, buffer, len);
+                                            aude.Data.SetDataEvent(ip, port, buffer, len);
                                             aude.Data.PackageType = AsyncDataPackageType.UDP;
                                             OnReceivedData(this, aude);
                                         }
@@ -249,9 +256,9 @@ namespace Wbs.Sockets
                                     {
                                         //var aude = new AsyncUserDataEvent();
                                         var data = _bufferPool.Get();
-                                        data.SetDataEvent(token, buffer, len);
+                                        data.SetDataEvent(ip, port, buffer, len);
                                         data.PackageType = AsyncDataPackageType.UDP;
-                                        _bufferReceived.Add(token, data);
+                                        _UDP_Buffer_Received.Add(token, data);
                                     }
                                 }
                             }
@@ -412,7 +419,7 @@ namespace Wbs.Sockets
                     }
                 }
             }
-            catch (Exception error)
+            catch //(Exception error)
             { }
         }
         /// <summary>
@@ -429,20 +436,20 @@ namespace Wbs.Sockets
                 // 锁定socket？
                 lock (token.Socket)
                 {
-                    lock (_bufferReceived)// 锁定缓冲区
+                    lock (_TCP_Buffer_Received)// 锁定缓冲区
                     {
                         //var token = e.UserToken as AsyncUserToken;
-                        //var socket = (e.UserToken as AsyncUserToken).SocketHandle;
+                        var socket = token.SocketHandle;
                         // 如果缓冲区中有这个socket的数据，说明之前的数据收到的不完整，需要再组包
-                        if (_bufferReceived.ContainsKey(token))
+                        if (_TCP_Buffer_Received.ContainsKey(socket))
                         {
                             // 组包
-                            var data = _bufferReceived[token];
+                            var data = _TCP_Buffer_Received[socket];
                             data.ResizeData(e);
                             if (data.Buffer.Length >= data.Buffer[0])
                             {
                                 // 包长度足够之后从暂存缓存中移除节点
-                                _bufferReceived.Remove(token);
+                                _TCP_Buffer_Received.Remove(socket);
                                 // 发送消息
                                 OnReceivedData(this, new AsyncUserDataEvent() { Data = data });
                             }
@@ -467,7 +474,7 @@ namespace Wbs.Sockets
                                 var data = _bufferPool.Get();
                                 data.SetDataEvent(e, 0);
                                 data.PackageType = AsyncDataPackageType.TCP;
-                                _bufferReceived.Add(token, data);
+                                _TCP_Buffer_Received.Add(socket, data);
                             }
                         }
                     }

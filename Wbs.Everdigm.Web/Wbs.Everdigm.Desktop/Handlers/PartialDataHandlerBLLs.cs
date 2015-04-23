@@ -36,5 +36,17 @@ namespace Wbs.Everdigm.Desktop
         /// 位置信息记录的BLL
         /// </summary>
         private PositionBLL PositionInstance { get { return new PositionBLL(); } }
+        /// <summary>
+        /// 报警信息记录BLL
+        /// </summary>
+        private AlarmBLL AlarmInstance { get { return new AlarmBLL(); } }
+        /// <summary>
+        /// TX10G的BLL
+        /// </summary>
+        private TrackerBLL TrackerInstance { get { return new TrackerBLL(); } }
+        /// <summary>
+        /// TX10G的历史记录BLL
+        /// </summary>
+        private TrackerPositionBLL TrackerPosition { get { return new TrackerPositionBLL(); } }
     }
 }

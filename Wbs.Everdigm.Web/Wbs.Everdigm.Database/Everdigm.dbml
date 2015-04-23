@@ -354,4 +354,37 @@
       <Association Name="TB_Warehouse_TB_Equipment" Member="TB_Warehouse" ThisKey="Warehouse" OtherKey="id" Type="TB_Warehouse" IsForeignKey="true" DeleteRule="SET DEFAULT" />
     </Type>
   </Table>
+  <Table Name="dbo.TB_Tracker" Member="TB_Tracker">
+    <Type Name="TB_Tracker">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CSQ" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="Socket" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="State" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="LastActionAt" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Latitude" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Longitude" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="ChargeAlarm" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="BatteryAlarm" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ParkingAlarm" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="SimCard" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="CarNumber" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Address" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Association Name="TB_Tracker_TB_Tracker_Position" Member="TB_Tracker_Position" ThisKey="id" OtherKey="Tracker" Type="TB_Tracker_Position" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_Tracker_Position" Member="TB_Tracker_Position">
+    <Type Name="TB_Tracker_Position">
+      <Column Name="id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Tracker" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ReceiveTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="GPSTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Latitude" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Longitude" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="SimCard" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Type" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="CarNumber" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Address" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Association Name="TB_Tracker_TB_Tracker_Position" Member="TB_Tracker" ThisKey="Tracker" OtherKey="id" Type="TB_Tracker" IsForeignKey="true" DeleteRule="SET NULL" />
+    </Type>
+  </Table>
 </Database>

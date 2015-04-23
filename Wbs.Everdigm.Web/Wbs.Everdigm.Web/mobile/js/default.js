@@ -23,7 +23,7 @@ function tryLogin(usr, pwd) {
     GetJsonData("../../ajax/query.ashx",
         { "type": "customer", "cmd": "login", "data": usr + "," + pwd }, function (data) {
             if (data.status == 0) {
-                location.href = "devices.aspx";
+                location.href = "my_devices.aspx";
             } else {
                 loginError(data.desc);
             }

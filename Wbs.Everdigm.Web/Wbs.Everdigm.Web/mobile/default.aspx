@@ -11,7 +11,7 @@
             <ul class="items">
                 <li>
                     <label class="txt">Account</label>
-                    <input type="text" id="account" class="input" placeholder="phone number" maxlength="15">
+                    <input type="text" id="account" class="input" placeholder="customer code or phone number" maxlength="15">
                 </li>
                 <li>
                     <label class="txt">Passowrd</label>

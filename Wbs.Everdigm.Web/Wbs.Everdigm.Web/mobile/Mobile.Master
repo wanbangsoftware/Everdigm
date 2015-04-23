@@ -29,7 +29,7 @@
             <asp:ContentPlaceHolder ID="BodyContentPlaceHolder" runat="server"></asp:ContentPlaceHolder>
         </div>
         <div id="footer">
-            <div class="menu"><a href="./default.aspx">Home</a><a href="../default.aspx">Desktop</a><a href="#">Help</a><a href="./default.aspx?key=logout">Logout</a></div>
+            <div class="menu"><a href="./default.aspx">Home</a><a href="../default.aspx?key=desktop">Desktop</a><a href="#">Help</a><a href="./default.aspx?key=logout">Logout</a></div>
             <div class="copyright">Copyright &copy; 2004-<span id="nYear" runat="server">2015</span> <a href="http://www.wanbangsoftware.com">Wanbang Softwrae</a></div>
         </div>
     </form>

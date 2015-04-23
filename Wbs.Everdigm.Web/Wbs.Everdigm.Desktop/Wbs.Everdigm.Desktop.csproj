@@ -44,9 +44,6 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GeoCoding">
-      <HintPath>..\Wbs.Everdigm.Web\including\GeoCoding.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -68,7 +65,13 @@
     </Compile>
     <Compile Include="Handlers\DataHandler.cs" />
     <Compile Include="Handlers\PartialDataHandlerBLLs.cs" />
+    <Compile Include="Handlers\PartialDataHandlerClient.cs" />
+    <Compile Include="Handlers\PartialDataHandlerCommand.cs" />
+    <Compile Include="Handlers\PartialDataHandlerDataHandler.cs" />
+    <Compile Include="Handlers\PartialDataHandlerTracker.cs" />
     <Compile Include="Handlers\SocketServer.cs" />
+    <Compile Include="Iridium\IridiumPackage.cs" />
+    <Compile Include="Iridium\IridiumServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormMain.resx">

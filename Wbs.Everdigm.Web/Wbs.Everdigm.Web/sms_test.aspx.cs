@@ -56,6 +56,7 @@ namespace Wbs.Everdigm.Web
                 {
                     handleBB0F(sender, x300.TerminalType);
                 }
+                HandleEquipmentState(sender, x300.CommandID);
             }
             catch
             { }
@@ -73,16 +74,51 @@ namespace Wbs.Everdigm.Web
             data.message_content = CustomConvert.GetHex(obj.MsgContent);
             data.message_type = 1;
             data.package_id = obj.PackageID;
-            data.protocol_type = obj.ProtocolType;
+            data.protocol_type = (obj.ProtocolType % 0x10 == 0 ? Protocol.ProtocolTypes.SMS : Protocol.ProtocolTypes.SMS_BLIND);//Protocol.ProtocolTypes.SMS;//obj.ProtocolType;
             data.protocol_version = obj.ProtocolVersion;
             data.receive_time = DateTime.Now;
             data.sequence_id = obj.SequenceID.ToString();
-            data.server_port = 31875;
+            data.server_port = 0;
             data.terminal_id = obj.TerminalID;
             data.terminal_type = obj.TerminalType;
             data.total_length = (short)obj.TotalLength;
             data.total_package = obj.TotalPackage;
             DataInstance.Add(data);
+        }
+
+        private void HandleEquipmentState(string sender, ushort Command)
+        {
+            var EquipmentInstance = new EquipmentBLL();
+            EquipmentInstance.Update(f => f.TB_Terminal.Sim.Equals(sender), act =>
+            {
+                act.Socket = 0;
+                act.OnlineTime = DateTime.Now;
+                act.IP = "";
+                act.Port = 0;
+                act.LastAction = "0x" + CustomConvert.IntToDigit(Command, CustomConvert.HEX, 4);
+                act.LastActionBy = "SMS";
+                act.LastActionTime = DateTime.Now;
+                if (act.OnlineStyle == (byte)LinkType.OFF && Command == 0x2000)
+                { }
+                else
+                {
+                    act.OnlineStyle = (byte)LinkType.SMS;
+                }
+            });
+            var TerminalInstance = new TerminalBLL();
+            TerminalInstance.Update(f => f.Sim.Equals(sender), act =>
+            {
+                act.Socket = 0;
+                act.OnlineTime = DateTime.Now;
+                if (act.OnlineStyle == (byte)LinkType.OFF && Command == 0x2000)
+                {
+                    // 收到报警但此时已经是OFF状态时，不更新在线状态
+                }
+                else
+                {
+                    act.OnlineStyle = (byte)LinkType.SMS;
+                }
+            });
         }
 
         private void handleBB0F(string sender, byte terminalType)

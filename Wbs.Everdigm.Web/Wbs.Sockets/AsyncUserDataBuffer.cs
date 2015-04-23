@@ -69,14 +69,14 @@ namespace Wbs.Sockets
         /// <param name="token"></param>
         /// <param name="buffer"></param>
         /// <param name="len"></param>
-        public void SetDataEvent(AsyncUserToken token, byte[] buffer, int len)
+        public void SetDataEvent(string IP, int port, byte[] buffer, int len)
         {
             ReceiveTime = DateTime.Now;
             audb_buffer = new byte[len];
             System.Buffer.BlockCopy(buffer, 0, audb_buffer, 0, len);
             DataType = AsyncUserDataType.ReceivedData;
-            IP = token.IP;
-            Port = token.Port;
+            IP = IP;
+            Port = port;
             SocketHandle = 0;
             PackageType = AsyncDataPackageType.UDP;
         }

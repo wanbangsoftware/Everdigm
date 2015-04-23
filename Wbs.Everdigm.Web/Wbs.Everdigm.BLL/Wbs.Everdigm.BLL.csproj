@@ -69,6 +69,8 @@
     <Compile Include="SettingBLL.cs" />
     <Compile Include="StoreHistoryBLL.cs" />
     <Compile Include="TerminalBLL.cs" />
+    <Compile Include="TrackerBLL.cs" />
+    <Compile Include="TrackerPositionBLL.cs" />
     <Compile Include="WarehouseBLL.cs" />
   </ItemGroup>
   <ItemGroup>

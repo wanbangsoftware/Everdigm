@@ -40,7 +40,7 @@ namespace Wbs.Everdigm.Web.ajax
             var pwd = tmp[1].ToUpper().Trim();
             if (pwd.Length > 32) pwd = pwd.Substring(0, 32);
 
-            var query = CustomerInstance.FindList(f => f.Phone.Equals(uid) && f.Delete == false);
+            var query = CustomerInstance.FindList(f => (f.Code.Equals(uid) || f.Phone.IndexOf(uid) >= 0) && f.Delete == false);
             var guest = query.Count() > 0 ? query.FirstOrDefault() : null;
             if (null != guest)
             {

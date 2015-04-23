@@ -82,8 +82,11 @@
     <Content Include="bootstrap3\models\js\bootstrap-alert.js" />
     <Content Include="bootstrap3\models\js\bootstrap-typeahead.js" />
     <Content Include="css\body_equipment.css" />
+    <Content Include="css\fonts\engine.dev.svg" />
+    <Content Include="css\fonts\engine.svg" />
     <Content Include="css\links.css" />
     <Content Include="css\pagging.css" />
+    <Content Include="css\style_font.css" />
     <Content Include="favicon.png" />
     <Content Include="google_map.aspx" />
     <Content Include="images\error.png" />
@@ -198,6 +201,7 @@
     <Content Include="js\twbsPagination\jquery.twbsPagination.js" />
     <Content Include="js\twbsPagination\jquery.twbsPagination.min.js" />
     <Content Include="main\astest.aspx" />
+    <Content Include="main\as_tracker.aspx" />
     <Content Include="main\customers.aspx" />
     <Content Include="main\customer_new.aspx" />
     <Content Include="main\equipment_alarm.aspx" />
@@ -224,6 +228,7 @@
     <Content Include="mobile\devices.aspx" />
     <Content Include="mobile\css\global-min.css" />
     <Content Include="mobile\css\home.css" />
+    <Content Include="mobile\my_devices.aspx" />
     <Content Include="scripts\main\command.base.js" />
     <Content Include="scripts\main\customers.js" />
     <Content Include="scripts\main\equipment.alarm.js" />
@@ -276,6 +281,9 @@
     <Content Include="bootstrap3\font-awesome-4.3.0\scss\_variables.scss" />
     <Content Include="ajax\satellite.ashx" />
     <Content Include="bootstrap3\js\bootstrap-select.js.map" />
+    <Content Include="css\fonts\engine.eot" />
+    <Content Include="css\fonts\engine.ttf" />
+    <Content Include="css\fonts\engine.woff" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -571,6 +579,13 @@
     </Compile>
     <Compile Include="main\astest.aspx.designer.cs">
       <DependentUpon>astest.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="main\as_tracker.aspx.cs">
+      <DependentUpon>as_tracker.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\as_tracker.aspx.designer.cs">
+      <DependentUpon>as_tracker.aspx</DependentUpon>
     </Compile>
     <Compile Include="main\board.aspx.cs">
       <DependentUpon>board.aspx</DependentUpon>
@@ -958,6 +973,13 @@
     </Compile>
     <Compile Include="mobile\Mobile.Master.designer.cs">
       <DependentUpon>Mobile.Master</DependentUpon>
+    </Compile>
+    <Compile Include="mobile\my_devices.aspx.cs">
+      <DependentUpon>my_devices.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="mobile\my_devices.aspx.designer.cs">
+      <DependentUpon>my_devices.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="sms_test.aspx.cs">

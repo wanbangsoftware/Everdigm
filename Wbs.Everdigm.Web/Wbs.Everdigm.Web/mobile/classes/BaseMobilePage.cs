@@ -17,10 +17,15 @@ namespace Wbs.Everdigm.Web.mobile
         /// 当前登录的客户的信息
         /// </summary>
         protected TB_Customer me = null;
+        /// <summary>
+        /// 当前session是否已丢失
+        /// </summary>
+        protected bool SessionLosed = false;
         protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
             me = Session[Utility.SessionNameCustomer] as TB_Customer;
+            SessionLosed = me == null;
         }
         /// <summary>
         /// 客户信息业务处理实体
