@@ -453,5 +453,27 @@ namespace Wbs.Everdigm.Web
             }
             return ret;
         }
+        /// <summary>
+        /// CSQ转换成dBm
+        /// </summary>
+        /// <param name="asu"></param>
+        /// <returns></returns>
+        public static string ASU2DBM(byte asu)
+        {
+            return asu > 31 ? "unknown" : ((2 * asu) - 113).ToString();
+        }
+        /// <summary>
+        /// CSQ转换成天线信号强度
+        /// </summary>
+        /// <param name="asu"></param>
+        /// <returns></returns>
+        public static byte ASU2Signal(byte asu)
+        {
+            if (asu < 1 || asu > 31) return 0;
+            else if (asu < 5) return 1;
+            else if (asu < 10) return 2;
+            else if (asu < 15) return 3;
+            else return 4;
+        }
     }
 }

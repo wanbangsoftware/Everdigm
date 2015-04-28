@@ -302,6 +302,15 @@ namespace Wbs.Everdigm.Desktop
             var client = new TcpClient();
             client.BeginConnect(IPAddress.Parse(tstbIridiumServer.Text), int.Parse(tstbIridiumPort.Text),
                 new AsyncCallback(Connected_Callback), client);
+            Task task = new Task(() =>
+            {
+                Thread.Sleep(5000);
+                this.BeginInvoke((MyInvoker)delegate
+                {
+                    tsbtSend.Enabled = true;
+                });
+            });
+            task.Start();
         }
 
         private void Connected_Callback(IAsyncResult ar)
@@ -311,7 +320,7 @@ namespace Wbs.Everdigm.Desktop
                 if (client.Connected)
                 {
                     client.EndConnect(ar);
-                    ShowHistory("Client connected.", true);
+                    ShowHistory("Iridium server connected.", true);
                     ClientState cs = new ClientState();
                     cs.client = client;
                     cs.length = 0;

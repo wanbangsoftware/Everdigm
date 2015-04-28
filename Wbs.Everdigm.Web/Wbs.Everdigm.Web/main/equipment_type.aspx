@@ -39,15 +39,16 @@
                                     <input type="text" runat="server" class="text-input important-input" id="txtName" />
                                     <input type="hidden" runat="server" id="hidID" />
                                 </td>
-                                <td class="td_right">&nbsp;</td>
-                                <td class="td_left">&nbsp;</td>
+                                <td class="td_right" rowspan="2">Clipart:</td>
+                                <td class="td_left" rowspan="2">
+                                    <img alt="equipment sketch" style="width: 41px; cursor: pointer;" title="Click to select the clipart" class="img-rounded" id="imgImage" runat="server" src="~/images/equipments/icon_hex.png"/>
+                                    <input type="hidden" id="hidImage" runat="server" />
+                                </td>
                             </tr>
                             <tr>
                                 <td class="td_right">Code:</td>
                                 <td class="td_left">
                                     <input type="text" runat="server" class="text-input important-input" id="txtCode" /></td>
-                                <td class="td_right">&nbsp;</td>
-                                <td class="td_left">&nbsp;</td>
                             </tr>
                         </table>
                         <table id="tbTable" width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #ccc; margin-top: 2px;">
@@ -58,12 +59,13 @@
                                     <th style="width: 40px; text-align: center;">ID</th>
                                     <th style="width: 300px;">Name</th>
                                     <th style="width: 180px;">Code</th>
+                                    <th style="width: 100px;">Clipart</th>
                                     <th>-</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="5">
+                                    <td colspan="6">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>
@@ -87,5 +89,13 @@
     <script type="text/javascript" src="../js/common.js"></script>
     <script type="text/javascript" src="../scripts/main/common.js"></script>
     <script type="text/javascript" src="../scripts/main/pagination.js"></script>
+    <script type="text/javascript">
+        $("#imgImage").click(function () {
+            showDialogWindows("../mobile/images.aspx", function (ret) {
+                $("#imgImage").prop("src", ret.ids);
+                $("#hidImage").val(ret.ids);
+            });
+        });
+    </script>
 </body>
 </html>

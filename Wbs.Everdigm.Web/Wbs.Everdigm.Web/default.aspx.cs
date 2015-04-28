@@ -17,9 +17,12 @@ namespace Wbs.Everdigm.Web
             base.Page_Load(sender, e);
             bool isMobile = Utility.IsMobile(this.Context);
             bool toDesktop = true;
-            if (isMobile && !_key.ToLower().Equals("desktop"))
+            if (isMobile)
             {
-                toDesktop = false;
+                if (!string.IsNullOrEmpty(_key) && _key.ToLower().Equals("desktop"))
+                { toDesktop = true; }
+                else
+                { toDesktop = false; }
             }
             if (toDesktop)
             {

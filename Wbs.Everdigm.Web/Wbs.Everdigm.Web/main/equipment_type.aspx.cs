@@ -40,6 +40,8 @@ namespace Wbs.Everdigm.Web.main
             {
                 txtCode.Value = t.Code;
                 txtName.Value = t.Name;
+                imgImage.Src = t.Image;
+                hidImage.Value = t.Image;
             }
             else {
                 ShowNotification("./equipment_type.aspx", "Error: Cannot edit null object of <a>Equipment Type</a>.", false);
@@ -50,6 +52,7 @@ namespace Wbs.Everdigm.Web.main
         {
             obj.Code = txtCode.Value.Trim();
             obj.Name = txtName.Value.Trim();
+            obj.Image = hidImage.Value;
         }
 
         private void NewType()
@@ -131,7 +134,7 @@ namespace Wbs.Everdigm.Web.main
             string html = "";
             if (totalRecords < 1)
             {
-                html = "<tr><td colspan=\"5\">No records, you can change condition and try again, or " +
+                html = "<tr><td colspan=\"6\">No records, you can change condition and try again, or " +
                     " <a>Add</a> some new one.</td></tr>";
             }
             else
@@ -142,11 +145,11 @@ namespace Wbs.Everdigm.Web.main
                     cnt++;
                     var id = Utility.UrlEncode(Utility.Encrypt(obj.id.ToString()));
                     html += "<tr>" +
-                        // 系统默认角色无法删除
                         "<td style=\"width: 40px; text-align: center;\"><input type=\"checkbox\" id=\"cb_" + id + "\" /></td>" +
                         "<td style=\"width: 40px; text-align: center;\">" + cnt + "</td>" +
                         "<td><a href=\"./equipment_type.aspx?key=" + id + "\" >" + ("" == obj.Name ? "-" : obj.Name) + "</a></td>" +
                         "<td>" + obj.Code + "</td>" +
+                        "<td><img alt=\"clipart\" style=\"width: 41px;\" class=\"img-rounded\" src=\"" + obj.Image + "\"/></td>" +
                         "<td></td>" +
                         "</tr>";
                 }

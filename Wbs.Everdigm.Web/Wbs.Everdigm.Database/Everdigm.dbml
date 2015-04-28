@@ -166,15 +166,6 @@
       <Association Name="TB_Equipment_TB_EquipmentStockHistory" Member="TB_Equipment" ThisKey="Equipment" OtherKey="id" Type="TB_Equipment" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.TB_EquipmentType" Member="TB_EquipmentType">
-    <Type Name="TB_EquipmentType">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Code" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
-      <Column Name="Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Association Name="TB_EquipmentType_TB_EquipmentModel" Member="TB_EquipmentModel" ThisKey="id" OtherKey="Type" Type="TB_EquipmentModel" />
-    </Type>
-  </Table>
   <Table Name="dbo.TB_Error" Member="TB_Error">
     <Type Name="TB_Error">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -385,6 +376,16 @@
       <Column Name="CarNumber" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Address" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
       <Association Name="TB_Tracker_TB_Tracker_Position" Member="TB_Tracker" ThisKey="Tracker" OtherKey="id" Type="TB_Tracker" IsForeignKey="true" DeleteRule="SET NULL" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_EquipmentType" Member="TB_EquipmentType">
+    <Type Name="TB_EquipmentType">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Code" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Image" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="TB_EquipmentType_TB_EquipmentModel" Member="TB_EquipmentModel" ThisKey="id" OtherKey="Type" Type="TB_EquipmentModel" />
     </Type>
   </Table>
 </Database>

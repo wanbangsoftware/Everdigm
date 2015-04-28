@@ -31,5 +31,9 @@ namespace Wbs.Everdigm.Web.mobile
         /// 客户信息业务处理实体
         /// </summary>
         protected CustomerBLL CustomerInstance { get { return new CustomerBLL(); } }
+        /// <summary>
+        /// 设备业务
+        /// </summary>
+        protected EquipmentBLL EquipmentInstance { get { return new EquipmentBLL(); } }
     }
 }

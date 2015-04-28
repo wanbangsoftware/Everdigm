@@ -89,15 +89,15 @@
     <Content Include="css\style_font.css" />
     <Content Include="favicon.png" />
     <Content Include="google_map.aspx" />
+    <Content Include="images\equipments\icon_hex.png" />
+    <Content Include="images\equipments\icon_adt.png" />
+    <Content Include="images\equipments\icon_cdrl.png" />
+    <Content Include="images\equipments\icon_cpt.png" />
+    <Content Include="images\equipments\icon_drl.png" />
+    <Content Include="images\equipments\icon_fl.png" />
+    <Content Include="images\equipments\icon_wld.png" />
     <Content Include="images\error.png" />
-    <Content Include="images\excavator.png" />
     <Content Include="images\graph2.gif" />
-    <Content Include="images\icon_adt.png" />
-    <Content Include="images\icon_cdrl.png" />
-    <Content Include="images\icon_drl.png" />
-    <Content Include="images\icon_cpt.png" />
-    <Content Include="images\icon_fl.png" />
-    <Content Include="images\icon_wld.png" />
     <Content Include="images\img_top_1.png" />
     <Content Include="images\links\links.png" />
     <Content Include="images\links\links_off.png" />
@@ -220,8 +220,11 @@
     <Content Include="main\satellite_manage.aspx" />
     <Content Include="main\terminal_satellite.aspx" />
     <Content Include="mobile\css\account.css" />
+    <Content Include="mobile\css\fonts\cell-signal.svg" />
+    <Content Include="mobile\css\style.css" />
     <Content Include="mobile\default.aspx" />
     <Content Include="mobile\device.aspx" />
+    <Content Include="mobile\images.aspx" />
     <Content Include="mobile\js\common.js" />
     <Content Include="mobile\js\default.js" />
     <Content Include="mobile\js\device.list.js" />
@@ -284,6 +287,9 @@
     <Content Include="css\fonts\engine.eot" />
     <Content Include="css\fonts\engine.ttf" />
     <Content Include="css\fonts\engine.woff" />
+    <Content Include="mobile\css\fonts\cell-signal.eot" />
+    <Content Include="mobile\css\fonts\cell-signal.ttf" />
+    <Content Include="mobile\css\fonts\cell-signal.woff" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -966,6 +972,13 @@
     </Compile>
     <Compile Include="mobile\devices.aspx.designer.cs">
       <DependentUpon>devices.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="mobile\images.aspx.cs">
+      <DependentUpon>images.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="mobile\images.aspx.designer.cs">
+      <DependentUpon>images.aspx</DependentUpon>
     </Compile>
     <Compile Include="mobile\Mobile.Master.cs">
       <DependentUpon>Mobile.Master</DependentUpon>

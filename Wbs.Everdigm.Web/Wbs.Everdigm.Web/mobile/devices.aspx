@@ -4,6 +4,7 @@
     <link href="../bootstrap3/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../css/links.css" rel="stylesheet" />
     <link href="../bootstrap3/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="TitleContentPlaceHolder" runat="server">
     <a href="javascript:history.go(-1);" class="backto"><span class="glyphicon glyphicon-arrow-left"></span></a>
@@ -21,16 +22,16 @@
     <dl class="invest-type" data-url="#1">
         <dt>
             <span class="iconleft">
-                <img class="img-rounded ex" src="../images/excavator.png">
+                <img class="img-rounded ex" src="../images/equipments/icon_hex.png">
             </span>DX225LC-20037
             <em class="status">Excavator</em>
         </dt>
         <dd>
-            <span class="text-success"><span class="glyphicon glyphicon-ok-circle"></span> Engine On</span>
+            <span class="text-success"><span class="signal cell-engine"></span> Engine On</span>
             <em class="status"><span class="glyphicon glyphicon-time"></span> 224 hr 32 min</em>
         </dd>
         <dd>
-            <span class="text-warning"><span class="glyphicon glyphicon-signal"></span> rssi: 15(-113dBm)</span>
+            <span class="text-warning"><span class="signal cell-signal-3"></span> rssi: 15(-113dBm)</span>
             <div class="total-num"><span class="label label-info">tcp</span></div>
         </dd>
         <dd class="desc"><span class="glyphicon glyphicon-globe"></span> 山东省烟台市开发区衡山路1号老咔叽卡级的发1的离开对方</dd>
@@ -38,7 +39,7 @@
     <dl class="invest-type" data-url="#2">
         <dt>
             <span class="iconleft">
-                <img class="img-rounded ex" src="../images/icon_adt.png">
+                <img class="img-rounded ex" src="../images/equipments/icon_adt.png">
             </span>DX225LC-20036
             <em class="status">Ariticulated Dump Truck</em>
         </dt>
@@ -55,7 +56,7 @@
     <dl class="invest-type" data-url="#3">
         <dt>
             <span class="iconleft">
-                <img class="img-rounded ex" src="../images/icon_cpt.png">
+                <img class="img-rounded ex" src="../images/equipments/icon_cpt.png">
             </span>DX225LC-20035
             <em class="status">Concrete Pump Track</em>
         </dt>
@@ -72,7 +73,7 @@
     <dl class="invest-type" data-url="#4">
         <dt>
             <span class="iconleft">
-                <img class="img-rounded ex" src="../images/icon_drl.png">
+                <img class="img-rounded ex" src="../images/equipments/icon_drl.png">
             </span>DX225LC-20034
             <em class="status">Rock Drill</em>
         </dt>
@@ -89,7 +90,7 @@
     <dl class="invest-type" data-url="#5">
         <dt>
             <span class="iconleft">
-                <img class="img-rounded ex" src="../images/icon_fl.png">
+                <img class="img-rounded ex" src="../images/equipments/icon_fl.png">
             </span>DX225LC-20033
             <em class="status">Fork Lift</em>
         </dt>
@@ -106,7 +107,7 @@
     <dl class="invest-type disabled" data-url="#6">
         <dt>
             <span class="iconleft">
-                <img class="img-rounded ex" src="../images/icon_cdrl.png">
+                <img class="img-rounded ex" src="../images/equipments/icon_cdrl.png">
             </span>DX225LC-20032
             <em class="status">Core Drill</em>
         </dt>
@@ -123,7 +124,7 @@
     <dl class="invest-type" data-url="#7">
         <dt>
             <span class="iconleft">
-                <img class="img-rounded ex" src="../images/icon_wld.png">
+                <img class="img-rounded ex" src="../images/equipments/icon_wld.png">
             </span>DX225LC-20031
             <em class="status">Wheel Loader</em>
         </dt>

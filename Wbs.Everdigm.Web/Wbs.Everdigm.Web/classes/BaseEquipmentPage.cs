@@ -74,6 +74,7 @@ namespace Wbs.Everdigm.Web
             TypeInstance.Update(f => f.id == obj.id, act => {
                 act.Code = obj.Code;
                 act.Name = obj.Name;
+                act.Image = obj.Image;
             });
         }
         /// <summary>

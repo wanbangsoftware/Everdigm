@@ -136,7 +136,7 @@ namespace Wbs.Everdigm.BLL
         {
             var voltage = obj.Voltage;
             if (null == voltage) return "OFF";
-            if (voltage.IndexOf("G2") >= 0) return "ON(" + obj.Rpm + ")";
+            if (voltage.IndexOf("G2") >= 0) return "ON";
             return "OFF";
         }
         /// <summary>
@@ -146,13 +146,12 @@ namespace Wbs.Everdigm.BLL
         /// <returns></returns>
         public string GetRuntime(int? time)
         {
-            if ((int?)null == time || 0 == time) return "0";
-            if (time.Value < 60) return time.Value.ToString() + "m";
+            if ((int?)null == time || 0 == time) return "00:00";
+            //if (time.Value < 60) return "00:"+time.Value.ToString() + "min";
             int hour = time.Value / 60, minute = time.Value % 60;
             if(hour<1000)
-                return string.Format("{0}h{1:00}m", hour, minute);
-            return string.Format("{0:0,0}h{1:00}m", hour, minute);
+                return string.Format("{0:00}:{1:00}", hour, minute);
+            return string.Format("{0:0,0}:{1:00}", hour, minute);
         }
-
     }
 }
