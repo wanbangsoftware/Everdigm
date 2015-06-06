@@ -38,13 +38,21 @@ namespace Wbs.Everdigm.Desktop
             //HandleTrackerCSQ(tx300.MsgContent[0], sim);
             switch (tx300.CommandID)
             {
+                case 0x7000:
+                    break;
+                case 0x7010:
+                    // 通讯参数设置，不需要进行处理
+                    break;
                 case 0x7020:
+                    // 报警
                     Handle0x7020(tx300, tracker);
                     break;
                 case 0x7030:
+                    // 位置信息
                     Handle0x7030(tx300, tracker);
                     break;
                 case 0x7040:
+                    // 心跳
                     if (null != tracker) { UpdateTrackerCSQ(tx300.MsgContent[0], tracker.id); }
                     break;
             }
@@ -144,6 +152,13 @@ namespace Wbs.Everdigm.Desktop
                     SaveTrackerPosition(obj.TerminalID, (null == tracker ? "" : tracker.CarNumber),
                       (null == tracker ? -1 : tracker.id), pos, "Period");
                 }
+            }
+        }
+        private void Handle0x7040(TX300 obj, TB_Tracker tracker)
+        {
+            if (null != tracker)
+            {
+                UpdateTrackerCSQ(obj.MsgContent[0], tracker.id);
             }
         }
     }

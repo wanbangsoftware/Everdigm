@@ -146,16 +146,17 @@ namespace Wbs.Everdigm.Desktop
 
             if (tx300.CommandID != 0xAA00)
             {
-                SaveTX300History(tx300, data.ReceiveTime,
-                    (null == equipment ? "" : EquipmentInstance.GetFullNumber(equipment)));
 
                 // TX10G的数据
-                if (tx300.CommandID == 0x7010 || tx300.CommandID == 0x7020 || tx300.CommandID == 0x7030)
+                if (tx300.CommandID >= 0x7000 && tx300.CommandID <= 0x7040)
                 {
                     HandleTX10G(tx300, data);
                 }
                 else
                 {
+                    SaveTX300History(tx300, data.ReceiveTime,
+                        (null == equipment ? "" : EquipmentInstance.GetFullNumber(equipment)));
+
                     // 根据命令的不同处理各个命令详情
                     HandleCommand(tx300, equipment, terminal);
                 }
