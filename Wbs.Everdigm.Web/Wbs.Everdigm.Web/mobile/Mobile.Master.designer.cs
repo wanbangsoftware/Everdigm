@@ -31,13 +31,22 @@ namespace Wbs.Everdigm.Web.mobile {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
-        /// TitleContentPlaceHolder 控件。
+        /// TitleContentPlaceHolderLeft 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder TitleContentPlaceHolder;
+        protected global::System.Web.UI.WebControls.ContentPlaceHolder TitleContentPlaceHolderLeft;
+        
+        /// <summary>
+        /// TitleContentPlaceHolderRight 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ContentPlaceHolder TitleContentPlaceHolderRight;
         
         /// <summary>
         /// BodyContentPlaceHolder 控件。

@@ -18,6 +18,14 @@ namespace Wbs.Sockets
         /// <summary>
         /// UDP数据包
         /// </summary>
-        UDP = 0x10
+        UDP = 0x10,
+        /// <summary>
+        /// SMS数据包
+        /// </summary>
+        SMS = 0x20,
+        /// <summary>
+        /// 卫星数据包
+        /// </summary>
+        SAT = 0x30
     }
 }

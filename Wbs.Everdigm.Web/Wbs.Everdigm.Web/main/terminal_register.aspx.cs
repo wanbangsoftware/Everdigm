@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 
 using Wbs.Everdigm.Database;
+using Wbs.Protocol;
 
 namespace Wbs.Everdigm.Web.main
 {
@@ -35,6 +36,12 @@ namespace Wbs.Everdigm.Web.main
                 txtNumber.Value = t.Number;
                 //txtSatellite.Value = t.Satellite;
                 txtSimcard.Value = t.Sim;
+                if (t.Type == TerminalTypes.DH)
+                    _dh.Checked = true;
+                else if (t.Type == TerminalTypes.DX)
+                    _dx.Checked = true;
+                else
+                    _ld.Checked = true;
             }
             else { ShowNotification("./terminal_list.aspx", "Error: Cannot edit null object of Terminal.", false); }
         }
@@ -44,6 +51,7 @@ namespace Wbs.Everdigm.Web.main
             obj.Number = txtNumber.Value.Trim();
             //obj.Satellite = txtSatellite.Value.Trim();
             obj.Sim = txtSimcard.Value.Trim();
+            obj.Type = byte.Parse(_dh.Checked ? _dh.Value : (_dx.Checked ? _dx.Value : _ld.Value));
         }
 
         private void NewTerminal()

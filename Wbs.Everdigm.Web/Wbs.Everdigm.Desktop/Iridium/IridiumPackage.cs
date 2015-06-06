@@ -5,9 +5,29 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Wbs.Utilities;
+using System.Globalization;
 
 namespace Wbs.Everdigm.Desktop
 {
+    /// <summary>
+    /// MT时计算MTMSN的方法
+    /// </summary>
+    public class IririumMTMSN
+    {
+        /// <summary>
+        /// 计算指定日期的MTMSN
+        /// </summary>
+        /// <param name="date">当前日期</param>
+        /// <param name="ExistsNumber">已存在了的号码</param>
+        /// <returns></returns>
+        public static ushort CalculateMTMSN(DateTime date, ushort ExistsNumber)
+        {
+            var month = CustomConvert.IntToDigit(date.Month, CustomConvert.BIN, 4);
+            var num = CustomConvert.IntToDigit((ExistsNumber + 1) % 4096, CustomConvert.BIN, 12);
+            var n = CustomConvert.DigitToInt(month + num, CustomConvert.BIN);
+            return (ushort)n;
+        }
+    }
     /// <summary>
     /// 铱星数据包
     /// </summary>
@@ -372,7 +392,12 @@ namespace Wbs.Everdigm.Desktop
         /// </summary>
         public DateTime Time
         {
-            get { return CustomConvert.JavascriptDateToDateTime(TimeOfSession); }
+            get
+            {
+                var date = new DateTime(1970, 1, 1);
+                return date.AddSeconds(TimeOfSession).ToLocalTime();
+                // return CustomConvert.JavascriptDateToDateTime(TimeOfSession); 
+            }
             set { TimeOfSession = (uint)CustomConvert.DateTimeToJavascriptDate(value); }
         }
         /// <summary>
@@ -404,7 +429,7 @@ namespace Wbs.Everdigm.Desktop
         }
         public override string ToString()
         {
-            return string.Format("{0}, CDR: {1}, IMEI: {2}, Status: {3}, MOMSN: {4}, MTMSN: {5}, TimeOfSession: {6}, Time:",
+            return string.Format("{0}, CDR: {1}, IMEI: {2}, Status: {3}, MOMSN: {4}, MTMSN: {5}, TimeOfSession: {6}, Time: {7}",
                 base.ToString(), CDR, IMEI, SessionStatus, MOMSN, MTMSN, TimeOfSession, Time.ToString("yyyy-MM-dd HH:mm:ss")); ;
         }
     }
@@ -469,13 +494,14 @@ namespace Wbs.Everdigm.Desktop
             byte[] tmp = new byte[2];
             Buffer.BlockCopy(LatLng, 2, tmp, 0, 2);
             tmp = CustomConvert.reserve(tmp);
-            double mm = double.Parse("0." + BitConverter.ToUInt16(tmp, 0));
+
+            double mm = double.Parse("0." + BitConverter.ToUInt16(tmp, 0), CultureInfo.InvariantCulture.NumberFormat);
             Latitude += mm;
 
             Longitude = LatLng[4];
             Buffer.BlockCopy(LatLng, 5, tmp, 0, 2);
             tmp = CustomConvert.reserve(tmp);
-            mm = double.Parse("0." + BitConverter.ToUInt16(tmp, 0));
+            mm = double.Parse("0." + BitConverter.ToUInt16(tmp, 0), CultureInfo.InvariantCulture.NumberFormat);
             Longitude += mm;
         }
         /// <summary>
@@ -498,7 +524,8 @@ namespace Wbs.Everdigm.Desktop
         public override string ToString()
         {
             return string.Format("{0}, LatLng: {1}, Latitude: {2}, NSI: {3}, Longitude: {4}, EWI: {5}, CEPRadius: {6}",
-                base.ToString(), CustomConvert.GetHex(LatLng), Latitude.ToString(), NSI, Longitude.ToString(), EWI, CEPRadius);
+                base.ToString(), CustomConvert.GetHex(LatLng), Latitude.ToString(CultureInfo.InvariantCulture.NumberFormat),
+                NSI, Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat), EWI, CEPRadius);
         }
     }
     /// <summary>
@@ -526,9 +553,16 @@ namespace Wbs.Everdigm.Desktop
 
             PackageLength();
         }
+        public override void Unpackage()
+        {
+            base.Unpackage();
+
+            Status = Content[index];
+            index += 1;
+        }
         public override string ToString()
         {
-            return base.ToString();
+            return string.Format("{0}, Status: {1}", base.ToString(), Status);
         }
     }
     /// <summary>
@@ -558,6 +592,9 @@ namespace Wbs.Everdigm.Desktop
             base.Package();
 
             byte[] temp = GetBytes(UniqueID);
+            //temp = CustomConvert.reserve(temp);
+            temp[0] = 0;
+            temp[1] = 0;
             Package(temp);
 
             temp = ASCIIEncoding.ASCII.GetBytes(IMEI);
@@ -568,6 +605,24 @@ namespace Wbs.Everdigm.Desktop
             Package(temp);
 
             PackageLength();
+        }
+        public override void Unpackage()
+        {
+            base.Unpackage();
+
+            UniqueID = GetUint(index);
+            index += 4;
+
+            IMEI = ASCIIEncoding.ASCII.GetString(Content, index, IMEI_LEN);
+            index += IMEI_LEN;
+
+            DispositionFlags = GetUshort(index);
+            index += 2;
+        }
+        public override string ToString()
+        {
+            return string.Format("{0}, UniqueID: {1}, IMEI: {2}, DispositionFlags: {3}({4})", 
+                base.ToString(), UniqueID, IMEI, DispositionFlags, CustomConvert.IntToDigit(DispositionFlags, CustomConvert.HEX, 4));
         }
     }
     /// <summary>
@@ -587,6 +642,18 @@ namespace Wbs.Everdigm.Desktop
             Package(Payload);
 
             PackageLength();
+        }
+        public override void Unpackage()
+        {
+            base.Unpackage();
+
+            Payload = new byte[Length];
+            Buffer.BlockCopy(Content, index, Payload, 0, Length);
+            index += Length;
+        }
+        public override string ToString()
+        {
+            return string.Format("{0}, Payload: {1}", base.ToString(), CustomConvert.GetHex(Payload));
         }
     }
     /// <summary>
@@ -621,6 +688,35 @@ namespace Wbs.Everdigm.Desktop
             temp = CustomConvert.reserve(temp);
             Status = BitConverter.ToInt16(temp, 2);
             index += 2;
+        }
+        public override string ToString()
+        {
+            return string.Format("{0}, UniqueID: {1}, IMEI: {2}, AutoID: {3}, Status: {4}({5})",
+                base.ToString(), UniqueID, IMEI, AutoID, Status, GetStatus());
+        }
+        public string GetStatus()
+        { return GetStatus(Status); }
+        public string GetStatus(short status)
+        {
+            if (status > 0)
+                return string.Format("Successful, order of message in the MT message queue: {0}", status);
+            var ret="";
+            switch (status)
+            {
+                case -11: ret = "MTMSN value is out of range(1-65535)"; break;
+                case -10: ret = "Source IP address rejected by MT filter"; break;
+                case -9: ret = "The given IMEI is not attached"; break;
+                case -8: ret = "Ring alerts to the given IMEI are disabled"; break;
+                case -7: ret = "Violation of MT DirectIP protocol error"; break;
+                case -6: ret = "MT resources unavailable"; break;
+                case -5: ret = "MT message queue full (max of 50)"; break;
+                case -4: ret = "Payload expected, but none received"; break;
+                case -3: ret = "Payload size exceeded maximum allowed"; break;
+                case -2: ret = "Unknown IMEI - not provisioned on the Iridium Gateway"; break;
+                case -1: ret = "Invalid IMEI – too few characters, non-numeric characters"; break;
+                case 0: ret = "Successful, no payload in message"; break;
+            }
+            return ret;
         }
     }
 }

@@ -19,7 +19,7 @@
             <input type="hidden" id="hidKey" runat="server" />
             <!-- Default panel contents -->
             <div class="panel-heading">
-                <strong><asp:ContentPlaceHolder ID="TitleContentPlaceHolder" runat="server"></asp:ContentPlaceHolder></strong> <span id="equipment_id" runat="server"></span>
+                <strong><asp:ContentPlaceHolder ID="TitleContentPlaceHolder" runat="server"></asp:ContentPlaceHolder></strong> for <span id="equipment_id" runat="server"></span>
             </div>
             <div class="panel-body">
                 <asp:ContentPlaceHolder ID="NavigatorContentPlaceHolder" runat="server"></asp:ContentPlaceHolder>

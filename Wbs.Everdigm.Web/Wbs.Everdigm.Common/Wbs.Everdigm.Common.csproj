@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Wbs.Everdigm.Common</RootNamespace>
     <AssemblyName>Wbs.Everdigm.Common</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -53,6 +53,10 @@
     <Compile Include="SMSUtility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Utilities\Wbs.Utilities.csproj">
+      <Project>{36073bfc-ac86-49c8-82ae-5ac8de80dcc4}</Project>
+      <Name>Wbs.Utilities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Wbs.Everdigm.BLL\Wbs.Everdigm.BLL.csproj">
       <Project>{fef26bc4-ae46-4a7c-9787-4d70df5b6a40}</Project>
       <Name>Wbs.Everdigm.BLL</Name>

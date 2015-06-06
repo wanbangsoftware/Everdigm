@@ -23,7 +23,9 @@
 <body>
     <form id="form1" runat="server">
         <div id="header">
-            <asp:ContentPlaceHolder ID="TitleContentPlaceHolder" runat="server"></asp:ContentPlaceHolder>
+            <asp:ContentPlaceHolder ID="TitleContentPlaceHolderLeft" runat="server"></asp:ContentPlaceHolder>
+            <div class="reg-log">Everdigm Mobile</div>
+            <asp:ContentPlaceHolder ID="TitleContentPlaceHolderRight" runat="server"></asp:ContentPlaceHolder>
         </div>
         <div id="wrap">
             <asp:ContentPlaceHolder ID="BodyContentPlaceHolder" runat="server"></asp:ContentPlaceHolder>

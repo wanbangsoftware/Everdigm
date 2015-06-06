@@ -48,5 +48,9 @@ namespace Wbs.Everdigm.Desktop
         /// TX10G的历史记录BLL
         /// </summary>
         private TrackerPositionBLL TrackerPosition { get { return new TrackerPositionBLL(); } }
+        /// <summary>
+        /// SMS消息处理BLL
+        /// </summary>
+        private SmsBLL SmsInstance { get { return new SmsBLL(); } }
     }
 }

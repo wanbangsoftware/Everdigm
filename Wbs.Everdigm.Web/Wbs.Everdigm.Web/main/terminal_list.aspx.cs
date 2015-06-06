@@ -9,6 +9,7 @@ using Wbs.Everdigm.Database;
 using System.Configuration;
 using Wbs.Utilities;
 using Wbs.Everdigm.Common;
+using Wbs.Protocol;
 
 namespace Wbs.Everdigm.Web.main
 {
@@ -105,7 +106,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td>" + TerminalInstance.GetSatellite(obj, true) + "</td>" +
                         "<td>" + obj.Firmware + "</td>" +
                         "<td style=\"text-align: center;\">" + obj.Revision.ToString() + "</td>" +
-                        "<td style=\"text-align: center;\">" + obj.Type + "</td>" +
+                        "<td style=\"text-align: center;\">" + TerminalTypes.GetTerminalType(obj.Type.Value) + "</td>" +
                         "<td>" + obj.ProductionDate.Value.ToString("yyyy/MM/dd") + "</td>" +
                         "<td style=\"text-align: center;\">" + (obj.HasBound == true ? "yes" : "no") + "</td>" +
                         "<td>" + GetEquipment(obj, equipment) + "</td>" +

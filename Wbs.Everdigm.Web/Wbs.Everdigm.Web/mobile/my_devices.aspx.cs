@@ -62,10 +62,5 @@ namespace Wbs.Everdigm.Web.mobile
             }
             equipmentItems.InnerHtml = html;
         }
-
-        protected void Submit_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

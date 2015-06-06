@@ -37,15 +37,17 @@
                                     <input type="text" runat="server" class="text-input important-input" id="txtNumber" maxlength="10" />
                                     <input type="hidden" runat="server" id="hidID" />
                                 </td>
-                                <td class="td_right">&nbsp;</td>
-                                <td class="td_left">&nbsp;</td>
+                                <td class="td_right" rowspan="2">Type:</td>
+                                <td class="td_left" rowspan="2">
+                                    <input type="radio" name="_type" value="10" id="_dh" runat="server" />DH<br />
+                                    <input type="radio" name="_type" value="20" id="_dx" runat="server" checked="true" />DX<br />
+                                    <input type="radio" name="_type" value="30" id="_ld" runat="server" />Loader
+                                </td>
                             </tr>
                             <tr>
                                 <td class="td_right">Sim Card No.:</td>
                                 <td class="td_left">
                                     <input type="text" runat="server" class="text-input" id="txtSimcard" maxlength="11" /></td>
-                                <td class="td_right">&nbsp;</td>
-                                <td class="td_left">&nbsp;</td>
                             </tr>
                         </table>
                         <p>

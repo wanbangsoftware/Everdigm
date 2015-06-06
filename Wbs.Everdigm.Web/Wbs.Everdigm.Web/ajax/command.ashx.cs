@@ -133,7 +133,8 @@ namespace Wbs.Everdigm.Web.ajax
             }
             else
             {
-                var id = CommandUtility.SendCommand(obj, cmd, sms, User.id);
+                var extra = GetParamenter("param");
+                var id = CommandUtility.SendCommand(obj, cmd, sms, User.id, extra);
                 return ResponseMessage(0, id.ToString());
             }
         }
@@ -286,13 +287,15 @@ namespace Wbs.Everdigm.Web.ajax
                         var start = DateTime.Parse(GetParamenter("start") + " 00:00:00");
                         var end = DateTime.Parse(GetParamenter("end") + " 23:59:59");
                         var sim = obj.TB_Terminal.Sim;
-                        if (sim[0] == '8' && sim[1] == '9' && sim.Length < 11) {
+                        if (sim[0] == '8' && sim[1] == '9' && sim.Length < 11)
+                        {
                             sim += "000";
                         }
                         // 查询的命令
                         //string _command = "";
                         Command command = null;
-                        if (!string.IsNullOrEmpty(cmd)) {
+                        if (!string.IsNullOrEmpty(cmd))
+                        {
                             command = CommandUtility.GetCommand(cmd);
                             //_command = command.Code;
                         }
@@ -300,11 +303,11 @@ namespace Wbs.Everdigm.Web.ajax
                             f.ScheduleTime >= start && f.ScheduleTime <= end, "ScheduleTime", true);
                         if (security)
                         {
-                            list = list.Where(w => w.Command == "0x6007" || w.Command == "0x4000");
+                            list = list.Where(w => w.Command == "0x6007" || w.Command == "0x4000" || w.Command == "0x3000");
                         }
                         else
                         {
-                            list = list.Where(w => w.Command != "0x6007" && w.Command != "0x4000");
+                            list = list.Where(w => w.Command != "0x6007" && w.Command != "0x4000" && w.Command != "0x3000");
                         }
                         //&&
                         //    (string.IsNullOrEmpty(_command) ? f.u_sms_command.IndexOf("0x") >= 0 : f.u_sms_command.IndexOf(_command) >= 0),
@@ -312,17 +315,28 @@ namespace Wbs.Everdigm.Web.ajax
                         if (null != command)
                         {
                             list = list.Where(w => w.Command.IndexOf(command.Code) >= 0);
-                            if (security&&command.Code.Equals("6007"))
+                            if (security && command.Code.Equals("6007"))
                             {
                                 list = list.Where(w => w.Content.Substring(w.Content.Length - 2) == command.Param);
                             }
+                            else if (security && command.Code.Equals("3000"))
+                            {
+                                list = list.Where(w => w.Content.Substring(w.Content.Length - 4, 2) == command.Param);
+                            }
                         }
-                        if (list.Count() > 0) { 
+                        if (list.Count() > 0)
+                        {
                             // 将command_id替换
-                            List<Command> commands = CommandUtility.GetCommand(false);
-                            foreach (var record in list) {
-                                Command _cmd = CommandUtility.GetCommand(record.Command.Replace("0x", ""));
-                                record.Command = (null == _cmd ? "" : _cmd.Flag);
+                            //List<Command> commands = CommandUtility.GetCommand();
+                            foreach (var record in list)
+                            {
+                                string param = "";
+                                if (record.Command == "0x6007")
+                                    param = record.Content.Substring(record.Content.Length - 2);
+                                if (record.Command == "0x3000")
+                                    param = record.Content.Substring(record.Content.Length - 4, 2);
+                                Command _cmd = CommandUtility.GetCommand(record.Command.Replace("0x", ""), param);
+                                record.Command = (null == _cmd ? "" : _cmd.Title);
                             }
                         }
                         ret = JsonConverter.ToJson(list);

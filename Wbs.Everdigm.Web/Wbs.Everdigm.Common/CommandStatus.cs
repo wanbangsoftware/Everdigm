@@ -9,43 +9,55 @@ using System.Web;
 public enum CommandStatus : byte
 {
     /// <summary>
-    /// 正在队列中等待发送0
+    /// 正在队列中等待发送
     /// </summary>
     Waiting = 0,
     /// <summary>
-    /// 正在等待重新发送1
+    /// 正在等待重新发送
     /// </summary>
     ReSending,
     /// <summary>
-    /// 已由TCP方式发送2
+    /// 正在等待卫星方式发送
+    /// </summary>
+    WaitingForSatellite,
+    /// <summary>
+    /// 卫星发送已处理
+    /// </summary>
+    SatelliteHandled,
+    /// <summary>
+    /// 已由TCP方式发送
     /// </summary>
     SentByTCP,
     /// <summary>
-    /// 已由SMS方式发送3
+    /// 已由SMS方式发送
     /// </summary>
     SentBySMS,
     /// <summary>
-    /// 已由卫星方式发送4
+    /// 已由卫星方式发送(发送到铱星网关)6
     /// </summary>
     SentBySAT,
     /// <summary>
-    /// 已发送到终端5
+    /// 已发送到终端
     /// </summary>
     SentToDest,
     /// <summary>
-    /// 发送失败6，一般发生在SMS下发信息时SMSC找不到终端的情况
+    /// 已通过卫星发送到终端
+    /// </summary>
+    SentToDestBySAT,
+    /// <summary>
+    /// 发送失败9（一般发生在SMS下发信息时SMSC找不到终端的情况）
     /// </summary>
     SentFail,
     /// <summary>
-    /// 命令已返回7
+    /// 命令已返回10
     /// </summary>
     Returned,
     /// <summary>
-    /// 命令超时未返回8
+    /// 命令超时未返回11
     /// </summary>
     Timedout,
     /// <summary>
-    /// EPOS返回错误9
+    /// EPOS返回错误12
     /// </summary>
     EposFail,
     /// <summary>

@@ -18,7 +18,6 @@ namespace Wbs.Everdigm.Desktop
     /// </summary>
     public partial class DataHandler
     {
-
         /// <summary>
         /// 处理接收到的数据
         /// </summary>
@@ -38,6 +37,9 @@ namespace Wbs.Everdigm.Desktop
                 //SaveTX300History(x300, data.ReceiveTime);
                 // 更新设备状态
                 HandleTX300Status(x300, data);
+                // SMS消息不需要返回包
+                if (x300.ProtocolType >= Protocol.ProtocolTypes.SMS) return;
+
                 if (null != _server)
                 {
                     if (x300.CommandID == 0xCC00)
@@ -84,7 +86,7 @@ namespace Wbs.Everdigm.Desktop
                         }
                     }
                 }
-                HandleCommandResponsed(x300);
+                HandleGsmCommandResponsed(x300);
                 index += x300.TotalLength;
                 x300 = null;
             }
@@ -173,6 +175,9 @@ namespace Wbs.Everdigm.Desktop
                 case 0x2000:
                     Handle0x2000(obj, equipment, terminal);
                     break;
+                case 0x3000:
+                    Handle0x3000(obj, equipment, terminal);
+                    break;
                 case 0x5000:
                     Handle0x5000(obj, equipment, terminal);
                     break;
@@ -186,6 +191,9 @@ namespace Wbs.Everdigm.Desktop
                 case 0x6007:
                     Handle0x6007(obj, equipment, terminal);
                     break;
+                case 0x600B:
+                    Handle0x600B(obj, equipment, terminal);
+                    break;
                 case 0xBB00:
                     HandleTerminalVersion(obj, terminal);
                     break;
@@ -195,7 +203,7 @@ namespace Wbs.Everdigm.Desktop
                     HandleTerminalVersion(obj, terminal);
                     break;
                 case 0xDD00:
-                    //HandleTerminalVersion(obj, terminal);
+                    HandleTerminalVersion(obj, terminal);
                     Handle0xDD00(obj, equipment, terminal);
                     break;
                 case 0xDD02:
@@ -219,14 +227,20 @@ namespace Wbs.Everdigm.Desktop
             // 处理终端版本信息
             byte[] version = new byte[7];
             byte rev = 0;
-            if (obj.CommandID == 0xDD00) { Buffer.BlockCopy(obj.MsgContent, 1, version, 0, 7); }
-            //else if (obj.CommandID == 0x1001)
-            //{
-            //    Buffer.BlockCopy(obj.MsgContent, 25, version, 0, 7);
-            //    // revision
-            //    rev = obj.MsgContent[32];
-            //}
-            else { Buffer.BlockCopy(obj.MsgContent, 0, version, 0, 7); }
+            if (obj.CommandID == 0xDD00)
+            {
+                Buffer.BlockCopy(obj.MsgContent, 1, version, 0, 7);
+            }
+            else if (obj.CommandID == 0x1001)
+            {
+                Buffer.BlockCopy(obj.MsgContent, 25, version, 0, 7);
+                // revision
+                rev = obj.MsgContent[32];
+            }
+            else
+            {
+                Buffer.BlockCopy(obj.MsgContent, 0, version, 0, 7);
+            }
             string ver = ASCIIEncoding.ASCII.GetString(version);
             version = null;
             if (obj.CommandID == 0xBB00)
@@ -268,7 +282,7 @@ namespace Wbs.Everdigm.Desktop
                 }
             }
             if (x1000.GPSInfo.Available)
-                SaveGpsInfo(x1000.GPSInfo, equipment, obj.TerminalID, "Command");
+                SaveGpsInfo(x1000.GPSInfo, equipment, obj.TerminalID, "Position command");
         }
         /// <summary>
         /// 从0x1001数据中取得定位信息记录
@@ -285,7 +299,7 @@ namespace Wbs.Everdigm.Desktop
             info.Longitude = first ? obj.Longitude_1 : obj.Longitude_2;
             //info.SectorCode = obj.Sector;
             //info.StationCode = obj.Station;
-            info.Type = "0x1001";
+            info.Type = "Period report";
             return info;
         }
         /// <summary>
@@ -319,6 +333,7 @@ namespace Wbs.Everdigm.Desktop
                 pos.Equipment = null == equipment ? (int?)null : equipment.id;
                 pos.Terminal = obj.TerminalID;
                 pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
+                pos.Type = "Period report";
                 PositionInstance.Add(pos);
             }
 
@@ -328,6 +343,7 @@ namespace Wbs.Everdigm.Desktop
                 pos.Equipment = null == equipment ? (int?)null : equipment.id;
                 pos.Terminal = obj.TerminalID;
                 pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
+                pos.Type = "Period report";
                 PositionInstance.Add(pos);
             }
         }
@@ -362,7 +378,7 @@ namespace Wbs.Everdigm.Desktop
             }
             long gps = -1;
             if (x2000.GPSInfo.Available)
-                gps = SaveGpsInfo(x2000.GPSInfo, equipment, obj.TerminalID, "Alarm");
+                gps = SaveGpsInfo(x2000.GPSInfo, equipment, obj.TerminalID, "Alarm report");
             // 保存报警信息
             SaveAlarm(equipment, obj.TerminalID, gps, x2000.AlarmBIN);
         }
@@ -383,6 +399,28 @@ namespace Wbs.Everdigm.Desktop
             obj.Terminal = terminal_id;
             AlarmInstance.Add(obj);
         }
+        private void Handle0x3000(TX300 obj, TB_Equipment equipment, TB_Terminal terminal)
+        {
+            _0x3000 x3000 = new _0x3000();
+            x3000.Content = obj.MsgContent;
+            x3000.Unpackage();
+            if (null != equipment)
+            {
+                EquipmentInstance.Update(f => f.id == equipment.id, act => {
+                    act.LockStatus = CustomConvert.GetHex(x3000.Type);
+                    if (x3000.GPSInfo.Available)
+                    {
+                        act.Latitude = x3000.GPSInfo.Latitude;
+                        act.Longitude = x3000.GPSInfo.Longitude;
+                        act.GpsUpdated = false;
+                    }
+                });
+            }
+            if (x3000.GPSInfo.Available)
+            {
+                SaveGpsInfo(x3000.GPSInfo, equipment, obj.TerminalID, ("Security: " + x3000.Flag));
+            }
+        }
         /// <summary>
         /// 处理设备的开关机信息
         /// </summary>
@@ -393,6 +431,7 @@ namespace Wbs.Everdigm.Desktop
         {
             // 发动机启动/关闭信息
             _0x5000 x5000 = new _0x5000();
+            x5000.Type = obj.TerminalType;
             x5000.Content = obj.MsgContent;
             x5000.Unpackage();
             if (null != equipment)
@@ -419,7 +458,7 @@ namespace Wbs.Everdigm.Desktop
                 });
             }
             if (x5000.GPSInfo.Available)
-                SaveGpsInfo(x5000.GPSInfo, equipment, obj.TerminalID, "Eng. State");
+                SaveGpsInfo(x5000.GPSInfo, equipment, obj.TerminalID, "Eng.: " + x5000.State);
         }
         /// <summary>
         /// 处理仪表盘数据
@@ -449,6 +488,7 @@ namespace Wbs.Everdigm.Desktop
         private void Handle0x6004(TX300 obj, TB_Equipment equipment, TB_Terminal terminal)
         {
             _0x6004DX x6004 = new _0x6004DX();
+            x6004.Type = obj.TerminalType;
             x6004.Content = obj.MsgContent;
             x6004.Unpackage();
             if (null != equipment)
@@ -486,6 +526,25 @@ namespace Wbs.Everdigm.Desktop
             }
         }
         /// <summary>
+        /// 处理装载机的0x600B初始化运转时间的回复
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="equipment"></param>
+        /// <param name="terminal"></param>
+        private void Handle0x600B(TX300 obj, TB_Equipment equipment, TB_Terminal terminal)
+        {
+            _0x600B x600B = new _0x600B();
+            x600B.Content = obj.MsgContent;
+            x600B.Unpackage();
+            if (null != equipment)
+            {
+                EquipmentInstance.Update(f => f.id == equipment.id, act =>
+                {
+                    act.Runtime = (int)x600B.Worktime;
+                });
+            }
+        }
+        /// <summary>
         /// 处理DD00命令
         /// </summary>
         /// <param name="obj"></param>
@@ -500,10 +559,10 @@ namespace Wbs.Everdigm.Desktop
             {
                 EquipmentInstance.Update(f => f.id == equipment.id, act => { act.Signal = xdd00.CSQ; });
             }
-            if (null != terminal)
-            {
-                TerminalInstance.Update(f => f.id == terminal.id, act => { act.Firmware = xdd00.Firmware; });
-            }
+            //if (null != terminal)
+            //{
+            //    TerminalInstance.Update(f => f.id == terminal.id, act => { act.Firmware = xdd00.Firmware; });
+            //}
         }
         /// <summary>
         /// 处理EE00命令

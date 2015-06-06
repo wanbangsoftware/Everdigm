@@ -44,6 +44,8 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.tscbIMEI = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
+            this.tsmiFlushMtQueue = new System.Windows.Forms.ToolStripMenuItem();
             this.tsbtSend = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tstbData = new System.Windows.Forms.ToolStripTextBox();
@@ -60,6 +62,7 @@
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiExit = new System.Windows.Forms.ToolStripMenuItem();
             this.browser = new System.Windows.Forms.WebBrowser();
+            this.tsmiShowIridiumPackage = new System.Windows.Forms.ToolStripMenuItem();
             this.tsMain.SuspendLayout();
             this.ssMain.SuspendLayout();
             this.cmsNotifyMenu.SuspendLayout();
@@ -78,6 +81,7 @@
             this.toolStripSeparator3,
             this.toolStripLabel3,
             this.tscbIMEI,
+            this.toolStripSplitButton1,
             this.tsbtSend,
             this.toolStripSeparator4,
             this.tstbData,
@@ -92,6 +96,7 @@
             // 
             this.tsdbSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiShowHistory,
+            this.tsmiShowIridiumPackage,
             this.toolStripMenuItem2,
             this.tsmiStopFetchingAddress});
             this.tsdbSettings.Image = ((System.Drawing.Image)(resources.GetObject("tsdbSettings.Image")));
@@ -174,9 +179,27 @@
             this.tscbIMEI.DropDownWidth = 130;
             this.tscbIMEI.Items.AddRange(new object[] {
             "300234061921380",
+            "300234061944960",
             "300234062060500"});
             this.tscbIMEI.Name = "tscbIMEI";
             this.tscbIMEI.Size = new System.Drawing.Size(130, 25);
+            // 
+            // toolStripSplitButton1
+            // 
+            this.toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiFlushMtQueue});
+            this.toolStripSplitButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButton1.Image")));
+            this.toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripSplitButton1.Name = "toolStripSplitButton1";
+            this.toolStripSplitButton1.Size = new System.Drawing.Size(67, 22);
+            this.toolStripSplitButton1.Text = "Flag:";
+            // 
+            // tsmiFlushMtQueue
+            // 
+            this.tsmiFlushMtQueue.Name = "tsmiFlushMtQueue";
+            this.tsmiFlushMtQueue.Size = new System.Drawing.Size(170, 22);
+            this.tsmiFlushMtQueue.Text = "Flush MT Queue";
+            this.tsmiFlushMtQueue.Click += new System.EventHandler(this.tsmiFlushMtQueue_Click);
             // 
             // tsbtSend
             // 
@@ -301,6 +324,13 @@
             this.browser.TabIndex = 3;
             this.browser.Visible = false;
             // 
+            // tsmiShowIridiumPackage
+            // 
+            this.tsmiShowIridiumPackage.Name = "tsmiShowIridiumPackage";
+            this.tsmiShowIridiumPackage.Size = new System.Drawing.Size(316, 22);
+            this.tsmiShowIridiumPackage.Text = "Show Iridium packages";
+            this.tsmiShowIridiumPackage.Click += new System.EventHandler(this.tsmiShowIridiumPackage_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -360,6 +390,9 @@
         private System.Windows.Forms.ToolStripButton tsbtSend;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripComboBox tscbIMEI;
+        private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton1;
+        private System.Windows.Forms.ToolStripMenuItem tsmiFlushMtQueue;
+        private System.Windows.Forms.ToolStripMenuItem tsmiShowIridiumPackage;
     }
 }
 

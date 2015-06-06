@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Wbs.Protocol;
 using Wbs.Everdigm.Database;
 
 namespace Wbs.Everdigm.BLL
@@ -36,7 +37,7 @@ namespace Wbs.Everdigm.BLL
                 OnlineTime = (DateTime?)null,
                 Socket = 0,
                 Sim = "",
-                Type = "DX"
+                Type = TerminalTypes.DX
             };
         }
         /// <summary>

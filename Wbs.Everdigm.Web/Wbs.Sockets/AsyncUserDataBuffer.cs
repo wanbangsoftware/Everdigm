@@ -69,16 +69,26 @@ namespace Wbs.Sockets
         /// <param name="token"></param>
         /// <param name="buffer"></param>
         /// <param name="len"></param>
-        public void SetDataEvent(string IP, int port, byte[] buffer, int len)
+        public void SetDataEvent(string ip, int port, byte[] buffer, int len)
         {
             ReceiveTime = DateTime.Now;
             audb_buffer = new byte[len];
             System.Buffer.BlockCopy(buffer, 0, audb_buffer, 0, len);
             DataType = AsyncUserDataType.ReceivedData;
-            IP = IP;
+            IP = ip;
             Port = port;
             SocketHandle = 0;
             PackageType = AsyncDataPackageType.UDP;
+        }
+        public void SetDataEvent(AsyncUserToken token) {
+            ReceiveTime = DateTime.Now;
+            audb_buffer = new byte[token.Length];
+            System.Buffer.BlockCopy(token.Buffer, 0, audb_buffer, 0, token.Length);
+            DataType = AsyncUserDataType.ReceivedData;
+            IP = token.IP;
+            Port = token.Port;
+            SocketHandle = token.SocketHandle;
+            PackageType = AsyncDataPackageType.TCP;
         }
         /// <summary>
         /// 设置异步接收到的消息内容

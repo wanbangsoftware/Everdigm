@@ -100,7 +100,30 @@ namespace Wbs.Everdigm.Desktop
                     act.OnlineStyle = (byte)LinkType.BLIND;
                 });
         }
-
+        private byte GetOnlineStyleByPackage(AsyncDataPackageType type)
+        {
+            byte ret = (byte)LinkType.TCP;
+            switch (type)
+            {
+                case AsyncDataPackageType.SAT: ret = (byte)LinkType.SATELLITE; break;
+                case AsyncDataPackageType.SMS: ret = (byte)LinkType.SMS; break;
+                case AsyncDataPackageType.TCP: ret = (byte)LinkType.TCP; break;
+                case AsyncDataPackageType.UDP: ret = (byte)LinkType.UDP; break;
+            }
+            return ret;
+        }
+        private string GetOnlineStyle(AsyncDataPackageType type)
+        {
+            string ret = "TCP";
+            switch (type)
+            {
+                case AsyncDataPackageType.SAT: ret = "SAT"; break;
+                case AsyncDataPackageType.SMS: ret = "SMS"; break;
+                case AsyncDataPackageType.TCP: ret = "TCP"; break;
+                case AsyncDataPackageType.UDP: ret = "UDP"; break;
+            }
+            return ret;
+        }
         /// <summary>
         /// 更新在线时间和在线状态
         /// </summary>
@@ -119,10 +142,10 @@ namespace Wbs.Everdigm.Desktop
                 }
                 else
                 {
-                    act.OnlineStyle = (byte)(data.PackageType == AsyncDataPackageType.TCP ? LinkType.TCP : LinkType.UDP);
+                    act.OnlineStyle = GetOnlineStyleByPackage(data.PackageType);
                 }
                 act.LastAction = "0x" + CustomConvert.IntToDigit(CommandID, CustomConvert.HEX, 4);
-                act.LastActionBy = data.PackageType == AsyncDataPackageType.TCP ? "TCP" : "UDP";
+                act.LastActionBy = GetOnlineStyle(data.PackageType);
                 act.LastActionTime = data.ReceiveTime;
             });
             TerminalInstance.Update(f => f.Sim.Equals(sim), act =>
@@ -134,7 +157,7 @@ namespace Wbs.Everdigm.Desktop
                 }
                 else
                 {
-                    act.OnlineStyle = (byte)(data.PackageType == AsyncDataPackageType.TCP ? LinkType.TCP : LinkType.UDP);
+                    act.OnlineStyle = GetOnlineStyleByPackage(data.PackageType);
                 }
                 act.OnlineTime = data.ReceiveTime;
             });

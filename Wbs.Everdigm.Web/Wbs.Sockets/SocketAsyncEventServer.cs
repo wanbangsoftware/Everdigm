@@ -78,7 +78,7 @@ namespace Wbs.Sockets
         /// <summary>
         /// 最大连接数量。
         /// </summary>
-        private int dwMaxConnections = 5000;
+        private int dwMaxConnections = 10000;
         /// <summary>
         /// 服务器开放的端口号码。
         /// </summary>
@@ -362,6 +362,7 @@ namespace Wbs.Sockets
                 // 将客户端信息附加到用户信息上。
                 var aut = readEventArgs.UserToken as AsyncUserToken;
                 aut.Socket = e.AcceptSocket;
+                aut.RecycleData();
 
                 // 将新入的链接加入队列
                 lock (_clients)
@@ -433,52 +434,70 @@ namespace Wbs.Sockets
             if (e.BytesTransferred > 0 && e.SocketError == SocketError.Success)
             {
                 var token = e.UserToken as AsyncUserToken;
-                // 锁定socket？
-                lock (token.Socket)
+                lock (token)
                 {
-                    lock (_TCP_Buffer_Received)// 锁定缓冲区
+                    token.ReceiveData(e.BytesTransferred, e.Buffer, e.Offset);
+                    if (token.Length >= token.Buffer[0])
                     {
-                        //var token = e.UserToken as AsyncUserToken;
-                        var socket = token.SocketHandle;
-                        // 如果缓冲区中有这个socket的数据，说明之前的数据收到的不完整，需要再组包
-                        if (_TCP_Buffer_Received.ContainsKey(socket))
+                        // 如果收到的是完整的包则直接发给前台处理
+                        if (null != OnReceivedData)
                         {
-                            // 组包
-                            var data = _TCP_Buffer_Received[socket];
-                            data.ResizeData(e);
-                            if (data.Buffer.Length >= data.Buffer[0])
-                            {
-                                // 包长度足够之后从暂存缓存中移除节点
-                                _TCP_Buffer_Received.Remove(socket);
-                                // 发送消息
-                                OnReceivedData(this, new AsyncUserDataEvent() { Data = data });
-                            }
-                        }
-                        else
-                        {
-                            if (e.BytesTransferred >= e.Buffer[e.Offset])
-                            {
-                                // 如果收到的是完整的包则直接发给前台处理
-                                if (null != OnReceivedData)
-                                {
-                                    var aude = new AsyncUserDataEvent();
-                                    aude.Data = _bufferPool.Get();
-                                    aude.Data.SetDataEvent(e, 0);
-                                    aude.Data.PackageType = AsyncDataPackageType.TCP;
-                                    OnReceivedData(this, aude);
-                                }
-                            }
-                            else
-                            {
-                                //var aude = new AsyncUserDataEvent();
-                                var data = _bufferPool.Get();
-                                data.SetDataEvent(e, 0);
-                                data.PackageType = AsyncDataPackageType.TCP;
-                                _TCP_Buffer_Received.Add(socket, data);
-                            }
+                            var aude = new AsyncUserDataEvent();
+                            aude.Data = _bufferPool.Get();
+                            aude.Data.SetDataEvent(token);
+                            aude.Data.PackageType = AsyncDataPackageType.TCP;
+                            OnReceivedData(this, aude);
+                            // 消息接收完毕之后清空接收缓冲区
+                            token.RecycleData();
                         }
                     }
                 }
+                // 锁定socket？
+                //lock (token.Socket)
+                //{
+                //    lock (_TCP_Buffer_Received)// 锁定缓冲区
+                //    {
+                //        //var token = e.UserToken as AsyncUserToken;
+                //        var socket = token.SocketHandle;
+                //        // 如果缓冲区中有这个socket的数据，说明之前的数据收到的不完整，需要再组包
+                //        if (_TCP_Buffer_Received.ContainsKey(socket))
+                //        {
+                //            // 组包
+                //            var data = _TCP_Buffer_Received[socket];
+                //            data.ResizeData(e);
+                //            if (data.Buffer.Length >= data.Buffer[0])
+                //            {
+                //                // 包长度足够之后从暂存缓存中移除节点
+                //                _TCP_Buffer_Received.Remove(socket);
+                //                // 发送消息
+                //                OnReceivedData(this, new AsyncUserDataEvent() { Data = data });
+                //            }
+                //        }
+                //        else
+                //        {
+                //            if (e.BytesTransferred >= e.Buffer[e.Offset])
+                //            {
+                //                // 如果收到的是完整的包则直接发给前台处理
+                //                if (null != OnReceivedData)
+                //                {
+                //                    var aude = new AsyncUserDataEvent();
+                //                    aude.Data = _bufferPool.Get();
+                //                    aude.Data.SetDataEvent(e, 0);
+                //                    aude.Data.PackageType = AsyncDataPackageType.TCP;
+                //                    OnReceivedData(this, aude);
+                //                }
+                //            }
+                //            else
+                //            {
+                //                //var aude = new AsyncUserDataEvent();
+                //                var data = _bufferPool.Get();
+                //                data.SetDataEvent(e, 0);
+                //                data.PackageType = AsyncDataPackageType.TCP;
+                //                _TCP_Buffer_Received.Add(socket, data);
+                //            }
+                //        }
+                //    }
+                //}
                 //回传收到的信息。
                 //e.SetBuffer(e.Offset, e.BytesTransferred);
                 //e.SetBuffer(0, 0);

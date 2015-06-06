@@ -14,6 +14,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using Wbs.Utilities;
+using Wbs.Sockets;
 
 namespace Wbs.Everdigm.Desktop
 {
@@ -50,9 +51,31 @@ namespace Wbs.Everdigm.Desktop
             this.Width = (int)((width * 1.0) * 2 / 3);
             this.Height = (int)(height * 1.0 * 4 / 5);
         }
-        private void OnServerMessage(object sender, string message)
+        private void OnServerMessage(object sender, UIEventArgs e)
         {
-            ShowHistory(message, false);
+            ShowHistory(e.Message, false);
+        }
+        /// <summary>
+        /// 接收到铱星模块发送的数据
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnIridiumReceive(object sender, IridiumDataEvent e)
+        {
+            // 加入铱星数据待处理列表
+            _server.EnqueueIridiumData(e);
+        }
+        /// <summary>
+        /// 铱星发送命令事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnIridiumSend(object sender, IridiumDataEvent e)
+        {
+            tstbData.Text = CustomConvert.GetHex(e.Data.Payload);
+            tsbtSend.PerformClick();
+            ShowHistory("Iridium Command: " + tstbData.Text, true);
+            e = null;
         }
         /// <summary>
         /// 初始化并启动服务
@@ -63,7 +86,8 @@ namespace Wbs.Everdigm.Desktop
             if (null == _server)
             {
                 _server = new SocketServer(port);
-                _server.OnMessage += new EventHandler<string>(OnServerMessage);
+                _server.OnMessage += new EventHandler<UIEventArgs>(OnServerMessage);
+                _server.OnIridiumSend += new EventHandler<IridiumDataEvent>(OnIridiumSend);
                 _server.StartUDP = true;
                 _server.Start();
                 tsmiStartService.Enabled = !_server.Started;
@@ -73,7 +97,9 @@ namespace Wbs.Everdigm.Desktop
             if (null == _iridium)
             {
                 _iridium = new IridiumServer();
-                _iridium.OnMessage += new EventHandler<string>(OnServerMessage);
+                _iridium.ShowPackageInformation = tsmiShowIridiumPackage.Checked;
+                _iridium.OnMessage += new EventHandler<UIEventArgs>(OnServerMessage);
+                _iridium.OnIridiumReceive += new EventHandler<IridiumDataEvent>(OnIridiumReceive);
                 _iridium.Start(int.Parse(tstbIridiumPort.Text));
             }
         }
@@ -104,7 +130,7 @@ namespace Wbs.Everdigm.Desktop
         /// <summary>
         /// 获取当前时间
         /// </summary>
-        private string Now { get { return DateTime.Now.ToString("[yyyy/MM/dd HH:mm:ss] "); } }
+        private string Now { get { return DateTime.Now.ToString("[yyyy/MM/dd HH:mm:ss.fff] "); } }
         /// <summary>
         /// 显示历史记录
         /// </summary>
@@ -225,8 +251,9 @@ namespace Wbs.Everdigm.Desktop
             if (IsClose)
             {
                 StopService();
-                Wbs.Utilities.Win32.TimeDelay(1000);
+                Wbs.Utilities.Win32.TimeDelay(2000);
                 SaveFile();
+                Wbs.Utilities.Win32.TimeDelay(5000);
             }
             else
             {
@@ -293,11 +320,28 @@ namespace Wbs.Everdigm.Desktop
 
         private void tsbtAnalyse_Click(object sender, EventArgs e)
         {
-
+            //uint shor = IririumMTMSN.CalculateMTMSN(DateTime.Now, mtmsn++);
+            //byte[] b = BitConverter.GetBytes(shor);
+            //ShowHistory("short: " + shor + ", byte: " + CustomConvert.GetHex(b) + ", to: " + CustomConvert.GetHex(CustomConvert.reserve(b)), false);
+            //if (shor == 0)
+            //{ shor = 1; }
+            var temp = CustomConvert.GetBytes(tstbData.Text.Trim());
+            var len = temp.Length;
+            var buffer = new IridiumBuffer();
+            buffer.socket = null;
+            buffer.length = len;
+            buffer.buffer = new byte[len];
+            Buffer.BlockCopy(temp, 0, buffer.buffer, 0, len);
+            _iridium.AddQueue(buffer);
+            temp = null;
         }
 
         private void tsbtSend_Click(object sender, EventArgs e)
         {
+            if (_iridium.ShowPackageInformation)
+            {
+                ShowHistory(Environment.NewLine + Now + "MT operation begin, try to connect Iridium server...", false);
+            }
             tsbtSend.Enabled = false;
             var client = new TcpClient();
             client.BeginConnect(IPAddress.Parse(tstbIridiumServer.Text), int.Parse(tstbIridiumPort.Text),
@@ -312,15 +356,33 @@ namespace Wbs.Everdigm.Desktop
             });
             task.Start();
         }
+        private ushort TodaySeconds
+        {
+            get
+            {
+                DateTime now = DateTime.Now;
+                DateTime today = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
+                TimeSpan tsNow = new TimeSpan(now.Ticks);
+                TimeSpan tsToday = new TimeSpan(today.Ticks);
+                uint seconds = (uint)tsNow.Subtract(tsToday).Duration().TotalSeconds;
 
+                return (ushort)(seconds % ushort.MaxValue);
+            }
+        }
+        private ushort mtmsn = 0;
+        private bool FlushMTQueue = false;
         private void Connected_Callback(IAsyncResult ar)
         {
-            TcpClient client = (TcpClient)ar.AsyncState;
-            try {
+            try
+            {
+                TcpClient client = (TcpClient)ar.AsyncState;
                 if (client.Connected)
                 {
                     client.EndConnect(ar);
-                    ShowHistory("Iridium server connected.", true);
+                    if (_iridium.ShowPackageInformation)
+                    {
+                        ShowHistory("Iridium server has connected.", true);
+                    }
                     ClientState cs = new ClientState();
                     cs.client = client;
                     cs.length = 0;
@@ -333,18 +395,21 @@ namespace Wbs.Everdigm.Desktop
                     mtp.Package();
                     // Header
                     MTHeader mth = new MTHeader();
-                    mth.UniqueID = (uint)CustomConvert.DateTimeToJavascriptDate(DateTime.Now);
+                    mth.UniqueID = IririumMTMSN.CalculateMTMSN(DateTime.Now, mtmsn++);
                     mth.IMEI = tscbIMEI.Text;
-                    mth.DispositionFlags = 0;
+                    mth.DispositionFlags = (ushort)(FlushMTQueue ? 1 : 32);
                     mth.Package();
                     // 整包
                     Iridium iridium = new Iridium();
-                    iridium.Content = new byte[mtp.Content.Length + mth.Content.Length];
+                    iridium.Content = new byte[mth.Content.Length + (FlushMTQueue ? 0 : mtp.Content.Length)];
                     Buffer.BlockCopy(mth.Content, 0, iridium.Content, 0, mth.Content.Length);
-                    Buffer.BlockCopy(mtp.Content, 0, iridium.Content, mth.Content.Length, mtp.Content.Length);
+                    if (!FlushMTQueue)
+                    {
+                        // 如果不是删除队列标记则添加payload数据
+                        Buffer.BlockCopy(mtp.Content, 0, iridium.Content, mth.Content.Length, mtp.Content.Length);
+                    }
                     iridium.Package();
 
-                    //ShowHistory("MT: " + CustomConvert.GetHex(iridium.PackageContent), true);
                     client.GetStream().Write(iridium.PackageContent, 0, iridium.PackageContent.Length);
                     var buffer = new IridiumBuffer();
                     buffer.length = iridium.PackageContent.Length;
@@ -354,54 +419,95 @@ namespace Wbs.Everdigm.Desktop
                 }
                 else
                 {
-                    ShowHistory("Can not establish connect", true);
+                    ShowHistory("Can not establish connect to Iridium server.", true);
                     client.Close();
                     client = null;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ShowHistory("Connect_Callback error: " + e.Message + Environment.NewLine + e.StackTrace, true);
             }
         }
         private void Read_Callback(IAsyncResult ar)
         {
-            ClientState cs = (ClientState)ar.AsyncState;
-            var len = cs.client.GetStream().EndRead(ar);
-            if (len > 0)
+            try
             {
-                if (null == cs.received)
+                ClientState cs = (ClientState)ar.AsyncState;
+                if (null == cs) return;
+                if (null == cs.client) return;
+                if (!cs.client.Connected)
                 {
-                    cs.received = new byte[len];
-                    cs.length = len;
+                    cs.Dispose();
+                    cs.client.GetStream().Close();
+                    cs.client.Close();
+                    cs.client = null;
+                    return;
+                }
+                var len = cs.client.GetStream().EndRead(ar);
+                if (len > 0)
+                {
+                    if (null == cs.received)
+                    {
+                        cs.received = new byte[len];
+                        cs.length = len;
+                    }
+                    else
+                    {
+                        cs.length += len;
+                        cs.received = CustomConvert.expand(cs.received, cs.length);
+                    }
+                    Buffer.BlockCopy(cs.buffer, 0, cs.received, cs.length - len, len);
+                    cs.client.GetStream().BeginRead(cs.buffer, 0, ClientState.SIZE, new AsyncCallback(Read_Callback), cs);
+                    if (cs.length >= cs.received[2])
+                    {
+                        var buffer = new IridiumBuffer();
+                        buffer.socket = null;
+                        buffer.length = cs.length;
+                        buffer.buffer = new byte[cs.length];
+                        Buffer.BlockCopy(cs.received, 0, buffer.buffer, 0, cs.length);
+                        cs.length = 0;
+                        cs.received = null;
+                        _iridium.AddQueue(buffer);
+                        try
+                        {
+                            cs.Dispose();
+                            cs.client.GetStream().Close();
+                            cs.client.Close();
+                            if (_iridium.ShowPackageInformation)
+                                ShowHistory("MT operation complete, client disconnected.", true);
+                        }
+                        catch (Exception e)
+                        {
+                            ShowHistory("Handle Iridium package error: " + e.Message + Environment.NewLine + e.StackTrace, true);
+                        }
+                        finally
+                        {
+                            cs.client = null;
+                            cs = null;
+                        }
+                    }
                 }
                 else
                 {
-                    cs.length += len;
-                    cs.received = CustomConvert.expand(cs.received, cs.length);
-                }
-                Buffer.BlockCopy(cs.buffer, 0, cs.received, cs.length - len, len);
-                cs.client.GetStream().BeginRead(cs.buffer, 0, ClientState.SIZE, new AsyncCallback(Read_Callback), cs);
-                if (cs.length >= cs.received[2])
-                {
-                    var buffer = new IridiumBuffer();
-                    buffer.socket = null;
-                    buffer.length = cs.length;
-                    buffer.buffer = new byte[cs.length];
-                    Buffer.BlockCopy(cs.received, 0, buffer.buffer, 0, cs.length);
-                    cs.length = 0;
-                    cs.received = null;
-                    _iridium.AddQueue(buffer);
+                    try
+                    {
+                        cs.Dispose();
+                        cs.client.GetStream().Close();
+                        cs.client.Close();
+                    }
+                    catch (Exception ee)
+                    {
+                        ShowHistory("Handle Iridium package error(len<=0): " + ee.Message + Environment.NewLine + ee.StackTrace, true);
+                    }
+                    finally
+                    {
+                        cs = null;
+                    }
                 }
             }
-            else
-            {
-                cs.Dispose();
-                cs.client.GetStream().Close();
-                cs.client.Close();
-                cs.client = null;
-                cs = null;
-            }
+            catch (Exception error)
+            { ShowHistory("Read_Callback error: " + error.Message + Environment.NewLine + error.StackTrace, true); }
         }
 
         private class ClientState : IDisposable
@@ -417,6 +523,21 @@ namespace Wbs.Everdigm.Desktop
             {
                 length = 0;
                 received = null;
+            }
+        }
+
+        private void tsmiFlushMtQueue_Click(object sender, EventArgs e)
+        {
+            tsmiFlushMtQueue.Checked = !tsmiFlushMtQueue.Checked;
+            FlushMTQueue = tsmiFlushMtQueue.Checked;
+        }
+
+        private void tsmiShowIridiumPackage_Click(object sender, EventArgs e)
+        {
+            tsmiShowIridiumPackage.Checked = !tsmiShowIridiumPackage.Checked;
+            if (null != _iridium)
+            {
+                _iridium.ShowPackageInformation = tsmiShowIridiumPackage.Checked;
             }
         }
     }

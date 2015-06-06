@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Wbs.Everdigm.BLL</RootNamespace>
     <AssemblyName>Wbs.Everdigm.BLL</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -61,12 +61,15 @@
     <Compile Include="ErrorBLL.cs" />
     <Compile Include="HistoryBLL.cs" />
     <Compile Include="InterfaceBaseService.cs" />
+    <Compile Include="IririumFlowBLL.cs" />
+    <Compile Include="IririumMTMSNBLL.cs" />
     <Compile Include="PermissionBLL.cs" />
     <Compile Include="PositionBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleBLL.cs" />
     <Compile Include="SatelliteBLL.cs" />
     <Compile Include="SettingBLL.cs" />
+    <Compile Include="SmsBLL.cs" />
     <Compile Include="StoreHistoryBLL.cs" />
     <Compile Include="TerminalBLL.cs" />
     <Compile Include="TrackerBLL.cs" />
@@ -74,6 +77,10 @@
     <Compile Include="WarehouseBLL.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Protocol\Wbs.Protocol.csproj">
+      <Project>{956772bb-347d-49c5-ae80-afa5f42fb192}</Project>
+      <Name>Wbs.Protocol</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Wbs.Everdigm.Database\Wbs.Everdigm.Database.csproj">
       <Project>{20e609ac-7671-4dcc-907d-d46c49a3334a}</Project>
       <Name>Wbs.Everdigm.Database</Name>

@@ -26,6 +26,7 @@ namespace Wbs.Everdigm.BLL
                 ActualSendTime = (DateTime?)null,
                 Command = "",
                 Content = "",
+                IridiumMTMSN = 0,
                 DataType = 2,
                 Terminal = (int?)null,
                 DestinationNo = "",

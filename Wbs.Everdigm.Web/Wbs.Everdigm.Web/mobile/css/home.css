@@ -24,6 +24,18 @@
 .invest-type .safe{display:block; height:25px; line-height:25px; color:#A0ABB2; font-size:12px}
 .invest-type .safe b{ margin:-2px 0 0 -3px}
 .invest-type .safe .total-num{ float:right; font-size:12px; color:#9FABB2}
+    .invest-type .lock-none {
+        color: #009933;
+    }
+    .invest-type .lock-disable {
+        color: #CCCCCC;
+    }
+    .invest-type .lock-partial {
+        color:#FF9900;
+    }
+    .invest-type .lock-full {
+        color: #CC3300;
+    }
 .disabled dt .status{color:#9FABB2}
 .iconleft{-moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius:5px; position:absolute; top:5px; left:-5px;display: inline-block; overflow: hidden; width: 50px; height: 50px; line-height: 50px; text-align: center; vertical-align: text-top; }
 .iconleft img{width: 45px;}

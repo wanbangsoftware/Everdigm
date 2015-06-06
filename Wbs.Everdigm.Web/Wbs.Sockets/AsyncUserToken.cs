@@ -14,6 +14,12 @@ namespace Wbs.Sockets
         private string aut_ip;
         private int aut_port;
         private int aut_handle;
+        private int length;
+        /// <summary>
+        /// 缓冲区大小
+        /// </summary>
+        private const int BUFFER_SIZE = 1024;
+        private byte[] buffer = new byte[BUFFER_SIZE];
         /// <summary>
         /// 实例化一个新的用户数据结构体并指定用户节点所用的 socket 。
         /// </summary>
@@ -76,6 +82,34 @@ namespace Wbs.Sockets
         public int SocketHandle
         {
             get { return aut_handle; }
+        }
+        /// <summary>
+        /// 接收到的数据长度
+        /// </summary>
+        public int Length { get { return length; } }
+        /// <summary>
+        /// 接收到的数据内容
+        /// </summary>
+        public byte[] Buffer { get { return buffer; } }
+        /// <summary>
+        /// 将接收到的数据加入缓冲区
+        /// </summary>
+        /// <param name="len"></param>
+        /// <param name="data"></param>
+        public void ReceiveData(int len, byte[] data, int start)
+        {
+            if (null == data || data.Length < 1)
+                return;
+
+            System.Buffer.BlockCopy(data, start, buffer, length, len);
+            length += len;
+        }
+        /// <summary>
+        /// 重置缓冲区
+        /// </summary>
+        public void RecycleData()
+        {
+            length = 0;
         }
         /// <summary>
         /// 销毁实体所占资源

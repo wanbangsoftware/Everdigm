@@ -18,7 +18,11 @@ namespace Wbs.Everdigm.Desktop
         /// <summary>
         /// 收到消息时的事务处理过程
         /// </summary>
-        public EventHandler<string> OnMessage;
+        public EventHandler<UIEventArgs> OnMessage;
+        /// <summary>
+        /// 铱星要发送命令的事件
+        /// </summary>
+        public EventHandler<IridiumDataEvent> OnIridiumSend;
         /// <summary>
         /// IOCP网络服务
         /// </summary>
@@ -27,6 +31,7 @@ namespace Wbs.Everdigm.Desktop
         /// 待处理数据缓冲区(这个是线程安全的，所以不必再费心自己加读写锁)
         /// </summary>
         private static ConcurrentQueue<AsyncUserDataBuffer> _dataPool;
+        private static ConcurrentQueue<IridiumData> _iridiumPool;
         /// <summary>
         /// 端口
         /// </summary>
@@ -62,6 +67,7 @@ namespace Wbs.Everdigm.Desktop
         private void InitializeDataPool()
         {
             _dataPool = new ConcurrentQueue<AsyncUserDataBuffer>();
+            _iridiumPool = new ConcurrentQueue<IridiumData>();
         }
         /// <summary>
         /// 初始化服务端
@@ -145,6 +151,14 @@ namespace Wbs.Everdigm.Desktop
         {
             _dataPool.Enqueue(e.Data);
         }
+        /// <summary>
+        /// 将接收到的卫星数据放入待处理缓冲区
+        /// </summary>
+        /// <param name="e"></param>
+        public void EnqueueIridiumData(IridiumDataEvent e)
+        {
+            _iridiumPool.Enqueue(e.Data);
+        }
         private string DateTime(DateTime dt)
         {
             return dt.ToString("[yyyy/MM/dd HH:mm:ss.fff] ");
@@ -153,10 +167,10 @@ namespace Wbs.Everdigm.Desktop
         /// 数据处理时出错的信息
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="message"></param>
-        private void DataHandler_OnUnhandledMessage(object sender, string message)
+        /// <param name="e"></param>
+        private void DataHandler_OnUnhandledMessage(object sender, UIEventArgs e)
         {
-            HandleDisplayMessage(message);
+            HandleDisplayMessage(e.Message);
         }
         /// <summary>
         /// 向主界面提交显示信息申请
@@ -166,7 +180,14 @@ namespace Wbs.Everdigm.Desktop
         {
             if (null != OnMessage)
             {
-                OnMessage(this, message);
+                OnMessage(this, new UIEventArgs() { Message = message });
+            }
+        }
+        private void DataHandler_OnIridiumSend(object sender, IridiumDataEvent e)
+        {
+            if (null != OnIridiumSend)
+            {
+                OnIridiumSend(this, e);
             }
         }
         /// <summary>
@@ -176,9 +197,11 @@ namespace Wbs.Everdigm.Desktop
         {
             var stat = (int)state;
             AsyncUserDataBuffer obj;
+            IridiumData iridium;
             // 处理数据的Handler
             DataHandler _handler = new DataHandler();
-            _handler.OnUnhandledMessage += new EventHandler<string>(DataHandler_OnUnhandledMessage);
+            _handler.OnUnhandledMessage += new EventHandler<UIEventArgs>(DataHandler_OnUnhandledMessage);
+            _handler.OnIridiumSend += new EventHandler<IridiumDataEvent>(DataHandler_OnIridiumSend);
             _handler.Server = _tcpServer;
             int timer = 0, sleeper = 10, gpsHandler = 0;
 
@@ -231,6 +254,17 @@ namespace Wbs.Everdigm.Desktop
                         _tcpServer.RecycleBuffer(obj);
                     }
                 }
+
+                // 查找是否有铱星数据待处理
+                iridium = null;
+                if (!_iridiumPool.TryDequeue(out iridium)) iridium = null;
+                if (null != iridium)
+                {
+                    // 处理铱星数据
+                    _handler.HandleIridiumData(iridium);
+                }
+
+
                 // 处理TCP下发送的命令
                 if (timer % 1000 == 0)
                 {
@@ -241,7 +275,8 @@ namespace Wbs.Everdigm.Desktop
                     {
                         try
                         {
-                            _handler.CheckCommand();
+                            _handler.CheckTcpCommand();
+                            _handler.CheckIridiumCommand();
                             if (gpsHandler % sleeper == 0) {
                                 gpsHandler = 0;
                                 // 处理一次定位信息

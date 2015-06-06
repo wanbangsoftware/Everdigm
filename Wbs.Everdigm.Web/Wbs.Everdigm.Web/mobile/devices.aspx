@@ -6,9 +6,10 @@
     <link href="../bootstrap3/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" />
     <link href="css/style.css" rel="stylesheet" />
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="TitleContentPlaceHolder" runat="server">
+<asp:Content ID="Content2" ContentPlaceHolderID="TitleContentPlaceHolderLeft" runat="server">
     <a href="javascript:history.go(-1);" class="backto"><span class="glyphicon glyphicon-arrow-left"></span></a>
-    <div class="reg-log">Everdigm mobile</div>
+</asp:Content>
+<asp:Content ID="Content5" ContentPlaceHolderID="TitleContentPlaceHolderRight" runat="server">
     <a href="javascript:location.reload();" class="forwordto"><span class="glyphicon glyphicon-refresh"></span></a>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="BodyContentPlaceHolder" runat="server">

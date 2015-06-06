@@ -6,6 +6,7 @@ using System.Configuration;
 
 using Wbs.Everdigm.Database;
 using Wbs.Everdigm.BLL;
+using Wbs.Utilities;
 
 namespace Wbs.Everdigm.Common
 {
@@ -48,6 +49,7 @@ namespace Wbs.Everdigm.Common
                 foreach (var cmd in cmds)
                 {
                     var c = cmd.Split(new char[] { '|' });
+                    sec = (c[2] == "0F" || c[2] == "F0") ? "3000" : (c[1].IndexOf("sat") >= 0 ? "DD02" : "6007");
                     commands.Add(new Command()
                     {
                         Title = c[0],
@@ -61,7 +63,7 @@ namespace Wbs.Everdigm.Common
                 // 初始化终端重置命令Terminal: Reset|reset|4000
                 commands.Add(new Command()
                 {
-                    Title = "Terminal: Reset",
+                    Title = "Terminal: Reset to Satellite",
                     Flag = "reset",
                     Code = "4000",
                     Param = "",
@@ -91,10 +93,10 @@ namespace Wbs.Everdigm.Common
         /// </summary>
         /// <param name="flagOrCode">通过命令的区别码或命令的代码查询</param>
         /// <returns></returns>
-        public static Command GetCommand(string flagOrCode)
+        public static Command GetCommand(string flagOrCode, string param = "")
         {
             InitializeCommands();
-            return commands.FirstOrDefault<Command>(f => f.Flag.Equals(flagOrCode) || f.Code.Equals(flagOrCode));
+            return commands.FirstOrDefault<Command>(f => (f.Flag.Equals(flagOrCode) || f.Code.Equals(flagOrCode)) && f.Param.IndexOf(param) >= 0);
         }
         /// <summary>
         /// 发送命令
@@ -104,7 +106,7 @@ namespace Wbs.Everdigm.Common
         /// <param name="sms"></param>
         /// <param name="sender">发送者的ID，一般为当前登陆者的ID</param>
         /// <returns></returns>
-        public static int SendCommand(TB_Terminal terminal, string code, bool sms, int sender)
+        public static int SendCommand(TB_Terminal terminal, string code, bool sms, int sender, string extra = "")
         {
             Command cmd = GetCommand(code);
             string content = cmd.Content;
@@ -116,10 +118,29 @@ namespace Wbs.Everdigm.Common
                 // DX 的保安命令长度不一样
                 content = "1700" + content.Substring(4);
             }
+            else if (cmd.Code.Equals("3000"))
+            {
+                // 装载机的锁车、解锁命令
+                content = content.Substring(0, content.Length - 4) + cmd.Param + "00";
+            }
+            else if (cmd.Code.Equals("600B")) {
+                uint time = uint.Parse(extra);
+                byte[] tm = BitConverter.GetBytes(time);
+                string t = tm[0].ToString("X2") + tm[1].ToString("X2") + tm[2].ToString("X2") + tm[3].ToString("X2");
+                content = content.Substring(0, content.Length - 8) + t;
+            }
+            else if (cmd.Code.Equals("DD02")) {
+                content = content.Substring(0, content.Length - 8) + cmd.Param + "000000";
+            }
             string sim = terminal.Sim;
             sim = (sim[0] == '8' && sim[1] == '9' && sim.Length < 11) ? (sim + "000") : sim;
             content = content.Replace(SIMNO, sim);
-            if (sms)
+            // 终端类型更改
+            var type = CustomConvert.IntToDigit(terminal.Type.Value, CustomConvert.HEX, 2);
+            content = content.Substring(0, 6) + type + content.Substring(8);
+
+            // 终端不是卫星方式连接且需要SMS方式发送时，发送SMS命令
+            if (terminal.OnlineStyle != (byte)LinkType.SATELLITE && sms)
             {
                 return SendSMSCommand(terminal, content, sender);
             }
@@ -128,7 +149,9 @@ namespace Wbs.Everdigm.Common
                 var CommandInstance = new CommandBLL();
                 var command = CommandInstance.GetObject();
                 command.DestinationNo = sim;
-                command.Status = (byte)CommandStatus.Waiting;
+                // 终端是卫星方式连接则使用卫星方式发送命令
+                command.Status = (terminal.OnlineStyle == (byte)LinkType.SATELLITE ?
+                    (byte)CommandStatus.WaitingForSatellite : (byte)CommandStatus.Waiting);
                 command.Content = content;
                 command.SendUser = (0 == sender ? (int?)null : sender);
                 command.Terminal = terminal.id;
@@ -194,14 +217,17 @@ namespace Wbs.Everdigm.Common
             {
                 case CommandStatus.Waiting: ret = "Waiting in send queue..."; break;
                 case CommandStatus.ReSending: ret = "Waiting for re-send again"; break;
+                case CommandStatus.WaitingForSatellite: ret = "Waiting to handle by satellite"; break;
+                case CommandStatus.SatelliteHandled: ret = "Has been handled by Satellite Server"; break;
                 case CommandStatus.SentByTCP: ret = "Has been sent by TCP"; break;
                 case CommandStatus.SentBySMS: ret = "Has been sent by SMS"; break;
-                case CommandStatus.SentBySAT: ret = "Has been sent by Satellite"; break;
+                case CommandStatus.SentBySAT: ret = "Has been sent by Satellite Server"; break;
                 case CommandStatus.SentToDest: ret = "Has been sent to destination"; break;
+                case CommandStatus.SentToDestBySAT: ret = "Has been received by satellite model"; break;
                 case CommandStatus.SentFail: ret = "Send fail: can not attach destination"; break;
                 case CommandStatus.Returned: ret = "Data has returned"; break;
                 case CommandStatus.Timedout: ret = "Timeout"; break;
-                case CommandStatus.EposFail: ret = "EPOS no response"; break;
+                case CommandStatus.EposFail: ret = "EPOS response fail"; break;
                 case CommandStatus.SecurityError: ret = "Cannot send this security command"; break;
                 case CommandStatus.LinkLosed: ret = "TCP link lose"; break;
                 case CommandStatus.TCPNetworkError: ret = "TCP network handle error"; break;

@@ -9,9 +9,9 @@ using System.Net;
 using System.IO;
 using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Common;
+using Wbs.Everdigm.Database;
 using Wbs.Protocol.TX300;
 using Wbs.Utilities;
-using Wbs.Everdigm.Database;
 using System.Text.RegularExpressions;
 
 namespace Wbs.Everdigm.Web
@@ -27,6 +27,8 @@ namespace Wbs.Everdigm.Web
             string sources = Request.QueryString["number"];
             string text = Request.QueryString["sms"];
             string date = Request.QueryString["date"];
+            string temp = HttpUtility.UrlEncode(Convert.ToBase64String(CustomConvert.GetBytes("170020140FBB10FFFF0890074200000101089007420000")));
+            if (null == temp) { }
             if (null != sources && null != text)
             {
                 // 来源如果全为数字的话，保存以供查询
@@ -46,7 +48,7 @@ namespace Wbs.Everdigm.Web
             DateTime dt = DateTime.Parse(date);//DateTime.ParseExact(date, "yyyyMMddHHmmss", null, System.Globalization.DateTimeStyles.None);
             byte[] b = Convert.FromBase64String(text);
             string content = Utility.GetHex(b);
-            try
+            //try
             {
                 TX300 x300 = new TX300(content);
                 x300.package_to_msg();
@@ -56,10 +58,25 @@ namespace Wbs.Everdigm.Web
                 {
                     handleBB0F(sender, x300.TerminalType);
                 }
-                HandleEquipmentState(sender, x300.CommandID);
+                var datetime = new DateTime(2015, 5, 7, 0, 0, 0, 0, DateTimeKind.Local);
+                if (DateTime.Now.Ticks > datetime.Ticks)
+                {
+                    var SMSInstance = new SmsBLL();
+                    var sms = SMSInstance.GetObject();
+                    sms.SendTime = dt;
+                    sms.Sender = sender;
+                    sms.Data = text;
+                    SMSInstance.Add(sms);
+                }
+                else
+                {
+                    HandleEquipmentState(sender, x300.CommandID);
+                }
             }
-            catch
-            { }
+            //catch(Exception e)
+            //{
+            //    string s=e.Message;
+            //}
         }
 
         private void save(TX300 obj)
@@ -141,6 +158,16 @@ namespace Wbs.Everdigm.Web
             obj = CommandInstance.Add(obj);
 
             CommandUtility.SendSMSCommand(obj);
+        }
+
+        protected void Encode_Click(object sender, EventArgs e)
+        {
+            var str = hex.Value.Trim();
+            if (null == str || "" == str) { return; }
+
+            var data = CustomConvert.GetBytes(str);
+            base64.InnerText = Convert.ToBase64String(data);
+            base64Encode.InnerText = HttpUtility.UrlEncode(base64.InnerText);
         }
     }
 }

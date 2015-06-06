@@ -25,7 +25,7 @@ namespace Wbs.Everdigm.Desktop
         /// <summary>
         /// 无法处理的数据
         /// </summary>
-        public EventHandler<string> OnUnhandledMessage = null;
+        public EventHandler<UIEventArgs> OnUnhandledMessage = null;
         /// <summary>
         /// 当前的Socket服务
         /// </summary>
@@ -82,6 +82,11 @@ namespace Wbs.Everdigm.Desktop
                         }
                         break;
                 }
+                if (data.PackageType == AsyncDataPackageType.SAT)
+                {
+                    data.Dispose();
+                    data = null;
+                }
             }
             catch (Exception e)
             {
@@ -100,7 +105,7 @@ namespace Wbs.Everdigm.Desktop
         {
             if (null != OnUnhandledMessage)
             {
-                OnUnhandledMessage(this, message);
+                OnUnhandledMessage(this, new UIEventArgs() { Message = message });
             }
         }
         /// <summary>
