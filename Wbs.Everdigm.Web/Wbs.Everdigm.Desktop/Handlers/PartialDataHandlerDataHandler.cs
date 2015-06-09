@@ -259,6 +259,10 @@ namespace Wbs.Everdigm.Desktop
                 }
             });
         }
+        
+        private string GetPackageType(byte packageType) {
+            return packageType == Protocol.ProtocolTypes.SATELLITE ? "(SAT)" : "(GSM)";
+        }
         /// <summary>
         /// 处理命令回复的定位信息
         /// </summary>
@@ -283,7 +287,7 @@ namespace Wbs.Everdigm.Desktop
                 }
             }
             if (x1000.GPSInfo.Available)
-                SaveGpsInfo(x1000.GPSInfo, equipment, obj.TerminalID, "Position command");
+                SaveGpsInfo(x1000.GPSInfo, equipment, obj.TerminalID, "Position command" + GetPackageType(obj.ProtocolType));
         }
         /// <summary>
         /// 从0x1001数据中取得定位信息记录
@@ -300,7 +304,7 @@ namespace Wbs.Everdigm.Desktop
             info.Longitude = first ? obj.Longitude_1 : obj.Longitude_2;
             //info.SectorCode = obj.Sector;
             //info.StationCode = obj.Station;
-            info.Type = "Period report";
+            //info.Type = "Period report" + GetPackageType(obj.ProtocolType);
             return info;
         }
         /// <summary>
@@ -334,7 +338,7 @@ namespace Wbs.Everdigm.Desktop
                 pos.Equipment = null == equipment ? (int?)null : equipment.id;
                 pos.Terminal = obj.TerminalID;
                 pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
-                pos.Type = "Period report";
+                pos.Type = "Period report" + GetPackageType(obj.ProtocolType);
                 PositionInstance.Add(pos);
             }
 
@@ -344,7 +348,7 @@ namespace Wbs.Everdigm.Desktop
                 pos.Equipment = null == equipment ? (int?)null : equipment.id;
                 pos.Terminal = obj.TerminalID;
                 pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
-                pos.Type = "Period report";
+                pos.Type = "Period report" + GetPackageType(obj.ProtocolType);
                 PositionInstance.Add(pos);
             }
         }
@@ -379,7 +383,7 @@ namespace Wbs.Everdigm.Desktop
             }
             long gps = -1;
             if (x2000.GPSInfo.Available)
-                gps = SaveGpsInfo(x2000.GPSInfo, equipment, obj.TerminalID, "Alarm report");
+                gps = SaveGpsInfo(x2000.GPSInfo, equipment, obj.TerminalID, "Alarm report" + GetPackageType(obj.ProtocolType));
             // 保存报警信息
             SaveAlarm(equipment, obj.TerminalID, gps, x2000.AlarmBIN);
         }
@@ -419,7 +423,7 @@ namespace Wbs.Everdigm.Desktop
             }
             if (x3000.GPSInfo.Available)
             {
-                SaveGpsInfo(x3000.GPSInfo, equipment, obj.TerminalID, ("Security: " + x3000.Flag));
+                SaveGpsInfo(x3000.GPSInfo, equipment, obj.TerminalID, ("Security: " + x3000.Flag + GetPackageType(obj.ProtocolType)));
             }
         }
         /// <summary>
@@ -459,7 +463,7 @@ namespace Wbs.Everdigm.Desktop
                 });
             }
             if (x5000.GPSInfo.Available)
-                SaveGpsInfo(x5000.GPSInfo, equipment, obj.TerminalID, "Eng.: " + x5000.State);
+                SaveGpsInfo(x5000.GPSInfo, equipment, obj.TerminalID, "Eng.: " + x5000.State + GetPackageType(obj.ProtocolType));
         }
         /// <summary>
         /// 处理仪表盘数据
@@ -635,7 +639,7 @@ namespace Wbs.Everdigm.Desktop
                 });
             }
             if (xff00.GPSInfo.Available)
-                SaveGpsInfo(xff00.GPSInfo, equipment, obj.TerminalID, "Battery OFF");
+                SaveGpsInfo(xff00.GPSInfo, equipment, obj.TerminalID, "Battery OFF" + GetPackageType(obj.ProtocolType));
         }
         /// <summary>
         /// 保存位置信息

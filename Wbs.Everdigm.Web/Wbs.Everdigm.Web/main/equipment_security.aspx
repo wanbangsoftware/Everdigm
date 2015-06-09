@@ -38,6 +38,9 @@
         <li role="presentation">
             <a href="equipment_storage.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Storage History</a>
         </li>
+        <li role="presentation">
+            <a href="equipment_setting.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Setting</a>
+        </li>
         <li role="presentation" style="float: right; cursor: pointer !important;" title="close">
             <a href="./equipment_inquiry.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">&times;</a>
         </li>
@@ -112,18 +115,16 @@
                     <h4 class="modal-title" id="myModalLabel">Testing progress</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="bs-callout bs-callout-warning" style="margin-top: 2px !important; font-size: 12px !important;  margin-bottom: 0px !important; height: 120px; overflow: auto;">
-                        <!--11:22:04 <code>position data</code> Command is waiting in send queue.<br />
-                        11:22:05 <code>0x1000</code> Command has been send to target.<br />
-                        11:22:09 <code>0x1000</code> Target received the command.<br />
-                        11:22:20 <code>0x1000</code> Command responsed successfully, you can <code>Analyse</code> this data by click <code>here</code>.<br />
-                        11:22:38 <code>0xDD00</code> Command has been send to target.<br />
-                        11:22:40 <code>0xDD00</code> Target is not online.<br />-->
+                    <div class="bs-callout bs-callout-warning" style="margin-top: 2px !important; font-size: 12px !important;  margin-bottom: 0px !important; height: 220px; overflow: auto;">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <span id="timeUsed">time used 00:00</span>&nbsp;
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="satWarning" type="button" class="btn btn-warning" style="display:none;">
+                        <span class="glyphicon glyphicon-time"></span> Satellite mode may take more time to wait
+                    </button>
+                    <button class="btn btn-primary" type="button">
+                        time used: <span class="badge" id="timeUsed">00:00</span>
+                    </button>
                 </div>
             </div>
         </div>

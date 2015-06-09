@@ -210,6 +210,7 @@
     <Content Include="main\equipment_overhaul.aspx" />
     <Content Include="main\equipment_position.aspx" />
     <Content Include="main\equipment_security.aspx" />
+    <Content Include="main\equipment_setting.aspx" />
     <Content Include="main\equipment_storage.aspx" />
     <Content Include="main\equipment_summary.aspx" />
     <Content Include="main\equipment_today_works.aspx" />
@@ -529,6 +530,7 @@
     <Compile Include="common\BasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="common\EquipmentFunctional.cs" />
     <Compile Include="common\ErrorChart.cs" />
     <Compile Include="common\JsonConverter.cs" />
     <Compile Include="common\TodayWorktimeChart.cs" />
@@ -738,6 +740,13 @@
     </Compile>
     <Compile Include="main\equipment_security.aspx.designer.cs">
       <DependentUpon>equipment_security.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="main\equipment_setting.aspx.cs">
+      <DependentUpon>equipment_setting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\equipment_setting.aspx.designer.cs">
+      <DependentUpon>equipment_setting.aspx</DependentUpon>
     </Compile>
     <Compile Include="main\equipment_status.aspx.cs">
       <DependentUpon>equipment_status.aspx</DependentUpon>

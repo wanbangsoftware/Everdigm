@@ -25,6 +25,9 @@
         <li role="presentation" class="active">
             <a href="equipment_storage.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Storage History<span class="caret"></span></a>
         </li>
+        <li role="presentation">
+            <a href="equipment_setting.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Setting</a>
+        </li>
         <li role="presentation" style="float: right; cursor: pointer !important;" title="close">
             <a href="./equipment_inquiry.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">&times;</a>
         </li>

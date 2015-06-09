@@ -453,6 +453,24 @@ namespace Wbs.Everdigm.Web
             }
             return ret;
         }
+        
+        /// <summary>
+        /// 获取设备的功能类别
+        /// </summary>
+        /// <param name="functional"></param>
+        /// <returns></returns>
+        public static string GetEquipmentFunctional(byte functional)
+        {
+            var ret = "";
+            EquipmentFunctional f = (EquipmentFunctional)functional;
+            switch (f)
+            {
+                case EquipmentFunctional.Mechanical: ret = "Mechanical"; break;
+                case EquipmentFunctional.Electronic: ret = "Electronic"; break;
+                case EquipmentFunctional.Loader: ret = "Loader"; break;
+            }
+            return ret;
+        }
         /// <summary>
         /// CSQ转换成dBm
         /// </summary>

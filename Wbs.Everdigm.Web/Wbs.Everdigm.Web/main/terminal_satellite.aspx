@@ -117,15 +117,18 @@
     <script type="text/javascript" src="../scripts/main/pagination.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            $("[id^=\"cb_\"]").prop("disabled", true);
             $("#btClose").click(function () { close(); });
             $("#tbodyBody").on("click", "tr", function () {
-                $(this).children("td:eq(0)").children("input:eq(0)").prop("checked",true);
+                $(this).children("td:eq(0)").children("input:eq(0)").prop("checked", true);
             });
             $("#btConfirm").click(function () {
-                var id=$("input:radio:checked").prop("id").replace("cb_","");
-                var msg = $("#hidID").val() + "," + id;
-                windowPopupCloseEvent(msg);
-                close();
+                if ($("input:radio:checked").length > 0) {
+                    var id = $("input:radio:checked").prop("id").replace("cb_", "");
+                    var msg = $("#hidID").val() + "," + id;
+                    windowPopupCloseEvent(msg);
+                    close();
+                }
             });
         });
     </script>

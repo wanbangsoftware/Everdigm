@@ -23,8 +23,19 @@ namespace Wbs.Everdigm.Web.main
                 {
                     hidPageIndex.Value = null == Request.Cookies[_cookie_name_] ? "1" : Request.Cookies[_cookie_name_].Value;
                     ShowEquipments();
+                    ShowEquipmentFunctional();
                 }
             }
+        }
+
+        private void ShowEquipmentFunctional() {
+            string html = "";
+            foreach (EquipmentFunctional f in Enum.GetValues(typeof(EquipmentFunctional)))
+            {
+                html += "<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"" + (byte)f + "\" href=\"#\">" +
+                    (f != EquipmentFunctional.Loader ? "Excavator: " : "") + Utility.GetEquipmentFunctional((byte)f) + "</a></li>";
+            }
+            menuFunctional.InnerHtml = html;
         }
 
         protected void btSaveNewInStorage_Click(object sender, EventArgs e)
@@ -171,6 +182,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td class=\"in-tab-txt-b\">" + cnt + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + (n == obj.Model ? "-" : obj.TB_EquipmentModel.TB_EquipmentType.Code) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\" style=\"text-align: left !important;\">" + (n == obj.Model ? "-" : ("<a href=\"./equipment_command.aspx?key=" + id + "\">" + EquipmentInstance.GetFullNumber(obj) + "</a>")) + "</td>" +
+                        "<td class=\"in-tab-txt-b\" style=\"text-align: left !important;\">" + Utility.GetEquipmentFunctional(obj.Functional.Value) + "</td>" +
                         "<td class=\"in-tab-txt-b\" style=\"text-align: right !important;\">" + EquipmentInstance.GetRuntime(obj.Runtime) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + EquipmentInstance.GetEngStatus(obj) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\" title=\"" + obj.GpsAddress + "\">" + obj.GpsAddress + "</td>" +

@@ -87,8 +87,7 @@ namespace Wbs.Everdigm.Web.ajax
                     var desc = CommandUtility.GetCommandStatus(state);
                     if (null != data)
                     {
-                        desc += ", you can click <code class='analyse' data-data='" + 
-                            data.command_id + "," + data.message_content + "'>here</code> to Analyse it";
+                        desc += ", you can click <code class='analyse' data-data='' style='cursor: pointer;'>here</code> to Analyse it";
                     }
                     ret = ResponseMessage(status, desc);
                 }
@@ -303,11 +302,11 @@ namespace Wbs.Everdigm.Web.ajax
                             f.ScheduleTime >= start && f.ScheduleTime <= end, "ScheduleTime", true);
                         if (security)
                         {
-                            list = list.Where(w => w.Command == "0x6007" || w.Command == "0x4000" || w.Command == "0x3000");
+                            list = list.Where(w => w.Command == "0x6007" || w.Command == "0x4000" || w.Command == "0x3000" || w.Command == "0xDD02");
                         }
                         else
                         {
-                            list = list.Where(w => w.Command != "0x6007" && w.Command != "0x4000" && w.Command != "0x3000");
+                            list = list.Where(w => w.Command != "0x6007" && w.Command != "0x4000" && w.Command != "0x3000" && w.Command != "0xDD02");
                         }
                         //&&
                         //    (string.IsNullOrEmpty(_command) ? f.u_sms_command.IndexOf("0x") >= 0 : f.u_sms_command.IndexOf(_command) >= 0),

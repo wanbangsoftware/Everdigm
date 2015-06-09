@@ -33,6 +33,7 @@
             this.tsMain = new System.Windows.Forms.ToolStrip();
             this.tsdbSettings = new System.Windows.Forms.ToolStripDropDownButton();
             this.tsmiShowHistory = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiShowIridiumPackage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiStopFetchingAddress = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -62,7 +63,6 @@
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiExit = new System.Windows.Forms.ToolStripMenuItem();
             this.browser = new System.Windows.Forms.WebBrowser();
-            this.tsmiShowIridiumPackage = new System.Windows.Forms.ToolStripMenuItem();
             this.tsMain.SuspendLayout();
             this.ssMain.SuspendLayout();
             this.cmsNotifyMenu.SuspendLayout();
@@ -113,6 +113,15 @@
             this.tsmiShowHistory.Size = new System.Drawing.Size(316, 22);
             this.tsmiShowHistory.Text = "Show History";
             this.tsmiShowHistory.Click += new System.EventHandler(this.tsmiShowHistory_Click);
+            // 
+            // tsmiShowIridiumPackage
+            // 
+            this.tsmiShowIridiumPackage.Checked = true;
+            this.tsmiShowIridiumPackage.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.tsmiShowIridiumPackage.Name = "tsmiShowIridiumPackage";
+            this.tsmiShowIridiumPackage.Size = new System.Drawing.Size(316, 22);
+            this.tsmiShowIridiumPackage.Text = "Show Iridium packages";
+            this.tsmiShowIridiumPackage.Click += new System.EventHandler(this.tsmiShowIridiumPackage_Click);
             // 
             // toolStripMenuItem2
             // 
@@ -323,13 +332,6 @@
             this.browser.Size = new System.Drawing.Size(250, 250);
             this.browser.TabIndex = 3;
             this.browser.Visible = false;
-            // 
-            // tsmiShowIridiumPackage
-            // 
-            this.tsmiShowIridiumPackage.Name = "tsmiShowIridiumPackage";
-            this.tsmiShowIridiumPackage.Size = new System.Drawing.Size(316, 22);
-            this.tsmiShowIridiumPackage.Text = "Show Iridium packages";
-            this.tsmiShowIridiumPackage.Click += new System.EventHandler(this.tsmiShowIridiumPackage_Click);
             // 
             // FormMain
             // 

@@ -274,9 +274,25 @@ namespace Wbs.Everdigm.Web.main
             if (null == terminal) return;
 
             var equipment = EquipmentInstance.Find(f => f.Terminal == id);
-            // 更新设备的终端为空
+            // 更新设备的终端为空并清空设备的相应值
             EquipmentInstance.Update(f => f.Terminal == id, act => {
                 act.Terminal = (int?)null;
+                act.GpsAddress = "";
+                act.LastAction = "";
+                act.LastActionBy = "";
+                act.LastActionTime = (DateTime?)null;
+                act.Latitude = 0.0;
+                act.Longitude = 0.0;
+                act.OnlineStyle = (byte?)null;
+                act.OnlineTime = (DateTime?)null;
+                act.Runtime = 0;
+                act.Socket = 0;
+                act.Port = 0;
+                act.IP = "";
+                act.LockStatus = "00";
+                act.Rpm = 0;
+                act.Signal = 0;
+                act.Voltage = "G0000";
             });
             // 更新终端的绑定状态为false
             TerminalInstance.Update(f => f.id == id, act => {

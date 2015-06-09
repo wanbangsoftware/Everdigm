@@ -52,7 +52,7 @@
                                     <th style="width: 180px;">Satellite</th>
                                     <th style="width: 70px;">Firmware</th>
                                     <th style="width: 30px; text-align: center;">Rev</th>
-                                    <th style="width: 100px; text-align: center;">Type</th>
+                                    <th style="width: 120px; text-align: center;">Type</th>
                                     <th style="width: 70px;">Register</th>
                                     <th style="width: 80px; text-align: center;">Has bound?</th>
                                     <th style="width: 140px;">Equipment</th>

@@ -52,5 +52,9 @@ namespace Wbs.Everdigm.Desktop
         /// SMS消息处理BLL
         /// </summary>
         private SmsBLL SmsInstance { get { return new SmsBLL(); } }
+        /// <summary>
+        /// 提供MTMSN计算的BLL
+        /// </summary>
+        private IridiumMMSNBLL MTMSNBLL { get { return new IridiumMMSNBLL(); } }
     }
 }

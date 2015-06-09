@@ -69,7 +69,7 @@
                             <thead>
                                 <tr>
                                     <th class="bg-primary"></th>
-                                    <th colspan="6" class="in-tab-title-rb bg-primary">Equipment Information</th>
+                                    <th colspan="7" class="in-tab-title-rb bg-primary">Equipment Information</th>
                                     <th colspan="2" class="in-tab-title-rb bg-primary">Customer</th>
                                     <th colspan="4" class="in-tab-title-rb bg-primary">Terminal Information</th>
                                     <th colspan="5" class="in-tab-title-b bg-primary">Storage Information</th>
@@ -78,6 +78,7 @@
                                     <th class="in-tab-title-b bg-warning">#</th>
                                     <th class="in-tab-title-b bg-warning">Type</th>
                                     <th class="in-tab-title-b bg-warning">Model</th>
+                                    <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Functional</th>
                                     <th class="in-tab-title-b bg-warning" style="text-align: right !important;">SMH</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">Eng.(RPM)</th>
                                     <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Location</th>

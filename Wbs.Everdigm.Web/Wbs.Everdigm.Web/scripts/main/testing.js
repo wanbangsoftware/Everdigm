@@ -48,7 +48,7 @@ $(document).ready(function () {
 var table_title = "<li><span class=\"ui-icon ui-icon-close\" title=\"close\" style=\"display: none;\">" +
     "</span><a href=\"#%id%\" title=\"check \"%label%\"\">%label%</a></li>";
 var table_content = "<div class=\"tab-content\" id=\"%id%\" style=\"display: none;\">" +
-            "<iframe frameborder=\"0\" scrolling=\"no\" width=\"100%\" height=\"330px\" " +
+            "<iframe frameborder=\"0\" scrolling=\"auto\" width=\"100%\" height=\"330px\" " +
             "src=\"./terminal_testing_content.aspx?key=%label%\"></iframe></div>";
 
 /*添加一个新的 tab */

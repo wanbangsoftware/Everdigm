@@ -6,26 +6,30 @@ using Wbs.Everdigm.Database;
 
 namespace Wbs.Everdigm.BLL
 {
-    public class IririumMTMSNBLL : BaseService<TB_IridiumMTMSN>
+    /// <summary>
+    /// 设置铱星服务器下发时的MTMSN
+    /// </summary>
+    public class IridiumMMSNBLL : BaseService<TB_IridiumMTMSN>
     {
-        public IririumMTMSNBLL()
+        public IridiumMMSNBLL()
             : base(new BaseRepository<TB_IridiumMTMSN>())
         { }
 
         public override TB_IridiumMTMSN GetObject()
         {
+            var now = DateTime.Now;
             return new TB_IridiumMTMSN()
             {
-                Year = 0,
-                Month = 0,
-                Day = 0,
+                Year = (short)now.Year,
+                Month = (byte)now.Month,
+                Day = (byte)now.Day,
                 Number = 0
             };
         }
 
         public override string ToString(TB_IridiumMTMSN entity)
         {
-            return string.Format("{0}/{1}/{2}: {3}", entity.Year, entity.Month, entity.Day, entity.Number);
+            return string.Format("{0}-{1}: {2}", entity.Year, entity.Month, entity.Number);
         }
     }
 }

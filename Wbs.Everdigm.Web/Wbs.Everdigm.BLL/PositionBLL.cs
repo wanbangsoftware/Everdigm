@@ -53,7 +53,10 @@ namespace Wbs.Everdigm.BLL
         /// <returns></returns>
         public override string ToString(TB_Data_Position entity)
         {
-            return string.Format("{0}", entity.Address);
+            return string.Format("Address: {0}\r\nAltitude: {1}, Ber: {2}, CSQ: {3}, Direction: {4}, " +
+            "EW: {5}, GpsTime: {6}, Latitude: {7}, Longitude: {8}, NS: {9}, Type: {10}",
+            entity.Address, entity.Altitude, entity.Ber, entity.Csq, entity.Direction, entity.EW,
+            entity.GpsTime.Value.ToString("yyyyMMddHHmmss"), entity.Latitude, entity.Longitude, entity.NS, entity.Type);
         }
     }
 }

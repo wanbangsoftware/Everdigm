@@ -31,6 +31,15 @@ namespace Wbs.Everdigm.Web {
         protected global::System.Web.UI.HtmlControls.HtmlInputText hex;
         
         /// <summary>
+        /// hexdata 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl hexdata;
+        
+        /// <summary>
         /// base64 控件。
         /// </summary>
         /// <remarks>
@@ -56,5 +65,14 @@ namespace Wbs.Everdigm.Web {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button Encode;
+        
+        /// <summary>
+        /// Decode 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Decode;
     }
 }

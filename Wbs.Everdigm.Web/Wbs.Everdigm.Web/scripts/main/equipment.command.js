@@ -3,7 +3,13 @@ $(document).ready(function () {
     $(".btn").click(function () {
         var index = $(".btn").index($(this));
         switch (index) {
-            case 0: sendCommand(); break;
+            case 0:
+                if (isInTestProgress) {
+                    $("#analyseModal").modal("show");
+                } else {
+                    sendCommand();
+                }
+                break;
             case 1: queryCommandHistory("history"); break;
             case 2:
                 var cmd = $("#cmdInfo").val();
@@ -69,6 +75,7 @@ function sendCommandTo(cmd, param) {
     GetJsonData("../ajax/command.ashx", { "type": "equipment", "cmd": cmd, "data": id, "param": param },
             function (data) {
                 if (data.status == 0) {
+                    isInTestProgress = true;
                     currentTestingCommand = cmd;
                     _lastCommandId = parseInt(data.desc);
                     //var btn = $(".btn:eq(0)");

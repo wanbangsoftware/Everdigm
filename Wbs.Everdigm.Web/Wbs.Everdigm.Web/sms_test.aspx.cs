@@ -27,8 +27,7 @@ namespace Wbs.Everdigm.Web
             string sources = Request.QueryString["number"];
             string text = Request.QueryString["sms"];
             string date = Request.QueryString["date"];
-            string temp = HttpUtility.UrlEncode(Convert.ToBase64String(CustomConvert.GetBytes("170020140FBB10FFFF0890074200000101089007420000")));
-            if (null == temp) { }
+            
             if (null != sources && null != text)
             {
                 // 来源如果全为数字的话，保存以供查询
@@ -168,6 +167,17 @@ namespace Wbs.Everdigm.Web
             var data = CustomConvert.GetBytes(str);
             base64.InnerText = Convert.ToBase64String(data);
             base64Encode.InnerText = HttpUtility.UrlEncode(base64.InnerText);
+        }
+
+        protected void Decode_Click(object sender, EventArgs e)
+        {
+            var str = hex.Value.Trim();
+            if (null == str || "" == str) return;
+            
+            var data = Convert.FromBase64String(str);
+            var h = CustomConvert.GetHex(data);
+            hexdata.InnerText = h;
+            base64.InnerText = str;
         }
     }
 }

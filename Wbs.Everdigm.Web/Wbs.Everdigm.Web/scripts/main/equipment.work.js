@@ -37,6 +37,7 @@ function getWorktime() {
 }
 // 显示运转时间
 function displayWorkTimes(obj) {
+    if (undefined == obj.ReceiveTime) return;
     $("#reportTime").html("(" + obj.ReceiveTime.replace(/T/, " ") + ")");
 
     $("#lblTotalHour").html(parseInt(obj.TotalWorkTime / 60));

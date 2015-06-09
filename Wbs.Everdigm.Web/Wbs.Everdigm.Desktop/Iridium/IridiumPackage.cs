@@ -270,11 +270,14 @@ namespace Wbs.Everdigm.Desktop
         }
         public void Package(byte[] data)
         {
-            var len = data.Length;
-            Length += (ushort)data.Length;
+            var len = null == data ? 0 : data.Length;
+            Length += (ushort)len;
             content = CustomConvert.expand(content, Length + Iridium.HEADER_SIZE);
             var total = content.Length;
-            Buffer.BlockCopy(data, 0, content, total - len, len);
+            if (null != data)
+            {
+                Buffer.BlockCopy(data, 0, content, total - len, len);
+            }
         }
         /// <summary>
         /// 打包长度
@@ -459,12 +462,37 @@ namespace Wbs.Everdigm.Desktop
         }
     }
     /// <summary>
-    /// MO Location定位信息
+    /// 铱星定位信息
     /// </summary>
-    public class MOLocation : IE
+    public class IridiumLocation : IDisposable
     {
-        public byte[] LatLng { get; private set; }
-        public uint CEPRadius { get; private set; }
+        public const int SIZE = 7;
+        private byte[] latlng = null;
+        public byte[] LatLng
+        {
+            get { return latlng; }
+            set
+            {
+                if (null == value || value.Length < SIZE)
+                    latlng = null;
+                else
+                {
+                    latlng = new byte[SIZE];
+                    Buffer.BlockCopy(value, 0, latlng, 0, SIZE);
+                }
+            }
+        }
+        /// <summary>
+        /// 标记本条GPS信息是否有效
+        /// </summary>
+        public bool Available
+        {
+            get
+            {
+                // 0<=经度值<=90 且 0<=维度值<=180
+                return (Latitude > 0 && Latitude < 90) && (Longitude > 0 && Longitude < 180);
+            }
+        }
         /// <summary>
         /// 纬度
         /// </summary>
@@ -482,28 +510,52 @@ namespace Wbs.Everdigm.Desktop
         /// </summary>
         public char EWI { get; private set; }
         /// <summary>
-        /// 解包经纬度信息
+        /// 解包定位信息
         /// </summary>
-        private void unpackage()
+        public void Unpackate()
         {
-            var nsew = CustomConvert.IntToDigit(LatLng[0], CustomConvert.BIN, 8);
+            var nsew = CustomConvert.IntToDigit(latlng[0], CustomConvert.BIN, 8);
             NSI = nsew[6] == '1' ? 'S' : 'N';
             EWI = nsew[7] == '1' ? 'W' : 'E';
 
-            Latitude = LatLng[1];
+            Latitude = latlng[1];
             byte[] tmp = new byte[2];
-            Buffer.BlockCopy(LatLng, 2, tmp, 0, 2);
+            Buffer.BlockCopy(latlng, 2, tmp, 0, 2);
             tmp = CustomConvert.reserve(tmp);
 
-            double mm = double.Parse("0." + BitConverter.ToUInt16(tmp, 0), CultureInfo.InvariantCulture.NumberFormat);
+            var u16 = BitConverter.ToUInt16(tmp, 0);
+            double mm = u16 / Math.Pow(10, u16.ToString().Length);
+            // 将ddmmmm转换成dd.dddd
+            mm = Wbs.Protocol.TX300.Analyse.GPSInfo.DDMM2DDDD(mm);
             Latitude += mm;
 
-            Longitude = LatLng[4];
-            Buffer.BlockCopy(LatLng, 5, tmp, 0, 2);
+            Longitude = latlng[4];
+            Buffer.BlockCopy(latlng, 5, tmp, 0, 2);
             tmp = CustomConvert.reserve(tmp);
-            mm = double.Parse("0." + BitConverter.ToUInt16(tmp, 0), CultureInfo.InvariantCulture.NumberFormat);
+            u16 = BitConverter.ToUInt16(tmp, 0);
+            mm = u16 / Math.Pow(10, u16.ToString().Length);
+            // 将ddmmmm转换成dd.dddd
+            mm = Wbs.Protocol.TX300.Analyse.GPSInfo.DDMM2DDDD(mm);
             Longitude += mm;
         }
+
+        public void Dispose()
+        {
+            latlng = null;
+        }
+    }
+    /// <summary>
+    /// MO Location定位信息
+    /// </summary>
+    public class MOLocation : IE
+    {
+        public byte[] LatLng { get; private set; }
+        public uint CEPRadius { get; private set; }
+        /// <summary>
+        /// 定位信息
+        /// </summary>
+        public IridiumLocation Location { get; private set; }
+        
         /// <summary>
         /// 解包
         /// </summary>
@@ -511,10 +563,11 @@ namespace Wbs.Everdigm.Desktop
         {
             base.Unpackage();
 
-            LatLng = new byte[7];
-            Buffer.BlockCopy(Content, index, LatLng, 0, 7);
-            unpackage();
-            index += 7;
+            Location = new IridiumLocation();
+            Location.LatLng = new byte[IridiumLocation.SIZE];
+            Buffer.BlockCopy(Content, index, Location.LatLng, 0, IridiumLocation.SIZE);
+            Location.Unpackate();
+            index += IridiumLocation.SIZE;
 
             byte[] temp = new byte[4];
             Buffer.BlockCopy(Content, index, temp, 0, 4);
@@ -524,8 +577,8 @@ namespace Wbs.Everdigm.Desktop
         public override string ToString()
         {
             return string.Format("{0}, LatLng: {1}, Latitude: {2}, NSI: {3}, Longitude: {4}, EWI: {5}, CEPRadius: {6}",
-                base.ToString(), CustomConvert.GetHex(LatLng), Latitude.ToString(CultureInfo.InvariantCulture.NumberFormat),
-                NSI, Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat), EWI, CEPRadius);
+                base.ToString(), CustomConvert.GetHex(LatLng), Location.Latitude.ToString(CultureInfo.InvariantCulture.NumberFormat),
+                Location.NSI, Location.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat), Location.EWI, CEPRadius);
         }
     }
     /// <summary>
@@ -634,7 +687,23 @@ namespace Wbs.Everdigm.Desktop
         {
             IEI = MT_PAYLOAD;
         }
-        public byte[] Payload { get; set; }
+        private byte[] payload = null;
+        public byte[] Payload
+        {
+            get { return payload; }
+            set
+            {
+                if (null == value)
+                {
+                    payload = null;
+                }
+                else
+                {
+                    payload = new byte[value.Length];
+                    Buffer.BlockCopy(value, 0, payload, 0, value.Length);
+                }
+            }
+        }
 
         public override void Package()
         {
@@ -647,8 +716,8 @@ namespace Wbs.Everdigm.Desktop
         {
             base.Unpackage();
 
-            Payload = new byte[Length];
-            Buffer.BlockCopy(Content, index, Payload, 0, Length);
+            payload = new byte[Length];
+            Buffer.BlockCopy(Content, index, payload, 0, Length);
             index += Length;
         }
         public override string ToString()

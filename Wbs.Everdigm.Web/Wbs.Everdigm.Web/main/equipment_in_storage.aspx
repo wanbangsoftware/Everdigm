@@ -31,6 +31,7 @@
         .modal-body {
             overflow-y: visible;
         }
+
         .custom-modal-header {
             -webkit-border-top-left-radius: 5px;
             -webkit-border-top-right-radius: 5px;
@@ -96,7 +97,7 @@
                     <li role="presentation" style="width: 100px; margin-top: 3px; padding-left: 5px;">
                         <div class="input-group">
                             <span class="input-group-btn">
-                                <button class="btn btn-primary" id="openModal" type="button" data-toggle="modal" data-target="#modalNewProduct"><span class="glyphicon glyphicon-floppy-open"></span> <span>Storage</span></button>
+                                <button class="btn btn-primary" id="openModal" type="button" data-toggle="modal" data-target="#modalNewProduct"><span class="glyphicon glyphicon-floppy-open"></span><span>Storage</span></button>
                             </span>
                         </div>
                         <!-- /input-group -->
@@ -111,7 +112,7 @@
                             <thead>
                                 <tr>
                                     <th class="bg-primary"></th>
-                                    <th colspan="6" class="in-tab-title-rb bg-primary">Equipment Information</th>
+                                    <th colspan="7" class="in-tab-title-rb bg-primary">Equipment Information</th>
                                     <th colspan="5" class="in-tab-title-rb bg-primary">Storage Information</th>
                                     <th colspan="6" class="in-tab-title-b bg-primary">Terminal Information</th>
                                 </tr>
@@ -119,8 +120,9 @@
                                     <th class="in-tab-title-b bg-warning">#</th>
                                     <th class="in-tab-title-b bg-warning">Type</th>
                                     <th class="in-tab-title-b bg-warning">Model</th>
+                                    <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Functional</th>
                                     <th class="in-tab-title-b bg-warning" style="text-align: right !important;">SMH</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow">Eng.(RPM)</th>
+                                    <th class="in-tab-title-b bg-warning textoverflow">Eng.</th>
                                     <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Location</th>
                                     <th class="in-tab-title-rb bg-warning">Status</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">In Date</th>
@@ -177,68 +179,78 @@
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title" id="NewStorageIn"><strong>New Product: </strong></h4>
                     </div>
-                    <div class="modal-body" style="height: 200px;">
-                        <div class="col-sm-12 show-grid" id="continue">
-                            <div class="col-sm-12 show-grid">
-                                <table class="table table-hover">
-                                    <tbody>
-                                        <tr>
-                                            <td class="popup-td right">Type:</td>
-                                            <td class="popup-td">
-                                                <div role="presentation" class="dropdown" id="ddType">
-                                                    <a id="dropType" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Type:</span><span class="caret"></span>
-                                                    </a>
-                                                    <ul id="menuType" class="dropdown-menu" role="menu" aria-labelledby="dropType">
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                            <td class="popup-td right">Model:</td>
-                                            <td class="popup-td">
-                                                <div role="presentation" class="dropdown" id="ddModel">
-                                                    <a id="dropModel" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Model:</span><span class="caret"></span>
-                                                    </a>
-                                                    <ul id="menuModel" class="dropdown-menu" role="menu" aria-labelledby="dropModel">
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Choose a Type First</a></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="popup-td right">C.C. date:
-                                            </td>
-                                            <td class="popup-td">
-                                                <input class="form-control" runat="server" style="z-index: 9999 !important;" id="ccDate" name="ccDate" placeholder="C.C. date">
-                                            </td>
-                                            <td class="popup-td right">In date:</td>
-                                            <td class="popup-td">
-                                                <input class="form-control" runat="server" style="z-index: 9999 !important;" id="inDate" name="inDate" placeholder="In Store date">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="popup-td right">Warehouse:</td>
-                                            <td class="popup-td">
-                                                <div role="presentation" class="dropdown" id="ddWarehouse">
-                                                    <a id="dropWarehouse" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Warehouse:</span><span class="caret"></span>
-                                                    </a>
-                                                    <ul id="menuWarehouse" class="dropdown-menu" role="menu" aria-labelledby="dropWarehouse">
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                            <td class="popup-td right"></td>
-                                            <td class="popup-td"></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="popup-td right">Number:</td>
-                                            <td class="popup-td">
-                                                <input class="form-control" id="number" placeholder="number" maxlength="5" />
-                                            </td>
-                                            <td class="popup-td right"></td>
-                                            <td class="popup-td"><span id="fullNumber"></span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12 show-grid" id="continue">
+                                <div class="col-sm-12 show-grid">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            <tr>
+                                                <td class="popup-td right">Type:</td>
+                                                <td class="popup-td">
+                                                    <div role="presentation" class="dropdown" id="ddType">
+                                                        <a id="dropType" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Type:</span><span class="caret"></span>
+                                                        </a>
+                                                        <ul id="menuType" class="dropdown-menu" role="menu" aria-labelledby="dropType">
+                                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                                <td class="popup-td right">Model:</td>
+                                                <td class="popup-td">
+                                                    <div role="presentation" class="dropdown" id="ddModel">
+                                                        <a id="dropModel" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Model:</span><span class="caret"></span>
+                                                        </a>
+                                                        <ul id="menuModel" class="dropdown-menu" role="menu" aria-labelledby="dropModel">
+                                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Choose a Type First</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="popup-td right">C.C. date:
+                                                </td>
+                                                <td class="popup-td">
+                                                    <input class="form-control" runat="server" style="z-index: 9999 !important;" id="ccDate" name="ccDate" placeholder="C.C. date">
+                                                </td>
+                                                <td class="popup-td right">In date:</td>
+                                                <td class="popup-td">
+                                                    <input class="form-control" runat="server" style="z-index: 9999 !important;" id="inDate" name="inDate" placeholder="In Store date">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="popup-td right">Warehouse:</td>
+                                                <td class="popup-td">
+                                                    <div role="presentation" class="dropdown" id="ddWarehouse">
+                                                        <a id="dropWarehouse" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Warehouse:</span><span class="caret"></span>
+                                                        </a>
+                                                        <ul id="menuWarehouse" class="dropdown-menu" role="menu" aria-labelledby="dropWarehouse">
+                                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                                <td class="popup-td right">Functional:</td>
+                                                <td class="popup-td">
+                                                    <div role="presentation" class="dropdown" id="ddFunctional">
+                                                        <a id="dropFunctional" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Functional:</span><span class="caret"></span>
+                                                        </a>
+                                                        <ul id="menuFunctional" class="dropdown-menu" role="menu" runat="server" aria-labelledby="dropFunctional">
+                                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="popup-td right">Number:</td>
+                                                <td class="popup-td">
+                                                    <input class="form-control" id="number" placeholder="number" maxlength="5" />
+                                                </td>
+                                                <td class="popup-td right"></td>
+                                                <td class="popup-td"><span id="fullNumber"></span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -261,65 +273,68 @@
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title"><strong>Rental Fleet storage: </strong></h4>
                     </div>
-                    <div class="modal-body" style="height: 230px;">
-                        <div class="col-sm-12 show-grid">
-                            <ul class="nav nav-tabs col-sm-12 show-grid" role="tablist">
-                                <!--输入查询2手或租赁出去的设备信息-->
-                                <li role="presentation" class="dropdown" id="ddTypeOld">
-                                    <a id="dropTypeOld" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Type:</span><span class="caret"></span>
-                                    </a>
-                                    <ul id="menuTypeOld" class="dropdown-menu" role="menu" aria-labelledby="dropTypeOld">
-                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
-                                    </ul>
-                                </li>
-                                <li role="presentation" class="dropdown" id="ddModelOld">
-                                    <a id="dropModelOld" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Model:</span><span class="caret"></span>
-                                    </a>
-                                    <ul id="menuModelOld" class="dropdown-menu" role="menu" aria-labelledby="dropModelOld">
-                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Choose a Type First</a></li>
-                                    </ul>
-                                </li>
-                                <li role="presentation" class="tablist-item-input">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="txtQueryOld" placeholder="number" data-provide="typeahead">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-warning" type="button" id="queryOld"><span class="glyphicon glyphicon-search"></span></button>
-                                        </span>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div class="col-sm-12" style="margin-top: 3px;">
-                                <table class="table table-hover">
-                                    <tbody id="oldEquipmentInfo">
-                                        <tr>
-                                            <td class="popup-td right">Equipment:</td>
-                                            <td class="popup-td"></td>
-                                            <td class="popup-td" colspan="2"><input type="checkbox" id="cbRepair" runat="server" />Need nspection & repair</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="popup-td right">Status:</td>
-                                            <td class="popup-td" colspan="3"></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="popup-td right">Location:</td>
-                                            <td class="popup-td" colspan="3"></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="popup-td right">Store In:</td>
-                                            <td class="popup-td">
-                                                <div role="presentation" class="dropdown" id="ddWarehouseOld">
-                                                    <a id="dropWarehouseOld" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Warehouse:</span><span class="caret"></span>
-                                                    </a>
-                                                    <ul id="menuWarehouseOld" class="dropdown-menu" role="menu" aria-labelledby="dropWarehousOlde">
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                            <td class="popup-td right"></td>
-                                            <td class="popup-td"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12 show-grid">
+                                <ul class="nav nav-tabs col-sm-12 show-grid" role="tablist">
+                                    <!--输入查询2手或租赁出去的设备信息-->
+                                    <li role="presentation" class="dropdown" id="ddTypeOld">
+                                        <a id="dropTypeOld" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Type:</span><span class="caret"></span>
+                                        </a>
+                                        <ul id="menuTypeOld" class="dropdown-menu" role="menu" aria-labelledby="dropTypeOld">
+                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
+                                        </ul>
+                                    </li>
+                                    <li role="presentation" class="dropdown" id="ddModelOld">
+                                        <a id="dropModelOld" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Model:</span><span class="caret"></span>
+                                        </a>
+                                        <ul id="menuModelOld" class="dropdown-menu" role="menu" aria-labelledby="dropModelOld">
+                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Choose a Type First</a></li>
+                                        </ul>
+                                    </li>
+                                    <li role="presentation" class="tablist-item-input">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="txtQueryOld" placeholder="number" data-provide="typeahead">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-warning" type="button" id="queryOld"><span class="glyphicon glyphicon-search"></span></button>
+                                            </span>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="col-sm-12" style="margin-top: 3px;">
+                                    <table class="table table-hover">
+                                        <tbody id="oldEquipmentInfo">
+                                            <tr>
+                                                <td class="popup-td right">Equipment:</td>
+                                                <td class="popup-td"></td>
+                                                <td class="popup-td" colspan="2">
+                                                    <input type="checkbox" id="cbRepair" runat="server" />Need nspection & repair</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="popup-td right">Status:</td>
+                                                <td class="popup-td" colspan="3"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="popup-td right">Location:</td>
+                                                <td class="popup-td" colspan="3"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="popup-td right">Store In:</td>
+                                                <td class="popup-td">
+                                                    <div role="presentation" class="dropdown" id="ddWarehouseOld">
+                                                        <a id="dropWarehouseOld" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Warehouse:</span><span class="caret"></span>
+                                                        </a>
+                                                        <ul id="menuWarehouseOld" class="dropdown-menu" role="menu" aria-labelledby="dropWarehousOlde">
+                                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                                <td class="popup-td right"></td>
+                                                <td class="popup-td"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -342,22 +357,24 @@
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title"><strong>Change Warehouse: </strong></h4>
                     </div>
-                    <div class="modal-body" style="height: 120px; ">
-                        <div class="col-sm-12 show-grid">
-                            <ul class="nav nav-tabs" id="equipmentWarehouseInfoBar">
-                                <li role="presentation"><a href="#" role="tab">Number: </a></li>
-                                <li role="presentation"><a href="#" role="tab">Warehouse: </a></li>
-                            </ul>
-                            <ul class="nav nav-tabs">
-                                <li role="presentation"><a href="#" role="tab">Change to: </a></li>
-                                <li role="presentation" class="dropdown" id="ddWarehouseWarehousing">
-                                    <a id="dropWarehouseWarehousing" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Change to:</span><span class="caret"></span>
-                                    </a>
-                                    <ul id="menuWarehouseWarehousing" class="dropdown-menu" role="menu" aria-labelledby="dropWarehouseWarehousing">
-                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12 show-grid">
+                                <ul class="nav nav-tabs" id="equipmentWarehouseInfoBar">
+                                    <li role="presentation"><a href="#" role="tab">Number: </a></li>
+                                    <li role="presentation"><a href="#" role="tab">Warehouse: </a></li>
+                                </ul>
+                                <ul class="nav nav-tabs">
+                                    <li role="presentation"><a href="#" role="tab">Change to: </a></li>
+                                    <li role="presentation" class="dropdown" id="ddWarehouseWarehousing">
+                                        <a id="dropWarehouseWarehousing" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Change to:</span><span class="caret"></span>
+                                        </a>
+                                        <ul id="menuWarehouseWarehousing" class="dropdown-menu" role="menu" aria-labelledby="dropWarehouseWarehousing">
+                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -379,10 +396,12 @@
                         <h4 class="modal-title"><strong>Change Warehouse(Confirm): </strong></h4>
                     </div>
                     <div class="modal-body" style="height: 300px; overflow: auto;">
-                        <ul class="nav nav-tabs" id="equipmentWarehouseConfirmBar">
-                            <li role="presentation"><a href="#" role="tab">Number: </a></li>
-                            <li role="presentation"><a href="#" role="tab">Warehouse: </a></li>
-                        </ul>
+                        <div class="row">
+                            <ul class="nav nav-tabs" id="equipmentWarehouseConfirmBar">
+                                <li role="presentation"><a href="#" role="tab">Number: </a></li>
+                                <li role="presentation"><a href="#" role="tab">Warehouse: </a></li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <asp:Button ID="btConfirmWarehouse" CssClass="hidden" runat="server" Text="Change warehouse" OnClick="btConfirmWarehouse_Click" />

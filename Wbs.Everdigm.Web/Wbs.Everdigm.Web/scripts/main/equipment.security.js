@@ -3,7 +3,11 @@
         var index = $(".btn").index($(this));
         if (index == 0) {
             // 发送命令
-            sendCommand();
+            if (isInTestProgress) {
+                $("#analyseModal").modal("show");
+            } else {
+                sendCommand();
+            }
         } else {
             // 查询命令历史记录
             queryCommandHistory("sechistory");
@@ -47,6 +51,7 @@ function sendCommand() {
         GetJsonData("../ajax/command.ashx", { "type": "security", "cmd": cmd, "data": id },
             function (data) {
                 if (data.status == 0) {
+                    isInTestProgress = true;
                     currentTestingCommand = cmd;
                     _lastCommandId = parseInt(data.desc);
                     //var btn = $(".btn:eq(0)");

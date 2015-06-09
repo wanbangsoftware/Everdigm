@@ -54,7 +54,7 @@ namespace Wbs.Everdigm.Desktop
                     IP = data.IP;
                     Port = data.Port;
                 }
-
+                bool handled = false;
                 switch (data.DataType)
                 {
                     case AsyncUserDataType.ClientConnected: break;
@@ -69,6 +69,7 @@ namespace Wbs.Everdigm.Desktop
                             Wbs.Protocol.ProtocolTypes.IsTX300(data.Buffer[2]) &&
                             Wbs.Protocol.TerminalTypes.IsTX300(data.Buffer[3]))
                         {
+                            handled = true;
                             if (data.Buffer[0] != len)
                             {
                                 HandleException("Data length(package length: " +
@@ -84,6 +85,10 @@ namespace Wbs.Everdigm.Desktop
                 }
                 if (data.PackageType == AsyncDataPackageType.SAT)
                 {
+                    if (!handled)
+                    { 
+
+                    }
                     data.Dispose();
                     data = null;
                 }
@@ -133,6 +138,17 @@ namespace Wbs.Everdigm.Desktop
             {
                 ShowUnhandledMessage("position: " + pos.id);
             }
+            ClearGpsAddressTimeout();
+        }
+        /// <summary>
+        /// 清理获取GPS地址信息失败的记录
+        /// </summary>
+        private void ClearGpsAddressTimeout()
+        {
+            PositionInstance.Update(f => f.Updated == 1 && f.ReceiveTime < DateTime.Now.AddMinutes(-10), act =>
+            {
+                act.Updated = 0;
+            });
         }
     }
 }

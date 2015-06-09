@@ -43,6 +43,19 @@ namespace Wbs.Everdigm.Desktop
 
         private string MAP_URL = ConfigurationManager.AppSettings["FETCH_MAP_URL"];
 
+        /// <summary>
+        /// 要发送的铱星模块号码
+        /// </summary>
+        private string SendIMEI { get; set; }
+        /// <summary>
+        /// 要发送到铱星模块的内容
+        /// </summary>
+        private byte[] SendContent = null;
+        /// <summary>
+        /// 要发送的MTMSN号码
+        /// </summary>
+        private ushort SendMTMSN { get; set; }
+
         public FormMain()
         {
             InitializeComponent();
@@ -53,7 +66,7 @@ namespace Wbs.Everdigm.Desktop
         }
         private void OnServerMessage(object sender, UIEventArgs e)
         {
-            ShowHistory(e.Message, false);
+            ShowHistory(e.Message, true);
         }
         /// <summary>
         /// 接收到铱星模块发送的数据
@@ -72,10 +85,17 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="e"></param>
         private void OnIridiumSend(object sender, IridiumDataEvent e)
         {
-            tstbData.Text = CustomConvert.GetHex(e.Data.Payload);
-            tsbtSend.PerformClick();
-            ShowHistory("Iridium Command: " + tstbData.Text, true);
+            SendIMEI = e.Data.IMEI;
+            SendContent = new byte[e.Data.Length];//CustomConvert.GetHex(e.Data.Payload);
+            Buffer.BlockCopy(e.Data.Payload, 0, SendContent, 0, e.Data.Length);
+            // 服务器生成的MTMSN
+            SendMTMSN = e.Data.MTMSN;
             e = null;
+            this.BeginInvoke((MyInvoker)delegate
+            {
+                performSend();
+                ShowHistory("Iridium Command: " + CustomConvert.GetHex(SendContent), true);
+            });
         }
         /// <summary>
         /// 初始化并启动服务
@@ -343,9 +363,17 @@ namespace Wbs.Everdigm.Desktop
                 ShowHistory(Environment.NewLine + Now + "MT operation begin, try to connect Iridium server...", false);
             }
             tsbtSend.Enabled = false;
-            var client = new TcpClient();
-            client.BeginConnect(IPAddress.Parse(tstbIridiumServer.Text), int.Parse(tstbIridiumPort.Text),
-                new AsyncCallback(Connected_Callback), client);
+            SendIMEI = tscbIMEI.Text.Trim();
+            if (string.IsNullOrEmpty(tstbData.Text.Trim()))
+            {
+                SendContent = null;
+            }
+            else
+            {
+                SendContent = CustomConvert.GetBytes(tstbData.Text.Trim());
+            }
+            SendMTMSN = mtmsn++;
+            performSend();
             Task task = new Task(() =>
             {
                 Thread.Sleep(5000);
@@ -355,6 +383,15 @@ namespace Wbs.Everdigm.Desktop
                 });
             });
             task.Start();
+        }
+        /// <summary>
+        /// 尝试发送铱星命令
+        /// </summary>
+        private void performSend()
+        {
+            var client = new TcpClient();
+            client.BeginConnect(IPAddress.Parse(tstbIridiumServer.Text), int.Parse(tstbIridiumPort.Text),
+                new AsyncCallback(Connected_Callback), client);
         }
         private ushort TodaySeconds
         {
@@ -369,7 +406,7 @@ namespace Wbs.Everdigm.Desktop
                 return (ushort)(seconds % ushort.MaxValue);
             }
         }
-        private ushort mtmsn = 0;
+        private ushort mtmsn = 1;
         private bool FlushMTQueue = false;
         private void Connected_Callback(IAsyncResult ar)
         {
@@ -391,12 +428,13 @@ namespace Wbs.Everdigm.Desktop
                     // 组包并发送
                     // 数据内容
                     MTPayload mtp = new MTPayload();
-                    mtp.Payload = CustomConvert.GetBytes(tstbData.Text);
+                    mtp.Payload = SendContent;
                     mtp.Package();
+
                     // Header
                     MTHeader mth = new MTHeader();
-                    mth.UniqueID = IririumMTMSN.CalculateMTMSN(DateTime.Now, mtmsn++);
-                    mth.IMEI = tscbIMEI.Text;
+                    mth.UniqueID = SendMTMSN;
+                    mth.IMEI = SendIMEI;
                     mth.DispositionFlags = (ushort)(FlushMTQueue ? 1 : 32);
                     mth.Package();
                     // 整包

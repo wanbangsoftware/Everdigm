@@ -72,6 +72,111 @@
                     </div>
                 </div>
             </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingFour">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">#4 Security: Enable/Unlock
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                    <div class="panel-body">
+                        <button type="button" id="bt_enable" data-loading-text="Testing monitor data retrieve progress..." data-complete-text="testing finished!" class="btn btn-default" autocomplete="off">
+                            Security: Enable/Unlock
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingFive">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">#5 Security: Disable
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+                    <div class="panel-body">
+                        <button type="button" id="bt_disable" data-loading-text="Testing monitor data retrieve progress..." data-complete-text="testing finished!" class="btn btn-default" autocomplete="off">
+                            Security: Disable
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingSix">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">#6 Security: Partial lock
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+                    <div class="panel-body">
+                        <button type="button" id="bt_custom" data-loading-text="Testing monitor data retrieve progress..." data-complete-text="testing finished!" class="btn btn-default" autocomplete="off">
+                            Security: Partial lock
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingSeven">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">#7 Security: Full lock
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
+                    <div class="panel-body">
+                        <button type="button" id="bt_full" data-loading-text="Testing monitor data retrieve progress..." data-complete-text="testing finished!" class="btn btn-default" autocomplete="off">
+                            Security: Full lock
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingEight">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="false" aria-controls="collapseEight">#8 Security: Reset to satellite(Iridium)
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
+                    <div class="panel-body">
+                        <button type="button" id="bt_reset" data-loading-text="Testing monitor data retrieve progress..." data-complete-text="testing finished!" class="btn btn-default" autocomplete="off">
+                            Security: Reset to satellite(Iridium)
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingNine">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseNine" aria-expanded="false" aria-controls="collapseNine">#9 Security: Satellite enable
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseNine" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingNine">
+                    <div class="panel-body">
+                        <button type="button" id="bt_satenable" data-loading-text="Testing monitor data retrieve progress..." data-complete-text="testing finished!" class="btn btn-default" autocomplete="off">
+                            Security: Satellite enable
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingTen">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTen" aria-expanded="false" aria-controls="collapseTen">#10 Security: Satellite disable
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseTen" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTen">
+                    <div class="panel-body">
+                        <button type="button" id="bt_satdisable" data-loading-text="Testing monitor data retrieve progress..." data-complete-text="testing finished!" class="btn btn-default" autocomplete="off">
+                            Security: Satellite disable
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
     <!-- Modal -->
@@ -93,8 +198,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <span id="timeUsed">time used 00:00</span>&nbsp;
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="satWarning" type="button" class="btn btn-warning" style="display:none;">
+                        <span class="glyphicon glyphicon-time"></span> Satellite mode may take more time to wait
+                    </button>
+                    <button class="btn btn-primary" type="button">
+                        time used: <span class="badge" id="timeUsed">00:00</span>
+                    </button>
                 </div>
             </div>
         </div>

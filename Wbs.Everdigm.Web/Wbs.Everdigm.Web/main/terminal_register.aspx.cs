@@ -36,9 +36,9 @@ namespace Wbs.Everdigm.Web.main
                 txtNumber.Value = t.Number;
                 //txtSatellite.Value = t.Satellite;
                 txtSimcard.Value = t.Sim;
-                if (t.Type == TerminalTypes.DH)
-                    _dh.Checked = true;
-                else if (t.Type == TerminalTypes.DX)
+                if (t.Type == TerminalTypes.DX)
+                    _dx_normal.Checked = true;
+                else if (t.Type == TerminalTypes.DXE)
                     _dx.Checked = true;
                 else
                     _ld.Checked = true;
@@ -51,7 +51,7 @@ namespace Wbs.Everdigm.Web.main
             obj.Number = txtNumber.Value.Trim();
             //obj.Satellite = txtSatellite.Value.Trim();
             obj.Sim = txtSimcard.Value.Trim();
-            obj.Type = byte.Parse(_dh.Checked ? _dh.Value : (_dx.Checked ? _dx.Value : _ld.Value));
+            obj.Type = byte.Parse(_dx_normal.Checked ? _dx_normal.Value : (_dx.Checked ? _dx.Value : _ld.Value));
         }
 
         private void NewTerminal()

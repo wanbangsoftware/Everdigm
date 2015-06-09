@@ -1,9 +1,10 @@
-﻿var currentTestingCommand = "";
+﻿var currentTestingCommand = "", currentTestCommandTitle = "";
 var isInTestProgress = false;
 // 计时器
 var _timer = null;
 // 获取服务器上命令发送状态的时间间隔
 var _timerInterval = 1000;
+var _MAX_GSM_ = 150, _MAX_SAT_ = 4800;
 // 一个命令发送之后最大尝试获取状态的次数30次，超过这个次数后显示发送结果为失败或超时等
 var _timerMaxtimes = 150, _timerTimes = 0;
 // 发送命令之后的命令的id，通过此id查询后续命令的发送状态
@@ -12,7 +13,7 @@ var _lastCommandId = 0, _lastCommandStatus = -1;
 /*
 命令发送状态的定义
 */
-var _command_send_failed = 9, _command_returned = 10;
+var _command_send_failed = 9, _command_returned = 10, _command_gsm_begin = 0, _command_sat_begin = 2;
 
 
 var cmdStatus = "%time% Command <code>%code%</code> %desc%<br />";
@@ -111,7 +112,7 @@ function showWarningLine(time, code, desc) {
 function calculateTimeused() {
     var used = _timerTimes * _timerInterval;
     var time = new Date(used);
-    $("#timeUsed").html("time used " + time.pattern("mm:ss"));
+    $("#timeUsed").html(time.pattern("mm:ss"));
     var max = _timerInterval * _timerMaxtimes;
     if (used > max * 0.7) {
         $(".modal-header").removeClass("btn-warning").addClass("btn-danger");
@@ -144,6 +145,13 @@ function timerOnTime(functionOnTime, functionTimeout) {
 function getCommandStatus(functionOnComplete) {
     GetJsonData("../ajax/command.ashx", { "type": "query", "cmd": currentTestingCommand, "data": _lastCommandId },
            function (data) {
+               if (data.status == _command_gsm_begin) {
+                   _timerMaxtimes = _MAX_GSM_;
+                   $("#satWarning").hide();
+               } else if (data.status == _command_sat_begin) {
+                   _timerMaxtimes = _MAX_SAT_;
+                   $("#satWarning").show();
+               }
                if (_lastCommandStatus != data.status) {
                    showWarningMessage(data);
                    _lastCommandStatus = data.status;
@@ -165,10 +173,10 @@ function setButtonsSendingState(sending) {
     var html = "<span class=\"glyphicon " +
         (!sending ? "glyphicon-repeat" : "glyphicon-repeat glyphicon-refresh-animate") + "\"></span> Send" + (!sending ? "" : "ing...");
     btn.html(html);
-    if (sending)
-        btn.addClass("disabled");
-    else
-        btn.removeClass("disabled");
+    //if (sending)
+    //    btn.addClass("disabled");
+    //else
+    //    btn.removeClass("disabled");
 }
 
 function queryCommandHistory(queryType) {

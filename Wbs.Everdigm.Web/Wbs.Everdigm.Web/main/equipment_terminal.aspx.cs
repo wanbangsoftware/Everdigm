@@ -95,6 +95,10 @@ namespace Wbs.Everdigm.Web.main
             EquipmentInstance.Update(f => f.id == equ.id, act =>
             {
                 act.Terminal = ter.id;
+                // 更新设备的相应信息为终端的信息
+                act.OnlineStyle = ter.OnlineStyle;
+                act.OnlineTime = ter.OnlineTime;
+                act.Socket = ter.Socket;
                 // 新品等待入库的，绑定终端之后直接确定为库存状态
                 act.Status = storage.id;
             });

@@ -27,6 +27,7 @@ namespace Wbs.Everdigm.BLL
                 Customer = (int?)null,
                 GpsAddress = "",
                 GpsUpdated = true,
+                Functional = 10,
                 id = 0,
                 IP = "",
                 LastAction = "",
