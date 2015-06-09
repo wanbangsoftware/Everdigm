@@ -243,6 +243,7 @@
     <Content Include="scripts\main\equipment.overhaul.js" />
     <Content Include="scripts\main\equipment.position.js" />
     <Content Include="scripts\main\equipment.security.js" />
+    <Content Include="scripts\main\equipment.setting.js" />
     <Content Include="scripts\main\equipment.storage.js" />
     <Content Include="scripts\main\equipment.terminal.base.js" />
     <Content Include="scripts\main\equipment.work.js" />
@@ -290,6 +291,7 @@
     <Content Include="mobile\css\fonts\cell-signal.eot" />
     <Content Include="mobile\css\fonts\cell-signal.ttf" />
     <Content Include="mobile\css\fonts\cell-signal.woff" />
+    <Content Include="bootstrap3\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

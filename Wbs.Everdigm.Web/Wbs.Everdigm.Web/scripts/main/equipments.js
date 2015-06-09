@@ -20,7 +20,7 @@
         typesOnChange($(this).prop("tabindex"), parentSuiffix);
     });
 
-    $("#number").on("keyup", function (e) {
+    $("[id$=\"number\"]").on("keyup", function (e) {
         var v = $(this).val();
         v = v.replace(/\D/g, "");
         $(this).val(v);

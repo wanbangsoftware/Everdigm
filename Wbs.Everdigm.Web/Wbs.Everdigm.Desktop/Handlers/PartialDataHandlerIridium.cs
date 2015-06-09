@@ -99,6 +99,7 @@ namespace Wbs.Everdigm.Desktop
                     pos.Longitude = location.Longitude;
                     pos.NS = location.NSI;
                     pos.EW = location.EWI;
+                    pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
                     pos.GpsTime = data.Time;
                     pos.Equipment = null == equipment ? (int?)null : equipment.id;
                     pos.Terminal = null == terminal ? "" : (terminal.Sim.Length < 11 ? (terminal.Sim + "000") : terminal.Sim);

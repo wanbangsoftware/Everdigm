@@ -526,7 +526,7 @@ namespace Wbs.Everdigm.Desktop
             var u16 = BitConverter.ToUInt16(tmp, 0);
             double mm = u16 / Math.Pow(10, u16.ToString().Length);
             // 将ddmmmm转换成dd.dddd
-            mm = Wbs.Protocol.TX300.Analyse.GPSInfo.DDMM2DDDD(mm);
+            //mm = Wbs.Protocol.TX300.Analyse.GPSInfo.DDMM2DDDD(mm);
             Latitude += mm;
 
             Longitude = latlng[4];
@@ -535,7 +535,7 @@ namespace Wbs.Everdigm.Desktop
             u16 = BitConverter.ToUInt16(tmp, 0);
             mm = u16 / Math.Pow(10, u16.ToString().Length);
             // 将ddmmmm转换成dd.dddd
-            mm = Wbs.Protocol.TX300.Analyse.GPSInfo.DDMM2DDDD(mm);
+            //mm = Wbs.Protocol.TX300.Analyse.GPSInfo.DDMM2DDDD(mm);
             Longitude += mm;
         }
 
