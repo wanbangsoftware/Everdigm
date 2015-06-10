@@ -64,7 +64,7 @@
             <table class="table table-hover position" style="margin-bottom: 0px !important;">
                 <thead>
                     <tr class="alert-info">
-                        <th class="panel-body-td" style="width: 120px;">Type</th>
+                        <th class="panel-body-td" style="width: 180px;">Type</th>
                         <th class="panel-body-td" style="width: 160px;">Receive time</th>
                         <th class="panel-body-td" style="width: 160px;">GPS time</th>
                         <th class="panel-body-td">Address</th>

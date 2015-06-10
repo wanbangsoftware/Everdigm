@@ -237,6 +237,7 @@
                                                         <ul id="menuFunctional" class="dropdown-menu" role="menu" runat="server" aria-labelledby="dropFunctional">
                                                             <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
                                                         </ul>
+                                                        <input type="hidden" id="hiddenFunctional" />
                                                     </div>
                                                 </td>
                                             </tr>

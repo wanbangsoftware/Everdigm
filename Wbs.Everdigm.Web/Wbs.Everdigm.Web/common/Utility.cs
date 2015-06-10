@@ -466,7 +466,7 @@ namespace Wbs.Everdigm.Web
             switch (f)
             {
                 case EquipmentFunctional.Mechanical: ret = "Mechanical"; break;
-                case EquipmentFunctional.Electronic: ret = "Electronic"; break;
+                case EquipmentFunctional.Electric: ret = "Electric"; break;
                 case EquipmentFunctional.Loader: ret = "Loader"; break;
             }
             return ret;

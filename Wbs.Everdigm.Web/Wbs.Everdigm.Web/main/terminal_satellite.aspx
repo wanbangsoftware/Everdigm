@@ -56,7 +56,7 @@
             <asp:Button ID="btQuery" runat="server" Text="Query" CssClass="hidden" OnClick="btQuery_Click" />
             <div class="content-box" style="width: 95%;">
                 <div class="content-box-header" style="padding-left: 8px; padding-right: 8px;">
-                    <input id="btConfirm" style="margin-top: 6px;" type="button" value="Select & Bound" class="button" />
+                    <input id="btConfirm" style="margin-top: 6px;" type="button" value="Select & Bind" class="button" />
                     <input id="btClose" type="button" style="margin-top: 6px; float: right;" value="Close" class="button" />
                     
                     <div class="clear"></div>

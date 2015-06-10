@@ -43,7 +43,10 @@
                         </table>
                         <table cellpadding="0" id="terminalinfo" runat="server" cellspacing="0" style="width: 100%; border: 1px solid #ccc; margin-top: 2px;">
                             <tr class="table_header">
-                                <td colspan="6">Selected terminal:</td>
+                                <td colspan="6">
+                                    Selected terminal(<span id="terType" runat="server"></span>):
+                                    <input type="hidden" id="hiddenType" runat="server" />
+                                </td>
                             </tr>
                             <tr id="_t_1_">
                                 <td class="td_right td-temp">Terminal:</td>

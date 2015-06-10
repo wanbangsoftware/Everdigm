@@ -8,6 +8,7 @@
         {
             case "#new":
                 if (ex.test("N")) {
+                    //document.location = "./equipment_new_product.aspx";
                     $(this).addClass("active");
                     $("#openModal").children("span:eq(1)").html("New product");
                     $("#openModal").attr("data-target", "#modalNewProduct").show();
@@ -210,6 +211,13 @@ function newInStorageSave() {
         return;
     }
     obj.Warehouse = house[0].id;
+    // functional
+    value = $("#hiddenFunctional").val();
+    if (isStringNull(value)) {
+        alert("Please select the functional.");
+        return;
+    }
+    obj.Functional = value;
     // number
     value = $("#number").val();
     if (isStringNull(value)) {

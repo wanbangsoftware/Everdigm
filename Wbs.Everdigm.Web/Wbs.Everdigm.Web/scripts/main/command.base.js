@@ -13,7 +13,8 @@ var _lastCommandId = 0, _lastCommandStatus = -1;
 /*
 命令发送状态的定义
 */
-var _command_send_failed = 9, _command_returned = 10, _command_gsm_begin = 0, _command_sat_begin = 2;
+var _command_send_failed = 9, _command_returned = 10,
+    _command_gsm_begin = 0, _command_sat_begin = 2, _command_sat_handled = 3;
 
 
 var cmdStatus = "%time% Command <code>%code%</code> %desc%<br />";
@@ -145,12 +146,14 @@ function timerOnTime(functionOnTime, functionTimeout) {
 function getCommandStatus(functionOnComplete) {
     GetJsonData("../ajax/command.ashx", { "type": "query", "cmd": currentTestingCommand, "data": _lastCommandId },
            function (data) {
-               if (data.status == _command_gsm_begin) {
-                   _timerMaxtimes = _MAX_GSM_;
-                   $("#satWarning").hide();
-               } else if (data.status == _command_sat_begin) {
+               if (data.status == _command_sat_begin || data.status == _command_sat_handled) {
                    _timerMaxtimes = _MAX_SAT_;
                    $("#satWarning").show();
+               } else {
+                   if (_timerMaxtimes != _MAX_GSM_) {
+                       _timerMaxtimes = _MAX_GSM_;
+                       $("#satWarning").hide();
+                   }
                }
                if (_lastCommandStatus != data.status) {
                    showWarningMessage(data);

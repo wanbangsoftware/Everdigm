@@ -42,6 +42,8 @@ namespace Wbs.Everdigm.Web.main
             }
             else
             {
+                hiddenType.Value = terminal.Type.Value.ToString();
+                terType.InnerText = Wbs.Protocol.TerminalTypes.GetTerminalType(terminal.Type.Value);
                 terminalinfo.Rows[1].Cells[1].InnerText = terminal.Number;
                 terminalinfo.Rows[1].Cells[3].InnerText = terminal.Sim;
                 terminalinfo.Rows[1].Cells[5].InnerText = (int?)null == terminal.Satellite ? "-" : terminal.TB_Satellite.CardNo;
@@ -124,19 +126,37 @@ namespace Wbs.Everdigm.Web.main
             ShowNotification("./terminal_list.aspx", "You have bound \"" + ter.Number + "\" on equipment \"" +
                 EquipmentInstance.GetFullNumber(equ) + "\"");
         }
+        /// <summary>
+        /// 通过终端的类型查找相应的设备
+        /// </summary>
+        /// <returns></returns>
+        private byte GetEquipmentTypeByTerminalType()
+        {
+            byte b = byte.Parse(hiddenType.Value);
+            byte ret = (byte)EquipmentFunctional.Mechanical;
+            switch (b)
+            {
+                case Wbs.Protocol.TerminalTypes.DX: ret = (byte)EquipmentFunctional.Mechanical; break;
+                case Wbs.Protocol.TerminalTypes.DXE: ret = (byte)EquipmentFunctional.Electric; break;
+                case Wbs.Protocol.TerminalTypes.LD: ret = (byte)EquipmentFunctional.Loader; break;
+            }
+            return ret;
+        }
         private void ShowNotbindEquipments()
         {
             var totalRecords = 0;
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
-                f => f.Terminal == (int?)null && f.Number.IndexOf(txtEquipment.Value.Trim()) >= 0, null);
+                f => f.Terminal == (int?)null && f.Number.IndexOf(txtEquipment.Value.Trim()) >= 0 && 
+                    f.Functional == GetEquipmentTypeByTerminalType(), null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             pageIndex = 0 == pageIndex ? totalPages : pageIndex;
             if (pageIndex > totalPages)
             {
                 pageIndex = totalPages;
                 list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
-                    f => f.Terminal == (int?)null && f.Number.IndexOf(txtEquipment.Value.Trim()) >= 0, null);
+                    f => f.Terminal == (int?)null && f.Number.IndexOf(txtEquipment.Value.Trim()) >= 0 &&
+                    f.Functional == GetEquipmentTypeByTerminalType(), null);
             }
 
             string html = "";

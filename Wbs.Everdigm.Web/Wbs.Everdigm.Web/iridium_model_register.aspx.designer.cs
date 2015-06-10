@@ -7,19 +7,10 @@
 // </自动生成>
 //------------------------------------------------------------------------------
 
-namespace Wbs.Everdigm.Web.main {
+namespace Wbs.Everdigm.Web {
     
     
-    public partial class EquipmentInfo {
-        
-        /// <summary>
-        /// header 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder header;
+    public partial class iridium_model_register {
         
         /// <summary>
         /// form1 控件。
@@ -31,75 +22,75 @@ namespace Wbs.Everdigm.Web.main {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
-        /// hidKey 控件。
+        /// cookieName 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidKey;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden cookieName;
         
         /// <summary>
-        /// TitleContentPlaceHolder 控件。
+        /// hidPageIndex 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder TitleContentPlaceHolder;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidPageIndex;
         
         /// <summary>
-        /// equipment_id 控件。
+        /// hidTotalPages 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl equipment_id;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidTotalPages;
         
         /// <summary>
-        /// NavigatorContentPlaceHolder 控件。
+        /// txtQueryNumber 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder NavigatorContentPlaceHolder;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtQueryNumber;
         
         /// <summary>
-        /// MainContentPlaceHolder 控件。
+        /// btQuery 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContentPlaceHolder;
+        protected global::System.Web.UI.WebControls.Button btQuery;
         
         /// <summary>
-        /// objectInfo 控件。
+        /// btSave 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTable objectInfo;
+        protected global::System.Web.UI.WebControls.Button btSave;
         
         /// <summary>
-        /// functional 控件。
+        /// divPagging 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl functional;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPagging;
         
         /// <summary>
-        /// FooterContentPlaceHolder 控件。
+        /// tbodyBody 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder FooterContentPlaceHolder;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl tbodyBody;
     }
 }

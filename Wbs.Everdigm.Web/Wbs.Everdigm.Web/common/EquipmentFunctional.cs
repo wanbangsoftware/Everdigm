@@ -17,7 +17,7 @@ namespace Wbs.Everdigm.Web
         /// <summary>
         /// 电子式挖掘机
         /// </summary>
-        Electronic = 11,
+        Electric = 11,
         /// <summary>
         /// 装载机
         /// </summary>

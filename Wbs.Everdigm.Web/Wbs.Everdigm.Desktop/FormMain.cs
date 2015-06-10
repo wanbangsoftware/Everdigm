@@ -66,7 +66,7 @@ namespace Wbs.Everdigm.Desktop
         }
         private void OnServerMessage(object sender, UIEventArgs e)
         {
-            ShowHistory(e.Message, true);
+            ShowHistory(e.Message, false);
         }
         /// <summary>
         /// 接收到铱星模块发送的数据

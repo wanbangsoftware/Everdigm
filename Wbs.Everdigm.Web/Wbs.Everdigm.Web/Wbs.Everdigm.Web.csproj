@@ -107,6 +107,7 @@
     <Content Include="ajax\equipment_models.ashx" />
     <Content Include="images\sprites.png" />
     <Content Include="images\updown.png" />
+    <Content Include="iridium_model_register.aspx" />
     <Content Include="js\CryptoJS.v3.1.2\components\aes-min.js" />
     <Content Include="js\CryptoJS.v3.1.2\components\aes.js" />
     <Content Include="js\CryptoJS.v3.1.2\components\cipher-core-min.js" />
@@ -207,6 +208,7 @@
     <Content Include="main\equipment_checkout.aspx" />
     <Content Include="main\equipment_command.aspx" />
     <Content Include="main\equipment_delivery.aspx" />
+    <Content Include="main\equipment_new_product.aspx" />
     <Content Include="main\equipment_overhaul.aspx" />
     <Content Include="main\equipment_position.aspx" />
     <Content Include="main\equipment_security.aspx" />
@@ -217,6 +219,7 @@
     <Content Include="main\equipment_work.aspx" />
     <Content Include="main\maptest.html" />
     <Content Include="main\satellite_manage.aspx" />
+    <Content Include="main\terminals.aspx" />
     <Content Include="main\terminal_satellite.aspx" />
     <Content Include="mobile\css\account.css" />
     <Content Include="mobile\css\fonts\cell-signal.svg" />
@@ -232,6 +235,7 @@
     <Content Include="mobile\css\home.css" />
     <Content Include="mobile\my_devices.aspx" />
     <Content Include="mobile\static_google_map.aspx" />
+    <Content Include="scripts\iridium.model.register.js" />
     <Content Include="scripts\main\command.base.js" />
     <Content Include="scripts\main\customers.js" />
     <Content Include="scripts\main\equipment.alarm.js" />
@@ -554,6 +558,13 @@
     <Compile Include="google_map.aspx.designer.cs">
       <DependentUpon>google_map.aspx</DependentUpon>
     </Compile>
+    <Compile Include="iridium_model_register.aspx.cs">
+      <DependentUpon>iridium_model_register.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="iridium_model_register.aspx.designer.cs">
+      <DependentUpon>iridium_model_register.aspx</DependentUpon>
+    </Compile>
     <Compile Include="logout.aspx.cs">
       <DependentUpon>logout.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -721,6 +732,13 @@
     </Compile>
     <Compile Include="main\equipment_model.aspx.designer.cs">
       <DependentUpon>equipment_model.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="main\equipment_new_product.aspx.cs">
+      <DependentUpon>equipment_new_product.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\equipment_new_product.aspx.designer.cs">
+      <DependentUpon>equipment_new_product.aspx</DependentUpon>
     </Compile>
     <Compile Include="main\equipment_overhaul.aspx.cs">
       <DependentUpon>equipment_overhaul.aspx</DependentUpon>
@@ -896,6 +914,13 @@
     </Compile>
     <Compile Include="main\satellite_manage.aspx.designer.cs">
       <DependentUpon>satellite_manage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="main\terminals.aspx.cs">
+      <DependentUpon>terminals.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\terminals.aspx.designer.cs">
+      <DependentUpon>terminals.aspx</DependentUpon>
     </Compile>
     <Compile Include="main\terminal_list.aspx.cs">
       <DependentUpon>terminal_list.aspx</DependentUpon>

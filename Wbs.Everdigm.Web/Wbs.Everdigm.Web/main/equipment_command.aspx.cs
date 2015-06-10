@@ -42,7 +42,7 @@ namespace Wbs.Everdigm.Web.main
                         html += "<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"-1\" href=\"#" + command.Flag + "\">" + command.Title + "</a></li>";
                     }
                 }
-                else if (functional == EquipmentFunctional.Electronic)
+                else if (functional == EquipmentFunctional.Electric)
                 { 
                     // 电子式的挖掘机，不显示普通挖掘机的EPOS命令
                     if (command.Title.IndexOf("Equipment") < 0)

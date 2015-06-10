@@ -6,6 +6,7 @@ using System.Web;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
+using Wbs.Protocol;
 using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Database;
 
@@ -98,23 +99,29 @@ namespace Wbs.Everdigm.Web
             var list = data.FindList(h => h.receive_time >= DateTime.Parse(_date + " 00:00:00") &&
                 h.receive_time <= DateTime.Parse(_date + " 23:59:59") && h.mac_id.Equals(_equipment) &&
                 h.command_id.Equals("0x5000")).OrderBy(o => o.receive_time);
-            //SqlHelper.DataBaseServer = globals.database_server;
-            //SqlDataReader sdr = SqlHelper.Query("select receive_time, substring(message_content, 1, 4) as vols from " + globals.database + ".dbo.dw" +
-            //    DateTime.Parse(date).ToString("yyyyMM") + " where mac_id='" + mac_id + "' and receive_time between '" + date +
-            //    " 00:00:00' and '" + date + " 23:59:59' and command_id='0x5000' order by receive_time ");
-            //if (null != sdr)
+
             // 当日开机时间默认为凌晨零点。
             DateTime lastOpen = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd") + " 00:00:00"), lastClose;
             var lastIsOpen = true;
+            var terType = 0;
             foreach (var obj in list)
             {
+                if (terType == 0)
+                {
+                    var t = new TerminalBLL().Find(find => obj.terminal_id.IndexOf(find.Sim) >= 0);
+                    if (null != t)
+                    {
+                        terType = (byte)t.Type;
+                    }
+                }
                 string str = "";
                 DateTime dt;
                 int hh, mm;
 
                 //while (sdr.Read())
                 //{
-                str = obj.message_content.Substring(0, 4);
+                str = terType == TerminalTypes.DX ? obj.message_content.Substring(0, 4) : 
+                    (obj.message_content.Substring(8, 2) == "00" ? "E000" : "0000");
                 dt = obj.receive_time.Value;
                 hh = Convert.ToInt32(dt.ToString("HH"));
                 mm = Convert.ToInt32(dt.ToString("mm")) / _interval;

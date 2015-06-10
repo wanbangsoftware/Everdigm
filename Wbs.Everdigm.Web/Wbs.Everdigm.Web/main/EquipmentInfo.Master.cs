@@ -36,6 +36,9 @@ namespace Wbs.Everdigm.Web.main
                 var obj = EquipmentInstance.Find(f => f.id == id);
                 if (null != obj)
                 {
+                    functional.InnerText = ((EquipmentFunctional)obj.Functional != EquipmentFunctional.Loader ? "Excavator: " : "") +
+                        Utility.GetEquipmentFunctional(obj.Functional.Value);
+
                     equipment_id.InnerHtml = obj.TB_EquipmentModel.Code + obj.Number;
                     objectInfo.Rows[1].Cells[1].InnerHtml = obj.TB_EquipmentModel.TB_EquipmentType.Name;
                     objectInfo.Rows[1].Cells[3].InnerHtml = obj.TB_EquipmentModel.Code;

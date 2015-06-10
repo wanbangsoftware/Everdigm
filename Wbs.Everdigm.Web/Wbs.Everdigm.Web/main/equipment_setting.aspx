@@ -1,6 +1,16 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main/EquipmentInfo.Master" AutoEventWireup="true" CodeBehind="equipment_setting.aspx.cs" Inherits="Wbs.Everdigm.Web.main.equipment_setting" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="header" runat="server">
+    <style type="text/css">
+        .custom-modal-header {
+            -webkit-border-top-left-radius: 5px;
+            -webkit-border-top-right-radius: 5px;
+            -moz-border-radius-topleft: 5px;
+            -moz-border-radius-topright: 5px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="TitleContentPlaceHolder" runat="server">Equipment: Setting</asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="NavigatorContentPlaceHolder" runat="server">
@@ -43,6 +53,15 @@
         <tr>
             <td colspan="4">
                 <ul class="nav nav-tabs" style="border-bottom: 0px;" role="tablist">
+                    <li role="presentation" class="dropdown" id="ddFunctional">
+                        <a id="dropFunctional" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Functional:</span><span class="caret"></span>
+                        </a>
+                        <ul id="menuFunctional" class="dropdown-menu" role="menu" runat="server" aria-labelledby="dropFunctional">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
+                        </ul>
+                        <input type="hidden" id="hidFunctional" runat="server" value="0" />
+                        <input type="hidden" id="oldFunc" runat="server" />
+                    </li>
                     <li role="presentation" class="dropdown" id="ddType">
                         <a id="dropType" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Type:</span><span class="caret"></span>
                         </a>
@@ -87,13 +106,50 @@
             </td>
         </tr>
         <tr>
+            <td colspan="4" class="alert-info">Change Terminal Information</td>
+        </tr>
+        <tr id="terminalInfo" runat="server">
+            <td class="popup-td">Number:
+                <input type="hidden" runat="server" id="oldTerminal" />
+                <input type="hidden" runat="server" id="newTerminal" />
+            </td>
+            <td class="popup-td"><a href="#bind">Click here to bind</a></td>
+            <td class="popup-td">Sim card:</td>
+            <td class="popup-td">-</td>
+        </tr>
+        <tr>
             <td colspan="4" class="popup-td">
+                <asp:Button ID="btUnbind" runat="server" CssClass="hidden" Text="Unbind" OnClick="btUnbind_Click" />
                 <asp:Button ID="btSaveInfo" runat="server" CssClass="hidden" Text="Save" OnClick="btSaveInfo_Click" />
                 <button class="btn btn-primary" id="btSave" type="button"><span class="glyphicon glyphicon-floppy-open"></span><span> Save changes</span></button>
                 <button class="btn btn-warning" type="button">Leave blank to avoid modification</button>
             </td>
         </tr>
     </table>
+
+    <div class="modal fade" id="analyseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header custom-modal-header btn-warning">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Warning</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <span>Do you realy wanna to unbind this equipment & terminal?</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="satWarning" type="button" class="btn btn-warning">
+                        <span class="glyphicon glyphicon-ok"></span> Yes, DO it!
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="FooterContentPlaceHolder" runat="server">
     <script type="text/javascript" src="../scripts/main/equipments.js"></script>
