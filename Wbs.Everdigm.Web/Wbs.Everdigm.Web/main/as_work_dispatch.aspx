@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="equipment_inquiry.aspx.cs" Inherits="Wbs.Everdigm.Web.main.equipment_inquiry" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="as_work_dispatch.aspx.cs" Inherits="Wbs.Everdigm.Web.main.as_work_dispatch" %>
 
 <!DOCTYPE html>
 
@@ -11,6 +11,20 @@
     <link href="../bootstrap3/bootstrap-datepicker-1.3.0/css/datepicker3.css" rel="stylesheet" />
     <link href="../css/body_equipment.css" rel="stylesheet" />
     <link href="../css/pagging.css" rel="stylesheet" />
+    <style type="text/css">
+        .custom-modal-header {
+            -webkit-border-top-left-radius: 5px;
+            -webkit-border-top-right-radius: 5px;
+            -moz-border-radius-topleft: 5px;
+            -moz-border-radius-topright: 5px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        #tbodyBody tr {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -19,10 +33,10 @@
             <input type="hidden" runat="server" value="0" id="hidPageIndex" />
             <input type="hidden" runat="server" id="hidTotalPages" value="0" />
             <!-- Default panel contents -->
-            <div class="panel-heading"><strong>Equipment: Inquiry</strong></div>
-            <div class="panel-body">
-                <!--默认查询新品库存列表-->
-                <input type="hidden" id="hidQueryType" runat="server" value="N" />
+            <div class="panel-heading">
+                <strong>AS: Work Dispatch</strong>(Equipments not bind terminal)
+            </div>
+            <div class="panel-body" style="padding-bottom: 0px !important;">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist" id="queryBar">
                     <li role="presentation" class="active dropdown" id="ddTypes">
@@ -51,7 +65,7 @@
                     </li>
                     <li role="presentation" class="tablist-item-input">
                         <div class="input-group">
-                            <input type="text" id="txtQueryNumber" runat="server" class="form-control" placeholder="number">
+                            <input type="text" id="txtQueryNumber" runat="server" class="form-control" placeholder="number" maxlength="15">
                             <asp:Button ID="btQuery" CssClass="hidden" runat="server" Text="Query" Width="0" Height="0" OnClick="btQuery_Click" />
                             <span class="input-group-btn">
                                 <button class="btn btn-warning" type="button" id="query"><span class="glyphicon glyphicon-search"></span></button>
@@ -60,7 +74,6 @@
                         <!-- /input-group -->
                     </li>
                 </ul>
-
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div class="tab-content">
@@ -68,37 +81,22 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th class="bg-primary"></th>
-                                    <th colspan="7" class="in-tab-title-rb bg-primary">Equipment Information</th>
-                                    <th colspan="2" class="in-tab-title-rb bg-primary">Customer</th>
-                                    <th colspan="4" class="in-tab-title-rb bg-primary">Terminal Information</th>
-                                    <th colspan="5" class="in-tab-title-b bg-primary">Storage Information</th>
-                                </tr>
-                                <tr>
-                                    <th class="in-tab-title-b bg-warning">#</th>
-                                    <th class="in-tab-title-b bg-warning">Type</th>
-                                    <th class="in-tab-title-b bg-warning">Model</th>
-                                    <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Functional</th>
-                                    <th class="in-tab-title-b bg-warning" style="text-align: right !important;">SMH</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow">Eng.</th>
-                                    <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Location</th>
-                                    <th class="in-tab-title-rb bg-warning">Status</th>
-                                    <th class="in-tab-title-b bg-warning">Number</th>
-                                    <th class="in-tab-title-rb bg-warning">Name</th>
-                                    <th class="in-tab-title-b bg-warning">Signal</th>
-                                    <th class="in-tab-title-b bg-warning">Link</th>
-                                    <th class="in-tab-title-b bg-warning">Received</th>
-                                    <th class="in-tab-title-rb bg-warning">Ter. NO.</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow">In Date</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow">In Type</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow">Out Date</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow">Out Type</th>
-                                    <th class="in-tab-title-b bg-warning">Warehouse</th>
+                                    <th class="in-tab-title-b bg-primary" style="width: 50px;">#</th>
+                                    <th class="in-tab-title-b bg-primary" style="width: 50px;">Type</th>
+                                    <th class="in-tab-title-b bg-primary" style="text-align: left !important; width: 150px;">Model</th>
+                                    <th class="in-tab-title-b bg-primary" style="text-align: left !important; width: 90px;">Functional</th>
+                                    <th class="in-tab-title-rb bg-primary" style="width: 50px;">Status</th>
+                                    <th class="in-tab-title-b bg-primary textoverflow" style="width: 90px;">In Date</th>
+                                    <th class="in-tab-title-b bg-primary textoverflow" style="width: 40px;">In Type</th>
+                                    <th class="in-tab-title-b bg-primary textoverflow" style="width: 90px;">Out Date</th>
+                                    <th class="in-tab-title-b bg-primary textoverflow" style="width: 40px;">Out Type</th>
+                                    <th class="in-tab-title-b bg-primary" style="width: 100px;">Warehouse</th>
+                                    <th class="in-tab-title-b bg-primary"></th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="18">
+                                    <td colspan="11">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>
@@ -108,24 +106,16 @@
                             <tbody id="tbodyBody" runat="server">
                                 <tr>
                                     <td class="in-tab-txt-b">1</td>
-                                    <td class="in-tab-txt-b">EX.</td>
-                                    <td class="in-tab-txt-b textoverflow" style="text-align: left !important;">DL215-9-21442</td>
-                                    <td class="in-tab-txt-b">2430</td>
-                                    <td class="in-tab-txt-b">OFF</td>
-                                    <td class="in-tab-txt-b textoverflow">山东省烟台市</td>
-                                    <td class="in-tab-txt-rb">W</td>
-                                    <td class="in-tab-txt-b">23553523</td>
-                                    <td class="in-tab-txt-rb">23553523</td>
-                                    <td class="in-tab-txt-b">ON</td>
-                                    <td class="in-tab-txt-b">
-                                        <img src="../images/img_connect_gprs.png" /></td>
-                                    <td class="in-tab-txt-b textoverflow">2014-09-22</td>
-                                    <td class="in-tab-txt-rb textoverflow">20140921221</td>
+                                    <td class="in-tab-txt-b">HEX</td>
+                                    <td class="in-tab-txt-b">DX500LCA-10139</td>
+                                    <td class="in-tab-txt-b">Mechanical</td>
+                                    <td class="in-tab-txt-rb">STOC</td>
                                     <td class="in-tab-txt-b">2014-09-21</td>
-                                    <td class="in-tab-txt-b">S</td>
+                                    <td class="in-tab-txt-b">STOC</td>
                                     <td class="in-tab-txt-b">2014-10-22</td>
-                                    <td class="in-tab-txt-b">S</td>
-                                    <td class="in-tab-txt-rb textoverflow">Warehouse1</td>
+                                    <td class="in-tab-txt-b">STOC</td>
+                                    <td class="in-tab-txt-b textoverflow">Warehouse1</td>
+                                    <td class="in-tab-txt-b"></td>
                                 </tr>
                             </tbody>
                         </table>

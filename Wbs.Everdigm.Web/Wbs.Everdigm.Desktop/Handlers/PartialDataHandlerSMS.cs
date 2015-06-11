@@ -11,23 +11,29 @@ namespace Wbs.Everdigm.Desktop
 {
     public partial class DataHandler
     {
-        private void CheckSMSData()
+        public void CheckSMSData()
         {
             var sms = SmsInstance.Find(f => f.Handled == false);
             if (null != sms)
             {
                 using (var data = new AsyncUserDataBuffer())
                 {
-                    data.Buffer = CustomConvert.GetBytes(sms.Data);
+                    data.Buffer = Convert.FromBase64String(sms.Data);
                     data.DataType = AsyncUserDataType.ReceivedData;
                     data.IP = "";
                     data.PackageType = AsyncDataPackageType.SMS;
                     data.Port = 0;
                     data.ReceiveTime = sms.SendTime.Value;
                     data.SocketHandle = 0;
+                    ShowUnhandledMessage(string.Format("{0}SMS data from {1}: {2}", Now, sms.Sender, CustomConvert.GetHex(data.Buffer)));
                     HandleData(data);
                 }
+                UpdateSMSDataHandled(sms.id);
             }
+        }
+        private void UpdateSMSDataHandled(long id)
+        {
+            SmsInstance.Update(f => f.id == id, act => { act.Handled = true; });
         }
     }
 }

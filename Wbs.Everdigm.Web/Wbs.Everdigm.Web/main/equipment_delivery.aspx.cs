@@ -41,7 +41,7 @@ namespace Wbs.Everdigm.Web.main
                 if (!string.IsNullOrEmpty(hidCustomerId.Value.Trim()) &&
                     !string.IsNullOrEmpty(hidEquipmentId.Value.Trim()))
                 {
-                    var obj = EquipmentInstance.Find(f => f.id == ParseInt(hidEquipmentId.Value.Trim()));
+                    var obj = EquipmentInstance.Find(f => f.id == ParseInt(hidEquipmentId.Value.Trim()) && f.Deleted == false);
                     if (obj.TB_EquipmentStatusName.IsItInventory == false)
                     {
                         // 如果不在库存状态则提示失败
@@ -50,7 +50,7 @@ namespace Wbs.Everdigm.Web.main
                     }
                     else
                     {
-                        EquipmentInstance.Update(f => f.id == obj.id, act =>
+                        EquipmentInstance.Update(f => f.id == obj.id && f.Deleted == false, act =>
                         {
                             act.Status = ParseInt(ddlSituation.SelectedValue);
                             // 出库后库存信息置为null

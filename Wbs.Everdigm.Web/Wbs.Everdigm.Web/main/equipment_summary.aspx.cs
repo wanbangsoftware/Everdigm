@@ -20,7 +20,7 @@ namespace Wbs.Everdigm.Web.main
 
         private void ShowCount()
         {
-            var list = EquipmentInstance.FindList(null);
+            var list = EquipmentInstance.FindList(f => f.Deleted == false);
 
             // 统计野外
             var total = 0;

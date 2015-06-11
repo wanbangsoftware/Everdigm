@@ -21,7 +21,7 @@ namespace Wbs.Everdigm.Web.mobile
         }
         private void ShowEquipmentInformations()
         {
-            var obj = EquipmentInstance.Find(f => f.id == int.Parse(_key));
+            var obj = EquipmentInstance.Find(f => f.id == int.Parse(_key) && f.Deleted == false);
             if (null == obj)
             {
                 ShowNotification("/mobile/devices.aspx", "No such equipment exist: paramenter error.", false);

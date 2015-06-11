@@ -25,7 +25,7 @@ namespace Wbs.Everdigm.Web.main
         private void ShowOldInformations()
         { 
             var id = ParseInt(Utility.Decrypt(_key));
-            var equipment = EquipmentInstance.Find(f => f.id == id);
+            var equipment = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
             if (null != equipment)
             {
                 number.Value = equipment.Number;
@@ -70,7 +70,7 @@ namespace Wbs.Everdigm.Web.main
         private void SaveChanges()
         {
             var id = ParseInt(Utility.Decrypt(_key));
-            var equipment = EquipmentInstance.Find(f => f.id == id);
+            var equipment = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
             bool needSave = false;
             if (null != equipment)
             {
@@ -118,7 +118,7 @@ namespace Wbs.Everdigm.Web.main
                 }
                 if (needSave)
                 {
-                    EquipmentInstance.Update(f => f.id == equipment.id, act =>
+                    EquipmentInstance.Update(f => f.id == equipment.id && f.Deleted == false, act =>
                     {
                         if (act.Model != equipment.Model)
                             act.Model = equipment.Model;
@@ -156,7 +156,7 @@ namespace Wbs.Everdigm.Web.main
             if (!HasSessionLose)
             {
                 var id = ParseInt(Utility.Decrypt(_key));
-                var equipment = EquipmentInstance.Find(f => f.id == id);
+                var equipment = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
                 if (null == equipment) {
                     ShowNotification("./equipment_setting.aspx?key=" + Utility.UrlEncode(_key), "Not found the equipment", false);
                 }
@@ -189,6 +189,54 @@ namespace Wbs.Everdigm.Web.main
                     });
                     ShowNotification("./equipment_setting.aspx?key=" + Utility.UrlEncode(_key), "You have unbind terminal & equipment.");
                 }
+            }
+        }
+
+        protected void btDelete_Click(object sender, EventArgs e)
+        {
+            // 删除设备
+            var id = ParseInt(Utility.Decrypt(_key));
+            var equipment = EquipmentInstance.Find(f => f.id == id);
+            if (null == equipment)
+            {
+                ShowNotification("./equipment_setting.aspx?key=" + Utility.UrlEncode(_key), "Not found the equipment", false);
+            }
+            else
+            {
+                string number = EquipmentInstance.GetFullNumber(equipment);
+                // 解绑终端
+                TerminalInstance.Update(f => f.id == equipment.Terminal, act =>
+                {
+                    act.HasBound = false;
+                });
+                // 更新Deleted=true
+                EquipmentInstance.Update(f => f.id == equipment.id, act => {
+                    act.Deleted = true;
+                    act.GpsAddress = "";
+                    act.IP = "";
+                    act.LastAction = "";
+                    act.LastActionBy = "";
+                    act.LastActionTime = (DateTime?)null;
+                    act.Latitude = 0.0;
+                    act.Longitude = 0.0;
+                    act.OnlineStyle = (byte?)null;
+                    act.OnlineTime = (DateTime?)null;
+                    act.Port = 0;
+                    act.Rpm = 0;
+                    act.Runtime = 0;
+                    act.ServerName = "";
+                    act.Signal = 0;
+                    act.Socket = 0;
+                    act.Terminal = (int?)null;
+                    act.Voltage = "G0000";
+                });
+                // 保存删除设备历史
+                SaveHistory(new TB_AccountHistory()
+                {
+                    ActionId = ActionInstance.Find(f => f.Name.Equals("Unbind")).id,
+                    ObjectA = "delete equipment " + number
+                });
+                ShowNotification("./equipment_inquiry.aspx", "You have deleted a equipment: " + number);
             }
         }
     }

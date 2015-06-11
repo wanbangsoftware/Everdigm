@@ -254,6 +254,14 @@ namespace Wbs.Everdigm.Desktop
                         _tcpServer.RecycleBuffer(obj);
                     }
                 }
+                else
+                {
+                    if (stat == 0)
+                    {
+                        // 处理未处理的SMS信息
+                        _handler.CheckSMSData();
+                    }
+                }
 
                 // 查找是否有铱星数据待处理
                 iridium = null;

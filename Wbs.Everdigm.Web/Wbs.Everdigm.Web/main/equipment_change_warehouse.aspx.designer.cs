@@ -10,7 +10,7 @@
 namespace Wbs.Everdigm.Web.main {
     
     
-    public partial class equipment_in_storage {
+    public partial class equipment_change_warehouse {
         
         /// <summary>
         /// selectedTypes 控件。
@@ -101,5 +101,32 @@ namespace Wbs.Everdigm.Web.main {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl tbodyBody;
+        
+        /// <summary>
+        /// btSaveChangeWarehouse 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btSaveChangeWarehouse;
+        
+        /// <summary>
+        /// hidWarehouseTo 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidWarehouseTo;
+        
+        /// <summary>
+        /// hidWarehouseEquipmentId 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidWarehouseEquipmentId;
     }
 }

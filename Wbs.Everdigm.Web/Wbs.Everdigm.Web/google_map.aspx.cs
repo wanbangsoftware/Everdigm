@@ -68,7 +68,7 @@ namespace Wbs.Everdigm.Web
                     if (pos.Equipment != (int?)null)
                     {
                         var EquipmentInstance = new EquipmentBLL();
-                        EquipmentInstance.Update(f => f.id == pos.Equipment, act =>
+                        EquipmentInstance.Update(f => f.id == pos.Equipment && f.Deleted == false, act =>
                         {
                             act.GpsAddress = hidAddress.Value;
                             act.GpsUpdated = true;

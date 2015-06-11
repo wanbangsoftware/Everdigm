@@ -25,6 +25,7 @@ namespace Wbs.Everdigm.BLL
             return new TB_Equipment()
             {
                 Customer = (int?)null,
+                Deleted = false,
                 GpsAddress = "",
                 GpsUpdated = true,
                 Functional = 10,

@@ -201,16 +201,19 @@
     <Content Include="js\twbsPagination\jquery.twbsPagination.min.js" />
     <Content Include="main\astest.aspx" />
     <Content Include="main\as_tracker.aspx" />
+    <Content Include="main\as_work_dispatch.aspx" />
     <Content Include="main\customers.aspx" />
     <Content Include="main\customer_new.aspx" />
     <Content Include="main\equipment_alarm.aspx" />
     <Content Include="main\equipment_as.aspx" />
+    <Content Include="main\equipment_change_warehouse.aspx" />
     <Content Include="main\equipment_checkout.aspx" />
     <Content Include="main\equipment_command.aspx" />
     <Content Include="main\equipment_delivery.aspx" />
     <Content Include="main\equipment_new_product.aspx" />
     <Content Include="main\equipment_overhaul.aspx" />
     <Content Include="main\equipment_position.aspx" />
+    <Content Include="main\equipment_rental_fleet.aspx" />
     <Content Include="main\equipment_security.aspx" />
     <Content Include="main\equipment_setting.aspx" />
     <Content Include="main\equipment_storage.aspx" />
@@ -240,12 +243,15 @@
     <Content Include="scripts\main\customers.js" />
     <Content Include="scripts\main\equipment.alarm.js" />
     <Content Include="scripts\main\equipment.base.js" />
+    <Content Include="scripts\main\equipment.change.warehouse.js" />
     <Content Include="scripts\main\equipment.checkout.js" />
     <Content Include="scripts\main\equipment.command.js" />
     <Content Include="scripts\main\equipment.delivery.js" />
     <Content Include="scripts\main\equipment.info.js" />
+    <Content Include="scripts\main\equipment.new.product.js" />
     <Content Include="scripts\main\equipment.overhaul.js" />
     <Content Include="scripts\main\equipment.position.js" />
+    <Content Include="scripts\main\equipment.rental.fleet.js" />
     <Content Include="scripts\main\equipment.security.js" />
     <Content Include="scripts\main\equipment.setting.js" />
     <Content Include="scripts\main\equipment.storage.js" />
@@ -296,6 +302,7 @@
     <Content Include="mobile\css\fonts\cell-signal.ttf" />
     <Content Include="mobile\css\fonts\cell-signal.woff" />
     <Content Include="bootstrap3\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="main\EquipmentStorage.Master" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -607,6 +614,13 @@
     <Compile Include="main\as_tracker.aspx.designer.cs">
       <DependentUpon>as_tracker.aspx</DependentUpon>
     </Compile>
+    <Compile Include="main\as_work_dispatch.aspx.cs">
+      <DependentUpon>as_work_dispatch.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\as_work_dispatch.aspx.designer.cs">
+      <DependentUpon>as_work_dispatch.aspx</DependentUpon>
+    </Compile>
     <Compile Include="main\board.aspx.cs">
       <DependentUpon>board.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -677,6 +691,13 @@
     <Compile Include="main\EquipmentInfo.Master.designer.cs">
       <DependentUpon>EquipmentInfo.Master</DependentUpon>
     </Compile>
+    <Compile Include="main\EquipmentStorage.Master.cs">
+      <DependentUpon>EquipmentStorage.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\EquipmentStorage.Master.designer.cs">
+      <DependentUpon>EquipmentStorage.Master</DependentUpon>
+    </Compile>
     <Compile Include="main\equipment_alarm.aspx.cs">
       <DependentUpon>equipment_alarm.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -690,6 +711,13 @@
     </Compile>
     <Compile Include="main\equipment_as.aspx.designer.cs">
       <DependentUpon>equipment_as.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="main\equipment_change_warehouse.aspx.cs">
+      <DependentUpon>equipment_change_warehouse.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\equipment_change_warehouse.aspx.designer.cs">
+      <DependentUpon>equipment_change_warehouse.aspx</DependentUpon>
     </Compile>
     <Compile Include="main\equipment_checkout.aspx.cs">
       <DependentUpon>equipment_checkout.aspx</DependentUpon>
@@ -753,6 +781,13 @@
     </Compile>
     <Compile Include="main\equipment_position.aspx.designer.cs">
       <DependentUpon>equipment_position.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="main\equipment_rental_fleet.aspx.cs">
+      <DependentUpon>equipment_rental_fleet.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\equipment_rental_fleet.aspx.designer.cs">
+      <DependentUpon>equipment_rental_fleet.aspx</DependentUpon>
     </Compile>
     <Compile Include="main\equipment_security.aspx.cs">
       <DependentUpon>equipment_security.aspx</DependentUpon>

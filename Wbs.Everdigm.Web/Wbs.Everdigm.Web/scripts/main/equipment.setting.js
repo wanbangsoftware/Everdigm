@@ -33,4 +33,6 @@
         $("#analyseModal").modal("show");
     });
     $("#satWarning").click(function () { $("[id$=\"btUnbind\"]").click(); });
+    $("#btDel").click(function () { $("#warningDelete").modal("show"); });
+    $("#satDelete").click(function () { $("[id$=\"btDelete\"]").click(); });
 });

@@ -97,7 +97,7 @@ namespace Wbs.Everdigm.Web.main
                 {
                     cnt++;
                     var id = Utility.UrlEncode(Utility.Encrypt(obj.id.ToString()));
-                    var equipment = EquipmentInstance.Find(f => f.TB_Terminal.id == obj.id);
+                    var equipment = EquipmentInstance.Find(f => f.TB_Terminal.id == obj.id && f.Deleted == false);
                     html += "<tr>" +
                         "<td style=\"text-align: center;\"><input type=\"checkbox\" id=\"cb_" + id + "\" /></td>" +
                         "<td style=\"text-align: center;\">" + cnt + "</td>" +
@@ -273,9 +273,10 @@ namespace Wbs.Everdigm.Web.main
             var terminal = TerminalInstance.Find(f => f.id == id);
             if (null == terminal) return;
 
-            var equipment = EquipmentInstance.Find(f => f.Terminal == id);
+            var equipment = EquipmentInstance.Find(f => f.Terminal == id && f.Deleted == false);
             // 更新设备的终端为空并清空设备的相应值
-            EquipmentInstance.Update(f => f.Terminal == id, act => {
+            EquipmentInstance.Update(f => f.Terminal == id && f.Deleted == false, act =>
+            {
                 act.Terminal = (int?)null;
                 act.GpsAddress = "";
                 act.LastAction = "";

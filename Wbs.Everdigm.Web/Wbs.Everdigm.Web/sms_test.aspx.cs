@@ -52,60 +52,26 @@ namespace Wbs.Everdigm.Web
                 TX300 x300 = new TX300(content);
                 x300.package_to_msg();
                 x300.TerminalID = sender + "000";
-                save(x300);
+                //save(x300);
                 if (x300.CommandID == 0xBB0F)
                 {
                     handleBB0F(sender, x300.TerminalType);
                 }
-                var datetime = new DateTime(2015, 5, 7, 0, 0, 0, 0, DateTimeKind.Local);
-                if (DateTime.Now.Ticks > datetime.Ticks)
-                {
-                    var SMSInstance = new SmsBLL();
-                    var sms = SMSInstance.GetObject();
-                    sms.SendTime = dt;
-                    sms.Sender = sender;
-                    sms.Data = text;
-                    SMSInstance.Add(sms);
-                }
-                else
-                {
-                    HandleEquipmentState(sender, x300.CommandID);
-                }
-            }
-            //catch(Exception e)
-            //{
-            //    string s=e.Message;
-            //}
-        }
 
-        private void save(TX300 obj)
-        {
-            var simno = (obj.TerminalID[0] == '8' && obj.TerminalID[1] == '9' ? obj.TerminalID.Substring(0, 8) : obj.TerminalID);
-            var EquipmentInstance = new EquipmentBLL();
-            var equipment = EquipmentInstance.Find(f => f.TB_Terminal.Sim.Equals(simno));
-            var DataInstance = new DataBLL();
-            TB_HISTORIES data = DataInstance.GetObject();
-            data.command_id = "0x" + CustomConvert.IntToDigit(obj.CommandID, CustomConvert.HEX, 4);
-            data.mac_id = null == equipment ? "" : EquipmentInstance.GetFullNumber(equipment);
-            data.message_content = CustomConvert.GetHex(obj.MsgContent);
-            data.message_type = 1;
-            data.package_id = obj.PackageID;
-            data.protocol_type = (obj.ProtocolType % 0x10 == 0 ? Protocol.ProtocolTypes.SMS : Protocol.ProtocolTypes.SMS_BLIND);//Protocol.ProtocolTypes.SMS;//obj.ProtocolType;
-            data.protocol_version = obj.ProtocolVersion;
-            data.receive_time = DateTime.Now;
-            data.sequence_id = obj.SequenceID.ToString();
-            data.server_port = 0;
-            data.terminal_id = obj.TerminalID;
-            data.terminal_type = obj.TerminalType;
-            data.total_length = (short)obj.TotalLength;
-            data.total_package = obj.TotalPackage;
-            DataInstance.Add(data);
+                var SMSInstance = new SmsBLL();
+                var sms = SMSInstance.GetObject();
+                sms.SendTime = dt;
+                sms.Sender = sender;
+                sms.Data = text;
+                SMSInstance.Add(sms);
+
+            }
         }
 
         private void HandleEquipmentState(string sender, ushort Command)
         {
             var EquipmentInstance = new EquipmentBLL();
-            EquipmentInstance.Update(f => f.TB_Terminal.Sim.Equals(sender), act =>
+            EquipmentInstance.Update(f => f.TB_Terminal.Sim.Equals(sender) && f.Deleted == false, act =>
             {
                 act.Socket = 0;
                 act.OnlineTime = DateTime.Now;

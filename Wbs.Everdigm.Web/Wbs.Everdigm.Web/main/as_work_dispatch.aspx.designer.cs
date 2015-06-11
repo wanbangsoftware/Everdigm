@@ -10,16 +10,16 @@
 namespace Wbs.Everdigm.Web.main {
     
     
-    public partial class equipment_in_storage {
+    public partial class as_work_dispatch {
         
         /// <summary>
-        /// selectedTypes 控件。
+        /// form1 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden selectedTypes;
+        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
         /// cookieName 控件。
@@ -47,6 +47,15 @@ namespace Wbs.Everdigm.Web.main {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidTotalPages;
+        
+        /// <summary>
+        /// selectedTypes 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden selectedTypes;
         
         /// <summary>
         /// selectedModels 控件。

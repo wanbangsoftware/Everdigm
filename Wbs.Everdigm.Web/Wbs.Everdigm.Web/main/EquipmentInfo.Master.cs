@@ -33,7 +33,7 @@ namespace Wbs.Everdigm.Web.main
             {
                 var id = ParseInt(Utility.Decrypt(_key));
                 var EquipmentInstance = new EquipmentBLL();
-                var obj = EquipmentInstance.Find(f => f.id == id);
+                var obj = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
                 if (null != obj)
                 {
                     functional.InnerText = ((EquipmentFunctional)obj.Functional != EquipmentFunctional.Loader ? "Excavator: " : "") +

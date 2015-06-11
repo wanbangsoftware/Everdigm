@@ -9,6 +9,16 @@
     <link href="../bootstrap3/css/bootstrap.css" rel="stylesheet" />
     <link href="../bootstrap3/models/css/bootstrap-dialog.min.css" rel="stylesheet" />
     <link href="../bootstrap3/bootstrap-datepicker-1.3.0/css/datepicker3.css" rel="stylesheet" />
+    <style type="text/css">
+        .custom-modal-header {
+            -webkit-border-top-left-radius: 5px;
+            -webkit-border-top-right-radius: 5px;
+            -moz-border-radius-topleft: 5px;
+            -moz-border-radius-topright: 5px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+    </style>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -46,7 +56,6 @@
                                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
                                             </ul>
                                             <input type="hidden" id="hidFunctional" runat="server" value="0" />
-                                            <input type="hidden" id="oldFunc" runat="server" />
                                         </li>
                                         <li role="presentation" class="dropdown" id="ddType">
                                             <a id="dropType" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Type:</span><span class="caret"></span>
@@ -66,7 +75,6 @@
                                         </li>
                                         <li role="presentation" class="tablist-item-input">
                                             <input class="form-control" runat="server" id="number" style="width: 150px; margin-top: 3px;" placeholder="number" maxlength="5" />
-                                            <input type="hidden" runat="server" id="old" />
                                         </li>
                                         <li role="presentation" class="tablist-item-input">
                                             <a><span id="fullNumber"></span></a>
@@ -81,9 +89,9 @@
                                 <td colspan="4">
                                     <ul class="nav nav-tabs" style="border-bottom: 0px;" role="tablist">
                                         <li role="presentation" class="dropdown" id="ddWarehouses">
-                                            <a id="dropWarehouses" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Warehouse:</span><span class="caret"></span>
+                                            <a id="dropWarehouse" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Warehouse:</span><span class="caret"></span>
                                             </a>
-                                            <ul id="menuWarehouses" class="dropdown-menu" role="menu" aria-labelledby="dropWarehouses">
+                                            <ul id="menuWarehouse" class="dropdown-menu" role="menu" aria-labelledby="dropWarehouse">
                                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
                                             </ul>
                                             <input type="hidden" id="hidWarehouse" runat="server" value="0" />
@@ -99,10 +107,32 @@
                             </tr>
                             <tr>
                                 <td colspan="4" class="popup-td">
-                                    <button class="btn btn-primary" id="btSave" type="button"><span class="glyphicon glyphicon-floppy-open"></span><span> Save</span></button>
+                                    <input type="hidden" id="hidNewInstorage" runat="server" />
+                                    <asp:Button ID="btSave" CssClass="hidden" runat="server" OnClick="btSave_Click" />
+                                    <button class="btn btn-primary" type="button"><span class="glyphicon glyphicon-floppy-open"></span><span>Save</span></button>
                                 </td>
                             </tr>
                         </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalWarning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header custom-modal-header btn-warning">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Warning</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <span id="warningText"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -122,5 +152,6 @@
     <script type="text/javascript" src="../scripts/main/pagination.js"></script>
     <script type="text/javascript" src="../scripts/main/equipment.base.js"></script>
     <script type="text/javascript" src="../scripts/main/equipments.js"></script>
+    <script type="text/javascript" src="../scripts/main/equipment.new.product.js"></script>
 </body>
 </html>

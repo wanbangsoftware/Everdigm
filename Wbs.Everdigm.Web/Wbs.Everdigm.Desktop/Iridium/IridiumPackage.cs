@@ -521,7 +521,7 @@ namespace Wbs.Everdigm.Desktop
             Latitude = latlng[1];
             byte[] tmp = new byte[2];
             Buffer.BlockCopy(latlng, 2, tmp, 0, 2);
-            tmp = CustomConvert.reserve(tmp);
+            //tmp = CustomConvert.reserve(tmp);
 
             var u16 = BitConverter.ToUInt16(tmp, 0);
             double mm = u16 / Math.Pow(10, u16.ToString().Length);
@@ -531,7 +531,7 @@ namespace Wbs.Everdigm.Desktop
 
             Longitude = latlng[4];
             Buffer.BlockCopy(latlng, 5, tmp, 0, 2);
-            tmp = CustomConvert.reserve(tmp);
+            //tmp = CustomConvert.reserve(tmp);
             u16 = BitConverter.ToUInt16(tmp, 0);
             mm = u16 / Math.Pow(10, u16.ToString().Length);
             // 将ddmmmm转换成dd.dddd

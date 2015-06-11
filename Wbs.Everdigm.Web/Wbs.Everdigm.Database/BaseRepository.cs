@@ -90,6 +90,14 @@ namespace Wbs.Everdigm.Database
             context.GetTable<T>().DeleteOnSubmit(entity);
             SubmitChanges();
         }
+        /// <summary>
+        /// 删除指定条件的所有记录
+        /// </summary>
+        /// <param name="anyLambda"></param>
+        public void Delete(Expression<Func<T, bool>> anyLambda) {
+            context.GetTable<T>().DeleteAllOnSubmit(FindList<T>(anyLambda));
+            SubmitChanges();
+        }
 
         /// <summary>
         /// 查找指定条件的记录是否存在

@@ -4,43 +4,34 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
-using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Database;
 
 namespace Wbs.Everdigm.Web.main
 {
-    public partial class equipment_in_storage : BaseEquipmentPage
+    public partial class equipment_rental_fleet : BaseEquipmentPage
     {
         protected override void Page_Load(object sender, EventArgs e)
         {
-            _cookie_name_ = "_equipment_in_storage_list_page_";
+            _cookie_name_ = "_equipment_rental_fleet_list_page_";
             cookieName.Value = _cookie_name_;
             base.Page_Load(sender, e);
             if (!HasSessionLose)
             {
                 if (!IsPostBack)
                 {
-                    hidPageIndex.Value = null == Request.Cookies[_cookie_name_] ? "1" : Request.Cookies[_cookie_name_].Value;
-                    ShowEquipments();
+                    if (!IsPostBack)
+                    {
+                        hidPageIndex.Value = null == Request.Cookies[_cookie_name_] ? "1" : Request.Cookies[_cookie_name_].Value;
+                        ShowEquipments();
+                    }
                 }
             }
         }
 
-        /// <summary>
-        /// 查询按钮
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         protected void btQuery_Click(object sender, EventArgs e)
         {
-            if (!HasSessionLose)
-            { ShowEquipments(); }
+            if (!HasSessionLose) { ShowEquipments(); }
         }
-        
-        /// <summary>
-        /// 按照查询条件显示设备列表
-        /// </summary>
         private void ShowEquipments()
         {
             var totalRecords = 0;
@@ -48,11 +39,13 @@ namespace Wbs.Everdigm.Web.main
             pageIndex = (0 >= pageIndex ? 1 : pageIndex);
             var model = ParseInt(selectedModels.Value);
             var house = ParseInt(hidQueryWarehouse.Value);
+            var number = txtQueryNumber.Value.Trim();
             var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
-                f => (model <= 0 ? f.Model >= 0 : f.Model == model) && f.Deleted == false &&
-                    (house <= 0 ? f.Warehouse >= 0 : f.Warehouse == house) &&
+                f => (model <= 0 ? f.Model >= 0 : f.Model == model) &&
+                    //(house <= 0 ? f.Warehouse >= 0 : f.Warehouse == house) &&
                     (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0) &&
-                    f.StoreTimes == 1 && f.TB_EquipmentStatusName.IsItInventory == true, null);
+                    (f.TB_EquipmentStatusName.IsItOutstorage == true || f.TB_EquipmentStatusName.IsItRental == true)
+                     && f.Deleted == false, null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             hidTotalPages.Value = totalPages.ToString();
             pageIndex = 0 == pageIndex ? totalPages : pageIndex;
@@ -60,10 +53,11 @@ namespace Wbs.Everdigm.Web.main
             {
                 pageIndex = totalPages;
                 list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
-                    f => (model <= 0 ? f.Model >= 0 : f.Model == model) && f.Deleted == false &&
-                    (house <= 0 ? f.Warehouse >= 0 : f.Warehouse == house) &&
+                    f => (model <= 0 ? f.Model >= 0 : f.Model == model) &&
+                    //(house <= 0 ? f.Warehouse >= 0 : f.Warehouse == house) &&
                     (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0) &&
-                    f.StoreTimes == 1 && f.TB_EquipmentStatusName.IsItInventory == true, null);
+                    (f.TB_EquipmentStatusName.IsItOutstorage == true || f.TB_EquipmentStatusName.IsItRental == true)
+                     && f.Deleted == false, null);
             }
 
             string html = "";
@@ -86,7 +80,7 @@ namespace Wbs.Everdigm.Web.main
                     html += "<tr>" +
                         "<td class=\"in-tab-txt-b\">" + cnt + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + (n == obj.Model ? "-" : obj.TB_EquipmentModel.TB_EquipmentType.Code) + "</td>" +
-                        "<td class=\"in-tab-txt-b textoverflow\" style=\"text-align: left !important;\">" + (n == obj.Model ? "-" : ("<a href=\"./equipment_position.aspx?key=" + id + "\">" + EquipmentInstance.GetFullNumber(obj) + "</a>")) + "</td>" +
+                        "<td class=\"in-tab-txt-b textoverflow\" style=\"text-align: left !important;\">" + (n == obj.Model ? "-" : ("<a href=\"#=" + id + "\">" + EquipmentInstance.GetFullNumber(obj) + "</a>")) + "</td>" +
                         "<td class=\"in-tab-txt-b\" style=\"text-align: left !important;\">" + Utility.GetEquipmentFunctional(obj.Functional.Value) + "</td>" +
                         "<td class=\"in-tab-txt-b\" style=\"text-align: right !important;\">" + EquipmentInstance.GetRuntime(obj.Runtime) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + EquipmentInstance.GetEngStatus(obj) + "</td>" +
@@ -96,7 +90,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td class=\"in-tab-txt-b\" title=\"" + StoreInstance.GetStatusTitle(_in) + "\">" + StoreInstance.GetStatus(_in) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\">" + (null == _out ? "-" : _out.Stocktime.Value.ToString("yyyy/MM/dd")) + "</td>" +
                         "<td class=\"in-tab-txt-b\" title=\"" + StoreInstance.GetStatusTitle(_out) + "\">" + StoreInstance.GetStatus(_out) + "</td>" +
-                        "<td class=\"in-tab-txt-rb textoverflow\">" + obj.TB_Warehouse.Name + "</td>" +
+                        "<td class=\"in-tab-txt-rb textoverflow\">" + (n == obj.Warehouse ? "-" : obj.TB_Warehouse.Name) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + ((byte?)null == obj.Signal ? "-" : obj.Signal.ToString()) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + Utility.GetOnlineStyle(obj.OnlineStyle) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\">" + ((DateTime?)null == obj.LastActionTime ? "" : obj.LastActionTime.Value.ToString("yyyy/MM/dd HH:mm")) + "</td>" +
@@ -107,7 +101,61 @@ namespace Wbs.Everdigm.Web.main
             tbodyBody.InnerHtml = html;
             divPagging.InnerHtml = "";
             if (totalRecords > 0)
-                ShowPaggings(pageIndex, totalPages, totalRecords, "./equipment_in_storage.aspx", divPagging);
+                ShowPaggings(pageIndex, totalPages, totalRecords, "./equipment_rental_fleet.aspx", divPagging);
+        }
+
+        protected void btSaveOldInStorage_Click(object sender, EventArgs e)
+        {
+            if (!HasSessionLose)
+            {
+                var id = int.Parse(Utility.Decrypt(Utility.UrlDecode(hidOldInstorage.Value)));
+                var exist = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
+                if (null != exist)
+                {
+                    // 保存之前的状态
+                    var history = StoreInstance.GetObject();
+                    history.Equipment = exist.id;
+                    history.Status = exist.Status;
+
+                    EquipmentInstance.Update(f => f.id == exist.id && f.Deleted == false, act =>
+                    {
+                        // 保存仓库信息
+                        act.Warehouse = int.Parse(hiddenOldWarehouse.Value);
+                        // 客户信息清除
+                        act.Customer = (int?)null;
+                        act.StoreTimes = exist.StoreTimes + 1;
+                        // 需要维修
+                        if (cbRepair.Checked)
+                        {
+                            act.Status = StatusInstance.Find(f => f.IsItOverhaul == true).id;
+                        }
+                        else
+                        { act.Status = StatusInstance.Find(f => f.IsItInventory == true).id; }
+                    });
+                    // 重新查询设备信息
+                    exist = EquipmentInstance.Find(f => f.id == exist.id && f.Deleted == false);
+                    // 保存入库信息
+                    history.Stocktime = DateTime.Now;
+                    // 入库次数加1
+                    history.StoreTimes = exist.StoreTimes;
+                    history.Warehouse = exist.Warehouse;
+                    StoreInstance.Add(history);
+
+                    // 保存入库操作历史记录
+                    SaveHistory(new TB_AccountHistory()
+                    {
+                        ActionId = ActionInstance.Find(f => f.Name.Equals("InStoreOld")).id,
+                        ObjectA = EquipmentInstance.ToString(exist)
+                    });
+
+                    ShowNotification("./equipment_rental_fleet.aspx", "Equipment has been store in warehouse.");
+                    //ShowEquipments();
+                }
+                else
+                {
+                    ShowNotification("./equipment_rental_fleet.aspx", "Cannot change storage status: object is not exist.", false);
+                }
+            }
         }
     }
 }

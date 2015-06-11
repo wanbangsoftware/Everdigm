@@ -29,7 +29,7 @@ namespace Wbs.Everdigm.Web.main
         private void ShowCustomCommands()
         {
             var id = ParseInt(Utility.Decrypt(_key));
-            var equipment = EquipmentInstance.Find(f => f.id == id);
+            var equipment = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
             var functional = null == equipment ? EquipmentFunctional.Mechanical : (EquipmentFunctional)equipment.Functional;
             var commands = CommandUtility.GetCommand(false);
             var html = "";

@@ -24,21 +24,21 @@ namespace Wbs.Everdigm.Web.ajax
             {
                 case "fullnumber":
                     // 查询完整的设备号码（如DX300LC-20000）
-                    var numbers = EquipmentInstance.FindList(f => (f.TB_EquipmentModel.Code + f.Number).Equals(data)).ToList();
+                    var numbers = EquipmentInstance.FindList(f => (f.TB_EquipmentModel.Code + f.Number).Equals(data) && f.Deleted == false).ToList();
                     ret = JsonConverter.ToJson(numbers);
                     break;
                 case "query":
                     var query = JsonConverter.ToObject<TB_Equipment>(data);
                     var queryList = EquipmentInstance.FindList(f =>
                         (query.Model > 0 ? f.Model == query.Model : f.Model > 0) &&
-                        f.Number.IndexOf(query.Number) >= 0).ToList();
+                        f.Number.IndexOf(query.Number) >= 0 && f.Deleted == false).ToList();
                     ret = JsonConverter.ToJson(queryList);
                     break;
                 case "notbind":
                     var obj = JsonConverter.ToObject<TB_Equipment>(data);
                     var list = EquipmentInstance.FindList(f =>
                         (obj.Model > 0 ? f.Model == obj.Model : f.Model > 0) &&
-                        f.Number.IndexOf(obj.Number) >= 0 && f.Terminal == (int?)null).ToList();
+                        f.Number.IndexOf(obj.Number) >= 0 && f.Terminal == (int?)null && f.Deleted == false).ToList();
                     break;
                 case "old-in-store":
                     // 2手或租赁设备入库查询
@@ -46,7 +46,7 @@ namespace Wbs.Everdigm.Web.ajax
                     if (queryObj.Number.IndexOf('-') >= 0)
                         queryObj.Number = queryObj.Number.Substring(queryObj.Number.LastIndexOf('-') + 1);
                     var olds = EquipmentInstance.FindList(f => (queryObj.Model > 0 ? f.Model == queryObj.Model : f.Model > 0) &&
-                        f.Number.IndexOf(queryObj.Number) >= 0).OrderBy(o => o.Number).Take(5).ToList();
+                        f.Number.IndexOf(queryObj.Number) >= 0 && f.Deleted == false).OrderBy(o => o.Number).Take(5).ToList();
                     ret = JsonConverter.ToJson(olds);
                     break;
                 case "storage":
@@ -141,7 +141,7 @@ namespace Wbs.Everdigm.Web.ajax
         {
             var ret = "{}";
             var id = ParseInt(Utility.Decrypt(data));
-            var obj = EquipmentInstance.Find(f => f.id == id);
+            var obj = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
             if (null != obj)
             {
                 var date = DateTime.Parse(GetParamenter("date") + " 23:59:59");

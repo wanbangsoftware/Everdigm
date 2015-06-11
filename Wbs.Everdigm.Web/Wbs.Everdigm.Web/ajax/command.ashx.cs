@@ -215,7 +215,7 @@ namespace Wbs.Everdigm.Web.ajax
             try
             {
                 var id = ParseInt(Utility.Decrypt(data));
-                var obj = EquipmentInstance.Find(f => f.id == id);
+                var obj = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
                 if (null != obj)
                 {
                     if ((int?)null != obj.Terminal)
@@ -250,7 +250,7 @@ namespace Wbs.Everdigm.Web.ajax
             try
             {
                 var id = ParseInt(Utility.Decrypt(data));
-                var obj = EquipmentInstance.Find(f => f.id == id);
+                var obj = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
                 if (null != obj)
                 {
                     if ((int?)null != obj.Terminal)
@@ -277,7 +277,7 @@ namespace Wbs.Everdigm.Web.ajax
             try
             {
                 var id = ParseInt(Utility.Decrypt(data));
-                var obj = EquipmentInstance.Find(f => f.id == id);
+                var obj = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
                 if (null != obj)
                 {
                     // 终端不为空时才查询

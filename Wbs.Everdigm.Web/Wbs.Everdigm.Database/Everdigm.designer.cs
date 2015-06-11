@@ -9260,6 +9260,8 @@ namespace Wbs.Everdigm.Database
 		
 		private int _id;
 		
+		private System.Nullable<bool> _Deleted;
+		
 		private System.Nullable<byte> _Functional;
 		
 		private System.Nullable<int> _Model;
@@ -9340,6 +9342,8 @@ namespace Wbs.Everdigm.Database
     partial void OnCreated();
     partial void OnidChanging(int value);
     partial void OnidChanged();
+    partial void OnDeletedChanging(System.Nullable<bool> value);
+    partial void OnDeletedChanged();
     partial void OnFunctionalChanging(System.Nullable<byte> value);
     partial void OnFunctionalChanged();
     partial void OnModelChanging(System.Nullable<int> value);
@@ -9422,8 +9426,29 @@ namespace Wbs.Everdigm.Database
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Functional", DbType="TinyInt")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Deleted", DbType="Bit")]
 		[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+		public System.Nullable<bool> Deleted
+		{
+			get
+			{
+				return this._Deleted;
+			}
+			set
+			{
+				if ((this._Deleted != value))
+				{
+					this.OnDeletedChanging(value);
+					this.SendPropertyChanging();
+					this._Deleted = value;
+					this.SendPropertyChanged("Deleted");
+					this.OnDeletedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Functional", DbType="TinyInt")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
 		public System.Nullable<byte> Functional
 		{
 			get
@@ -9444,7 +9469,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Model", DbType="Int")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=4)]
 		public System.Nullable<int> Model
 		{
 			get
@@ -9469,7 +9494,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Terminal", DbType="Int")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=4)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=5)]
 		public System.Nullable<int> Terminal
 		{
 			get
@@ -9494,7 +9519,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Port", DbType="Int")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=5)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=6)]
 		public System.Nullable<int> Port
 		{
 			get
@@ -9515,7 +9540,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Socket", DbType="Int")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=6)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=7)]
 		public System.Nullable<int> Socket
 		{
 			get
@@ -9536,7 +9561,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Warehouse", DbType="Int")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=7)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=8)]
 		public System.Nullable<int> Warehouse
 		{
 			get
@@ -9561,7 +9586,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Customer", DbType="Int")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=8)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=9)]
 		public System.Nullable<int> Customer
 		{
 			get
@@ -9586,7 +9611,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Runtime", DbType="Int")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=9)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=10)]
 		public System.Nullable<int> Runtime
 		{
 			get
@@ -9607,7 +9632,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="Int")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=10)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=11)]
 		public System.Nullable<int> Status
 		{
 			get
@@ -9632,7 +9657,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StoreTimes", DbType="Int")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=11)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=12)]
 		public System.Nullable<int> StoreTimes
 		{
 			get
@@ -9653,7 +9678,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Rpm", DbType="SmallInt")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=12)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=13)]
 		public System.Nullable<short> Rpm
 		{
 			get
@@ -9674,7 +9699,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Signal", DbType="TinyInt")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=13)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=14)]
 		public System.Nullable<byte> Signal
 		{
 			get
@@ -9695,7 +9720,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OnlineStyle", DbType="TinyInt")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=14)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=15)]
 		public System.Nullable<byte> OnlineStyle
 		{
 			get
@@ -9716,7 +9741,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GpsUpdated", DbType="Bit")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=15)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=16)]
 		public System.Nullable<bool> GpsUpdated
 		{
 			get
@@ -9737,7 +9762,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Latitude", DbType="Float")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=16)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=17)]
 		public System.Nullable<double> Latitude
 		{
 			get
@@ -9758,7 +9783,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Longitude", DbType="Float")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=17)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=18)]
 		public System.Nullable<double> Longitude
 		{
 			get
@@ -9779,7 +9804,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RegisterTime", DbType="DateTime")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=18)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=19)]
 		public System.Nullable<System.DateTime> RegisterTime
 		{
 			get
@@ -9800,7 +9825,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OnlineTime", DbType="DateTime")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=19)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=20)]
 		public System.Nullable<System.DateTime> OnlineTime
 		{
 			get
@@ -9821,7 +9846,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastActionTime", DbType="DateTime")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=20)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=21)]
 		public System.Nullable<System.DateTime> LastActionTime
 		{
 			get
@@ -9842,7 +9867,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LockStatus", DbType="Char(2)")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=21)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=22)]
 		public string LockStatus
 		{
 			get
@@ -9863,7 +9888,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastActionBy", DbType="Char(3)")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=22)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=23)]
 		public string LastActionBy
 		{
 			get
@@ -9884,7 +9909,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Voltage", DbType="Char(5)")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=23)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=24)]
 		public string Voltage
 		{
 			get
@@ -9905,7 +9930,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastAction", DbType="Char(6)")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=24)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=25)]
 		public string LastAction
 		{
 			get
@@ -9926,7 +9951,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Number", DbType="VarChar(10)")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=25)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=26)]
 		public string Number
 		{
 			get
@@ -9947,7 +9972,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ServerName", DbType="VarChar(50)")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=26)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=27)]
 		public string ServerName
 		{
 			get
@@ -9968,7 +9993,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IP", DbType="VarChar(20)")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=27)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=28)]
 		public string IP
 		{
 			get
@@ -9989,7 +10014,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GpsAddress", DbType="NVarChar(100)")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=28)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=29)]
 		public string GpsAddress
 		{
 			get
@@ -10010,7 +10035,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Equipment_TB_Data_Alarm", Storage="_TB_Data_Alarm", ThisKey="id", OtherKey="Equipment")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=29, EmitDefaultValue=false)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=30, EmitDefaultValue=false)]
 		public EntitySet<TB_Data_Alarm> TB_Data_Alarm
 		{
 			get
@@ -10029,7 +10054,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Equipment_TB_Data_EposFault", Storage="_TB_Data_EposFault", ThisKey="id", OtherKey="Equipment")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=30, EmitDefaultValue=false)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=31, EmitDefaultValue=false)]
 		public EntitySet<TB_Data_EposFault> TB_Data_EposFault
 		{
 			get
@@ -10048,7 +10073,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Equipment_TB_Data_Position", Storage="_TB_Data_Position", ThisKey="id", OtherKey="Equipment")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=31, EmitDefaultValue=false)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=32, EmitDefaultValue=false)]
 		public EntitySet<TB_Data_Position> TB_Data_Position
 		{
 			get
@@ -10067,7 +10092,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Equipment_TB_EquipmentStockHistory", Storage="_TB_EquipmentStockHistory", ThisKey="id", OtherKey="Equipment")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=32, EmitDefaultValue=false)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=33, EmitDefaultValue=false)]
 		public EntitySet<TB_EquipmentStockHistory> TB_EquipmentStockHistory
 		{
 			get

@@ -42,6 +42,14 @@ namespace Wbs.Everdigm.BLL
         /// <param name="entity"></param>
         public void Delete(T entity) { CurrentRepository.Delete(entity); }
         /// <summary>
+        /// 删除指定条件的所有记录
+        /// </summary>
+        /// <param name="predicate"></param>
+        public void Delete(Expression<Func<T, bool>> predicate)
+        {
+            CurrentRepository.Delete(predicate);
+        }
+        /// <summary>
         /// 查找指定条件的单个实例
         /// </summary>
         /// <param name="predicate"></param>

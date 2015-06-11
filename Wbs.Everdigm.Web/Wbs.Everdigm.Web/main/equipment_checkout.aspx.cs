@@ -53,7 +53,7 @@ namespace Wbs.Everdigm.Web.main
             var model = ParseInt(selectedModels.Value);
             var house = ParseInt(hidQueryWarehouse.Value);
             var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
-                f => f.TB_EquipmentStatusName.IsItInventory == true && (model <= 0 ? f.Model >= 0 : f.Model == model) &&
+                f => f.TB_EquipmentStatusName.IsItInventory == true && f.Deleted == false && (model <= 0 ? f.Model >= 0 : f.Model == model) &&
                     (house <= 0 ? (f.Warehouse >= 0 || f.Warehouse == (int?)null) : f.Warehouse == house) &&
                     (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0), null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
@@ -63,7 +63,7 @@ namespace Wbs.Everdigm.Web.main
             {
                 pageIndex = totalPages;
                 list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
-                    f => f.TB_EquipmentStatusName.IsItInventory == true && (model <= 0 ? f.Model >= 0 : f.Model == model) &&
+                    f => f.TB_EquipmentStatusName.IsItInventory == true && f.Deleted == false && (model <= 0 ? f.Model >= 0 : f.Model == model) &&
                         (house <= 0 ? (f.Warehouse >= 0 || f.Warehouse == (int?)null) : f.Warehouse == house) &&
                         (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0), null);
             }
@@ -118,7 +118,7 @@ namespace Wbs.Everdigm.Web.main
         protected void btCheckoutStorage_Click(object sender, EventArgs e)
         {
             var id = int.Parse(hidCheckEquipmentId.Value);
-            var equipment = EquipmentInstance.Find(f => f.id == id);
+            var equipment = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
             if (null == equipment)
             {
                 ShowNotification("./equipment_checkout.aspx", "Cannot find the equipment.", false);

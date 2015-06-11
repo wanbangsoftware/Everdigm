@@ -145,7 +145,7 @@ namespace Wbs.Everdigm.Web.ajax
             var terminal = TerminalInstance.Find(f => f.Sim.Equals(sim));
             if (null == terminal) return;
 
-            var equipment = EquipmentInstance.Find(f => f.TB_Terminal.Sim.Equals(sim));
+            var equipment = EquipmentInstance.Find(f => f.TB_Terminal.Sim.Equals(sim) && f.Deleted == false);
 
             HandleOnline(sim, obj.CommandID);
             SaveTX300History(obj, (null == equipment ? "" : EquipmentInstance.GetFullNumber(equipment)));
@@ -171,7 +171,7 @@ namespace Wbs.Everdigm.Web.ajax
         private void HandleOnline(string sim, ushort CommandID)
         {
             // 更新设备在线状态为卫星通信
-            EquipmentInstance.Update(f => f.TB_Terminal.Sim.Equals(sim), act =>
+            EquipmentInstance.Update(f => f.TB_Terminal.Sim.Equals(sim) && f.Deleted == false, act =>
             {
                 act.IP = "";
                 act.Port = 0;
@@ -250,7 +250,7 @@ namespace Wbs.Everdigm.Web.ajax
             {
                 if (x1000.GPSInfo.Available)
                 {
-                    EquipmentInstance.Update(f => f.id == equipment.id, act =>
+                    EquipmentInstance.Update(f => f.id == equipment.id && f.Deleted == false, act =>
                     {
                         act.Latitude = x1000.GPSInfo.Latitude;
                         act.Longitude = x1000.GPSInfo.Longitude;
@@ -274,7 +274,7 @@ namespace Wbs.Everdigm.Web.ajax
             x6007.Unpackage();
             if (null != equipment)
             {
-                EquipmentInstance.Update(f => f.id == equipment.id, act =>
+                EquipmentInstance.Update(f => f.id == equipment.id && f.Deleted == false, act =>
                 {
                     act.LockStatus = CustomConvert.GetHex(x6007.Code);
                 });
@@ -295,7 +295,7 @@ namespace Wbs.Everdigm.Web.ajax
             {
                 if (null != equipment)
                 {
-                    EquipmentInstance.Update(f => f.id == equipment.id, act =>
+                    EquipmentInstance.Update(f => f.id == equipment.id && f.Deleted == false, act =>
                     {
                         act.LockStatus = xee00.ErrorParamenter;
                     });

@@ -37,7 +37,7 @@ namespace Wbs.Everdigm.Web.mobile
         /// </summary>
         private void ShowMyDevices()
         {
-            var items = EquipmentInstance.FindList(f => f.Customer == me.id);
+            var items = EquipmentInstance.FindList(f => f.Customer == me.id && f.Deleted == false);
             var html = "";
             foreach (var item in items)
             {

@@ -121,7 +121,9 @@
             <td colspan="4" class="popup-td">
                 <asp:Button ID="btUnbind" runat="server" CssClass="hidden" Text="Unbind" OnClick="btUnbind_Click" />
                 <asp:Button ID="btSaveInfo" runat="server" CssClass="hidden" Text="Save" OnClick="btSaveInfo_Click" />
+                <asp:Button ID="btDelete" runat="server" CssClass="hidden" OnClick="btDelete_Click" />
                 <button class="btn btn-primary" id="btSave" type="button"><span class="glyphicon glyphicon-floppy-open"></span><span> Save changes</span></button>
+                <button class="btn btn-danger" id="btDel" type="button"><span class="glyphicon glyphicon-remove"></span><span> Delete equipment</span></button>
                 <button class="btn btn-warning" type="button">Leave blank to avoid modification</button>
             </td>
         </tr>
@@ -137,13 +139,37 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-lg-12">
-                            <span>Do you realy wanna to unbind this equipment & terminal?</span>
+                            <span>Are you really wanna to unbind this equipment & terminal?</span>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button id="satWarning" type="button" class="btn btn-warning">
                         <span class="glyphicon glyphicon-ok"></span> Yes, DO it!
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="warningDelete" tabindex="-1" role="dialog" aria-labelledby="deletelLabel" data-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header custom-modal-header btn-danger">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="deletelLabel">Caution</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <span>Are you really wanna to <strong>DELETE</strong> this equipment?</span><br />
+                            <span>It's cannot be roll back, and terminal will unbind.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="satDelete" type="button" class="btn btn-danger">
+                        <span class="glyphicon glyphicon-ok"></span> Yes, DELETE it!
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>

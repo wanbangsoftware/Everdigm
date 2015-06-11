@@ -38,7 +38,7 @@ namespace Wbs.Everdigm.Web.main
             var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
                 f => f.TB_EquipmentStatusName.IsItOverhaul == true && (model <= 0 ? f.Model >= 0 : f.Model == model) &&
                     (house <= 0 ? (f.Warehouse >= 0 || f.Warehouse == (int?)null) : f.Warehouse == house) &&
-                    (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0), null);
+                    (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0 && f.Deleted == false), null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             hidTotalPages.Value = totalPages.ToString();
             pageIndex = 0 == pageIndex ? totalPages : pageIndex;
@@ -48,7 +48,7 @@ namespace Wbs.Everdigm.Web.main
                 list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
                     f => f.TB_EquipmentStatusName.IsItOverhaul == true && (model <= 0 ? f.Model >= 0 : f.Model == model) &&
                         (house <= 0 ? (f.Warehouse >= 0 || f.Warehouse == (int?)null) : f.Warehouse == house) &&
-                        (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0), null);
+                        (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0 && f.Deleted == false), null);
             }
 
             string html = "";
@@ -108,7 +108,7 @@ namespace Wbs.Everdigm.Web.main
             if (!HasSessionLose)
             {
                 var id = int.Parse(hidRepairId.Value);
-                var equipment = EquipmentInstance.Find(f => f.id == id);
+                var equipment = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
                 if (null == equipment)
                 {
                     ShowNotification("./equipment_overhaul.aspx", "Cannot find the equipment: object is not exist.", false);
@@ -120,12 +120,12 @@ namespace Wbs.Everdigm.Web.main
                     // 先保存维修状态
                     history.Status = equipment.Status;
 
-                    EquipmentInstance.Update(f => f.id == equipment.id, act =>
+                    EquipmentInstance.Update(f => f.id == equipment.id && f.Deleted == false, act =>
                     {
                         act.Status = StatusInstance.Find(f => f.IsItInventory == true).id;
                     });
                     //RepairOK
-                    equipment = EquipmentInstance.Find(f => f.id == equipment.id);
+                    equipment = EquipmentInstance.Find(f => f.id == equipment.id && f.Deleted == false);
 
                     // 保存维修完成信息
                     history.Stocktime = DateTime.Now;

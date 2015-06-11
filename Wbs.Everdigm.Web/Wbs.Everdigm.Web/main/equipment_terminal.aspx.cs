@@ -79,7 +79,7 @@ namespace Wbs.Everdigm.Web.main
                 ShowNotification("./terminal_list.aspx", "Error: The terminal \"" + ter.Number + "\" has been bound before this time.", false);
                 return;
             }
-            var equ = EquipmentInstance.Find(f => f.id == equipment);
+            var equ = EquipmentInstance.Find(f => f.id == equipment && f.Deleted == false);
             if (null == equ)
             {
                 ShowNotification("./terminal_list.aspx", "Error: Cannot find the equipment.", false);
@@ -94,7 +94,7 @@ namespace Wbs.Everdigm.Web.main
 
             // 开始绑定流程
             var storage = StatusInstance.Find(f => f.IsItInventory == true);
-            EquipmentInstance.Update(f => f.id == equ.id, act =>
+            EquipmentInstance.Update(f => f.id == equ.id && f.Deleted == false, act =>
             {
                 act.Terminal = ter.id;
                 // 更新设备的相应信息为终端的信息
@@ -147,8 +147,8 @@ namespace Wbs.Everdigm.Web.main
             var totalRecords = 0;
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
-                f => f.Terminal == (int?)null && f.Number.IndexOf(txtEquipment.Value.Trim()) >= 0 && 
-                    f.Functional == GetEquipmentTypeByTerminalType(), null);
+                f => f.Terminal == (int?)null && f.Number.IndexOf(txtEquipment.Value.Trim()) >= 0 &&
+                    f.Functional == GetEquipmentTypeByTerminalType() && f.Deleted == false, null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             pageIndex = 0 == pageIndex ? totalPages : pageIndex;
             if (pageIndex > totalPages)
@@ -156,7 +156,7 @@ namespace Wbs.Everdigm.Web.main
                 pageIndex = totalPages;
                 list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
                     f => f.Terminal == (int?)null && f.Number.IndexOf(txtEquipment.Value.Trim()) >= 0 &&
-                    f.Functional == GetEquipmentTypeByTerminalType(), null);
+                    f.Functional == GetEquipmentTypeByTerminalType() && f.Deleted == false, null);
             }
 
             string html = "";
