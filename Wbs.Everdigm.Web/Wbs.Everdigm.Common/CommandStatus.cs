@@ -79,5 +79,9 @@ public enum CommandStatus : byte
     /// <summary>
     /// Eng未启动
     /// </summary>
-    EngNotStart
+    EngNotStart,
+    /// <summary>
+    /// 命令不需要回复数据
+    /// </summary>
+    NotNeedReturn
 }

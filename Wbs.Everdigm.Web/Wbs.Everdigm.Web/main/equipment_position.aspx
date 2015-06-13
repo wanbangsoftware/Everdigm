@@ -91,5 +91,6 @@
 <asp:Content ID="Content5" ContentPlaceHolderID="FooterContentPlaceHolder" runat="server">
     <script type="text/javascript" src="../js/twbsPagination/jquery.twbsPagination.js"></script>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA3ZyjLQqMHZ7jtuVmCxbK11r86K2UuNLM&sensor=false"></script>
+    <script type="text/javascript" src="../js/google.map.api.js"></script>
     <script type="text/javascript" src="../scripts/main/equipment.position.js"></script>
 </asp:Content>

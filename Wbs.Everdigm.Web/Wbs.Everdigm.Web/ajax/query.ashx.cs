@@ -39,6 +39,9 @@ namespace Wbs.Everdigm.Web.ajax
                     // 查询客户信息
                     HandleCustomerQuery();
                     break;
+                case "tracker":
+                    HandleTrackerQuery();
+                    break;
             }
         }
     }

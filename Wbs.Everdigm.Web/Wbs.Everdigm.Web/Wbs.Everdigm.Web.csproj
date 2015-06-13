@@ -196,6 +196,7 @@
     <Content Include="js\CryptoJS.v3.1.2\rollups\sha384.js" />
     <Content Include="js\CryptoJS.v3.1.2\rollups\sha512.js" />
     <Content Include="js\CryptoJS.v3.1.2\rollups\tripledes.js" />
+    <Content Include="js\google.map.api.js" />
     <Content Include="js\jquery.timer.js" />
     <Content Include="js\twbsPagination\jquery.twbsPagination.js" />
     <Content Include="js\twbsPagination\jquery.twbsPagination.min.js" />
@@ -225,7 +226,7 @@
     <Content Include="main\terminals.aspx" />
     <Content Include="main\terminal_satellite.aspx" />
     <Content Include="mobile\css\account.css" />
-    <Content Include="mobile\css\fonts\cell-signal.svg" />
+    <Content Include="mobile\css\fonts\cell-custom.svg" />
     <Content Include="mobile\css\style.css" />
     <Content Include="mobile\default.aspx" />
     <Content Include="mobile\device.aspx" />
@@ -298,11 +299,11 @@
     <Content Include="css\fonts\engine.eot" />
     <Content Include="css\fonts\engine.ttf" />
     <Content Include="css\fonts\engine.woff" />
-    <Content Include="mobile\css\fonts\cell-signal.eot" />
-    <Content Include="mobile\css\fonts\cell-signal.ttf" />
-    <Content Include="mobile\css\fonts\cell-signal.woff" />
     <Content Include="bootstrap3\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="main\EquipmentStorage.Master" />
+    <Content Include="mobile\css\fonts\cell-custom.eot" />
+    <Content Include="mobile\css\fonts\cell-custom.ttf" />
+    <Content Include="mobile\css\fonts\cell-custom.woff" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -467,6 +468,10 @@
     <Content Include="scripts\main\terminals.js" />
     <Content Include="scripts\main\testing.js" />
     <Content Include="scripts\main\testing_content.js" />
+    <Content Include="scripts\service\as.tracker.js" />
+    <Content Include="scripts\service\as.trackers.js" />
+    <Content Include="service\as_tracker.aspx" />
+    <Content Include="service\as_trackers.aspx" />
     <Content Include="sms_test.aspx" />
     <Content Include="tree_images\dash.gif" />
     <Content Include="tree_images\dashminus.gif" />
@@ -500,6 +505,7 @@
     </Compile>
     <Compile Include="ajax\PartialCommandBLLs.cs" />
     <Compile Include="ajax\PartialQueryCustomer.cs" />
+    <Compile Include="ajax\PartialQueryTracker.cs" />
     <Compile Include="ajax\query.ashx.cs">
       <DependentUpon>query.ashx</DependentUpon>
     </Compile>
@@ -537,6 +543,9 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="classes\BaseTerminalPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="classes\BaseTrackerPage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="classes\CustomAlarm.cs" />
@@ -1073,6 +1082,20 @@
       <DependentUpon>static_google_map.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="service\as_tracker.aspx.cs">
+      <DependentUpon>as_tracker.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="service\as_tracker.aspx.designer.cs">
+      <DependentUpon>as_tracker.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="service\as_trackers.aspx.cs">
+      <DependentUpon>as_trackers.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="service\as_trackers.aspx.designer.cs">
+      <DependentUpon>as_trackers.aspx</DependentUpon>
+    </Compile>
     <Compile Include="sms_test.aspx.cs">
       <DependentUpon>sms_test.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1111,6 +1134,7 @@
       <Name>Wbs.Everdigm.Database</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

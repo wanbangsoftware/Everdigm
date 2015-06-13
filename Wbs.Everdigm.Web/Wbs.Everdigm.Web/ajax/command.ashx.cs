@@ -6,6 +6,8 @@ using System.Configuration;
 
 using Wbs.Everdigm.Common;
 using Wbs.Everdigm.Database;
+using Wbs.Protocol.TX300;
+using Wbs.Protocol.TX300.Analyse;
 
 namespace Wbs.Everdigm.Web.ajax
 {
@@ -68,6 +70,36 @@ namespace Wbs.Everdigm.Web.ajax
             }
             ResponseJson(ret);
         }
+        private string GetCommandData(TB_HISTORIES data)
+        {
+            var ret = "";
+            var buffer = Wbs.Utilities.CustomConvert.GetBytes(data.message_content);
+            var start = 0;
+            switch (data.command_id)
+            {
+                case "0xDD00":
+                    ret = string.Format("Signal: {0}({1})", buffer[8], Utility.ASU2DBM(buffer[8]));
+                    break;
+                case "0x1000":
+                    ret = "Please going to page <code>Map</code> to check out the data."; 
+                    break;
+                case "0x6000":
+                    ret = string.Format("RPM: {0}, Fuel: {1}", BitConverter.ToUInt16(buffer, 5),
+                        OilTempers.GetOilLeftDX((ushort)(BitConverter.ToUInt16(buffer, 29) * 500 / 1024)).ToString());
+                    break;
+                case "0x6004":
+                    start = data.terminal_type == Wbs.Protocol.TerminalTypes.DX ? 5 : 1;
+                    ret = string.Format("Worktime: {0}", EquipmentInstance.GetRuntime((int?)BitConverter.ToUInt32(buffer, start)));
+                    break;
+                case "0x600B":
+                    ret = string.Format("Worktime: {0}", EquipmentInstance.GetRuntime((int?)BitConverter.ToUInt32(buffer, 0)));
+                    break;
+                case "0x6007": ret = string.Format("Security: {0}", _0x6007.GetSecurity(buffer[1])); break;
+                case "0x3000": ret = string.Format("Security: {0}", _0x3000.GetFlag(buffer[0])); break;
+                case "0xDD02": ret = string.Format("Satellite: {0}",_0xDD02.GetStatus(buffer[0])); break;
+            }
+            return ret;
+        }
         /// <summary>
         /// 处理查询命令发送状态的请求
         /// </summary>
@@ -81,13 +113,13 @@ namespace Wbs.Everdigm.Web.ajax
                 CommandStatus state = (CommandStatus)status;
                 if (state == CommandStatus.Returned) {
                     var list = DataInstance.FindList<TB_HISTORIES>(f =>
-                        f.command_id.Equals(cmd.Command) &&
+                        f.command_id.Equals(cmd.Command) && f.terminal_id.Equals(cmd.DestinationNo) &&
                         f.receive_time > cmd.ActualSendTime, "receive_time", true);
                     var data = list.FirstOrDefault<TB_HISTORIES>();
                     var desc = CommandUtility.GetCommandStatus(state);
                     if (null != data)
                     {
-                        desc += ", you can click <code class='analyse' data-data='' style='cursor: pointer;'>here</code> to Analyse it";
+                        desc += GetCommandData(data);
                     }
                     ret = ResponseMessage(status, desc);
                 }

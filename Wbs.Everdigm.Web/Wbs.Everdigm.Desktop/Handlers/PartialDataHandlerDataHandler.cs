@@ -121,7 +121,8 @@ namespace Wbs.Everdigm.Desktop
         /// <returns></returns>
         private string GetSimFromData(TX300 tx300)
         {
-            return (tx300.TerminalID[0] == '8' && tx300.TerminalID[1] == '9' ? tx300.TerminalID.Substring(0, 8) : tx300.TerminalID);
+            return ((tx300.TerminalID[0] == '8' || tx300.TerminalID[0] == '9') ? 
+                tx300.TerminalID.Substring(0, 8) : tx300.TerminalID);
         }
         private bool IsTracker(ushort cmd)
         {

@@ -115,12 +115,12 @@ namespace Wbs.Everdigm.Desktop
                     else if (alarm[2] == '1')
                     {
                         // 充电接线断开报警
-                        act.ChargeAlarm = DateTime.Now;
+                        act.ChargingAlarm = DateTime.Now;
                     }
                     else if (alarm[2] == '0')
                     {
                         // 充电接线链接报警
-                        act.ChargeAlarm = (DateTime?)null;
+                        act.ChargingAlarm = (DateTime?)null;
                     }
                 });
             }
@@ -150,7 +150,7 @@ namespace Wbs.Everdigm.Desktop
                 if (pos.Available)
                 {
                     SaveTrackerPosition(obj.TerminalID, (null == tracker ? "" : tracker.CarNumber),
-                      (null == tracker ? -1 : tracker.id), pos, "Period");
+                      (null == tracker ? -1 : tracker.id), pos, "Tracking");
                 }
             }
         }

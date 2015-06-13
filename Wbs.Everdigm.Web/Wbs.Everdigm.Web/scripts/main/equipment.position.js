@@ -2,6 +2,8 @@
 var pointer;
 var markerArray = new Array();
 var posArray = new Array();
+var polyline;
+
 $(document).ready(function () {
     // 初始化地图
     InitializeMap(47.908287, 106.9308501);
@@ -77,6 +79,7 @@ function queryPositionHistory() {
         //for (var i = 0; i <= 10; i++)
         //    posArray = $.merge(posArray, data);
         posArray = data;
+        showPolyline();
         showPositionPagging();
     });
 }
@@ -137,4 +140,23 @@ function showPositionHistory(list) {
         html = "<tr data-latlng=\"\"><td class=\"panel-body-td\" colspan=\"4\">No records exists.</td></tr>";
     }
     $(".position tbody").html(html);
+}
+// 显示轨迹
+function showPolyline() {
+    if (posArray.length < 1) return;
+    var polyPath = new Array();
+    for (var i in posArray) {
+        var obj = posArray[i];
+        polyPath.push(new google.maps.LatLng(obj.Latitude, obj.Longitude));
+    }
+    // 划线的参数
+    var polyOptions = {
+        path: polyPath,
+        strokeColor: "blue",
+        strokeOpacity: 0.5,
+        strokeWeight: 3
+    };
+    polyline = new google.maps.Polyline(polyOptions);
+    polyline.setMap(map);
+    fitBounds(polyPath);
 }

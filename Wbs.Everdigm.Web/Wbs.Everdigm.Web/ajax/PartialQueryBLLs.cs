@@ -45,5 +45,10 @@ namespace Wbs.Everdigm.Web.ajax
         /// 客户信心业务处理实体
         /// </summary>
         private CustomerBLL CustomerInstance { get { return new CustomerBLL(); } }
+
+        /// <summary>
+        /// Tracker历史记录BLL
+        /// </summary>
+        private TrackerPositionBLL TrackerPositionInstance { get { return new TrackerPositionBLL(); } }
     }
 }

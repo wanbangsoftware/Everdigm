@@ -1,16 +1,16 @@
 @font-face {
-	font-family: 'cell-signal';
-	src:url('fonts/cell-signal.eot?-373i6q');
-	src:url('fonts/cell-signal.eot?#iefix-373i6q') format('embedded-opentype'),
-		url('fonts/cell-signal.woff?-373i6q') format('woff'),
-		url('fonts/cell-signal.ttf?-373i6q') format('truetype'),
-		url('fonts/cell-signal.svg?-373i6q#cell-signal') format('svg');
+	font-family: 'cell-custom';
+	src:url('fonts/cell-custom.eot?-izsmc0');
+	src:url('fonts/cell-custom.eot?#iefix-izsmc0') format('embedded-opentype'),
+		url('fonts/cell-custom.ttf?-izsmc0') format('truetype'),
+		url('fonts/cell-custom.woff?-izsmc0') format('woff'),
+		url('fonts/cell-custom.svg?-izsmc0#cell-custom') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
 
 .signal {
-	font-family: 'cell-signal';
+	font-family: 'cell-custom';
 	speak: none;
 	font-style: normal;
 	font-weight: normal;
@@ -23,31 +23,30 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.cell-triangle-ruler:before {
+	content: "\e608";
+}
+.cell-rule:before {
+	content: "\e607";
+}
 .cell-dashboard:before {
 	content: "\e606";
 }
-
 .cell-engine:before {
 	content: "\e605";
 }
-
 .cell-signal-0:before {
 	content: "\e600";
 }
-
 .cell-signal-1:before {
 	content: "\e601";
 }
-
 .cell-signal-2:before {
 	content: "\e602";
 }
-
 .cell-signal-3:before {
 	content: "\e603";
 }
-
 .cell-signal-4:before {
 	content: "\e604";
 }
-

@@ -7,6 +7,7 @@ using System.Configuration;
 using Wbs.Everdigm.Database;
 using Wbs.Everdigm.BLL;
 using Wbs.Utilities;
+using Wbs.Protocol;
 
 namespace Wbs.Everdigm.Common
 {
@@ -135,8 +136,10 @@ namespace Wbs.Everdigm.Common
             string sim = terminal.Sim;
             sim = (sim[0] == '8' && sim[1] == '9' && sim.Length < 11) ? (sim + "000") : sim;
             content = content.Replace(SIMNO, sim);
-            // 终端类型更改
-            var type = CustomConvert.IntToDigit(terminal.Type.Value, CustomConvert.HEX, 2);
+            // 终端类型更改，电子式的挖掘机和装载机一个类型，普通DX挖掘机一个类型
+            byte ttype = terminal.Type.Value;
+            ttype = (ttype == TerminalTypes.DXE || ttype == TerminalTypes.LD) ? TerminalTypes.LD : TerminalTypes.DX;
+            var type = CustomConvert.IntToDigit(ttype, CustomConvert.HEX, 2);
             content = content.Substring(0, 6) + type + content.Substring(8);
 
             // 终端不是卫星方式连接且需要SMS方式发送时，发送SMS命令
@@ -225,7 +228,7 @@ namespace Wbs.Everdigm.Common
                 case CommandStatus.SentToDest: ret = "Has been sent to destination"; break;
                 case CommandStatus.SentToDestBySAT: ret = "Has been received by satellite model"; break;
                 case CommandStatus.SentFail: ret = "Send fail: can not attach destination"; break;
-                case CommandStatus.Returned: ret = "Data has returned"; break;
+                case CommandStatus.Returned: ret = "Data returned, "; break;
                 case CommandStatus.Timedout: ret = "Timeout"; break;
                 case CommandStatus.EposFail: ret = "EPOS response fail"; break;
                 case CommandStatus.SecurityError: ret = "Cannot send this security command"; break;
@@ -233,6 +236,7 @@ namespace Wbs.Everdigm.Common
                 case CommandStatus.TCPNetworkError: ret = "TCP network handle error"; break;
                 case CommandStatus.EngNotStart: ret = "Eng. not start"; break;
                 case CommandStatus.NoFunction: ret = "Terminal has no function to handle this command"; break;
+                case CommandStatus.NotNeedReturn: ret = "Not need return"; break;
             }
             return ret;
         }

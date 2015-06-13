@@ -19,21 +19,17 @@ namespace Wbs.Everdigm.Desktop
     public partial class DataHandler
     {
         /// <summary>
-        /// Google API Key
-        /// </summary>
-        //private string GOOGLE_API_KEY = ConfigurationManager.AppSettings["GOOGLE_API_KEY"];
-        /// <summary>
         /// 无法处理的数据
         /// </summary>
         public EventHandler<UIEventArgs> OnUnhandledMessage = null;
         /// <summary>
         /// 当前的Socket服务
         /// </summary>
-        private SocketAsyncEventServer _server = null;
+        private SocketService _server = null;
         /// <summary>
         /// 设置Socket服务
         /// </summary>
-        public SocketAsyncEventServer Server { set { _server = value; } }
+        public SocketService Server { set { _server = value; } }
         
         public DataHandler()
         {

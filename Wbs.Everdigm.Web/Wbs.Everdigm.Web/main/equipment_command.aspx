@@ -66,12 +66,6 @@
         </div>
         <div class="panel-body">
             <div class="bs-callout bs-callout-warning" style="margin-top: 2px !important; font-size: 12px !important; margin-bottom: 0px !important; height: 150px; overflow: auto;">
-                <!--11:22:04 <code>position data</code> Command is waiting in send queue.<br />
-                11:22:05 <code>0x1000</code> Command has been send to target.<br />
-                11:22:09 <code>0x1000</code> Target received the command.<br />
-                11:22:20 <code>0x1000</code> Command responsed successfully, you can <code>Analyse</code> this data by click <code>here</code>.<br />
-                11:22:38 <code>0xDD00</code> Command has been send to target.<br />
-                11:22:40 <code>0xDD00</code> Target is not online.<br />-->
             </div>
         </div>
     </div>

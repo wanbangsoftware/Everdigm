@@ -91,6 +91,30 @@ namespace Wbs.Sockets
             PackageType = AsyncDataPackageType.TCP;
         }
         /// <summary>
+        /// 设置数据内容
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="type">0=connect, 1=disconnect, 2=data</param>
+        public void SetDataEvent(StateObject obj, byte type)
+        {
+            ReceiveTime = DateTime.Now;
+            PackageType = AsyncDataPackageType.TCP;
+            IP = obj.point.Address.ToString();
+            Port = obj.point.Port;
+            SocketHandle = obj.socket.Handle.ToInt32();
+            if (type < 2)
+            {
+                audb_buffer = null;
+                DataType = 0 == type ? AsyncUserDataType.ClientConnected : AsyncUserDataType.ClientDisconnected;
+            }
+            else
+            {
+                audb_buffer = new byte[obj.length];
+                System.Buffer.BlockCopy(obj.Received, 0, audb_buffer, 0, obj.length);
+                DataType = AsyncUserDataType.ReceivedData;
+            }
+        }
+        /// <summary>
         /// 设置异步接收到的消息内容
         /// </summary>
         /// <param name="args"></param>

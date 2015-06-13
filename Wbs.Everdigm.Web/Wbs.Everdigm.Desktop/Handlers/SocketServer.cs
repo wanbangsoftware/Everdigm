@@ -24,9 +24,13 @@ namespace Wbs.Everdigm.Desktop
         /// </summary>
         public EventHandler<IridiumDataEvent> OnIridiumSend;
         /// <summary>
+        /// 提供TCP/UDP服务
+        /// </summary>
+        private SocketService _server;
+        /// <summary>
         /// IOCP网络服务
         /// </summary>
-        private SocketAsyncEventServer _tcpServer;
+        //private SocketAsyncEventServer _tcpServer;
         /// <summary>
         /// 待处理数据缓冲区(这个是线程安全的，所以不必再费心自己加读写锁)
         /// </summary>
@@ -74,11 +78,12 @@ namespace Wbs.Everdigm.Desktop
         /// </summary>
         private void InitializeServer()
         {
-            _tcpServer = new SocketAsyncEventServer(Port);
-            _tcpServer.OnConnected += new EventHandler<AsyncUserDataEvent>(OnClientConnected);
-            _tcpServer.OnDisconnected += new EventHandler<AsyncUserDataEvent>(OnClientDisconnected);
-            _tcpServer.OnReceivedData += new EventHandler<AsyncUserDataEvent>(OnReceivedData);
-            _tcpServer.StartUDP = StartUDP;
+            _server = new SocketService(Port);
+            //_tcpServer = new SocketAsyncEventServer(Port);
+            _server.OnConnected += new EventHandler<AsyncUserDataEvent>(OnClientConnected);
+            _server.OnDisconnected += new EventHandler<AsyncUserDataEvent>(OnClientDisconnected);
+            _server.OnReceivedData += new EventHandler<AsyncUserDataEvent>(OnReceivedData);
+            //_tcpServer.StartUDP = StartUDP;
         }
         /// <summary>
         /// 初始化线程池
@@ -102,7 +107,7 @@ namespace Wbs.Everdigm.Desktop
             try
             {
                 // 启动服务
-                _tcpServer.Start();
+                _server.Start();
                 started = true;
             }
             catch
@@ -120,7 +125,7 @@ namespace Wbs.Everdigm.Desktop
         /// </summary>
         public void Stop()
         {
-            _tcpServer.Stop();
+            _server.Stop();
             HasServiceStoped = true;
             started = false;
         }
@@ -202,7 +207,7 @@ namespace Wbs.Everdigm.Desktop
             DataHandler _handler = new DataHandler();
             _handler.OnUnhandledMessage += new EventHandler<UIEventArgs>(DataHandler_OnUnhandledMessage);
             _handler.OnIridiumSend += new EventHandler<IridiumDataEvent>(DataHandler_OnIridiumSend);
-            _handler.Server = _tcpServer;
+            _handler.Server = _server;
             int timer = 0, sleeper = 10, gpsHandler = 0;
 
             while (true)
@@ -225,12 +230,10 @@ namespace Wbs.Everdigm.Desktop
                         switch (obj.DataType)
                         {
                             case AsyncUserDataType.ClientConnected:
-                                message = string.Format("{0}client {1}:{2} connected. [{3}]",
-                                    DateTime(obj.ReceiveTime), obj.IP, obj.Port, obj.PackageType);
+                                message = string.Format("{0}client {1}:{2} connected. [{3}]", DateTime(obj.ReceiveTime), obj.IP, obj.Port, obj.PackageType);
                                 break;
                             case AsyncUserDataType.ClientDisconnected:
-                                message = string.Format("{0}client {1}:{2} disconnected. [{3}]",
-                                    DateTime(obj.ReceiveTime), obj.IP, obj.Port, obj.PackageType);
+                                message = string.Format("{0}client {1}:{2} disconnected. [{3}]", DateTime(obj.ReceiveTime), obj.IP, obj.Port, obj.PackageType);
                                 break;
                             case AsyncUserDataType.ReceivedData:
                                 message = string.Format("{0}received data(length: {1}): {2} [{3}]", DateTime(obj.ReceiveTime),
@@ -251,7 +254,7 @@ namespace Wbs.Everdigm.Desktop
                     }
                     finally
                     {
-                        _tcpServer.RecycleBuffer(obj);
+                        _server.RecycleBuffer(obj);
                     }
                 }
                 else
