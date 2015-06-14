@@ -55,6 +55,14 @@ namespace Wbs.Everdigm.Desktop
         /// <summary>
         /// 提供MTMSN计算的BLL
         /// </summary>
-        private IridiumMMSNBLL MTMSNBLL { get { return new IridiumMMSNBLL(); } }
+        private IridiumMMSNBLL MtmsnInstance { get { return new IridiumMMSNBLL(); } }
+        /// <summary>
+        /// 铱星数据流量统计BLL
+        /// </summary>
+        private IridiumFlowBLL FlowInstance { get { return new IridiumFlowBLL(); } }
+        /// <summary>
+        /// 卫星模块BLL
+        /// </summary>
+        private SatelliteBLL SatelliteInstance { get { return new SatelliteBLL(); } }
     }
 }

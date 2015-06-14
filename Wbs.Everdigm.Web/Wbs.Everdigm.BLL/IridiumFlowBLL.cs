@@ -9,9 +9,9 @@ namespace Wbs.Everdigm.BLL
     /// <summary>
     /// 铱星数据收发流量统计
     /// </summary>
-    public class IririumFlowBLL : BaseService<TB_IridiumFlow>
+    public class IridiumFlowBLL : BaseService<TB_IridiumFlow>
     {
-        public IririumFlowBLL()
+        public IridiumFlowBLL()
             : base(new BaseRepository<TB_IridiumFlow>())
         { }
 
@@ -19,6 +19,7 @@ namespace Wbs.Everdigm.BLL
         {
             return new TB_IridiumFlow()
             {
+                id = 0,
                 Iridium = (int?)null,
                 Monthly = int.Parse(DateTime.Now.ToString("yyyyMM")),
                 MOPayload = 0,

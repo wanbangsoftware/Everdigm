@@ -145,8 +145,62 @@ namespace Wbs.Everdigm.Desktop
                     });
                 }
                 else { HandleIridiumNewProtocolPackage(data); }
+                // 统计铱星的接收数据次数和数据长度
+                HandleIridiumMOFlow(data);
             }
             data.Dispose();
+        }
+        /// <summary>
+        /// 记录铱星的MO次数和长度
+        /// </summary>
+        /// <param name="data"></param>
+        private void HandleIridiumMOFlow(IridiumData data) {
+            var iridium = SatelliteInstance.Find(f => f.CardNo.Equals(data.IMEI));
+            if (null != iridium)
+            {
+                var monthly = int.Parse(DateTime.Now.ToString("yyyyMM"));
+                var flow = FlowInstance.Find(f => f.Iridium == iridium.id && f.Monthly == monthly);
+                if (null == flow)
+                {
+                    flow = FlowInstance.GetObject();
+                    flow.Iridium = iridium.id;
+                    flow.MOTimes = 1;
+                    flow.MOPayload = data.Length;
+                    FlowInstance.Add(flow);
+                }
+                else
+                {
+                    FlowInstance.Update(f => f.id == flow.id, act =>
+                    {
+                        act.MOTimes += 1;
+                        act.MOPayload += data.Length;
+                    });
+                }
+            }
+        }
+        /// <summary>
+        /// 记录铱星的MT次数和长度
+        /// </summary>
+        private void HandleIridiumMTFlow(int iridium, int length)
+        {
+            var monthly = int.Parse(DateTime.Now.ToString("yyyyMM"));
+            var flow = FlowInstance.Find(f => f.Iridium == iridium && f.Monthly == monthly);
+            if (null == flow)
+            {
+                flow = FlowInstance.GetObject();
+                flow.Iridium = iridium;
+                flow.MTTimes = 1;
+                flow.MTPayload = length;
+                FlowInstance.Add(flow);
+            }
+            else
+            {
+                FlowInstance.Update(f => f.id == flow.id, act =>
+                {
+                    act.MTTimes += 1;
+                    act.MTPayload += length;
+                });
+            }
         }
         /// <summary>
         /// 检测需要用铱星方式发送的命令
@@ -170,20 +224,20 @@ namespace Wbs.Everdigm.Desktop
         {
             ushort num = 0;
             var now = DateTime.Now;
-            var obj = MTMSNBLL.Find(f => f.Year == (short)now.Year && f.Month == (byte)now.Month);
+            var obj = MtmsnInstance.Find(f => f.Year == (short)now.Year && f.Month == (byte)now.Month);
             if (null == obj)
             {
-                obj = MTMSNBLL.GetObject();
+                obj = MtmsnInstance.GetObject();
                 obj.Year = (short)now.Year;
                 obj.Month = (byte)now.Month;
                 obj.Number = 0;
-                MTMSNBLL.Add(obj);
+                MtmsnInstance.Add(obj);
                 num = IririumMTMSN.CalculateMTMSN(now, 0);
             }
             else
             {
                 num = IririumMTMSN.CalculateMTMSN(now, (ushort)obj.Number);
-                MTMSNBLL.Update(f => f.id == obj.id, act =>
+                MtmsnInstance.Update(f => f.id == obj.id, act =>
                 {
                     act.Number = (short)(act.Number + 1);
                 });
@@ -207,6 +261,10 @@ namespace Wbs.Everdigm.Desktop
                 {
                     act.Status = (byte)CommandStatus.SatelliteHandled;
                 });
+                if (obj.TB_Terminal.Satellite != (int?)null)
+                {
+                    HandleIridiumMTFlow(obj.TB_Terminal.Satellite.Value, (int)(obj.Content.Length / 2));
+                }
             }
         }
 

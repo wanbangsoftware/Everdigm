@@ -130,6 +130,10 @@ namespace Wbs.Everdigm.Web.main
                 {
                     act.Status = int.Parse(ddlOuttype.SelectedValue);
                     act.Customer = int.Parse(hidCheckCustomerId.Value);
+                    // 出库时的总运转时间
+                    act.OutdoorWorktime = equipment.Runtime;
+                    // 出库的时间
+                    act.OutdoorTime = DateTime.Today;
                     // 出库后库存信息置为null
                     act.Warehouse = (int?)null;
                 });

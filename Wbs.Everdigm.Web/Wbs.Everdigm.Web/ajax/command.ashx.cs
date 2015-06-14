@@ -89,10 +89,10 @@ namespace Wbs.Everdigm.Web.ajax
                     break;
                 case "0x6004":
                     start = data.terminal_type == Wbs.Protocol.TerminalTypes.DX ? 5 : 1;
-                    ret = string.Format("Worktime: {0}", EquipmentInstance.GetRuntime((int?)BitConverter.ToUInt32(buffer, start)));
+                    ret = string.Format("Worktime: {0}", EquipmentInstance.GetRuntime((int?)BitConverter.ToUInt32(buffer, start), true));
                     break;
                 case "0x600B":
-                    ret = string.Format("Worktime: {0}", EquipmentInstance.GetRuntime((int?)BitConverter.ToUInt32(buffer, 0)));
+                    ret = string.Format("Worktime: {0}", EquipmentInstance.GetRuntime((int?)BitConverter.ToUInt32(buffer, 0), true));
                     break;
                 case "0x6007": ret = string.Format("Security: {0}", _0x6007.GetSecurity(buffer[1])); break;
                 case "0x3000": ret = string.Format("Security: {0}", _0x3000.GetFlag(buffer[0])); break;

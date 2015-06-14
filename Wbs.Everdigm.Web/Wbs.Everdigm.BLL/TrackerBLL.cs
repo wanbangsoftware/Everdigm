@@ -41,7 +41,8 @@ namespace Wbs.Everdigm.BLL
 
         public override string ToString(TB_Tracker entity)
         {
-            return string.Format("ID: {0}, Sim: {1}, Car NO.:{2}", entity.id, entity.SimCard, entity.CarNumber);
+            return string.Format("Number: {0}, Vehicle:{1}", entity.SimCard, 
+                string.IsNullOrEmpty(entity.CarNumber) ? "-" : entity.CarNumber);
         }
     }
 }

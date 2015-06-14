@@ -46,7 +46,7 @@
 <asp:Content ContentPlaceHolderID="ContentPlaceHolderContent" runat="server">
     <tfoot>
         <tr>
-            <td colspan="18">
+            <td colspan="19">
                 <div class="pagging" id="divPagging" runat="server">
                 </div>
                 <div class="clear"></div>
@@ -54,25 +54,7 @@
         </tr>
     </tfoot>
     <tbody id="tbodyBody" runat="server">
-        <tr>
-            <td class="in-tab-txt-b">1</td>
-            <td class="in-tab-txt-b">EX.</td>
-            <td class="in-tab-txt-b textoverflow">DL215-9-21442</td>
-            <td class="in-tab-txt-b">2430</td>
-            <td class="in-tab-txt-b">OFF</td>
-            <td class="in-tab-txt-b textoverflow">山东省烟台市</td>
-            <td class="in-tab-txt-rb">W</td>
-            <td class="in-tab-txt-b">2014-09-21</td>
-            <td class="in-tab-txt-b">S</td>
-            <td class="in-tab-txt-b">2014-10-22</td>
-            <td class="in-tab-txt-b">S</td>
-            <td class="in-tab-txt-rb textoverflow">Warehouse1</td>
-            <td class="in-tab-txt-b">ON</td>
-            <td class="in-tab-txt-b">
-                <img src="../images/img_connect_gprs.png" /></td>
-            <td class="in-tab-txt-b textoverflow">2014-09-22</td>
-            <td class="in-tab-txt-b textoverflow">20140921221</td>
-        </tr>
+        
     </tbody>
 </asp:Content>
 <asp:Content ContentPlaceHolderID="ContentPlaceHolderDialog" runat="server">

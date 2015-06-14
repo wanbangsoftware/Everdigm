@@ -213,7 +213,7 @@ namespace Wbs.Everdigm.Desktop
             {
                 if (rtbHistory.Text.Length < 1) return;
 
-                var ret = SaveFile("data\\" + DateTime.Now.ToString("yyyyMMdd") + "_history.txt", rtbHistory.Text);
+                var ret = SaveFile("data\\" + DateTime.Now.ToString("yyyyMM") + "\\" + DateTime.Now.ToString("yyyyMMdd") + "_history.txt", rtbHistory.Text);
                 if (string.IsNullOrEmpty(ret))
                 {
                     rtbHistory.Clear();

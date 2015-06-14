@@ -69,7 +69,7 @@
                             <thead>
                                 <tr>
                                     <th class="bg-primary"></th>
-                                    <th colspan="7" class="in-tab-title-rb bg-primary">Equipment Information</th>
+                                    <th colspan="9" class="in-tab-title-rb bg-primary">Equipment Information</th>
                                     <th colspan="2" class="in-tab-title-rb bg-primary">Customer</th>
                                     <th colspan="4" class="in-tab-title-rb bg-primary">Terminal Information</th>
                                     <th colspan="5" class="in-tab-title-b bg-primary">Storage Information</th>
@@ -82,7 +82,9 @@
                                     <th class="in-tab-title-b bg-warning" style="text-align: right !important;">SMH</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">Eng.</th>
                                     <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Location</th>
-                                    <th class="in-tab-title-rb bg-warning">Status</th>
+                                    <th class="in-tab-title-b bg-warning">Status</th>
+                                    <th class="in-tab-title-b bg-warning textoverflow">Out Days</th>
+                                    <th class="in-tab-title-rb bg-warning textoverflow">AVG. Work time</th>
                                     <th class="in-tab-title-b bg-warning">Number</th>
                                     <th class="in-tab-title-rb bg-warning">Name</th>
                                     <th class="in-tab-title-b bg-warning">Signal</th>
@@ -98,7 +100,7 @@
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="18">
+                                    <td colspan="21">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>
@@ -110,10 +112,13 @@
                                     <td class="in-tab-txt-b">1</td>
                                     <td class="in-tab-txt-b">EX.</td>
                                     <td class="in-tab-txt-b textoverflow" style="text-align: left !important;">DL215-9-21442</td>
+                                    <td class="in-tab-txt-b">Loader</td>
                                     <td class="in-tab-txt-b">2430</td>
                                     <td class="in-tab-txt-b">OFF</td>
                                     <td class="in-tab-txt-b textoverflow">山东省烟台市</td>
-                                    <td class="in-tab-txt-rb">W</td>
+                                    <td class="in-tab-txt-b">W</td>
+                                    <td class="in-tab-txt-b">30</td>
+                                    <td class="in-tab-txt-rb">4 hr 30 min</td>
                                     <td class="in-tab-txt-b">23553523</td>
                                     <td class="in-tab-txt-rb">23553523</td>
                                     <td class="in-tab-txt-b">ON</td>

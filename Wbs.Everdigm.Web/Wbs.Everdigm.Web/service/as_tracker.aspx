@@ -9,6 +9,7 @@
     <link href="../bootstrap3/css/bootstrap.css" rel="stylesheet" />
     <link href="../bootstrap3/models/css/bootstrap-dialog.min.css" rel="stylesheet" />
     <link href="../bootstrap3/bootstrap-datepicker-1.3.0/css/datepicker3.css" rel="stylesheet" />
+    <link href="../bootstrap3/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" />
     <link href="../css/body_equipment.css" rel="stylesheet" />
     <link href="../css/pagging.css" rel="stylesheet" />
     <link href="../mobile/css/style.css" rel="stylesheet" />
@@ -24,7 +25,16 @@
             <div class="panel-body">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist" id="queryBar">
-                    <li role="presentation" class="active"><a href="#" role="tab" data-toggle="tab" runat="server" id="aTrackerId">Tracker</a></li>
+                    <li role="presentation" class="active">
+                        <button class="btn btn-info" type="button" style="margin-top: 3px; margin-right: 3px; margin-bottom: 3px;">
+                            <i class="fa fa-anchor"></i> <span runat="server" id="aTrackerId"></span>
+                        </button>
+                    </li>
+                    <li role="presentation">
+                        <button class="btn btn-info" type="button" style="margin-top: 3px; margin-right: 3px;">
+                            <i class="fa fa-car"></i> <span runat="server" id="aTrackerVehicle"></span>
+                        </button>
+                    </li>
                     <li role="presentation">
                         <div class="input-group" style="margin-top: 3px;">
                             <div class="input-daterange input-group" style="float: left; margin-left: 2px;">
@@ -44,7 +54,7 @@
                         </button>
                     </li>
                     <li role="presentation">
-                        <button class="btn btn-info" type="button" style="margin-top: 3px; margin-right: 3px;">
+                        <button class="btn btn-warning" type="button" style="margin-top: 3px; margin-right: 3px;">
                             <span class="glyphicon glyphicon-map-marker"></span> point(s)
                             <span id="points" class="badge"></span>
                         </button>
@@ -69,7 +79,7 @@
                                 <thead>
                                     <tr class="alert-info">
                                         <th class="panel-body-td" style="width: 30px;">#</th>
-                                        <th class="panel-body-td" style="width: 160px;">Receive time</th>
+                                        <th class="panel-body-td" style="width: 150px;">Receive time</th>
                                         <th class="panel-body-td">Type</th>
                                     </tr>
                                 </thead>

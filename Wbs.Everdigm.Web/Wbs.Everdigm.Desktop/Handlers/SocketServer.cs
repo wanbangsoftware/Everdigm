@@ -261,8 +261,13 @@ namespace Wbs.Everdigm.Desktop
                 {
                     if (stat == 0)
                     {
-                        // 处理未处理的SMS信息
-                        _handler.CheckSMSData();
+                        try
+                        {
+                            // 处理未处理的SMS信息
+                            _handler.CheckSMSData();
+                        }
+                        catch (Exception sms)
+                        { HandleDisplayMessage("Cannot handle CheckSMSData: " + sms.Message); }
                     }
                 }
 
@@ -271,8 +276,13 @@ namespace Wbs.Everdigm.Desktop
                 if (!_iridiumPool.TryDequeue(out iridium)) iridium = null;
                 if (null != iridium)
                 {
-                    // 处理铱星数据
-                    _handler.HandleIridiumData(iridium);
+                    try
+                    {
+                        // 处理铱星数据
+                        _handler.HandleIridiumData(iridium);
+                    }
+                    catch (Exception iri)
+                    { HandleDisplayMessage("Cannot handle HandleIridiumData: " + iri.Message); }
                 }
 
 

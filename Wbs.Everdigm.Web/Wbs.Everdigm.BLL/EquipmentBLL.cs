@@ -41,6 +41,8 @@ namespace Wbs.Everdigm.BLL
                 Rpm = 0,
                 Model = (int?)null,
                 Number = "",
+                OutdoorTime = (DateTime?)null,
+                OutdoorWorktime = 0,
                 OnlineStyle = (byte?)null,
                 OnlineTime = (DateTime?)null,
                 Port = 0,
@@ -104,6 +106,34 @@ namespace Wbs.Everdigm.BLL
         {
             return entity.TB_EquipmentStatusName.Name;
         }
+        /// <summary>
+        /// 计算设备出厂之时与今日的天数
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public int GetOutdoorDays(TB_Equipment entity)
+        {
+            if ((DateTime?)null == entity.OutdoorTime)
+                return 0;
+
+            var ts1 = new TimeSpan(entity.OutdoorTime.Value.Ticks);
+            var ts2 = new TimeSpan(DateTime.Now.Ticks);
+            return (int)ts1.Subtract(ts2).Duration().TotalDays;
+        }
+        /// <summary>
+        /// 获取设备出厂之后的每日运转时间
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public string GetAverageWorktime(TB_Equipment entity)
+        {
+            var days = GetOutdoorDays(entity);
+            if (days < 1) return "-";
+            var newTime = (int?)null == entity.Runtime ? 0 : entity.Runtime;
+            var oldTime = (int?)null == entity.OutdoorWorktime ? 0 : entity.OutdoorWorktime;
+            int times = (int)((newTime - oldTime) / days);
+            return GetRuntime((int?)times, true);
+        }
 
         /// <summary>
         /// 获取终端信息的title
@@ -146,14 +176,20 @@ namespace Wbs.Everdigm.BLL
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
-        public string GetRuntime(int? time)
+        public string GetRuntime(int? time, bool showHour = false)
         {
-            if ((int?)null == time || 0 == time) return "00:00";
-            //if (time.Value < 60) return "00:"+time.Value.ToString() + "min";
-            int hour = time.Value / 60, minute = time.Value % 60;
-            if(hour<1000)
-                return string.Format("{0:00}:{1:00}", hour, minute);
-            return string.Format("{0:0,0}:{1:00}", hour, minute);
+            var ret = "";
+            if ((int?)null == time || 0 == time)
+                ret = "0:00";
+            else
+            {
+                //if (time.Value < 60) return "00:"+time.Value.ToString() + "min";
+                int hour = time.Value / 60, minute = time.Value % 60;
+                if (hour < 1000)
+                    ret = string.Format("{0:00}:{1:00}", hour, minute);
+                ret = string.Format("{0:0,0}:{1:00}", hour, minute);
+            }
+            return showHour ? (ret.Replace(":", " hr ") + " min") : ret;
         }
     }
 }

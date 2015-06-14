@@ -62,7 +62,7 @@
     <Compile Include="HistoryBLL.cs" />
     <Compile Include="InterfaceBaseService.cs" />
     <Compile Include="IridiumMMSNBLL.cs" />
-    <Compile Include="IririumFlowBLL.cs" />
+    <Compile Include="IridiumFlowBLL.cs" />
     <Compile Include="PermissionBLL.cs" />
     <Compile Include="PositionBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,6 +75,8 @@
     <Compile Include="TrackerBLL.cs" />
     <Compile Include="TrackerPositionBLL.cs" />
     <Compile Include="WarehouseBLL.cs" />
+    <Compile Include="WorkBLL.cs" />
+    <Compile Include="WorkDetailBLL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Protocol\Wbs.Protocol.csproj">

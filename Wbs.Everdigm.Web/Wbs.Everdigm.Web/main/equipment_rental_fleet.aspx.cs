@@ -85,7 +85,9 @@ namespace Wbs.Everdigm.Web.main
                         "<td class=\"in-tab-txt-b\" style=\"text-align: right !important;\">" + EquipmentInstance.GetRuntime(obj.Runtime) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + EquipmentInstance.GetEngStatus(obj) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\" title=\"" + obj.GpsAddress + "\">" + obj.GpsAddress + "</td>" +
-                        "<td class=\"in-tab-txt-rb\">" + EquipmentInstance.GetStatus(obj) + "</td>" +
+                        "<td class=\"in-tab-txt-b\" title=\"" + EquipmentInstance.GetStatusTitle(obj) + "\">" + EquipmentInstance.GetStatus(obj) + "</td>" +
+                        "<td class=\"in-tab-txt-b\">" + EquipmentInstance.GetOutdoorDays(obj) + "</td>" +
+                        "<td class=\"in-tab-txt-rb\">" + EquipmentInstance.GetAverageWorktime(obj) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\">" + (null == _in ? "-" : _in.Stocktime.Value.ToString("yyyy/MM/dd")) + "</td>" +
                         "<td class=\"in-tab-txt-b\" title=\"" + StoreInstance.GetStatusTitle(_in) + "\">" + StoreInstance.GetStatus(_in) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\">" + (null == _out ? "-" : _out.Stocktime.Value.ToString("yyyy/MM/dd")) + "</td>" +
@@ -121,6 +123,9 @@ namespace Wbs.Everdigm.Web.main
                     {
                         // 保存仓库信息
                         act.Warehouse = int.Parse(hiddenOldWarehouse.Value);
+                        // 清除出厂日期和出厂时运转时间
+                        act.OutdoorWorktime = 0;
+                        act.OutdoorTime = (DateTime?)null;
                         // 客户信息清除
                         act.Customer = (int?)null;
                         act.StoreTimes = exist.StoreTimes + 1;

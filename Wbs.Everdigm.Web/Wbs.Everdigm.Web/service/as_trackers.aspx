@@ -35,7 +35,7 @@
             <div class="panel-body" style="padding-bottom: 0px !important;">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist" id="queryBar">
-                    <li role="presentation" class="active"><a href="#" role="tab" data-toggle="tab">Tracker</a></li>
+                    <li role="presentation" class="active"><a href="#" role="tab" data-toggle="tab">Trackers</a></li>
                     <li role="presentation" class="tablist-item-input">
                         <div class="input-group">
                             <input type="text" id="txtQueryNumber" runat="server" class="form-control" placeholder="license plate" maxlength="15">

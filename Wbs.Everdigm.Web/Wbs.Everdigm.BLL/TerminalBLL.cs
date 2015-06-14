@@ -28,6 +28,7 @@ namespace Wbs.Everdigm.BLL
                 id = 0,
                 HasBound = false,
                 Delete = false,
+                Booked = false,
                 Firmware = "",
                 Number = "",
                 ProductionDate = DateTime.Now,
