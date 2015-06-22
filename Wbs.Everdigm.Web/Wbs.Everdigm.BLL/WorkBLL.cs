@@ -20,6 +20,7 @@ namespace Wbs.Everdigm.BLL
         {
             return new TB_Work()
             {
+                Deleted = false,
                 Description = "",
                 Director = "",
                 RealEnd = (DateTime?)null,

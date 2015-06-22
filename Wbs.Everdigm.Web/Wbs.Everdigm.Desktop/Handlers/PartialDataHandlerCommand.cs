@@ -142,11 +142,24 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="tx300"></param>
         private void HandleGsmCommandResponsed(TX300 tx300)
         {
-            CommandInstance.Update(f => f.DestinationNo == tx300.TerminalID &&
-                f.Command == "0x" + CustomConvert.IntToDigit(tx300.CommandID, CustomConvert.HEX, 4) &&
-                f.ScheduleTime >= DateTime.Now.AddMinutes(-3) &&
-                GsmStatus.Skip(2).Contains(f.Status.Value),
-                act => { act.Status = (byte)CommandStatus.Returned; });
+            // 查找定期时间内发送的相同命令记录，直取最后一条命令
+            var cmd = CommandInstance.FindList<TB_Command>(f => f.DestinationNo.Equals(tx300.TerminalID) &&
+                f.Command.Equals("0x" + CustomConvert.IntToDigit(tx300.CommandID, CustomConvert.HEX, 4)) &&
+                f.ScheduleTime >= DateTime.Now.AddMinutes(tx300.ProtocolType == Protocol.ProtocolTypes.SATELLITE ? -60 : -3),
+                "ScheduleTime", true).FirstOrDefault();
+
+            if (null != cmd)
+            {
+                CommandInstance.Update(f => f.id == cmd.id, act =>
+                {
+                    act.Status = (byte)CommandStatus.Returned;
+                });
+            }
+            //CommandInstance.Update(f => f.DestinationNo == tx300.TerminalID &&
+            //    f.Command == "0x" + CustomConvert.IntToDigit(tx300.CommandID, CustomConvert.HEX, 4) &&
+            //    f.ScheduleTime >= DateTime.Now.AddMinutes(-3) //&&
+            //    //GsmStatus.Skip(2).Contains(f.Status.Value),
+            //    , act => { act.Status = (byte)CommandStatus.Returned; });
         }
     }
 }

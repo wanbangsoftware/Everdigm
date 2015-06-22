@@ -48,6 +48,7 @@ namespace Wbs.Everdigm.BLL
                 Port = 0,
                 RegisterTime = DateTime.Now,
                 Runtime = 0,
+                InitializedRuntime = 0,
                 ServerName = "",
                 Signal = 0,
                 Socket = 0,
@@ -131,7 +132,8 @@ namespace Wbs.Everdigm.BLL
             if (days < 1) return "-";
             var newTime = (int?)null == entity.Runtime ? 0 : entity.Runtime;
             var oldTime = (int?)null == entity.OutdoorWorktime ? 0 : entity.OutdoorWorktime;
-            int times = (int)((newTime - oldTime) / days);
+            // 加上初始化的运转时间
+            int times = (int)((newTime - oldTime + entity.InitializedRuntime) / days);
             return GetRuntime((int?)times, true);
         }
 

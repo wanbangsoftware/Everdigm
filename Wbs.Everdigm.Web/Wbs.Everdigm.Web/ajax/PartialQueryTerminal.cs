@@ -3,8 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
+using Wbs.Everdigm.Database;
+
 namespace Wbs.Everdigm.Web.ajax
 {
+    public class TempTerminal
+    {
+        public int Id { get; set; }
+        public string Sim { get; set; }
+        public string Number { get; set; }
+        public string Satellite { get; set; }
+        public TempTerminal(TB_Terminal obj)
+        {
+            Id = obj.id;
+            Sim = obj.Sim;
+            Number = obj.Number;
+            Satellite = (int?)null == obj.Satellite ? "" : obj.TB_Satellite.CardNo;
+        }
+    }
     /// <summary>
     /// 这里提供终端信息查询
     /// </summary>
@@ -25,6 +41,17 @@ namespace Wbs.Everdigm.Web.ajax
                         f.Delete == false && (f.HasBound == ("bound" == cmd ? true : false)) &&
                         (f.Number.IndexOf(data) >= 0 || f.Sim.IndexOf(data) >= 0)).Take(10).ToList();
                     ret = JsonConverter.ToJson(bound);
+                    break;
+                case "book":
+                    var book = TerminalInstance.FindList(f => f.Delete == false && 
+                        f.HasBound == false && f.Booked == false && 
+                        (f.Number.IndexOf(data) >= 0 || f.Sim.IndexOf(data) >= 0)).Take(10).ToList();
+                    var tmp = new List<TempTerminal>();
+                    foreach (var t in book)
+                    {
+                        tmp.Add(new TempTerminal(t));
+                    }
+                    ret = JsonConverter.ToJson(tmp);
                     break;
                 case "single":
                     // 查询单个终端

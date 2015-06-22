@@ -25,5 +25,10 @@ namespace Wbs.Everdigm.Web
         protected TrackerBLL TrackerInstance { get { return new TrackerBLL(); } }
 
         protected TrackerPositionBLL TrackerPositionInstance { get { return new TrackerPositionBLL(); } }
+
+        protected WorkBLL WorkInstance { get { return new WorkBLL(); } }
+        protected WorkDetailBLL WorkDetailInstance { get { return new WorkDetailBLL(); } }
+        protected EquipmentBLL EquipmentInstance { get { return new EquipmentBLL(); } }
+        protected TerminalBLL TerminalInstance { get { return new TerminalBLL(); } }
     }
 }

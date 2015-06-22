@@ -147,10 +147,6 @@ namespace Wbs.Everdigm.Web.ajax
             return ret;
         }
         /// <summary>
-        /// 当前登陆者的信息
-        /// </summary>
-        private TB_Account User { get { return ctx.Session[Utility.SessionName] as TB_Account; } }
-        /// <summary>
         /// 发送命令
         /// </summary>
         /// <param name="obj"></param>
@@ -214,24 +210,28 @@ namespace Wbs.Everdigm.Web.ajax
                     // 保安命令处于已禁用时只能发送00，其余的都不能发送
                     if (!tobe.Equals("00") && !tobe.Equals("10"))
                     {
-                        ret = ResponseMessage(-1, "Cannot send this security command in Disabled status.");
+                        ret = ResponseMessage(-1, "Cannot send this security command from Disabled status.");
                     }
                     break;
                 case "20":
                     // 代理商保安命令不能发送禁用命令
                     if (tobe.Equals("10"))
                     {
-                        ret = ResponseMessage(-1, "Cannot disable security function in Custom Lock status.");
+                        ret = ResponseMessage(-1, "Cannot disable security function directly from Partial Lock status.");
+                    }
+                    else if (tobe.Equals("40"))
+                    {
+                        ret = ResponseMessage(-1, "Cannot change Partial Lock to Full Lock directly.");
                     }
                     break;
                 case "40":
                     if (tobe.Equals("10"))
                     {
-                        ret = ResponseMessage(-1, "Cannot disable security function in Full Lock status.");
+                        ret = ResponseMessage(-1, "Cannot disable security function directly from Full Lock status.");
                     }
                     else if (tobe.Equals("20"))
                     {
-                        ret = ResponseMessage(-1, "Cannot lower the security level in Full Lock status.");
+                        ret = ResponseMessage(-1, "Cannot lower the Security level directly from Full Lock status.");
                     }
                     break;
             }
@@ -331,7 +331,7 @@ namespace Wbs.Everdigm.Web.ajax
                             //_command = command.Code;
                         }
                         var list = CommandInstance.FindList<TB_Command>(f => f.DestinationNo.Equals(sim) &&
-                            f.ScheduleTime >= start && f.ScheduleTime <= end, "ScheduleTime", true);
+                            f.ScheduleTime >= start && f.ScheduleTime <= end && f.Command != "0xBB0F", "ScheduleTime", true);
                         if (security)
                         {
                             list = list.Where(w => w.Command == "0x6007" || w.Command == "0x4000" || w.Command == "0x3000" || w.Command == "0xDD02");
@@ -367,7 +367,9 @@ namespace Wbs.Everdigm.Web.ajax
                                 if (record.Command == "0x3000")
                                     param = record.Content.Substring(record.Content.Length - 4, 2);
                                 Command _cmd = CommandUtility.GetCommand(record.Command.Replace("0x", ""), param);
-                                record.Command = (null == _cmd ? "" : _cmd.Title);
+                                var func = (EquipmentFunctional)obj.Functional;
+                                var called = (func == EquipmentFunctional.Mechanical || func == EquipmentFunctional.Electric) ? "Equipment" : "Loader";
+                                record.Command = (null == _cmd ? "" : _cmd.Title.Replace("Equipment", called).Replace("Loader", called));
                             }
                         }
                         ret = JsonConverter.ToJson(list);

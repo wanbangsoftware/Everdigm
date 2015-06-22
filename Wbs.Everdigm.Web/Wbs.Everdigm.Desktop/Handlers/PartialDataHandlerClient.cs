@@ -86,6 +86,7 @@ namespace Wbs.Everdigm.Desktop
                 f.OnlineTime < DateTime.Now.AddMinutes(-720), act =>
                 {
                     act.OnlineStyle = (byte)LinkType.SLEEP;
+                    act.Voltage = "G0000";
                 });
             // 处理终端连接
             TerminalInstance.Update(f => f.OnlineStyle > (byte)LinkType.OFF && f.OnlineStyle < (byte)LinkType.SLEEP &&
@@ -98,6 +99,7 @@ namespace Wbs.Everdigm.Desktop
                 f.OnlineTime < DateTime.Now.AddMinutes(-10080), act =>
                 {
                     act.OnlineStyle = (byte)LinkType.BLIND;
+                    act.Voltage = "G0000";
                 });
         }
         private byte GetOnlineStyleByPackage(AsyncDataPackageType type)

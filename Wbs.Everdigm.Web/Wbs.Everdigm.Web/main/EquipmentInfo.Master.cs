@@ -47,7 +47,7 @@ namespace Wbs.Everdigm.Web.main
                     objectInfo.Rows[2].Cells[3].InnerHtml = obj.TB_EquipmentStatusName.Code;
                     objectInfo.Rows[2].Cells[3].Attributes["title"] = obj.TB_EquipmentStatusName.Name;
 
-                    objectInfo.Rows[3].Cells[1].InnerHtml = EquipmentInstance.GetRuntime(obj.Runtime);
+                    objectInfo.Rows[3].Cells[1].InnerHtml = EquipmentInstance.GetRuntime(obj.Runtime + obj.InitializedRuntime);
                     objectInfo.Rows[3].Cells[3].InnerText = EquipmentInstance.GetEngStatus(obj);
 
                     objectInfo.Rows[4].Cells[1].InnerText = obj.GpsAddress;

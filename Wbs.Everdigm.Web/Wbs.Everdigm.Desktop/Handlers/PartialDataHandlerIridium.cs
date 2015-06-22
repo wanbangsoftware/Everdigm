@@ -132,17 +132,32 @@ namespace Wbs.Everdigm.Desktop
                 if (Wbs.Protocol.ProtocolTypes.IsTX300(data.Payload[2]) &&
                             Wbs.Protocol.TerminalTypes.IsTX300(data.Payload[3]))
                 {
-                    // 更新命令的MTMSN状态为返回状态
-                    HandleData(new Sockets.AsyncUserDataBuffer()
+                    // 根据卫星号码查询终端的Sim卡号码并将其填入包头结构里
+                    var terminal = TerminalInstance.Find(f => f.TB_Satellite.CardNo.Equals(data.IMEI) && f.Delete == false);
+                    if (null != terminal)
                     {
-                        Buffer = data.Payload,
-                        DataType = Sockets.AsyncUserDataType.ReceivedData,
-                        IP = "",
-                        PackageType = Sockets.AsyncDataPackageType.SAT,
-                        Port = 0,
-                        ReceiveTime = data.Time,
-                        SocketHandle = 0
-                    });
+                        var sim = terminal.Sim;
+                        sim += sim.Length < 11 ? "000" : "";
+                        sim = "0" + sim;
+                        var s = CustomConvert.GetBytes(sim);
+                        Buffer.BlockCopy(s, 0, data.Payload, 9, s.Length);
+                        s = null;
+                        // 更新命令的MTMSN状态为返回状态
+                        HandleData(new Sockets.AsyncUserDataBuffer()
+                        {
+                            Buffer = data.Payload,
+                            DataType = Sockets.AsyncUserDataType.ReceivedData,
+                            IP = "",
+                            PackageType = Sockets.AsyncDataPackageType.SAT,
+                            Port = 0,
+                            ReceiveTime = data.Time,
+                            SocketHandle = 0
+                        });
+                    }
+                    else
+                    {
+                        ShowUnhandledMessage("Unbind satellite report data: " + CustomConvert.GetHex(data.Payload));
+                    }
                 }
                 else { HandleIridiumNewProtocolPackage(data); }
                 // 统计铱星的接收数据次数和数据长度
@@ -255,6 +270,7 @@ namespace Wbs.Everdigm.Desktop
                     IMEI = obj.TB_Terminal.TB_Satellite.CardNo,
                     MTMSN = GetIridiumMTMSN()
                 };
+                e.Data.Payload[2] = Protocol.ProtocolTypes.SATELLITE;
                 OnIridiumSend(this, e);
                 // 更新命令发送状态
                 CommandInstance.Update(f => f.id == obj.id, act =>

@@ -389,6 +389,7 @@
   <Table Name="dbo.TB_Work" Member="TB_Work">
     <Type Name="TB_Work">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Deleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Tracker" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="RegisterTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="ScheduleStart" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
@@ -405,7 +406,9 @@
   <Table Name="dbo.TB_WorkDetail" Member="TB_WorkDetail">
     <Type Name="TB_WorkDetail">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Deleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Priority" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="Type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
       <Column Name="[Work]" Member="Work" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Equipment" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="BookedTerminal" Type="System.Int32" DbType="Int" CanBeNull="true" />
@@ -427,6 +430,7 @@
       <Column Name="Warehouse" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Customer" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Runtime" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="InitializedRuntime" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Status" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="StoreTimes" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Rpm" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />

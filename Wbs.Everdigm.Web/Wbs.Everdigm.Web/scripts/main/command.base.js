@@ -14,7 +14,8 @@ var _lastCommandId = 0, _lastCommandStatus = -1;
 命令发送状态的定义
 */
 var _command_send_failed = 9, _command_returned = 10,
-    _command_gsm_begin = 0, _command_sat_begin = 2, _command_sat_handled = 3;
+    _command_gsm_begin = 0,
+    _command_sat_begin = 2, _command_sat_handled = 3, _command_sat_sent = 6, _command_sat_received = 8;
 
 
 var cmdStatus = "%time% Command <code>%code%</code> %desc%<br />";
@@ -113,7 +114,7 @@ function showWarningLine(time, code, desc) {
 function calculateTimeused() {
     var used = _timerTimes * _timerInterval;
     var time = new Date(used);
-    $("#timeUsed").html(time.pattern("mm:ss"));
+    $("#timeUsed").html(time.pattern(_timerMaxtimes == _MAX_GSM_ ? "mm:ss" : "H:mm:ss"));
     var max = _timerInterval * _timerMaxtimes;
     if (used > max * 0.7) {
         $(".modal-header").removeClass("btn-warning").addClass("btn-danger");
@@ -146,7 +147,9 @@ function timerOnTime(functionOnTime, functionTimeout) {
 function getCommandStatus(functionOnComplete) {
     GetJsonData("../ajax/command.ashx", { "type": "query", "cmd": currentTestingCommand, "data": _lastCommandId },
            function (data) {
-               if (data.status == _command_sat_begin || data.status == _command_sat_handled) {
+               // 如果是卫星方式等待发送/卫星服务已处理/卫星服务已发送
+               if (data.status == _command_sat_begin || data.status == _command_sat_handled ||
+                   data.status == _command_sat_sent || data.status == _command_sat_received) {
                    _timerMaxtimes = _MAX_SAT_;
                    $("#satWarning").show();
                } else {
@@ -192,6 +195,7 @@ function queryCommandHistory(queryType) {
         function (data) {
             if (data.hasOwnProperty("desc")) {
                 showAlertModal(data.desc);
+                $(".btn-info").addClass("disabled");
             } else {
                 showHistoryList(data);
             }

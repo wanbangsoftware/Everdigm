@@ -477,8 +477,12 @@ namespace Wbs.Everdigm.Desktop
                 if (!cs.client.Connected)
                 {
                     cs.Dispose();
-                    cs.client.GetStream().Close();
-                    cs.client.Close();
+                    try
+                    {
+                        cs.client.Close();
+                        //cs.client.GetStream().Close();
+                    }
+                    catch { }
                     cs.client = null;
                     return;
                 }

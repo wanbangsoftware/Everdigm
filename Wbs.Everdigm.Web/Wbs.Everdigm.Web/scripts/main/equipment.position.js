@@ -51,8 +51,8 @@ function setMarkerInMap(lat, lng, time) {
     markerArray.push(marker);
     map.setCenter(latlng);
 
-    $("#lat").html(lat);
-    $("#lng").html(lng);
+    $("#lat").html(lat.toFixed(6));
+    $("#lng").html(lng.toFixed(6));
     $("#time").html(time.pattern(_datetimepatternFMT));
 }
 // 初始化地图
@@ -139,7 +139,7 @@ function showPositionHistory(list) {
     if (isStringNull(html)) {
         html = "<tr data-latlng=\"\"><td class=\"panel-body-td\" colspan=\"4\">No records exists.</td></tr>";
     }
-    $(".position tbody").html(html);
+    $(".position tbody").html(html).children("tr").css("cursor", "pointer");
 }
 // 显示轨迹
 function showPolyline() {
@@ -147,7 +147,15 @@ function showPolyline() {
     var polyPath = new Array();
     for (var i in posArray) {
         var obj = posArray[i];
-        polyPath.push(new google.maps.LatLng(obj.Latitude, obj.Longitude));
+        if (polyPath.length < 1) {
+            polyPath.push(new google.maps.LatLng(obj.Latitude, obj.Longitude));
+        } else {
+            var len = polyPath.length - 1;
+            var distence = getFlatternDistance(obj.Latitude, obj.Longitude, polyPath[len].lat(), polyPath[len].lng());
+            if (!isNaN(distence) && distence > 200) {
+                polyPath.push(new google.maps.LatLng(obj.Latitude, obj.Longitude));
+            }
+        }
     }
     // 划线的参数
     var polyOptions = {
@@ -158,5 +166,7 @@ function showPolyline() {
     };
     polyline = new google.maps.Polyline(polyOptions);
     polyline.setMap(map);
-    fitBounds(polyPath);
+    if (polyPath.length > 1) {
+        fitBounds(polyPath);
+    }
 }

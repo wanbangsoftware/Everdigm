@@ -42,10 +42,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.PowerPoint, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Word, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>including\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -304,6 +314,10 @@
     <Content Include="mobile\css\fonts\cell-custom.eot" />
     <Content Include="mobile\css\fonts\cell-custom.ttf" />
     <Content Include="mobile\css\fonts\cell-custom.woff" />
+    <Content Include="files\shop.order.TMS.installation.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ajax\work.ashx" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -468,10 +482,15 @@
     <Content Include="scripts\main\terminals.js" />
     <Content Include="scripts\main\testing.js" />
     <Content Include="scripts\main\testing_content.js" />
+    <Content Include="scripts\service\as.common.js" />
     <Content Include="scripts\service\as.tracker.js" />
     <Content Include="scripts\service\as.trackers.js" />
+    <Content Include="scripts\service\as.work.details.js" />
+    <Content Include="scripts\service\as.work.js" />
     <Content Include="service\as_tracker.aspx" />
     <Content Include="service\as_trackers.aspx" />
+    <Content Include="service\as_work_details.aspx" />
+    <Content Include="service\as_work_dispatch.aspx" />
     <Content Include="sms_test.aspx" />
     <Content Include="tree_images\dash.gif" />
     <Content Include="tree_images\dashminus.gif" />
@@ -515,6 +534,9 @@
     <Compile Include="ajax\satellite.ashx.cs">
       <DependentUpon>satellite.ashx</DependentUpon>
     </Compile>
+    <Compile Include="ajax\work.ashx.cs">
+      <DependentUpon>work.ashx</DependentUpon>
+    </Compile>
     <Compile Include="classes\BaseAccountPage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -555,6 +577,7 @@
     <Compile Include="common\EquipmentFunctional.cs" />
     <Compile Include="common\ErrorChart.cs" />
     <Compile Include="common\JsonConverter.cs" />
+    <Compile Include="common\OfficeConvert.cs" />
     <Compile Include="common\TodayWorktimeChart.cs" />
     <Compile Include="common\Utility.cs" />
     <Compile Include="default.aspx.cs">
@@ -1096,6 +1119,20 @@
     <Compile Include="service\as_trackers.aspx.designer.cs">
       <DependentUpon>as_trackers.aspx</DependentUpon>
     </Compile>
+    <Compile Include="service\as_work_details.aspx.cs">
+      <DependentUpon>as_work_details.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="service\as_work_details.aspx.designer.cs">
+      <DependentUpon>as_work_details.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="service\as_work_dispatch.aspx.cs">
+      <DependentUpon>as_work_dispatch.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="service\as_work_dispatch.aspx.designer.cs">
+      <DependentUpon>as_work_dispatch.aspx</DependentUpon>
+    </Compile>
     <Compile Include="sms_test.aspx.cs">
       <DependentUpon>sms_test.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1134,7 +1171,17 @@
       <Name>Wbs.Everdigm.Database</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>5</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="as_trackers.aspx.cs" Inherits="Wbs.Everdigm.Web.service.as_trackers" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="as_work_dispatch.aspx.cs" Inherits="Wbs.Everdigm.Web.service.as_work_dispatch" %>
 
 <!DOCTYPE html>
 
@@ -20,6 +20,18 @@
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
         }
+
+        body.modal-open .datepicker {
+            z-index: 1200 !important;
+        }
+
+        body.modal-open .dropdown-menu {
+            z-index: 1200 !important;
+        }
+
+        #tbodyBody tr {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -30,32 +42,34 @@
             <input type="hidden" runat="server" id="hidTotalPages" value="0" />
             <!-- Default panel contents -->
             <div class="panel-heading">
-                <strong>A/S: Trackers</strong>
+                <strong>AS: Work Dispatch</strong>
             </div>
             <div class="panel-body" style="padding-bottom: 0px !important;">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist" id="queryBar">
-                    <li role="presentation" class="active"><a href="#" role="tab" data-toggle="tab">Trackers</a></li>
-                    <li role="presentation" class="tablist-item-input">
-                        <div class="input-group">
-                            <input type="text" id="txtQueryNumber" runat="server" class="form-control" placeholder="license plate" maxlength="15">
-                            <asp:Button ID="btQuery" CssClass="hidden" runat="server" Text="Query" OnClick="btQuery_Click" />
-                            <span class="input-group-btn">
-                                <button class="btn btn-warning" type="button" id="query"><span class="glyphicon glyphicon-search"></span></button>
+                    <li role="presentation" class="active">
+                        <div class="input-group" style="margin-top: 3px; margin-bottom: 3px;">
+                            <div class="input-daterange input-group" style="float: left;">
+                                <span class="input-group-addon">Schedule:</span>
+                                <input type="text" class="input-md form-control little-input click-input" id="start" runat="server" />
+                                <span class="input-group-addon">to </span>
+                                <input type="text" class="input-md form-control little-input click-input" id="end" runat="server" />
+                            </div>
+                            <span class="input-group-btn" style="float: left;">
+                                <asp:Button ID="btQuery" runat="server" CssClass="hidden" OnClick="btQuery_Click" />
+                                <button class="btn btn-success" id="query" type="button"><span class="glyphicon glyphicon-search"></span>Query</button>
                             </span>
                         </div>
-                        <!-- /input-group -->
                     </li>
                     <li role="presentation" style="width: 100px; margin-top: 3px; padding-left: 5px;">
                         <div class="input-group">
                             <span class="input-group-btn">
-                                <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modalNewTracker"><span class="glyphicon glyphicon-plus-sign"></span><span>Add New</span></button>
+                                <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modalNewWork"><span class="glyphicon glyphicon-plus-sign"></span><span>Add New Work</span></button>
                             </span>
                         </div>
                         <!-- /input-group -->
                     </li>
                 </ul>
-
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div class="tab-content">
@@ -64,20 +78,18 @@
                             <thead>
                                 <tr>
                                     <th class="in-tab-title-b bg-primary" style="width: 50px;">#</th>
-                                    <th class="in-tab-title-b bg-primary" style="width: 80px; text-align: left;">Number</th>
-                                    <th class="in-tab-title-b bg-primary" style="width: 130px;">Last Receive</th>
-                                    <th class="in-tab-title-b bg-primary" style="width: 130px;">Charging lose</th>
-                                    <th class="in-tab-title-b bg-primary" style="width: 130px;">Battery use up</th>
-                                    <th class="in-tab-title-b bg-primary" style="width: 130px;">Parking timeout</th>
-                                    <th class="in-tab-title-b bg-primary" style="width: 100px;">Vehicle</th>
-                                    <th class="in-tab-title-b bg-primary" style="width: 60px;">Director</th>
-                                    <th class="in-tab-title-b bg-primary" style="text-align: left;">Address</th>
+                                    <th class="in-tab-title-b bg-primary" style="width: 90px;">Published</th>
+                                    <th class="in-tab-title-b bg-primary" style="width: 90px;">Start</th>
+                                    <th class="in-tab-title-b bg-primary" style="width: 90px;">End</th>
+                                    <th class="in-tab-title-b bg-primary textoverflow" style="width: 100px; text-align: left;">Director</th>
+                                    <th class="in-tab-title-b bg-primary" style="width: 50px;">Works</th>
+                                    <th class="in-tab-title-b bg-primary" style="text-align: left;">Title</th>
                                     <th class="in-tab-title-b bg-primary"></th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="10">
+                                    <td colspan="8">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>
@@ -85,32 +97,20 @@
                                 </tr>
                             </tfoot>
                             <tbody id="tbodyBody" runat="server">
-                                <tr>
-                                    <td class="in-tab-txt-b">1</td>
-                                    <td class="in-tab-txt-b" style="text-align: left;">95471420</td>
-                                    <td class="in-tab-txt-b">2015/06/11 19:53:12</td>
-                                    <td class="in-tab-txt-b">2015/06/11 19:53:12</td>
-                                    <td class="in-tab-txt-b">2015/06/11 19:53:12</td>
-                                    <td class="in-tab-txt-b">2015/06/11 19:53:12</td>
-                                    <td class="in-tab-txt-b">12345678</td>
-                                    <td class="in-tab-txt-b">12345678</td>
-                                    <td class="in-tab-txt-b textoverflow" style="text-align: left;" title="Asian Highway 3, Songino Khairkhan, Ulaanbaatar, Mongolia">Asian Highway 3, Songino Khairkhan, Ulaanbaatar, Mongolia</td>
-                                    <td class="in-tab-txt-b"></td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-        <!--小模态框-添加新Tracker界面-->
-        <div class="modal fade" id="modalNewTracker" tabindex="-1" style="height: 500px;" role="dialog" aria-labelledby="NewStorageIn" data-backdrop="static" aria-hidden="true">
+        <!--小模态框-转移仓库界面-->
+        <div class="modal fade" id="modalNewWork" tabindex="-1" style="height: 500px;" role="dialog" data-backdrop="static" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <asp:Panel runat="server" DefaultButton="btSave">
                         <div class="modal-header custom-modal-header bg-primary">
                             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            <h4 class="modal-title"><strong>Add new tracker: </strong></h4>
+                            <h4 class="modal-title"><strong>Add new work: </strong></h4>
                         </div>
                         <div class="modal-body">
                             <div class="row">
@@ -118,13 +118,13 @@
                                     <table class="table table-hover">
                                         <tbody id="popupTbody">
                                             <tr>
-                                                <td class="popup-td" style="vertical-align: middle;">Number:</td>
-                                                <td class="popup-td">
-                                                    <input type="text" class="form-control" style="width: 150px;" runat="server" id="number" placeholder="number" maxlength="10">
-                                                </td>
-                                                <td class="popup-td" style="vertical-align: middle;">Vehicle:</td>
-                                                <td class="popup-td">
-                                                    <input type="text" class="form-control" style="width: 150px;" runat="server" id="vehicle" placeholder="vehicle" maxlength="10">
+                                                <td class="popup-td" style="vertical-align: middle; width: 10%;">Schedule:</td>
+                                                <td class="popup-td" colspan="3">
+                                                    <div class="input-daterange input-group" style="float: left; margin-left: 2px;">
+                                                        <input type="text" class="input-md form-control little-input click-input" id="start1" runat="server" />
+                                                        <span class="input-group-addon">to </span>
+                                                        <input type="text" class="input-md form-control little-input click-input" id="end1" runat="server" />
+                                                    </div>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -135,6 +135,18 @@
                                                 <td class="popup-td"></td>
                                                 <td class="popup-td"></td>
                                             </tr>
+                                            <tr>
+                                                <td class="popup-td" style="vertical-align: middle;">Title:</td>
+                                                <td class="popup-td" colspan="3">
+                                                    <input type="text" class="form-control" runat="server" id="title" placeholder="title" maxlength="100">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="popup-td">Description:</td>
+                                                <td class="popup-td" colspan="3">
+                                                    <textarea runat="server" class="form-control" id="description" placeholder="description" rows="3"></textarea>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -143,7 +155,7 @@
                         <div class="modal-footer">
                             <asp:Button ID="btSave" runat="server" CssClass="hidden" OnClick="btSave_Click" />
                             <input type="hidden" id="hiddenId" runat="server" />
-                            <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>Save</button>
+                            <button type="button" class="btn btn-success" id="save"><span class="glyphicon glyphicon-ok"></span>Save</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
                     </asp:Panel>
@@ -163,6 +175,7 @@
     <script type="text/javascript" src="../js/javascript.date.pattern.js"></script>
     <script type="text/javascript" src="../js/common.js"></script>
     <script type="text/javascript" src="../scripts/main/pagination.js"></script>
-    <script type="text/javascript" src="../scripts/service/as.trackers.js"></script>
+    <script type="text/javascript" src="../scripts/service/as.common.js"></script>
+    <script type="text/javascript" src="../scripts/service/as.work.js"></script>
 </body>
 </html>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.SessionState;
+using Wbs.Everdigm.Database;
 
 namespace Wbs.Everdigm.Web.ajax
 {
@@ -50,6 +51,10 @@ namespace Wbs.Everdigm.Web.ajax
             data = GetParamenter("data");
         }
 
+        /// <summary>
+        /// 当前登陆者的信息
+        /// </summary>
+        protected TB_Account User { get { return ctx.Session[Utility.SessionName] as TB_Account; } }
         /// <summary>
         /// 获取客户端亲求中的 param 值
         /// </summary>

@@ -21,10 +21,6 @@ $(document).ready(function () {
         box.click();
     });
 
-    $("#tbodyBody").on("change", "input[type=\"checkbox\"]", function () {
-        checkboxChange($(this));
-    });
-
     $(".input-daterange").each(function () {
         var inputs = $(this).children(".input-md");
         var now = new Date();
@@ -33,10 +29,8 @@ $(document).ready(function () {
         $(inputs[1]).val(now.pattern(_datepatternFMT));
     });
 
-    $(".input-daterange").datepicker({
-        format: _datepickerFMT,
-        weekStart: 0,
-        autoclose: true
+    $("#tbodyBody").on("change", "input[type=\"checkbox\"]", function () {
+        checkboxChange($(this));
     });
 
     $("#animation").click(function () {
@@ -53,6 +47,7 @@ $(document).ready(function () {
         }
     });
 
+    $(".btn-success").click(function () { getTrackerHistory(); });
     getTrackerHistory();
 });
 
@@ -164,16 +159,18 @@ function showPositionHistory(list) {
     }
     $(".table-hover tbody").html(html).children("tr").css("cursor", "pointer");
 
-    // 划线的参数
-    var polyOptions = {
-        path: posArray,
-        strokeColor: "blue",
-        strokeOpacity: 0.5,
-        strokeWeight: 3
-    };
-    polyline = new google.maps.Polyline(polyOptions);
-    polyline.setMap(map);
-    fitBounds(posArray);
+    if (posArray.length > 1) {
+        // 划线的参数
+        var polyOptions = {
+            path: posArray,
+            strokeColor: "blue",
+            strokeOpacity: 0.5,
+            strokeWeight: 3
+        };
+        polyline = new google.maps.Polyline(polyOptions);
+        polyline.setMap(map);
+        fitBounds(posArray);
+    }
 }
 
 function checkboxChange(obj) {

@@ -19,6 +19,25 @@ namespace Wbs.Everdigm.Desktop
     public partial class DataHandler
     {
         /// <summary>
+        /// 获取CC00的返回数据
+        /// </summary>
+        /// <param name="x300"></param>
+        /// <returns></returns>
+        private byte[] Get0xCC00(TX300 x300)
+        {
+            byte[] cc00 = new byte[23];
+            Buffer.BlockCopy(x300.Content, 0, cc00, 0, 17);
+            cc00[0] = 0x17;
+            cc00[7] = 0xFF;
+            cc00[8] = 0xFF;
+            // 心跳时间间隔，7分钟
+            cc00[17] = 0x07;
+            WbsDateTime dt = new WbsDateTime(DateTime.Now);
+            Buffer.BlockCopy(dt.DateTimeToByte, 0, cc00, 19, 4);
+            dt = null;
+            return cc00;
+        }
+        /// <summary>
         /// 处理接收到的数据
         /// </summary>
         /// <param name="data"></param>
@@ -37,6 +56,8 @@ namespace Wbs.Everdigm.Desktop
                 //SaveTX300History(x300, data.ReceiveTime);
                 // 更新设备状态
                 HandleTX300Status(x300, data);
+                // 处理命令回复
+                HandleGsmCommandResponsed(x300);
                 // SMS消息不需要返回包
                 if (x300.ProtocolType >= Protocol.ProtocolTypes.SMS) return;
 
@@ -44,15 +65,7 @@ namespace Wbs.Everdigm.Desktop
                 {
                     if (x300.CommandID == 0xCC00)
                     {
-                        byte[] cc00 = new byte[23];
-                        Buffer.BlockCopy(x300.Content, 0, cc00, 0, 17);
-                        cc00[0] = 0x17;
-                        cc00[7] = 0xFF;
-                        cc00[8] = 0xFF;
-                        cc00[17] = 0x07;
-                        WbsDateTime dt = new WbsDateTime(DateTime.Now);
-                        Buffer.BlockCopy(dt.DateTimeToByte, 0, cc00, 19, 4);
-                        dt = null;
+                        byte[] cc00 = Get0xCC00(x300);
                         var ret = 0;
                         if (data.PackageType == AsyncDataPackageType.TCP)
                             ret = _server.Send(data.SocketHandle, cc00);
@@ -86,7 +99,6 @@ namespace Wbs.Everdigm.Desktop
                         }
                     }
                 }
-                HandleGsmCommandResponsed(x300);
                 index += x300.TotalLength;
                 x300 = null;
             }
@@ -202,6 +214,7 @@ namespace Wbs.Everdigm.Desktop
                 case 0xBB0F:
                     break;
                 case 0xCC00:
+                    Handle0xCC00(obj, terminal);
                     HandleTerminalVersion(obj, terminal);
                     break;
                 case 0xDD00:
@@ -548,6 +561,28 @@ namespace Wbs.Everdigm.Desktop
                 {
                     act.Runtime = (int)x600B.Worktime;
                 });
+            }
+        }
+        /// <summary>
+        /// 处理CC00命令，这里只处理卫星方式
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="equipment"></param>
+        /// <param name="terminal"></param>
+        private void Handle0xCC00(TX300 obj, TB_Terminal terminal)
+        {
+            // 返回铱星方式的0xCC00数据
+            if (obj.ProtocolType == Protocol.ProtocolTypes.SATELLITE)
+            {
+                var cc00 = Get0xCC00(obj);
+                var cmd = CommandInstance.GetObject();
+                cmd.Command = "0xCC00";
+                cmd.Content = CustomConvert.GetHex(cc00);
+                cc00 = null;
+                cmd.DestinationNo = terminal.Sim + (terminal.Sim.Length < 11 ? "000" : "");
+                cmd.Status = (byte)CommandStatus.WaitingForSatellite;
+                cmd.Terminal = terminal.id;
+                CommandInstance.Add(cmd);
             }
         }
         /// <summary>

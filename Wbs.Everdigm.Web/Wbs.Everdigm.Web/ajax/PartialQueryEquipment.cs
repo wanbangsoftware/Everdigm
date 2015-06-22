@@ -9,6 +9,24 @@ using Wbs.Everdigm.Database;
 
 namespace Wbs.Everdigm.Web.ajax
 {
+    public class TempEquipment
+    {
+        public string Number { get; set; }
+        public int Id { get; set; }
+        public string Terminal { get; set; }
+        public string Sim { get; set; }
+        public string Satellite { get; set; }
+
+        public TempEquipment(TB_Equipment obj)
+        {
+            Number = obj.TB_EquipmentModel.Code + obj.Number;
+            Id = obj.id;
+            var n = (int?)null;
+            Terminal = n == obj.Terminal ? "" : obj.TB_Terminal.Number;
+            Sim = n == obj.Terminal ? "" : obj.TB_Terminal.Sim;
+            Satellite = n == obj.Terminal ? "" : (n == obj.TB_Terminal.Satellite ? "" : obj.TB_Terminal.TB_Satellite.CardNo);
+        }
+    }
     /// <summary>
     /// 这里提供Equipment相关的查询方法集合
     /// </summary>
@@ -33,6 +51,15 @@ namespace Wbs.Everdigm.Web.ajax
                         (query.Model > 0 ? f.Model == query.Model : f.Model > 0) &&
                         f.Number.IndexOf(query.Number) >= 0 && f.Deleted == false).ToList();
                     ret = JsonConverter.ToJson(queryList);
+                    break;
+                case "number":
+                    // 通过号码模糊查询
+                    var ns = EquipmentInstance.FindList(f => f.Number.IndexOf(data) >= 0 && f.Deleted == false).ToList();
+                    var tmp=new List<TempEquipment>();
+                    foreach (var t in ns) {
+                        tmp.Add(new TempEquipment(t));
+                    }
+                    ret = JsonConverter.ToJson(tmp);
                     break;
                 case "notbind":
                     var obj = JsonConverter.ToObject<TB_Equipment>(data);
