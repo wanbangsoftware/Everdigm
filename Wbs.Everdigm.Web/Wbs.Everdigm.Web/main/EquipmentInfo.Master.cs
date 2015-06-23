@@ -21,8 +21,15 @@ namespace Wbs.Everdigm.Web.main
             {
                 if (!IsPostBack)
                 {
-                    hidKey.Value = Utility.UrlEncode(_key);
-                    ShowEquipmentInfo();
+                    if (string.IsNullOrEmpty(_key))
+                    {
+                        ShowNotification("./equipment_inquiry.aspx", "Can not find object with null paramenter.", false);
+                    }
+                    else
+                    {
+                        hidKey.Value = Utility.UrlEncode(_key);
+                        ShowEquipmentInfo();
+                    }
                 }
             }
         }

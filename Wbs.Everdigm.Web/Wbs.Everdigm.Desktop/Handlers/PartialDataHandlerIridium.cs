@@ -58,6 +58,17 @@ namespace Wbs.Everdigm.Desktop
             {
                 act.Status = (byte)CommandStatus.SentToDestBySAT;
             });
+            // 更新终端的在线时间
+            TerminalInstance.Update(f => f.TB_Satellite.CardNo.Equals(data.IMEI), act =>
+            {
+                act.OnlineTime = data.Time;
+                act.OnlineStyle = (byte)LinkType.SATELLITE;
+            });
+            EquipmentInstance.Update(f => f.TB_Terminal.TB_Satellite.CardNo.Equals(data.IMEI), act =>
+            {
+                act.OnlineTime = data.Time;
+                act.OnlineStyle = (byte)LinkType.SATELLITE;
+            });
         }
         /// <summary>
         /// 处理新版的卫星通讯协议
@@ -79,13 +90,19 @@ namespace Wbs.Everdigm.Desktop
                     TB_Equipment equipment = null;
                     if (null != terminal)
                     {
-                        TerminalInstance.Update(f => f.id == terminal.id, act => { act.OnlineStyle = (byte)LinkType.SATELLITE; });
+                        TerminalInstance.Update(f => f.id == terminal.id, act =>
+                        {
+                            act.OnlineStyle = (byte)LinkType.SATELLITE;
+                            // 同时更新终端的最后链接时间
+                            act.OnlineTime = data.Time;
+                        });
                         equipment = EquipmentInstance.Find(f => f.Terminal == terminal.id);
                         if (null != equipment)
                         {
                             EquipmentInstance.Update(f => f.id == equipment.id, act =>
                             {
                                 act.OnlineStyle = (byte)LinkType.SATELLITE;
+                                act.OnlineTime = data.Time;
                                 if (worktime > 0)
                                 {
                                     // 运转时间不为零的话，更新运转时间
