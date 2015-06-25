@@ -52,6 +52,31 @@
                 width: 100%;
                 height: 100%;
             }
+
+        .glyphicon-refresh-animate {
+            -animation: spin 1.5s infinite linear;
+            -webkit-animation: spin2 1.5s infinite linear;
+        }
+
+        @-webkit-keyframes spin2 {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+
+            to {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: scale(1) rotate(0deg);
+            }
+
+            to {
+                transform: scale(1) rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -69,7 +94,7 @@
                         <a href="#">Work detail</a>
                     </li>
                     <li role="presentation" style="margin-top: 3px; padding-left: 2px;">
-                        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalAddEquipment"><span class="glyphicon glyphicon-plus"></span><span>Add Equipment</span></button>
+                        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalAddEquipment"><span class="glyphicon glyphicon-plus"></span><span> Add Equipment</span></button>
                     </li>
                 </ul>
                 <!-- Tab panes -->
@@ -201,7 +226,7 @@
                         <div class="modal-footer">
                             <label class="label label-warning" id="warning"></label>
                             <asp:Button ID="btSave" runat="server" CssClass="hidden" OnClick="btSave_Click" />
-                            <button type="button" class="btn btn-success" id="save"><span class="glyphicon glyphicon-ok"></span>Save</button>
+                            <button type="button" class="btn btn-success" id="save"><span class="glyphicon glyphicon-ok"></span> Save</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
                     </asp:Panel>

@@ -64,5 +64,9 @@ namespace Wbs.Everdigm.Desktop
         /// 卫星模块BLL
         /// </summary>
         private SatelliteBLL SatelliteInstance { get { return new SatelliteBLL(); } }
+        /// <summary>
+        /// Excel转成PDF
+        /// </summary>
+        private ExcelHandlerBLL ExcelHandlerInstance { get { return new ExcelHandlerBLL(); } }
     }
 }

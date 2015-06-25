@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.IO;
 using System.Web.SessionState;
 using Wbs.Everdigm.Database;
 
@@ -50,6 +51,22 @@ namespace Wbs.Everdigm.Web.ajax
             cmd = GetParamenter("cmd");
             data = GetParamenter("data");
         }
+
+        //public void SaveHistory(string str)
+        //{
+        //    string filename = DateTime.Now.ToString("yyyyMMdd");
+        //    var path = ctx.Server.MapPath("~/") + "exceptions/";
+        //    if (!Directory.Exists(path))
+        //        Directory.CreateDirectory(path);
+        //    FileStream fs = new FileStream((path + "" + filename + ".txt"), FileMode.Append);
+        //    //创建FileSteam类,参数为路径\打开文件方式\对文件进行什么样的操作
+        //    StreamWriter ww = new StreamWriter(fs, System.Text.Encoding.Default);
+        //    ww.WriteLine("\r\n**************" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "**************");
+        //    ww.Write(str);
+        //    ww.WriteLine("\r\n**************End**************");
+        //    ww.Close();
+        //    fs.Close();
+        //}
 
         /// <summary>
         /// 当前登陆者的信息

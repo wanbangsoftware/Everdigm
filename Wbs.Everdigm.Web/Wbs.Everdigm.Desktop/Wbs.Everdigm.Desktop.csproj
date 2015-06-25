@@ -45,6 +45,9 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -65,6 +68,7 @@
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
     <Compile Include="Handlers\DataHandler.cs" />
+    <Compile Include="Handlers\OfficeConvert.cs" />
     <Compile Include="Handlers\PartialDataHandlerBLLs.cs" />
     <Compile Include="Handlers\PartialDataHandlerClient.cs" />
     <Compile Include="Handlers\PartialDataHandlerCommand.cs" />
@@ -72,6 +76,7 @@
     <Compile Include="Handlers\PartialDataHandlerIridium.cs" />
     <Compile Include="Handlers\PartialDataHandlerSMS.cs" />
     <Compile Include="Handlers\PartialDataHandlerTracker.cs" />
+    <Compile Include="Handlers\PartialDataHandlerWebRequeste.cs" />
     <Compile Include="Handlers\SocketServer.cs" />
     <Compile Include="Iridium\IridiumDataEvent.cs" />
     <Compile Include="Iridium\IridiumPackage.cs" />

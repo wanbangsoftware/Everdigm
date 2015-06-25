@@ -27,6 +27,7 @@ namespace Wbs.Everdigm.Web.ajax
             return ret;
         }
         private WorkDetailBLL WorkDetailInstance { get { return new WorkDetailBLL(); } }
+        private ExcelHandlerBLL ExcelHandlerInstance { get { return new ExcelHandlerBLL(); } }
         private void HandleRequest()
         {
             var ret = "";
@@ -49,123 +50,58 @@ namespace Wbs.Everdigm.Web.ajax
                         else
                         {
                             // 读取工作项，并保存到excel中
-                            ret = HandleWorkDetail(detail);
+                            ret = SaveWorkHandlerRequest(id);//HandleWorkDetail(detail);
                         }
+                        break;
+                    case "excel":
+                        ret = HandleWorkHandlerStatus();
                         break;
                 }
             }
             ResponseJson(ret);
         }
 
-        private string HandleWorkDetail(TB_WorkDetail obj)
+        /// <summary>
+        /// 保存请求生成打印文档的记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private string SaveWorkHandlerRequest(int id)
         {
-            var path = ctx.Server.MapPath("~/files/shop.order.TMS.installation.xlsx");
-            var ret = "";
-            var source = "";
-            ApplicationClass app = null;
-            Workbook book = null;
-            Worksheet sheet = null;
-            try
-            {
-                var n = (int?)null;
-                app = new ApplicationClass();
-                book = app.Workbooks.Open(path);
-                sheet = (Worksheet)book.ActiveSheet;
-                // 更改Shop order No.
-                var _int = obj.id;
-                int column = 5, row = 2;
-                sheet.Cells[row, column] = _int;
-                sheet.Cells[row + 16, column] = _int;
-                sheet.Cells[row + 32, column] = _int;
-                // 更改Shop order date
-                row += 1;
-                sheet.Cells[row, column] = DateTime.Today;
-                sheet.Cells[row + 16, column] = DateTime.Today;
-                sheet.Cells[row + 32, column] = DateTime.Today;
-                // 更改Equipment model
-                row += 1;
-                var _string = obj.TB_Equipment.TB_EquipmentModel.Code;
-                sheet.Cells[row, column] = _string;
-                sheet.Cells[row + 16, column] = _string;
-                sheet.Cells[row + 32, column] = _string;
-                // 更改Equipment serial No.
-                row += 1;
-                _string = obj.TB_Equipment.Number;
-                sheet.Cells[row, column] = _string;
-                sheet.Cells[row + 16, column] = _string;
-                sheet.Cells[row + 32, column] = _string;
-                // 更改Equipment location
-                row += 1;
-                _string = n == obj.TB_Equipment.Warehouse ? "" : obj.TB_Equipment.TB_Warehouse.Name;
-                sheet.Cells[row, column] = _string;
-                sheet.Cells[row + 16, column] = _string;
-                sheet.Cells[row + 32, column] = _string;
-                // 更改TMS model
-                row += 2;
-                var func = (EquipmentFunctional)obj.TB_Equipment.Functional;
-                _string = func == EquipmentFunctional.Mechanical ? "EX300" : "EX100";
-                sheet.Cells[row, column] = _string;
-                sheet.Cells[row + 16, column] = _string;
-                sheet.Cells[row + 32, column] = _string;
-
-                // 另存为别的
-                path = ctx.Server.MapPath("~/files/") + "xls/" + DateTime.Now.ToString("yyyyMMdd");
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                var equipment = obj.TB_Equipment.TB_EquipmentModel.Code + obj.TB_Equipment.Number;
-                source = path + "/" + obj.TB_Work.RegisterTime.Value.ToString("HHmmss_") + equipment + ".xlsx";
-                if (File.Exists(source))
-                {
-                    File.Delete(source);
-                }
-                book.SaveAs(source);
-
-            }
-            catch
-            {
-                ret = GetFormatedJson(-1, "Cannot change file.");
-            }
-            finally
-            {
-                if (null != book)
-                {
-                    book.Close();
-                    book = null;
-                }
-                if (null != app)
-                {
-                    app.Quit();
-                    app = null;
-                }
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-
-                // 转换成pdf
-                var ee = obj.TB_Work.RegisterTime.Value.ToString("yyyyMMddHHmmssfff") + ".pdf";
-                ret = ConvertToPdf(source, obj.TB_Work.RegisterTime.Value.ToString("yyyyMMdd"), ee);
-            }
-            return ret;
+            var obj = ExcelHandlerInstance.GetObject();
+            obj.Work = id;
+            ExcelHandlerInstance.Add(obj);
+            return GetFormatedJson(0, "SUCESS", obj.id.ToString());
         }
 
-        private string ConvertToPdf(string source, string dir, string name)
+        /// <summary>
+        /// 查询处理结果的请求
+        /// </summary>
+        /// <returns></returns>
+        private string HandleWorkHandlerStatus()
         {
-            // 转换成pdf
-            var path = "~/files/pdf/" + dir;
-            var p = ctx.Server.MapPath(path);
-            if (!Directory.Exists(p))
+            var id = ParseInt(data);
+            var obj = ExcelHandlerInstance.Find(f => f.id == id && f.Deleted == false);
+            if (null != obj)
             {
-                Directory.CreateDirectory(p);
+                if (obj.Handled == true)
+                {
+                    // 更新已删除状态
+                    ExcelHandlerInstance.Update(f => f.id == obj.id, act => { act.Deleted = true; });
+                    return GetFormatedJson(1, "SUCCESS", obj.Target);
+                }
+                else
+                {
+                    return GetFormatedJson(0, "");
+                }
             }
-            var target = p + "\\" + name;
-            var ok = OfficeConvert.ExcelConvertToPDF(source, target);
-            if (ok)
+            else
             {
-                return GetFormatedJson(0, "Success", (path + "/" + name).Replace("~", ".."));
+                return GetFormatedJson(-1, "Can not find work handler object, please try again.");
             }
-            return GetFormatedJson(-1, "Cannot convert file to PDF.");
         }
+
+        
         /// <summary>
         /// 执行exe程序将pdf转换成
         /// </summary>

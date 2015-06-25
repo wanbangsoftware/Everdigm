@@ -18,7 +18,7 @@
             $("#title").val("");
             $("#description").val("");
             $("#director").val("");
-            $(".input-daterange:eq(1) input").val("");
+            //$(".input-daterange:eq(1) input").val("");
         }
     });
 

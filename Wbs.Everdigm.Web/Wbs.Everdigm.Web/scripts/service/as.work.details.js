@@ -1,5 +1,6 @@
 ﻿var equipmentList = new Array();
 var terminalList = new Array();
+var excelId = -1;
 
 $(document).ready(function () {
 
@@ -7,7 +8,6 @@ $(document).ready(function () {
         performSave();
     });
     $("#tbodyBody").children("tr").css("cursor", "pointer").click(function () {
-        showDialogWaring("Prepare file, please waiting...");
         showModalExcel();
     });
     $("#equipmentInfo").hide();
@@ -82,26 +82,45 @@ function performSave() {
 }
 
 function showDialogWaring(text) {
-    $(".col-sm-12:eq(1)").text(text);
+    $(".col-sm-12:eq(1)").html(text);
     $("#modalShowFile").modal(isStringNull(text) ? "hide" : "show");
 }
 
 function showModalExcel() {
     // 从服务器上生成pdf之后返回文件url
     GetJsonData("../ajax/work.ashx", { "type": "work", "cmd": "detail", "data": $("#hidKey").val() }, function (data) {
-        showDialogWaring("");
         if (data.status < 0) {
             // 文件转换失败，显示提示信息
             showDialogWaring(data.desc);
         } else {
+            showDialogWaring("<span class=\"glyphicon glyphicon-repeat glyphicon-refresh-animate text-primary\"></span> Preparing file, wait for a moment please...");
+            excelId = parseInt(data.data);
+            setTimeout("getModalExcel();", 3000);
+        }
+    });
+}
+
+// 获取服务器处理excel文档的结果
+function getModalExcel() {
+    // 获取服务器上处理excel的结果
+    GetJsonData("../ajax/work.ashx", { "type": "work", "cmd": "excel", "data": excelId }, function (data) {
+        if (data.status < 0) {
+            // 文件转换失败，显示提示信息
+            showDialogWaring(data.desc);
+        } else if (data.status >= 1) {
+            showDialogWaring("");
+            // 定时5秒后获取服务器处理结果
             var pdf_link = data.data;
             var iframe = "<div class=\"iframe-container\"><iframe border=\"0\" src=\"" + pdf_link + "\"></iframe></div>";
             $.createModal({
-                title: "Preview",
+                title: "Work dispatch preview",
                 message: iframe,
                 closeButton: true,
                 scrollable: true
             });
+        } else {
+            // 如果服务器没处理完则继续3秒后读取状态
+            setTimeout("getModalExcel();", 3000);
         }
     });
 }

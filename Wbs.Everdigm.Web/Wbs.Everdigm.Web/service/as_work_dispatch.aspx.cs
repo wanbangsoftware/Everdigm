@@ -30,7 +30,7 @@ namespace Wbs.Everdigm.Web.service
         private void ShowQueryDate()
         {
             var now = DateTime.Now;
-            var then = now.AddDays(-5);
+            var then = new DateTime(now.Year, now.Month, 1);
             // 查询开始时间
             start.Value = then.ToString("yyyy/MM/dd");
             // 查询结束时间
@@ -57,14 +57,14 @@ namespace Wbs.Everdigm.Web.service
             var totalRecords = 0;
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             var list = WorkInstance.FindPageList<TB_Work>(pageIndex, PageSize, out totalRecords,
-                f => f.ScheduleStart >= then && f.ScheduleEnd <= now && f.Deleted == false, null);
+                f => f.ScheduleStart >= then && f.ScheduleStart <= now && f.Deleted == false, null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             pageIndex = 0 == pageIndex ? totalPages : pageIndex;
             if (pageIndex >= totalPages)
             {
                 pageIndex = totalPages;
                 list = WorkInstance.FindPageList<TB_Work>(pageIndex, PageSize, out totalRecords,
-                f => f.ScheduleStart >= then && f.ScheduleEnd <= now && f.Deleted == false, null);
+                f => f.ScheduleStart >= then && f.ScheduleStart <= now && f.Deleted == false, null);
             }
 
             string html = "";

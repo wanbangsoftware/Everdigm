@@ -296,6 +296,9 @@ namespace Wbs.Everdigm.Desktop
                     {
                         try
                         {
+                            if (gpsHandler % 5 == 0)
+                                _handler.HandleWebRequestExcel();
+
                             _handler.CheckTcpCommand();
                             _handler.CheckIridiumCommand();
                             if (gpsHandler % sleeper == 0) {

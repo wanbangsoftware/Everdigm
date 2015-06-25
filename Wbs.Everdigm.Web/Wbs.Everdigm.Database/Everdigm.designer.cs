@@ -121,6 +121,9 @@ namespace Wbs.Everdigm.Database
     partial void InsertTB_Equipment(TB_Equipment instance);
     partial void UpdateTB_Equipment(TB_Equipment instance);
     partial void DeleteTB_Equipment(TB_Equipment instance);
+    partial void InsertTB_ExcelHandler(TB_ExcelHandler instance);
+    partial void UpdateTB_ExcelHandler(TB_ExcelHandler instance);
+    partial void DeleteTB_ExcelHandler(TB_ExcelHandler instance);
     #endregion
 		
 		public EverdigmDataContext(string connection) : 
@@ -384,6 +387,14 @@ namespace Wbs.Everdigm.Database
 			get
 			{
 				return this.GetTable<TB_Equipment>();
+			}
+		}
+		
+		public System.Data.Linq.Table<TB_ExcelHandler> TB_ExcelHandler
+		{
+			get
+			{
+				return this.GetTable<TB_ExcelHandler>();
 			}
 		}
 	}
@@ -9856,11 +9867,15 @@ namespace Wbs.Everdigm.Database
 		
 		private string _Details;
 		
+		private EntitySet<TB_ExcelHandler> _TB_ExcelHandler;
+		
 		private EntityRef<TB_Terminal> _TB_Terminal;
 		
 		private EntityRef<TB_Work> _TB_Work;
 		
 		private EntityRef<TB_Equipment> _TB_Equipment;
+		
+		private bool serializing;
 		
     #region 可扩展性方法定义
     partial void OnLoaded();
@@ -10065,6 +10080,25 @@ namespace Wbs.Everdigm.Database
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_WorkDetail_TB_ExcelHandler", Storage="_TB_ExcelHandler", ThisKey="id", OtherKey="Work")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=9, EmitDefaultValue=false)]
+		public EntitySet<TB_ExcelHandler> TB_ExcelHandler
+		{
+			get
+			{
+				if ((this.serializing 
+							&& (this._TB_ExcelHandler.HasLoadedOrAssignedValues == false)))
+				{
+					return null;
+				}
+				return this._TB_ExcelHandler;
+			}
+			set
+			{
+				this._TB_ExcelHandler.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Terminal_TB_WorkDetail", Storage="_TB_Terminal", ThisKey="BookedTerminal", OtherKey="id", IsForeignKey=true)]
 		public TB_Terminal TB_Terminal
 		{
@@ -10187,8 +10221,21 @@ namespace Wbs.Everdigm.Database
 			}
 		}
 		
+		private void attach_TB_ExcelHandler(TB_ExcelHandler entity)
+		{
+			this.SendPropertyChanging();
+			entity.TB_WorkDetail = this;
+		}
+		
+		private void detach_TB_ExcelHandler(TB_ExcelHandler entity)
+		{
+			this.SendPropertyChanging();
+			entity.TB_WorkDetail = null;
+		}
+		
 		private void Initialize()
 		{
+			this._TB_ExcelHandler = new EntitySet<TB_ExcelHandler>(new Action<TB_ExcelHandler>(this.attach_TB_ExcelHandler), new Action<TB_ExcelHandler>(this.detach_TB_ExcelHandler));
 			this._TB_Terminal = default(EntityRef<TB_Terminal>);
 			this._TB_Work = default(EntityRef<TB_Work>);
 			this._TB_Equipment = default(EntityRef<TB_Equipment>);
@@ -10200,6 +10247,20 @@ namespace Wbs.Everdigm.Database
 		public void OnDeserializing(StreamingContext context)
 		{
 			this.Initialize();
+		}
+		
+		[global::System.Runtime.Serialization.OnSerializingAttribute()]
+		[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+		public void OnSerializing(StreamingContext context)
+		{
+			this.serializing = true;
+		}
+		
+		[global::System.Runtime.Serialization.OnSerializedAttribute()]
+		[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+		public void OnSerialized(StreamingContext context)
+		{
+			this.serializing = false;
 		}
 	}
 	
@@ -11442,6 +11503,269 @@ namespace Wbs.Everdigm.Database
 		public void OnSerialized(StreamingContext context)
 		{
 			this.serializing = false;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TB_ExcelHandler")]
+	[global::System.Runtime.Serialization.DataContractAttribute()]
+	public partial class TB_ExcelHandler : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private System.Nullable<bool> _Deleted;
+		
+		private System.Nullable<bool> _Handled;
+		
+		private System.Nullable<int> _Work;
+		
+		private System.Nullable<System.DateTime> _CreateDate;
+		
+		private string _Source;
+		
+		private string _Target;
+		
+		private EntityRef<TB_WorkDetail> _TB_WorkDetail;
+		
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnDeletedChanging(System.Nullable<bool> value);
+    partial void OnDeletedChanged();
+    partial void OnHandledChanging(System.Nullable<bool> value);
+    partial void OnHandledChanged();
+    partial void OnWorkChanging(System.Nullable<int> value);
+    partial void OnWorkChanged();
+    partial void OnCreateDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnCreateDateChanged();
+    partial void OnSourceChanging(string value);
+    partial void OnSourceChanged();
+    partial void OnTargetChanging(string value);
+    partial void OnTargetChanged();
+    #endregion
+		
+		public TB_ExcelHandler()
+		{
+			this.Initialize();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Deleted", DbType="Bit")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+		public System.Nullable<bool> Deleted
+		{
+			get
+			{
+				return this._Deleted;
+			}
+			set
+			{
+				if ((this._Deleted != value))
+				{
+					this.OnDeletedChanging(value);
+					this.SendPropertyChanging();
+					this._Deleted = value;
+					this.SendPropertyChanged("Deleted");
+					this.OnDeletedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Handled", DbType="Bit")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+		public System.Nullable<bool> Handled
+		{
+			get
+			{
+				return this._Handled;
+			}
+			set
+			{
+				if ((this._Handled != value))
+				{
+					this.OnHandledChanging(value);
+					this.SendPropertyChanging();
+					this._Handled = value;
+					this.SendPropertyChanged("Handled");
+					this.OnHandledChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[Work]", Storage="_Work", DbType="Int")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=4)]
+		public System.Nullable<int> Work
+		{
+			get
+			{
+				return this._Work;
+			}
+			set
+			{
+				if ((this._Work != value))
+				{
+					this.OnWorkChanging(value);
+					this.SendPropertyChanging();
+					this._Work = value;
+					this.SendPropertyChanged("Work");
+					this.OnWorkChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreateDate", DbType="DateTime")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=5)]
+		public System.Nullable<System.DateTime> CreateDate
+		{
+			get
+			{
+				return this._CreateDate;
+			}
+			set
+			{
+				if ((this._CreateDate != value))
+				{
+					this.OnCreateDateChanging(value);
+					this.SendPropertyChanging();
+					this._CreateDate = value;
+					this.SendPropertyChanged("CreateDate");
+					this.OnCreateDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Source", DbType="VarChar(100)")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=6)]
+		public string Source
+		{
+			get
+			{
+				return this._Source;
+			}
+			set
+			{
+				if ((this._Source != value))
+				{
+					this.OnSourceChanging(value);
+					this.SendPropertyChanging();
+					this._Source = value;
+					this.SendPropertyChanged("Source");
+					this.OnSourceChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Target", DbType="VarChar(100)")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=7)]
+		public string Target
+		{
+			get
+			{
+				return this._Target;
+			}
+			set
+			{
+				if ((this._Target != value))
+				{
+					this.OnTargetChanging(value);
+					this.SendPropertyChanging();
+					this._Target = value;
+					this.SendPropertyChanged("Target");
+					this.OnTargetChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_WorkDetail_TB_ExcelHandler", Storage="_TB_WorkDetail", ThisKey="Work", OtherKey="id", IsForeignKey=true, DeleteRule="SET NULL")]
+		public TB_WorkDetail TB_WorkDetail
+		{
+			get
+			{
+				return this._TB_WorkDetail.Entity;
+			}
+			set
+			{
+				TB_WorkDetail previousValue = this._TB_WorkDetail.Entity;
+				if (((previousValue != value) 
+							|| (this._TB_WorkDetail.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._TB_WorkDetail.Entity = null;
+						previousValue.TB_ExcelHandler.Remove(this);
+					}
+					this._TB_WorkDetail.Entity = value;
+					if ((value != null))
+					{
+						value.TB_ExcelHandler.Add(this);
+						this._Work = value.id;
+					}
+					else
+					{
+						this._Work = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("TB_WorkDetail");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void Initialize()
+		{
+			this._TB_WorkDetail = default(EntityRef<TB_WorkDetail>);
+			OnCreated();
+		}
+		
+		[global::System.Runtime.Serialization.OnDeserializingAttribute()]
+		[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+		public void OnDeserializing(StreamingContext context)
+		{
+			this.Initialize();
 		}
 	}
 }

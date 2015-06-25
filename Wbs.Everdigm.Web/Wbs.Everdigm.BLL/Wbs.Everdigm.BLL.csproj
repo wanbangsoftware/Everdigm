@@ -59,6 +59,7 @@
     <Compile Include="EquipmentStatusBLL.cs" />
     <Compile Include="EquipmentTypeBLL.cs" />
     <Compile Include="ErrorBLL.cs" />
+    <Compile Include="ExcelHandlerBLL.cs" />
     <Compile Include="HistoryBLL.cs" />
     <Compile Include="InterfaceBaseService.cs" />
     <Compile Include="IridiumMMSNBLL.cs" />
