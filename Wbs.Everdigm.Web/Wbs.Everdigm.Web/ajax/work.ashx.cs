@@ -64,13 +64,18 @@ namespace Wbs.Everdigm.Web.ajax
         /// <summary>
         /// 保存请求生成打印文档的记录
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="workId"></param>
         /// <returns></returns>
-        private string SaveWorkHandlerRequest(int id)
+        private string SaveWorkHandlerRequest(int workId)
         {
-            var obj = ExcelHandlerInstance.GetObject();
-            obj.Work = id;
-            ExcelHandlerInstance.Add(obj);
+            // 查找相同的工作是否已经有生成的文件
+            var obj = ExcelHandlerInstance.Find(f => f.Work == workId && f.Deleted == false);
+            if (null == obj)
+            {
+                obj = ExcelHandlerInstance.GetObject();
+                obj.Work = workId;
+                ExcelHandlerInstance.Add(obj);
+            }
             return GetFormatedJson(0, "SUCESS", obj.id.ToString());
         }
 
@@ -87,7 +92,7 @@ namespace Wbs.Everdigm.Web.ajax
                 if (obj.Handled == true)
                 {
                     // 更新已删除状态
-                    ExcelHandlerInstance.Update(f => f.id == obj.id, act => { act.Deleted = true; });
+                    //ExcelHandlerInstance.Update(f => f.id == obj.id, act => { act.Deleted = true; });
                     return GetFormatedJson(1, "SUCCESS", obj.Target);
                 }
                 else
