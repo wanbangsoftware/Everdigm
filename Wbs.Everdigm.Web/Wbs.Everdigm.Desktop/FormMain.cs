@@ -59,10 +59,21 @@ namespace Wbs.Everdigm.Desktop
         public FormMain()
         {
             InitializeComponent();
+            ThreadPool.RegisterWaitForSingleObject(Program.ProgramStarted, OnProgramStarted, null, -1, false);
             var width = Screen.PrimaryScreen.Bounds.Width;
             var height = Screen.PrimaryScreen.Bounds.Height;
             this.Width = (int)((width * 1.0) * 2 / 3);
             this.Height = (int)(height * 1.0 * 4 / 5);
+        }
+        /// <summary>
+        /// 当收到第二个进程的通知时，显示窗体
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="timeout"></param>
+        private void OnProgramStarted(object state, bool timeout)
+        {
+            notifyIcon.ShowBalloonTip(5000, "Hey! I'm here.", "Double click me to show main window.", ToolTipIcon.Info);
+            //notifyIcon_DoubleClick(this, EventArgs.Empty);
         }
         private void OnServerMessage(object sender, UIEventArgs e)
         {
@@ -161,7 +172,8 @@ namespace Wbs.Everdigm.Desktop
             {
                 try
                 {
-                    if (history.IndexOf("position: ") == 0) { 
+                    if (history.IndexOf("position: ") == 0)
+                    {
                         // 捕获位置信息
                         if (!tsmiStopFetchingAddress.Checked)
                         {
