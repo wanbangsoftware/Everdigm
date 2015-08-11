@@ -138,7 +138,9 @@ namespace Wbs.Everdigm.Desktop
             // 如果是正式的协议则以正常的方式处理
             if (data.Length >= Wbs.Protocol.TX300.TX300Items.header_length)
             {
-                if (Wbs.Protocol.ProtocolTypes.IsTX300(data.Payload[2]) &&
+                // TX300通讯协议首字节必定大于等于17
+                if (data.Payload[0] >= 17 &&
+                    Wbs.Protocol.ProtocolTypes.IsTX300(data.Payload[2]) &&
                             Wbs.Protocol.TerminalTypes.IsTX300(data.Payload[3]))
                 {
                     // 根据卫星号码查询终端的Sim卡号码并将其填入包头结构里
