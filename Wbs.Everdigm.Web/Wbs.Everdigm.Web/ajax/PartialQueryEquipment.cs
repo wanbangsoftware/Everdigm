@@ -128,7 +128,8 @@ namespace Wbs.Everdigm.Web.ajax
                 var start = DateTime.Parse(GetParamenter("start") + " 00:00:00");
                 var end = DateTime.Parse(GetParamenter("end") + " 23:59:59");
                 var armList = AlarmInstance.FindList<TB_Data_Alarm>(f => f.Equipment == id &&
-                    f.TB_Data_Position.ReceiveTime >= start && f.TB_Data_Position.ReceiveTime <= end, null);
+                    f.TB_Data_Position.ReceiveTime >= start &&
+                    f.TB_Data_Position.ReceiveTime <= end, "Position", true);
                 var list = new List<CustomAlarm>();
                 foreach (var arm in armList)
                 {

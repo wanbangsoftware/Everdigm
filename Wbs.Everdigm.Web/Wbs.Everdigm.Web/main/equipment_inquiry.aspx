@@ -69,10 +69,11 @@
                             <thead>
                                 <tr>
                                     <th class="bg-primary"></th>
-                                    <th colspan="9" class="in-tab-title-rb bg-primary">Equipment Information</th>
+                                    <th colspan="7" class="in-tab-title-rb bg-primary">Equipment Information</th>
+                                    <th colspan="2" class="in-tab-title-rb bg-primary">RENT/SOLD SMH</th>
                                     <th colspan="2" class="in-tab-title-rb bg-primary">Customer</th>
-                                    <th colspan="4" class="in-tab-title-rb bg-primary">Terminal Information</th>
-                                    <th colspan="5" class="in-tab-title-b bg-primary">Storage Information</th>
+                                    <th colspan="3" class="in-tab-title-rb bg-primary">Terminal Information</th>
+                                    <th class="in-tab-title-b bg-primary">Storage</th>
                                 </tr>
                                 <tr>
                                     <th class="in-tab-title-b bg-warning">#</th>
@@ -82,25 +83,25 @@
                                     <th class="in-tab-title-b bg-warning" style="text-align: right !important;">SMH</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">Eng.</th>
                                     <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Location</th>
-                                    <th class="in-tab-title-b bg-warning">Status</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow">Out Days</th>
-                                    <th class="in-tab-title-rb bg-warning textoverflow">AVG. Work time</th>
+                                    <th class="in-tab-title-rb bg-warning">Status</th>
+                                    <th class="in-tab-title-b bg-warning textoverflow">Days</th>
+                                    <th class="in-tab-title-rb bg-warning textoverflow">Hr/Day</th>
                                     <th class="in-tab-title-b bg-warning">Number</th>
                                     <th class="in-tab-title-rb bg-warning">Name</th>
-                                    <th class="in-tab-title-b bg-warning">Signal</th>
+                                    <!--<th class="in-tab-title-b bg-warning">Signal</th>-->
                                     <th class="in-tab-title-b bg-warning">Link</th>
-                                    <th class="in-tab-title-b bg-warning">Received</th>
-                                    <th class="in-tab-title-rb bg-warning">Ter. NO.</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow">In Date</th>
+                                    <th class="in-tab-title-b bg-warning">Last received</th>
+                                    <th class="in-tab-title-rb bg-warning">Terminal No.</th>
+                                    <!--<th class="in-tab-title-b bg-warning textoverflow">In Date</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">In Type</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">Out Date</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow">Out Type</th>
+                                    <th class="in-tab-title-b bg-warning textoverflow">Out Type</th>-->
                                     <th class="in-tab-title-b bg-warning">Warehouse</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="21">
+                                    <td colspan="16">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>
@@ -121,15 +122,10 @@
                                     <td class="in-tab-txt-rb">4 hr 30 min</td>
                                     <td class="in-tab-txt-b">23553523</td>
                                     <td class="in-tab-txt-rb">23553523</td>
-                                    <td class="in-tab-txt-b">ON</td>
                                     <td class="in-tab-txt-b">
                                         <img src="../images/img_connect_gprs.png" /></td>
                                     <td class="in-tab-txt-b textoverflow">2014-09-22</td>
                                     <td class="in-tab-txt-rb textoverflow">20140921221</td>
-                                    <td class="in-tab-txt-b">2014-09-21</td>
-                                    <td class="in-tab-txt-b">S</td>
-                                    <td class="in-tab-txt-b">2014-10-22</td>
-                                    <td class="in-tab-txt-b">S</td>
                                     <td class="in-tab-txt-rb textoverflow">Warehouse1</td>
                                 </tr>
                             </tbody>

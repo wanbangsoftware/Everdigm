@@ -55,7 +55,7 @@
 <asp:Content ContentPlaceHolderID="ContentPlaceHolderContent" runat="server">
     <tfoot>
         <tr>
-            <td colspan="17">
+            <td colspan="18">
                 <div class="pagging" id="divPagging" runat="server">
                 </div>
                 <div class="clear"></div>

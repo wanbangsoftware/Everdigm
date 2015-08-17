@@ -284,23 +284,34 @@ namespace Wbs.Everdigm.Desktop
                     catch (Exception iri)
                     { HandleDisplayMessage("Cannot handle HandleIridiumData: " + iri.Message); }
                 }
-
-
+                // 只有第一个线程有权处理命令后面的数据
+                if (stat > 0)
+                {
+                    timer = 0;
+                    continue;
+                }
                 // 处理TCP下发送的命令
                 if (timer % 1000 == 0)
                 {
-                    // 每秒钟增加1次，每10秒处理一次未获取到定位位置的记录
+                    // 每秒钟增加1
                     gpsHandler++;
 
                     lock (Locker)
                     {
                         try
                         {
+                            // 每5秒处理一次未处理的excel请求
                             if (gpsHandler % 5 == 0)
                                 _handler.HandleWebRequestExcel();
 
-                            _handler.CheckTcpCommand();
-                            _handler.CheckIridiumCommand();
+                            // 每2秒处理一次未发的命令
+                            if (gpsHandler % 2 == 0)
+                            {
+                                _handler.CheckTcpCommand();
+                                _handler.CheckIridiumCommand();
+                            }
+
+                            // 10秒处理一次获取GPS地理位置
                             if (gpsHandler % sleeper == 0) {
                                 gpsHandler = 0;
                                 // 处理一次定位信息
@@ -333,7 +344,6 @@ namespace Wbs.Everdigm.Desktop
                         }
                     }
                 }
-                // 处理命令
             }
         }
     }

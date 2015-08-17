@@ -14,6 +14,7 @@ $(document).ready(function () {
 });
 // 查询
 function query(type) {
+    $(".table:eq(" + (type == cmdAlarm ? "0" : "1") + ") tbody").html("<tr><td class=\"panel-body-td\" colspan=\"" + (type == cmdAlarm ? "3" : "6") + "\">loading data...</td></tr>");
     var id = $("#hidKey").val();
     var inputs = $(".input-daterange .input-md");
     var start = $(inputs[0]).val();

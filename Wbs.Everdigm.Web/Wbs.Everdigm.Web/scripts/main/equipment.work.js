@@ -1,6 +1,7 @@
 ﻿
 
 $(document).ready(function () {
+    $(".date-test").datepicker("update", $("[id$=\"hiddenLastDate\"]").val());
     $(".btn-success").click(function () { showWorktimes(); });
 
     // 初始化查询最近5天内的启动情况
@@ -30,7 +31,7 @@ function showWorktimes() {
 }
 // 获取最新的运转时间信息
 function getWorktime() {
-    GetJsonData("../ajax/query.ashx", { "type": "equipment", "cmd": "6004", "data": $("#hidKey").val(), "date": $("#worktimeDate").val() },
+    GetJsonData("../ajax/query.ashx", { "type": "equipment", "cmd": "6004", "data": $("[id$=\"hidKey\"]").val(), "date": $("#worktimeDate").val() },
         function (data) {
             displayWorkTimes(data);
         });

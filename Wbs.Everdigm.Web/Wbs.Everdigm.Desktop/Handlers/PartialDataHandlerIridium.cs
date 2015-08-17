@@ -60,6 +60,10 @@ namespace Wbs.Everdigm.Desktop
             });
         }
         /// <summary>
+        /// 空报警
+        /// </summary>
+        private static string ALARM = "0000000000000000";
+        /// <summary>
         /// 处理新版的卫星通讯协议
         /// </summary>
         /// <param name="data"></param>
@@ -69,6 +73,9 @@ namespace Wbs.Everdigm.Desktop
             { 
                 // 新版的卫星通讯协议
                 uint worktime = BitConverter.ToUInt32(data.Payload, 13);
+                string locks = CustomConvert.GetHex(data.Payload[1]);
+                string alarms = CustomConvert.IntToDigit(data.Payload[3], CustomConvert.BIN, 8) +
+                    CustomConvert.IntToDigit(data.Payload[4], CustomConvert.BIN, 8);
                 IridiumLocation location = new IridiumLocation();
                 location.LatLng = new byte[IridiumLocation.SIZE];
                 Buffer.BlockCopy(data.Payload, 4, location.LatLng, 0, IridiumLocation.SIZE);
@@ -100,9 +107,21 @@ namespace Wbs.Everdigm.Desktop
                                     // 运转时间不为零的话，更新运转时间
                                     act.Runtime = (int)worktime;
                                 }
+                                // 锁车状态 2015/08/14
+                                if (act.LockStatus != locks) { act.LockStatus = locks; }
                             });
                         }
                     }
+                    // 保存TX300历史记录
+                    SaveTX300History(new Protocol.TX300.TX300()
+                    {
+                        CommandID = 0x1000,
+                        MsgContent = data.Payload,
+                        ProtocolType = Wbs.Protocol.ProtocolTypes.SATELLITE,
+                        TerminalID = null == terminal ? "" : terminal.Sim,
+                        TotalLength = (ushort)data.Payload.Length
+                    }, data.Time, EquipmentInstance.GetFullNumber(equipment));
+
                     var pos = PositionInstance.GetObject();
                     pos.Latitude = location.Latitude;
                     pos.Longitude = location.Longitude;
@@ -112,10 +131,20 @@ namespace Wbs.Everdigm.Desktop
                     pos.GpsTime = data.Time;
                     pos.Equipment = null == equipment ? (int?)null : equipment.id;
                     pos.Terminal = null == terminal ? "" : (terminal.Sim.Length < 11 ? (terminal.Sim + "000") : terminal.Sim);
-                    pos.Type = "Period report(SAT)";
+                    pos.Type = location.Report + "(Eng " + location.EngFlag + ")(SAT)";
                     try
                     {
                         PositionInstance.Add(pos);
+                        // 处理报警信息
+                        if (alarms != ALARM) {
+                            var arm = AlarmInstance.GetObject();
+                            arm.Code = alarms;
+                            arm.Equipment = null == equipment ? (int?)null : equipment.id;
+                            arm.Position = pos.id;
+                            arm.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
+                            arm.Terminal = null == terminal ? "" : (terminal.Sim.Length < 11 ? (terminal.Sim + "000") : terminal.Sim);
+                            AlarmInstance.Add(arm);
+                        }
                     }
                     catch (Exception e)
                     {

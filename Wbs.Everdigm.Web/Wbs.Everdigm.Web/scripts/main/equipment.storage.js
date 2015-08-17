@@ -7,6 +7,7 @@
 });
 // 查询设备的出入库历史记录
 function queryStorageHistory() {
+    $("#tbodyWorktimes").html("<tr><td class=\"panel-body-td\" colspan=\"7\">Loading data...</td></tr>");
     var id = $("#hidKey").val();
     var inputs = $(".input-daterange .input-md");
     var start = $(inputs[0]).val();

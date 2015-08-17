@@ -509,12 +509,28 @@ namespace Wbs.Everdigm.Desktop
         /// 东西指示
         /// </summary>
         public char EWI { get; private set; }
+        private byte report = 0;
+        /// <summary>
+        /// 获取卫星数据的汇报方式
+        /// </summary>
+        public string Report
+        {
+            get { return report == 0 ? "Period" : "Command"; }
+        }
+        private byte eng = 0;
+        /// <summary>
+        /// 获取Eng状态
+        /// </summary>
+        public string EngFlag
+        { get { return eng == 0 ? "Off" : "On"; } }
         /// <summary>
         /// 解包定位信息
         /// </summary>
         public void Unpackate()
         {
             var nsew = CustomConvert.IntToDigit(latlng[0], CustomConvert.BIN, 8);
+            report = (byte)(nsew[0] == '1' ? 1 : 0);
+            eng = (byte)(nsew[1] == '1' ? 1 : 0);
             NSI = nsew[6] == '1' ? 'S' : 'N';
             EWI = nsew[7] == '1' ? 'W' : 'E';
 

@@ -56,23 +56,57 @@ namespace Wbs.Everdigm.Desktop
         {
             LastOlderLinkHandledTime = DateTime.Now;
 
+            // 所有更新集合到一个事务中2015/08/14
+            // 更新设备连接状态
+            EquipmentInstance.Update(f => f.OnlineStyle > (byte)LinkType.OFF && f.OnlineTime < DateTime.Now.AddMinutes(-75), act =>
+            {
+                act.Socket = 0;
+                act.Voltage = "G0000";
+                act.Rpm = 0;
+                act.Signal = 0;
+                // 长时间睡眠的转为盲区
+                if (act.OnlineTime < DateTime.Now.AddMinutes(-10800) && act.OnlineStyle < (byte)LinkType.BLIND)
+                { act.OnlineStyle = (byte)LinkType.BLIND; }
+                // 长时间SMS的转为睡眠
+                else if (act.OnlineTime < DateTime.Now.AddMinutes(-720) && act.OnlineStyle < (byte)LinkType.SLEEP)
+                { act.OnlineStyle = (byte)LinkType.SLEEP; }
+                // 长时间没有UDP、TCP信息的转为SMS
+                else if (act.OnlineStyle < (byte)LinkType.SMS)
+                { act.OnlineStyle = (byte)LinkType.SMS; }
+                // 卫星超过2小时没有数据的，Eng. On更新为Eng. Off
+                else if (act.OnlineTime < DateTime.Now.AddMinutes(-120) && act.OnlineStyle == (byte)LinkType.SATELLITE
+                    && act.Voltage != "G0000")
+                { act.Voltage = "G0000"; }
+            });
+            // 更新终端连接状态
+            TerminalInstance.Update(f => f.OnlineStyle > (byte)LinkType.OFF && f.OnlineTime < DateTime.Now.AddMinutes(-75), act =>
+            {
+                act.Socket = 0;
+                if (act.OnlineTime < DateTime.Now.AddMinutes(-10800) && act.OnlineStyle < (byte)LinkType.BLIND)
+                { act.OnlineStyle = (byte)LinkType.BLIND; }
+                else if (act.OnlineTime < DateTime.Now.AddMinutes(-720) && act.OnlineStyle < (byte)LinkType.SLEEP)
+                { act.OnlineStyle = (byte)LinkType.SLEEP; }
+                else if (act.OnlineStyle < (byte)LinkType.SMS)
+                { act.OnlineStyle = (byte)LinkType.SMS; }
+            });
+
             // 2015-04-08 16:40 更新：不处理已经为OFF状态的列表
             // 处理旧的TCP链接为SMS链接(1小时15分钟之前有TCP数据来的链接会被置为SMS)
-            EquipmentInstance.Update(f => f.OnlineStyle > (byte)LinkType.OFF && f.OnlineStyle < (byte)LinkType.SMS &&
-                f.OnlineTime < DateTime.Now.AddMinutes(-75), act =>
-                {
-                    act.Socket = 0;
-                    act.OnlineStyle = (byte)LinkType.SMS;
-                    act.Voltage = "G0000";
-                    act.Rpm = 0;
-                });
+            //EquipmentInstance.Update(f => f.OnlineStyle > (byte)LinkType.OFF && f.OnlineStyle < (byte)LinkType.SMS &&
+            //    f.OnlineTime < DateTime.Now.AddMinutes(-75), act =>
+            //    {
+            //        act.Socket = 0;
+            //        act.OnlineStyle = (byte)LinkType.SMS;
+            //        act.Voltage = "G0000";
+            //        act.Rpm = 0;
+            //    });
             // 处理终端连接
-            TerminalInstance.Update(f => f.OnlineStyle > (byte)LinkType.OFF && f.OnlineStyle < (byte)LinkType.SMS &&
-                f.OnlineTime < DateTime.Now.AddMinutes(-75), act =>
-                {
-                    act.Socket = 0;
-                    act.OnlineStyle = (byte)LinkType.SMS;
-                });
+            //TerminalInstance.Update(f => f.OnlineStyle > (byte)LinkType.OFF && f.OnlineStyle < (byte)LinkType.SMS &&
+            //    f.OnlineTime < DateTime.Now.AddMinutes(-75), act =>
+            //    {
+            //        act.Socket = 0;
+            //        act.OnlineStyle = (byte)LinkType.SMS;
+            //    });
             // 清理TX10G的旧链接记录
             TrackerInstance.Update(f => f.State > 0 && f.LastActionAt < DateTime.Now.AddMinutes(-15), act =>
             {
@@ -82,25 +116,27 @@ namespace Wbs.Everdigm.Desktop
                 act.State = 0;
             });
             // 处理旧的SMS连接为SLEEP状态(SMS链接超过12小时的)
-            EquipmentInstance.Update(f => f.OnlineStyle > (byte)LinkType.OFF && f.OnlineStyle < (byte)LinkType.SLEEP &&
-                f.OnlineTime < DateTime.Now.AddMinutes(-720), act =>
-                {
-                    act.OnlineStyle = (byte)LinkType.SLEEP;
-                    act.Voltage = "G0000";
-                });
+            //EquipmentInstance.Update(f => f.OnlineStyle > (byte)LinkType.OFF && f.OnlineStyle < (byte)LinkType.SLEEP &&
+            //    f.OnlineTime < DateTime.Now.AddMinutes(-720), act =>
+            //    {
+            //        act.OnlineStyle = (byte)LinkType.SLEEP;
+            //        act.Signal = 0;
+            //        act.Voltage = "G0000";
+            //    });
             // 处理终端连接
-            TerminalInstance.Update(f => f.OnlineStyle > (byte)LinkType.OFF && f.OnlineStyle < (byte)LinkType.SLEEP &&
-                f.OnlineTime < DateTime.Now.AddMinutes(-720), act =>
-                {
-                    act.OnlineStyle = (byte)LinkType.SLEEP;
-                });
+            //TerminalInstance.Update(f => f.OnlineStyle > (byte)LinkType.OFF && f.OnlineStyle < (byte)LinkType.SLEEP &&
+            //    f.OnlineTime < DateTime.Now.AddMinutes(-720), act =>
+            //    {
+            //        act.OnlineStyle = (byte)LinkType.SLEEP;
+            //    });
             // 处理旧的SLEEP连接为盲区(SLEEP超过7天的)
-            EquipmentInstance.Update(f => f.OnlineStyle > (byte)LinkType.OFF && f.OnlineStyle < (byte)LinkType.BLIND &&
-                f.OnlineTime < DateTime.Now.AddMinutes(-10080), act =>
-                {
-                    act.OnlineStyle = (byte)LinkType.BLIND;
-                    act.Voltage = "G0000";
-                });
+            //EquipmentInstance.Update(f => f.OnlineStyle > (byte)LinkType.OFF && f.OnlineStyle < (byte)LinkType.BLIND &&
+            //    f.OnlineTime < DateTime.Now.AddMinutes(-10080), act =>
+            //    {
+            //        act.OnlineStyle = (byte)LinkType.BLIND;
+            //        act.Signal = 0;
+            //        act.Voltage = "G0000";
+            //    });
         }
         private byte GetOnlineStyleByPackage(AsyncDataPackageType type)
         {

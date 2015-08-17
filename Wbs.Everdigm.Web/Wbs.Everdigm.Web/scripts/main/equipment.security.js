@@ -10,7 +10,7 @@
             }
         } else {
             // 查询命令历史记录
-            queryCommandHistory("sechistory");
+            query_command_history();
         }
     });
 
@@ -22,8 +22,12 @@
         parent.next().val(cmd);
     });
     initializeCommandList();
-    queryCommandHistory("sechistory");
+    query_command_history();
 });
+
+function query_command_history() {
+    queryCommandHistory("sechistory");
+}
 
 function showAlertModal(title) {
     $(".modal-body").html(title);

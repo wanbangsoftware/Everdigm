@@ -97,10 +97,8 @@
                                 <td class="popup-td">-</td>
                             </tr>
                             <tr>
-                                <td class="popup-td">Signal:</td>
-                                <td class="popup-td">-</td>
                                 <td class="popup-td">Received:</td>
-                                <td class="popup-td">-</td>
+                                <td class="popup-td" colspan="3">-</td>
                             </tr>
                             <tr>
                                 <td style="height: 2px;" colspan="4"></td>

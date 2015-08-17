@@ -1,6 +1,10 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main/EquipmentInfo.Master" AutoEventWireup="true" CodeBehind="equipment_position.aspx.cs" Inherits="Wbs.Everdigm.Web.main.equipment_position" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="header" runat="server"></asp:Content>
+<asp:Content ID="Content1" ContentPlaceHolderID="header" runat="server">
+<script type="text/javascript">
+    var statLat = "<%=Lat%>", statLng = "<%=Lng%>", statTime = "<%=Dat%>";
+</script>
+</asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="TitleContentPlaceHolder" runat="server">Equipment: Position</asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="NavigatorContentPlaceHolder" runat="server">
     <!-- Nav tabs -->
@@ -37,12 +41,13 @@
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
     <!--Map-->
     <div class="panel panel-default" style="margin-top: 2px; margin-bottom: 2px;">
+        <input type="hidden" id="hiddenLatLng" runat="server" />
         <div class="panel-heading">
             <span id="span_map" style="cursor: pointer;">Map</span>
             <span style="float: right;"><code>Longitude:</code><span id="lng">-</span>　<code>Latitude:</code><span id="lat">-</span>　<code>Time:</code><span id="time">-</span></span>
         </div>
         <div class="panel-body" style="min-height: 200px; padding: 2px !important;">
-            <div id="map_canvas" style="width: 100%; height: 200px;"></div>
+            <div id="map_canvas" style="width: 100%; height: 400px;"></div>
         </div>
     </div>
     <!--Position History-->
@@ -60,7 +65,7 @@
                 </span>
             </div>
         </div>
-        <div class="panel-body" style="min-height: 120px;">
+        <div class="panel-body" style="min-height: 120px; display: none;">
             <table class="table table-hover position" style="margin-bottom: 0px !important;">
                 <thead>
                     <tr class="alert-info">

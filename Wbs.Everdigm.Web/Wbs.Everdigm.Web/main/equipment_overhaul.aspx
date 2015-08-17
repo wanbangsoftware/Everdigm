@@ -101,31 +101,28 @@
                                 <tr>
                                     <th class="bg-primary"></th>
                                     <th colspan="6" class="in-tab-title-rb bg-primary">Equipment Information</th>
-                                    <th colspan="4" class="in-tab-title-rb bg-primary">Terminal Information</th>
-                                    <th colspan="5" class="in-tab-title-b bg-primary">Storage Information</th>
+                                    <th colspan="3" class="in-tab-title-rb bg-primary">Terminal Information</th>
+                                    <th colspan="3" class="in-tab-title-b bg-primary">Storage Information</th>
                                 </tr>
                                 <tr>
                                     <th class="in-tab-title-b bg-warning">#</th>
                                     <th class="in-tab-title-b bg-warning">Type</th>
                                     <th class="in-tab-title-b bg-warning">Model</th>
                                     <th class="in-tab-title-b bg-warning" style="text-align: right !important;">SMH</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow">Eng.(RPM)</th>
+                                    <th class="in-tab-title-b bg-warning textoverflow">Eng.</th>
                                     <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Location</th>
                                     <th class="in-tab-title-rb bg-warning">Status</th>
-                                    <th class="in-tab-title-b bg-warning">Signal</th>
                                     <th class="in-tab-title-b bg-warning">Link</th>
                                     <th class="in-tab-title-b bg-warning">Received</th>
                                     <th class="in-tab-title-rb bg-warning">Ter. NO.</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">In Date</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">In Type</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow">Out Date</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow">Out Type</th>
                                     <th class="in-tab-title-b bg-warning">Warehouse</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="16">
+                                    <td colspan="15">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>

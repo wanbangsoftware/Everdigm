@@ -20,7 +20,10 @@ $(document).ready(function () {
             _map.css({ "height": "200px" });
         }
     });
-    $(".btn-success").click(function () { queryPositionHistory(); });
+    $(".btn-success").click(function () {
+        $("#span_malf").click();
+        queryPositionHistory();
+    });
     $(".position tbody").on("click", "tr", function () {
         var input = $(this).attr("data-latlng");
         if (null == input || isStringNull(input)) return;
@@ -30,8 +33,15 @@ $(document).ready(function () {
         var lng = parseFloat(latlngStr[1]);
         setMarkerInMap(lat, lng, new Date($(this).children("td:eq(1)").html()));
     });
+    initializeStaticPosition();
     queryPositionHistory();
 });
+
+function initializeStaticPosition() {
+    var lat = parseFloat(statLat);
+    var lng = parseFloat(statLng);
+    setMarkerInMap(lat, lng, new Date(statTime));
+}
 // 清除所有已有的标记
 function clearMarkers() {
     for (var i in markerArray) {
@@ -68,6 +78,7 @@ function InitializeMap(lat, lng) {
 }
 // 查询定位信息历史记录
 function queryPositionHistory() {
+    $(".position tbody").html("<tr><td class=\"panel-body-td\" colspan=\"4\">Loading data...</td></tr>");
     var id = $("#hidKey").val();
     var inputs = $(".input-daterange .input-md");
     var start = $(inputs[0]).val();

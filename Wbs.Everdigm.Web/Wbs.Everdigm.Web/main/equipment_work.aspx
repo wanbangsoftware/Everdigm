@@ -39,6 +39,7 @@
     <div class="panel panel-default" style="margin-top: 2px; margin-bottom: 2px;">
         <div class="panel-heading">
             <span>Daily working time</span>
+            <input type="hidden" id="hiddenLastDate" runat="server" />
             <div class="input-group" style="float: right; margin-top: -7px;">
                 <div class="input-group" style="float: left; margin-left: 2px;">
                     <span class="input-group-addon">Date: </span>

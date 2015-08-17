@@ -113,7 +113,7 @@ function showWarningLine(time, code, desc) {
 // 计算已用时间
 function calculateTimeused() {
     var used = _timerTimes * _timerInterval;
-    var time = new Date(used);
+    var time = new Date(new Date(used).toUTCString().substr(0, 25));
     $("#timeUsed").html(time.pattern(_timerMaxtimes == _MAX_GSM_ ? "mm:ss" : "H:mm:ss"));
     var max = _timerInterval * _timerMaxtimes;
     if (used > max * 0.7) {
@@ -186,6 +186,7 @@ function setButtonsSendingState(sending) {
 }
 
 function queryCommandHistory(queryType) {
+    $(".bs-callout:eq(1)").html("Loading data...");
     var id = $("#hidKey").val();
     var inputs = $(".input-daterange .input-md");
     var start = $(inputs[0]).val();

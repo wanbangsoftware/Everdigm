@@ -82,9 +82,9 @@ namespace Wbs.Everdigm.Web.main
                         (n == obj.Terminal ? "-" :
                         ((int?)null == obj.TB_Terminal.Satellite ? "" : obj.TB_Terminal.TB_Satellite.CardNo));
 
+                    //objectInfo.Rows[12].Cells[1].InnerText =
+                    //    (byte?)null == obj.Signal ? "-" : obj.Signal.Value.ToString();
                     objectInfo.Rows[12].Cells[1].InnerText =
-                        (byte?)null == obj.Signal ? "-" : obj.Signal.Value.ToString();
-                    objectInfo.Rows[12].Cells[3].InnerText =
                         (DateTime?)null == obj.LastActionTime ? "-" : obj.LastActionTime.Value.ToString("yyyy/MM/dd HH:mm");
                 }
             }
