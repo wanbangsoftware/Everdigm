@@ -120,7 +120,7 @@
                 </div>
                 <div class="modal-footer">
                     <button id="satWarning" type="button" class="btn btn-warning" style="display:none;">
-                        <span class="glyphicon glyphicon-time"></span> Satellite mode may take more time to wait
+                        <span class="glyphicon glyphicon-time"></span> Satellite mode may take more time to wait the result
                     </button>
                     <button class="btn btn-primary" type="button">
                         time used: <span class="badge" id="timeUsed">00:00</span>

@@ -517,6 +517,10 @@ namespace Wbs.Everdigm.Desktop
         {
             get { return report == 0 ? "Period" : "Command"; }
         }
+        /// <summary>
+        /// 信息汇报方式0=自动汇报1=命令回复
+        /// </summary>
+        public byte ReportType { get { return report; } }
         private byte eng = 0;
         /// <summary>
         /// 获取Eng状态
@@ -529,10 +533,11 @@ namespace Wbs.Everdigm.Desktop
         public void Unpackate()
         {
             var nsew = CustomConvert.IntToDigit(latlng[0], CustomConvert.BIN, 8);
-            report = (byte)(nsew[0] == '1' ? 1 : 0);
-            eng = (byte)(nsew[1] == '1' ? 1 : 0);
-            NSI = nsew[6] == '1' ? 'S' : 'N';
-            EWI = nsew[7] == '1' ? 'W' : 'E';
+            //nsew = CustomConvert.reserve(nsew);
+            report = (byte)(nsew[7] == '1' ? 1 : 0);
+            eng = (byte)(nsew[6] == '1' ? 1 : 0);
+            NSI = nsew[1] == '1' ? 'S' : 'N';
+            EWI = nsew[0] == '1' ? 'W' : 'E';
 
             Latitude = latlng[1];
             byte[] tmp = new byte[2];

@@ -119,7 +119,8 @@ namespace Wbs.Everdigm.Desktop
             obj.protocol_version = tx300.ProtocolVersion;
             obj.receive_time = receiveTime;
             obj.sequence_id = tx300.SequenceID.ToString();
-            obj.server_port = 31875;
+            obj.server_port = (short)(tx300.ProtocolType == Protocol.ProtocolTypes.SATELLITE ? 10800 : 
+                tx300.ProtocolType == Protocol.ProtocolTypes.SMS ? 0 : 31875);
             obj.terminal_id = tx300.TerminalID;
             obj.terminal_type = tx300.TerminalType;
             obj.total_length = (short)tx300.TotalLength;

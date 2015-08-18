@@ -169,6 +169,10 @@ namespace Wbs.Everdigm.Desktop
             return dt.ToString("[yyyy/MM/dd HH:mm:ss.fff] ");
         }
         /// <summary>
+        /// 当前系统时间
+        /// </summary>
+        private string Now { get { return System.DateTime.Now.ToString("[yyyy/MM/dd HH:mm:ss.fff] "); } }
+        /// <summary>
         /// 数据处理时出错的信息
         /// </summary>
         /// <param name="sender"></param>
@@ -267,7 +271,7 @@ namespace Wbs.Everdigm.Desktop
                             _handler.CheckSMSData();
                         }
                         catch (Exception sms)
-                        { HandleDisplayMessage("Cannot handle CheckSMSData: " + sms.Message); }
+                        { HandleDisplayMessage(string.Format("{0} Cannot handle CheckSMSData: {1}", Now, sms.Message)); }
                     }
                 }
 

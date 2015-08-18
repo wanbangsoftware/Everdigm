@@ -6,6 +6,7 @@ using System.Web;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
+using Wbs.Utilities;
 using Wbs.Protocol;
 using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Database;
@@ -69,10 +70,19 @@ namespace Wbs.Everdigm.Web
         /// 默认画出当日的运转情况
         /// </summary>
         private string _date = DateTime.Now.ToString("yyyy/MM/dd");
+        private DateTime _start, _end;
         /// <summary>
         /// 设置日期
         /// </summary>
-        public string Date { set { _date = value; } }
+        public string Date
+        {
+            set
+            {
+                _date = value;
+                _start = DateTime.Parse(_date + " 00:00:00");
+                _end = DateTime.Parse(_date + " 23:59:59");
+            }
+        }
 
         /// <summary>
         /// 画图
@@ -96,16 +106,23 @@ namespace Wbs.Everdigm.Web
                     times[i, j] = 10;
             // 获取数据库中今日启动情况
             var data = new DataBLL();
-            var list = data.FindList(h => h.receive_time >= DateTime.Parse(_date + " 00:00:00") &&
-                h.receive_time <= DateTime.Parse(_date + " 23:59:59") && h.mac_id.Equals(_equipment) &&
-                h.command_id.Equals("0x5000")).OrderBy(o => o.receive_time);
+            var list = data.FindList(h => h.receive_time >= _start && h.receive_time <= _end && h.mac_id.Equals(_equipment) &&
+                (h.command_id.Equals("0x5000") || h.command_id.Equals("0x1000"))).OrderBy(o => o.receive_time);
 
             // 当日开机时间默认为凌晨零点。
-            DateTime lastOpen = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd") + " 00:00:00"), lastClose;
+            TimeSpan lastOpen = new TimeSpan(_start.Ticks), lastClose;
             var lastIsOpen = true;
             var terType = 0;
             foreach (var obj in list)
             {
+                // 非卫星方式回来的1000命令不处理
+                if (obj.command_id.Equals("0x1000"))
+                {
+                    if (obj.protocol_type != ProtocolTypes.SATELLITE)
+                        continue;
+                    if (obj.message_content.Substring(0, 2) != "01")
+                        continue;
+                }
                 if (terType == 0)
                 {
                     var t = new TerminalBLL().Find(find => obj.terminal_id.IndexOf(find.Sim) >= 0);
@@ -120,8 +137,18 @@ namespace Wbs.Everdigm.Web
 
                 //while (sdr.Read())
                 //{
-                str = terType == TerminalTypes.DX ? obj.message_content.Substring(0, 4) : 
-                    (obj.message_content.Substring(8, 2) == "00" ? "E000" : "0000");
+                if (obj.protocol_type == ProtocolTypes.SATELLITE)
+                {
+                    byte[] msgc = CustomConvert.GetBytes(obj.message_content);
+                    string bin = CustomConvert.IntToDigit(msgc[4], CustomConvert.BIN, 8);
+                    msgc = null;
+                    str = bin[6] == '1' ? "F000" : "0000";
+                }
+                else
+                {
+                    str = terType == TerminalTypes.DX ? obj.message_content.Substring(0, 4) :
+                        (obj.message_content.Substring(8, 2) == "00" ? "F000" : "0000");
+                }
                 dt = obj.receive_time.Value;
                 hh = Convert.ToInt32(dt.ToString("HH"));
                 mm = Convert.ToInt32(dt.ToString("mm")) / _interval;
@@ -129,13 +156,13 @@ namespace Wbs.Everdigm.Web
                 if (0 < str.CompareTo("0000"))
                 {
                     times[hh, mm] = 1;
-                    lastOpen = dt;
+                    lastOpen = new TimeSpan(dt.Ticks);
                     lastIsOpen = true;
                 }
                 else
                 {
                     times[hh, mm] = 0;
-                    lastClose = dt;
+                    lastClose = new TimeSpan(dt.Ticks);
                     if (lastIsOpen)
                     {
                         lastIsOpen = false;

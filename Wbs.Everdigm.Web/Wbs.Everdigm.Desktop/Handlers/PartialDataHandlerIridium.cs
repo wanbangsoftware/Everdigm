@@ -48,6 +48,17 @@ namespace Wbs.Everdigm.Desktop
                 });
         }
         /// <summary>
+        /// 处理1小时内已被卫星模块接收了的命令为正常返回状态
+        /// </summary>
+        private void HandleIridiumCommandResponseed(IridiumData data)
+        {
+            CommandInstance.Update(f => f.TB_Terminal.TB_Satellite.CardNo.Equals(data.IMEI) &&
+            f.Status == (byte)CommandStatus.SentToDestBySAT && f.ActualSendTime > DateTime.Now.AddMinutes(-60), act =>
+            {
+                act.Status = (byte)CommandStatus.Returned;
+            });
+        }
+        /// <summary>
         /// 处理铱星终端接收命令的状态
         /// </summary>
         /// <param name="data"></param>
@@ -101,7 +112,7 @@ namespace Wbs.Everdigm.Desktop
                                 act.OnlineTime = data.Time;
                                 act.LastAction = "0x1000";
                                 act.LastActionBy = "SAT";
-                                act.LastActionTime = DateTime.Now;
+                                act.LastActionTime = data.Time;
                                 if (worktime > 0)
                                 {
                                     // 运转时间不为零的话，更新运转时间
@@ -153,6 +164,11 @@ namespace Wbs.Everdigm.Desktop
                             Message = e.Message + Environment.NewLine + e.StackTrace + Environment.NewLine + PositionInstance.ToString(pos)
                         });
                     }
+                }
+                // 更新卫星方式的命令状态
+                if (location.ReportType == 1)
+                {
+                    HandleIridiumCommandResponseed(data);
                 }
                 location.Dispose();
                 location = null;
