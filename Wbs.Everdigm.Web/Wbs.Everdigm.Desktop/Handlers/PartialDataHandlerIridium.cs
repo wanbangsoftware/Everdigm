@@ -129,6 +129,7 @@ namespace Wbs.Everdigm.Desktop
                         CommandID = 0x1000,
                         MsgContent = data.Payload,
                         ProtocolType = Wbs.Protocol.ProtocolTypes.SATELLITE,
+                        TerminalType = terminal.Type.Value,
                         TerminalID = null == terminal ? "" : terminal.Sim,
                         TotalLength = (ushort)data.Payload.Length
                     }, data.Time, EquipmentInstance.GetFullNumber(equipment));
@@ -184,7 +185,8 @@ namespace Wbs.Everdigm.Desktop
             if (data.Length >= Wbs.Protocol.TX300.TX300Items.header_length)
             {
                 // TX300通讯协议首字节必定大于等于17
-                if (data.Payload[0] >= 17 &&
+                // 卫星通讯协议首字节必定等于01
+                if (data.Payload[0] >= 17 && 
                     Wbs.Protocol.ProtocolTypes.IsTX300(data.Payload[2]) &&
                             Wbs.Protocol.TerminalTypes.IsTX300(data.Payload[3]))
                 {

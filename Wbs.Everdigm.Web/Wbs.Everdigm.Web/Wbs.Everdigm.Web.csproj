@@ -209,6 +209,7 @@
     <Content Include="main\as_work_dispatch.aspx" />
     <Content Include="main\customers.aspx" />
     <Content Include="main\customer_new.aspx" />
+    <Content Include="main\customer_pop.aspx" />
     <Content Include="main\equipment_alarm.aspx" />
     <Content Include="main\equipment_as.aspx" />
     <Content Include="main\equipment_change_warehouse.aspx" />
@@ -218,6 +219,7 @@
     <Content Include="main\equipment_new_product.aspx" />
     <Content Include="main\equipment_overhaul.aspx" />
     <Content Include="main\equipment_position.aspx" />
+    <Content Include="main\equipment_rental.aspx" />
     <Content Include="main\equipment_rental_fleet.aspx" />
     <Content Include="main\equipment_security.aspx" />
     <Content Include="main\equipment_setting.aspx" />
@@ -256,6 +258,7 @@
     <Content Include="scripts\main\equipment.new.product.js" />
     <Content Include="scripts\main\equipment.overhaul.js" />
     <Content Include="scripts\main\equipment.position.js" />
+    <Content Include="scripts\main\equipment.rental.js" />
     <Content Include="scripts\main\equipment.rental.fleet.js" />
     <Content Include="scripts\main\equipment.security.js" />
     <Content Include="scripts\main\equipment.setting.js" />
@@ -689,6 +692,13 @@
     <Compile Include="main\customer_new.aspx.designer.cs">
       <DependentUpon>customer_new.aspx</DependentUpon>
     </Compile>
+    <Compile Include="main\customer_pop.aspx.cs">
+      <DependentUpon>customer_pop.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\customer_pop.aspx.designer.cs">
+      <DependentUpon>customer_pop.aspx</DependentUpon>
+    </Compile>
     <Compile Include="main\department_add.aspx.cs">
       <DependentUpon>department_add.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -807,6 +817,13 @@
     </Compile>
     <Compile Include="main\equipment_position.aspx.designer.cs">
       <DependentUpon>equipment_position.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="main\equipment_rental.aspx.cs">
+      <DependentUpon>equipment_rental.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\equipment_rental.aspx.designer.cs">
+      <DependentUpon>equipment_rental.aspx</DependentUpon>
     </Compile>
     <Compile Include="main\equipment_rental_fleet.aspx.cs">
       <DependentUpon>equipment_rental_fleet.aspx</DependentUpon>

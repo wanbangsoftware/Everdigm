@@ -42,6 +42,7 @@ namespace Wbs.Everdigm.BLL
                 Model = (int?)null,
                 Number = "",
                 OutdoorTime = (DateTime?)null,
+                ReclaimTime = (DateTime?)null,
                 OutdoorWorktime = 0,
                 OnlineStyle = (byte?)null,
                 OnlineTime = (DateTime?)null,

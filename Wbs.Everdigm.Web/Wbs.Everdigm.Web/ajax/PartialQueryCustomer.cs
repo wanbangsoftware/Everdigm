@@ -24,6 +24,11 @@ namespace Wbs.Everdigm.Web.ajax
                         f.Code.IndexOf(data) >= 0) && f.Delete == false);
                     ret = JsonConverter.ToJson(query);
                     break;
+                case "customer":
+                    var id = ParseInt(Utility.Decrypt(data));
+                    var c = CustomerInstance.FindList(f => f.id == id && f.Delete == false);
+                    ret = JsonConverter.ToJson(c);
+                    break;
                 case "login":
                     // 客户登陆
                     ret = HandleCustomerLogin();

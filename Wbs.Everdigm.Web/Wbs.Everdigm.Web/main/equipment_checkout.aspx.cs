@@ -52,8 +52,10 @@ namespace Wbs.Everdigm.Web.main
             pageIndex = (0 >= pageIndex ? 1 : pageIndex);
             var model = ParseInt(selectedModels.Value);
             var house = ParseInt(hidQueryWarehouse.Value);
+            // 只查询库存的设备和售出的设备
             var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
-                f => f.TB_EquipmentStatusName.IsItInventory == true && f.Deleted == false && (model <= 0 ? f.Model >= 0 : f.Model == model) &&
+                f => (f.TB_EquipmentStatusName.IsItInventory == true || f.TB_EquipmentStatusName.IsItOutstorage == true)
+                    && f.Deleted == false && (model <= 0 ? f.Model >= 0 : f.Model == model) &&
                     (house <= 0 ? (f.Warehouse >= 0 || f.Warehouse == (int?)null) : f.Warehouse == house) &&
                     (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0), null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
@@ -63,7 +65,8 @@ namespace Wbs.Everdigm.Web.main
             {
                 pageIndex = totalPages;
                 list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
-                    f => f.TB_EquipmentStatusName.IsItInventory == true && f.Deleted == false && (model <= 0 ? f.Model >= 0 : f.Model == model) &&
+                    f => (f.TB_EquipmentStatusName.IsItInventory == true || f.TB_EquipmentStatusName.IsItOutstorage == true) && 
+                        f.Deleted == false && (model <= 0 ? f.Model >= 0 : f.Model == model) &&
                         (house <= 0 ? (f.Warehouse >= 0 || f.Warehouse == (int?)null) : f.Warehouse == house) &&
                         (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0), null);
             }

@@ -177,8 +177,18 @@ namespace Wbs.Everdigm.Web
             // 添加表格
             bool is_open = false;
             int hn, mn;
-            hn = Convert.ToInt32(DateTime.Now.ToString("HH"));
-            mn = Convert.ToInt32(DateTime.Now.ToString("mm")) / _interval;
+            // 查看日期是否跟今天相同
+            DateTime date = DateTime.Parse(_date);
+            if (date < DateTime.Now)
+            {
+                hn = 23;
+                mn = 60 / _interval;
+            }
+            else
+            {
+                hn = Convert.ToInt32(DateTime.Now.ToString("HH"));
+                mn = Convert.ToInt32(DateTime.Now.ToString("mm")) / _interval;
+            }
             Bitmap b = new Bitmap(_width, _height);
             Graphics g = Graphics.FromImage(b);
             // 填充白色背景

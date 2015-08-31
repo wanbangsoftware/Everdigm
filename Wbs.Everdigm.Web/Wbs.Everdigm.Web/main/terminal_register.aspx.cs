@@ -60,12 +60,12 @@ namespace Wbs.Everdigm.Web.main
             // 如果没有输入Sim卡号码则查询是否具有相同终端号码的记录
             if (string.IsNullOrEmpty(txtSimcard.Value.Trim()))
             {
-                t = TerminalInstance.Find(f => f.Number.Equals(txtNumber.Value.Trim()));
+                t = TerminalInstance.Find(f => f.Number.Equals(txtNumber.Value.Trim()) && f.Delete == false);
             }
             else
             {
                 // 如果有Sim卡号码输入则查询终端或Sim卡号码是否有相同记录存在
-                t = TerminalInstance.Find(f => f.Number.Equals(txtNumber.Value.Trim()) || f.Sim.Equals(txtSimcard.Value.Trim()));
+                t = TerminalInstance.Find(f => (f.Number.Equals(txtNumber.Value.Trim()) || f.Sim.Equals(txtSimcard.Value.Trim())) && f.Delete == false);
             }
 
             if (null != t)
@@ -91,7 +91,8 @@ namespace Wbs.Everdigm.Web.main
         private void EditTerminal()
         {
             var id = ParseInt(Utility.Decrypt(hidID.Value));
-            var t = TerminalInstance.Find(f => (f.Number.Equals(txtNumber.Value.Trim()) || f.Sim.Equals(txtSimcard.Value.Trim())) && f.id != id);
+            var t = TerminalInstance.Find(f => (f.Number.Equals(txtNumber.Value.Trim()) || f.Sim.Equals(txtSimcard.Value.Trim())) && 
+                f.id != id && f.Delete == false);
             if (null == t)
             {
                 t = TerminalInstance.Find(f => f.id == ParseInt(Utility.Decrypt(hidID.Value)));

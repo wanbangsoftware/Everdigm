@@ -419,6 +419,18 @@
       <Association Name="TB_Equipment_TB_WorkDetail" Member="TB_Equipment" ThisKey="Equipment" OtherKey="id" Type="TB_Equipment" IsForeignKey="true" DeleteRule="SET NULL" />
     </Type>
   </Table>
+  <Table Name="dbo.TB_ExcelHandler" Member="TB_ExcelHandler">
+    <Type Name="TB_ExcelHandler">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Deleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Handled" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="[Work]" Member="Work" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CreateDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Source" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Target" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Association Name="TB_WorkDetail_TB_ExcelHandler" Member="TB_WorkDetail" ThisKey="Work" OtherKey="id" Type="TB_WorkDetail" IsForeignKey="true" DeleteRule="SET NULL" />
+    </Type>
+  </Table>
   <Table Name="dbo.TB_Equipment" Member="TB_Equipment">
     <Type Name="TB_Equipment">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -442,6 +454,7 @@
       <Column Name="Longitude" Type="System.Double" DbType="Float" CanBeNull="true" />
       <Column Name="OutdoorWorktime" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="OutdoorTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ReclaimTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="RegisterTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="OnlineTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="LastActionTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
@@ -463,18 +476,6 @@
       <Association Name="TB_EquipmentStatusName_TB_Equipment" Member="TB_EquipmentStatusName" ThisKey="Status" OtherKey="id" Type="TB_EquipmentStatusName" IsForeignKey="true" DeleteRule="SET NULL" />
       <Association Name="TB_Terminal_TB_Equipment" Member="TB_Terminal" ThisKey="Terminal" OtherKey="id" Type="TB_Terminal" IsForeignKey="true" DeleteRule="SET DEFAULT" />
       <Association Name="TB_Warehouse_TB_Equipment" Member="TB_Warehouse" ThisKey="Warehouse" OtherKey="id" Type="TB_Warehouse" IsForeignKey="true" DeleteRule="SET DEFAULT" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_ExcelHandler" Member="TB_ExcelHandler">
-    <Type Name="TB_ExcelHandler">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Deleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Handled" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="[Work]" Member="Work" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="CreateDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Source" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Target" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Association Name="TB_WorkDetail_TB_ExcelHandler" Member="TB_WorkDetail" ThisKey="Work" OtherKey="id" Type="TB_WorkDetail" IsForeignKey="true" DeleteRule="SET NULL" />
     </Type>
   </Table>
 </Database>
