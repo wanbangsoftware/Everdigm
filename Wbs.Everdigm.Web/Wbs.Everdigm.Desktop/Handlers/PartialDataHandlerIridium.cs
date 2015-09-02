@@ -113,10 +113,21 @@ namespace Wbs.Everdigm.Desktop
                                 act.LastAction = "0x1000";
                                 act.LastActionBy = "SAT";
                                 act.LastActionTime = data.Time;
-                                if (worktime > 0)
+                                // 更新启动与否状态 2015/08/31
+                                act.Voltage = location.EngFlag == "On" ? "G2400" : "G0000";
+                                // 如果回来的运转时间比当前时间大则更新成为On状态  暂时  2015/09/02
+                                if (worktime > act.Runtime)
                                 {
-                                    // 运转时间不为零的话，更新运转时间
+                                    act.Voltage = "G2400";
                                     act.Runtime = (int)worktime;
+                                }
+                                else
+                                {
+                                    if (worktime > 0)
+                                    {
+                                        // 运转时间不为零的话，更新运转时间
+                                        act.Runtime = (int)worktime;
+                                    }
                                 }
                                 // 锁车状态 2015/08/14
                                 if (act.LockStatus != locks) { act.LockStatus = locks; }

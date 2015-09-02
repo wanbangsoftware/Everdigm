@@ -68,5 +68,9 @@ namespace Wbs.Everdigm.Desktop
         /// Excel转成PDF
         /// </summary>
         private ExcelHandlerBLL ExcelHandlerInstance { get { return new ExcelHandlerBLL(); } }
+        /// <summary>
+        /// 终端流量统计的BLL
+        /// </summary>
+        private TerminalFlowBLL TerminalFlow { get { return new TerminalFlowBLL(); } }
     }
 }

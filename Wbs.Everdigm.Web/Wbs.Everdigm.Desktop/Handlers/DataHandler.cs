@@ -77,6 +77,11 @@ namespace Wbs.Everdigm.Desktop
                                 HandleReceivedData(data);
                             }
                         }
+                        else
+                        {
+                            // 增加未能处理的数据保存   2015/09/02 15:09
+                            HandleException("Data is not TX protocol.", CustomConvert.GetHex(data.Buffer));
+                        }
                         break;
                 }
                 if (data.PackageType == AsyncDataPackageType.SAT)
@@ -108,6 +113,19 @@ namespace Wbs.Everdigm.Desktop
             {
                 OnUnhandledMessage(this, new UIEventArgs() { Message = message });
             }
+        }
+        /// <summary>
+        /// 将Sim号码组成TX协议中的字节串
+        /// </summary>
+        /// <param name="sim"></param>
+        /// <returns></returns>
+        private byte[] SimToByte(string sim)
+        {
+            if (sim[0] == '8' && sim[1] == '9' && sim.Length == 8) { sim = string.Format("0{0}000", sim); }
+            else if (sim[0] == '9' && sim.Length == 8) { sim = string.Format("0{0}000", sim); }
+            else if (sim.Length == 11) { sim = string.Format("0{0}", sim); }
+
+            return CustomConvert.GetBytes(sim);
         }
         /// <summary>
         /// 获取当前系统时间的字符串

@@ -123,6 +123,41 @@ namespace Wbs.Everdigm.Web
             obj = CommandInstance.Add(obj);
 
             CommandUtility.SendSMSCommand(obj);
+
+            // 保存SMS发送流量
+            saveTerminalFlow(null == terminal ? -1 : terminal.id, sender);
+        }
+        /// <summary>
+        /// 保存命令发送流量
+        /// </summary>
+        /// <param name="ter"></param>
+        /// <param name="sim"></param>
+        private void saveTerminalFlow(int ter, string sim)
+        {
+            var n = (int?)null;
+            int monthly = int.Parse(DateTime.Now.ToString("yyyyMM"));
+            var flow = new TerminalFlowBLL();
+            var f = flow.Find(find => find.Sim.Equals(sim) && find.Monthly == monthly);
+            if (null == f)
+            {
+                f = flow.GetObject();
+                f.Monthly = monthly;
+                f.Sim = sim;
+                f.Terminal = ter < 0 ? n : ter;
+                f.SMSDeliver = 1;
+                flow.Add(f);
+            }
+            else
+            {
+                flow.Update(u => u.id == f.id, act =>
+                {
+                    if (n == act.Terminal)
+                    {
+                        act.Terminal = ter < 0 ? n : ter;
+                    }
+                    act.SMSDeliver += 1;
+                });
+            }
         }
 
         protected void Encode_Click(object sender, EventArgs e)

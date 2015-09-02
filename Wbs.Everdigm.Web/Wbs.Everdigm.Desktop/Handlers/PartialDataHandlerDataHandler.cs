@@ -37,6 +37,52 @@ namespace Wbs.Everdigm.Desktop
             dt = null;
             return cc00;
         }
+
+        private void SaveTerminalData(int terminal, string sim, AsyncDataPackageType protocol, int len, bool receive)
+        {
+            var n = (int?)null;
+            var monthly = int.Parse(DateTime.Now.ToString("yyyyMM"));
+            var flow = TerminalFlow.Find(f => f.Sim.Equals(sim) && f.Monthly == monthly);
+            if (null == flow)
+            {
+                flow = TerminalFlow.GetObject();
+                flow.Terminal = terminal < 0 ? n : terminal;
+                flow.Monthly = monthly;
+                flow.Sim = sim;
+            }
+            if (protocol == AsyncDataPackageType.TCP || protocol == AsyncDataPackageType.UDP)
+            {
+                if (receive)
+                    flow.GPRSReceive = len;
+                else
+                    flow.GPRSDeliver = len;
+            }
+            else if (protocol == AsyncDataPackageType.SMS)
+            {
+                if (receive)
+                    flow.SMSReceive = 1;
+                else
+                    flow.SMSDeliver = 1;
+            }
+            if (flow.id < 0)
+            {
+                TerminalFlow.Add(flow);
+            }
+            else
+            {
+                TerminalFlow.Update(f => f.id == flow.id, act =>
+                {
+                    if (n == act.Terminal && n != terminal)
+                    {
+                        act.Terminal = terminal;
+                    }
+                    act.GPRSDeliver += flow.GPRSDeliver;
+                    act.GPRSReceive += flow.GPRSReceive;
+                    act.SMSDeliver += flow.SMSDeliver;
+                    act.SMSReceive += flow.SMSReceive;
+                });
+            }
+        }
         /// <summary>
         /// 处理接收到的数据
         /// </summary>
@@ -150,6 +196,7 @@ namespace Wbs.Everdigm.Desktop
             var sim = GetSimFromData(tx300);
             var equipment = EquipmentInstance.Find(f => f.TB_Terminal.Sim.Equals(sim));
             var terminal = TerminalInstance.Find(f => f.Sim.Equals(sim));
+            SaveTerminalData(null == terminal ? -1 : terminal.id, sim, data.PackageType, tx300.TotalLength, true);
             // 终端不存在的话，不用再继续处理数据了
             if (!IsTracker(tx300.CommandID))
             {

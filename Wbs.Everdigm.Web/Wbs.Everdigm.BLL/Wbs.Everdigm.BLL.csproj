@@ -73,6 +73,7 @@
     <Compile Include="SmsBLL.cs" />
     <Compile Include="StoreHistoryBLL.cs" />
     <Compile Include="TerminalBLL.cs" />
+    <Compile Include="TerminalFlowBLL.cs" />
     <Compile Include="TrackerBLL.cs" />
     <Compile Include="TrackerPositionBLL.cs" />
     <Compile Include="WarehouseBLL.cs" />
@@ -83,6 +84,10 @@
     <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Protocol\Wbs.Protocol.csproj">
       <Project>{956772bb-347d-49c5-ae80-afa5f42fb192}</Project>
       <Name>Wbs.Protocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\TX300\WBS\Wbs.Utilities\Wbs.Utilities.csproj">
+      <Project>{36073bfc-ac86-49c8-82ae-5ac8de80dcc4}</Project>
+      <Name>Wbs.Utilities</Name>
     </ProjectReference>
     <ProjectReference Include="..\Wbs.Everdigm.Database\Wbs.Everdigm.Database.csproj">
       <Project>{20e609ac-7671-4dcc-907d-d46c49a3334a}</Project>
