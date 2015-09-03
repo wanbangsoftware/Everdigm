@@ -34,6 +34,10 @@ namespace Wbs.Everdigm.Web
         /// </summary>
         protected SatelliteBLL SatelliteInstance { get { return new SatelliteBLL(); } }
         /// <summary>
+        /// 流量业务处理
+        /// </summary>
+        protected TerminalFlowBLL FlowInstance { get { return new TerminalFlowBLL(); } }
+        /// <summary>
         /// 更新终端的信息
         /// </summary>
         /// <param name="obj"></param>

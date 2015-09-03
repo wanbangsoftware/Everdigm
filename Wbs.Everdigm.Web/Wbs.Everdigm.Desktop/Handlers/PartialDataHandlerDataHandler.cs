@@ -49,23 +49,20 @@ namespace Wbs.Everdigm.Desktop
                 flow.Terminal = terminal < 0 ? n : terminal;
                 flow.Monthly = monthly;
                 flow.Sim = sim;
-            }
-            if (protocol == AsyncDataPackageType.TCP || protocol == AsyncDataPackageType.UDP)
-            {
-                if (receive)
-                    flow.GPRSReceive = len;
-                else
-                    flow.GPRSDeliver = len;
-            }
-            else if (protocol == AsyncDataPackageType.SMS)
-            {
-                if (receive)
-                    flow.SMSReceive = 1;
-                else
-                    flow.SMSDeliver = 1;
-            }
-            if (flow.id < 0)
-            {
+                if (protocol == AsyncDataPackageType.TCP || protocol == AsyncDataPackageType.UDP)
+                {
+                    if (receive)
+                        flow.GPRSReceive = len;
+                    else
+                        flow.GPRSDeliver = len;
+                }
+                else if (protocol == AsyncDataPackageType.SMS)
+                {
+                    if (receive)
+                        flow.SMSReceive = 1;
+                    else
+                        flow.SMSDeliver = 1;
+                } 
                 TerminalFlow.Add(flow);
             }
             else
@@ -76,10 +73,20 @@ namespace Wbs.Everdigm.Desktop
                     {
                         act.Terminal = terminal;
                     }
-                    act.GPRSDeliver += flow.GPRSDeliver;
-                    act.GPRSReceive += flow.GPRSReceive;
-                    act.SMSDeliver += flow.SMSDeliver;
-                    act.SMSReceive += flow.SMSReceive;
+                    if (protocol == AsyncDataPackageType.TCP || protocol == AsyncDataPackageType.UDP)
+                    {
+                        if (receive)
+                            act.GPRSReceive += len;
+                        else
+                            act.GPRSDeliver += len;
+                    }
+                    else if (protocol == AsyncDataPackageType.SMS)
+                    {
+                        if (receive)
+                            act.SMSReceive += 1;
+                        else
+                            act.SMSDeliver += 1;
+                    } 
                 });
             }
         }

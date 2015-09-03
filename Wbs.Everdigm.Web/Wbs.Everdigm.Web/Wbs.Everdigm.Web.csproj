@@ -88,7 +88,6 @@
     <Content Include="css\links.css" />
     <Content Include="css\pagging.css" />
     <Content Include="css\style_font.css" />
-    <Content Include="favicon.png" />
     <Content Include="google_map.aspx" />
     <Content Include="images\equipments\icon_hex.png" />
     <Content Include="images\equipments\icon_adt.png" />
@@ -98,6 +97,7 @@
     <Content Include="images\equipments\icon_fl.png" />
     <Content Include="images\equipments\icon_wld.png" />
     <Content Include="images\error.png" />
+    <Content Include="images\favicon.png" />
     <Content Include="images\graph2.gif" />
     <Content Include="images\icon_warning.png" />
     <Content Include="images\img_top_1.png" />
@@ -230,6 +230,7 @@
     <Content Include="main\maptest.html" />
     <Content Include="main\satellite_manage.aspx" />
     <Content Include="main\terminals.aspx" />
+    <Content Include="main\terminal_flow.aspx" />
     <Content Include="main\terminal_satellite.aspx" />
     <Content Include="mobile\css\account.css" />
     <Content Include="mobile\css\fonts\cell-custom.svg" />
@@ -999,6 +1000,13 @@
     </Compile>
     <Compile Include="main\terminals.aspx.designer.cs">
       <DependentUpon>terminals.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="main\terminal_flow.aspx.cs">
+      <DependentUpon>terminal_flow.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\terminal_flow.aspx.designer.cs">
+      <DependentUpon>terminal_flow.aspx</DependentUpon>
     </Compile>
     <Compile Include="main\terminal_list.aspx.cs">
       <DependentUpon>terminal_list.aspx</DependentUpon>
