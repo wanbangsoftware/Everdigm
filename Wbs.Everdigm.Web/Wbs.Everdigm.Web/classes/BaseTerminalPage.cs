@@ -38,6 +38,10 @@ namespace Wbs.Everdigm.Web
         /// </summary>
         protected TerminalFlowBLL FlowInstance { get { return new TerminalFlowBLL(); } }
         /// <summary>
+        /// 铱星流量业务处理
+        /// </summary>
+        protected IridiumFlowBLL IridiumInstance { get { return new IridiumFlowBLL(); } }
+        /// <summary>
         /// 更新终端的信息
         /// </summary>
         /// <param name="obj"></param>

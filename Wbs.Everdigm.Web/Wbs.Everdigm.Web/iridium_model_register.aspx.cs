@@ -77,17 +77,33 @@ namespace Wbs.Everdigm.Web
         {
             // 保存新的铱星模块号码
             var number = txtQueryNumber.Value.Trim();
-            var obj = SatelliteInstance.Find(f => f.CardNo.Equals(number));
-            if (null != obj)
+            var len = number.Length;
+            if (len != 6 && len != 15)
             {
-                ShowNotification("/iridium_model_register.aspx", "There have a SAME number exist.", false);
+                ShowNotification("/iridium_model_register.aspx", "Your input is not Iridium IMEI NO. .", false);
             }
             else
             {
-                var n = SatelliteInstance.GetObject();
-                n.CardNo = number;
-                SatelliteInstance.Add(n);
-                ShowSatellites();
+                var pre = number.Substring(0, 3);
+                if (pre != "306" && pre != "300")
+                {
+                    ShowNotification("/iridium_model_register.aspx", "Your input is not Iridium IMEI NO. .", false);
+                }
+                else
+                {
+                    var obj = SatelliteInstance.Find(f => f.CardNo.Equals(number));
+                    if (null != obj)
+                    {
+                        ShowNotification("/iridium_model_register.aspx", "There have a same satellite number exist.", false);
+                    }
+                    else
+                    {
+                        var n = SatelliteInstance.GetObject();
+                        n.CardNo = number;
+                        SatelliteInstance.Add(n);
+                        ShowSatellites();
+                    }
+                }
             }
         }
     }

@@ -83,7 +83,7 @@
                                         <th class="in-tab-title-rb bg-warning textoverflow" style="width: 80px;">TCP/IP(S)</th>
                                         <th class="in-tab-title-b bg-warning textoverflow" style="width: 80px;">SMS(R)</th>
                                         <th class="in-tab-title-rb bg-warning textoverflow" style="width: 80px;">SMS(S)</th>
-                                        <th class="in-tab-title-b bg-warning textoverflow" style="width: 80px;">Satellite NO.</th>
+                                        <th class="in-tab-title-rb bg-warning textoverflow" style="width: 80px; text-align: left;">Satellite NO.</th>
                                         <th class="in-tab-title-b bg-warning textoverflow" style="width: 80px;">PKG.(R)</th>
                                         <th class="in-tab-title-rb bg-warning textoverflow" style="width: 80px;">Length(R)</th>
                                         <th class="in-tab-title-b bg-warning textoverflow" style="width: 80px;">PKG.(S)</th>
