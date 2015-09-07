@@ -11,12 +11,23 @@ namespace Wbs.Everdigm.Web
 {
     public class BaseEquipmentPage : BaseBLLPage
     {
+        /// <summary>
+        /// 当前打开的Equipment
+        /// </summary>
+        protected static string SessionKey = "_opened_equipment_";
         protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
             if (HasSessionLose)
             {
                 ShowNotification("../default.aspx", "Your session has expired, please login again.", false, true);
+            }
+        }
+        protected void initializeSessionKey()
+        {
+            if (string.IsNullOrEmpty(_key))
+            {
+                _key = (string)Session[SessionKey];
             }
         }
         /// <summary>

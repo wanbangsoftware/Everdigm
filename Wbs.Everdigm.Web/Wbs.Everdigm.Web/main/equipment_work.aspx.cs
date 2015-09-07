@@ -15,6 +15,7 @@ namespace Wbs.Everdigm.Web.main
 
             if (!HasSessionLose)
             {
+                initializeSessionKey();
                 if (!IsPostBack)
                 {
                     if (string.IsNullOrEmpty(_key))

@@ -14,6 +14,10 @@ namespace Wbs.Everdigm.Web.main
     /// </summary>
     public partial class EquipmentInfo : BaseBllMaster
     {
+        /// <summary>
+        /// 当前打开的Equipment
+        /// </summary>
+        private static string SessionKey = "_opened_equipment_";
         protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
@@ -21,6 +25,8 @@ namespace Wbs.Everdigm.Web.main
             {
                 if (!IsPostBack)
                 {
+                    if (string.IsNullOrEmpty(_key)) { _key = (string)Session[SessionKey]; }
+
                     if (string.IsNullOrEmpty(_key))
                     {
                         ShowNotification("./equipment_inquiry.aspx", "Can not find object with null paramenter.", false);

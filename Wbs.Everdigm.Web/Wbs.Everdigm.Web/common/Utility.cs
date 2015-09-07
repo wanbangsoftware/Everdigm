@@ -494,5 +494,27 @@ namespace Wbs.Everdigm.Web
             else if (asu < 15) return 3;
             else return 4;
         }
+        /// <summary>
+        /// 将C#的DateTime转换成Javascript的Date
+        /// </summary>
+        /// <param name="time">C#的DateTime</param>
+        /// <returns>返回Javascript的Date的毫秒数(setTime(long))</returns>
+        public static long DateTimeToJavascriptDate(DateTime time)
+        {
+            DateTime d1 = new DateTime(1970, 1, 1);
+            DateTime d2 = time.ToUniversalTime();
+            TimeSpan ts = new TimeSpan(d2.Ticks - d1.Ticks);
+            return (long)ts.TotalMilliseconds;
+        }
+        /// <summary>
+        /// 将Javascript的Date转换成C#的DateTime
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static DateTime JavascriptDateToDateTime(long time)
+        {
+            var date = new DateTime(1970, 1, 1);
+            return date.AddMilliseconds(time);
+        }
     }
 }

@@ -15,15 +15,18 @@ namespace Wbs.Everdigm.Web.main
             base.Page_Load(sender, e);
             if (!HasSessionLose)
             {
+                initializeSessionKey(); 
                 if (!IsPostBack)
-                { ShowOldInformations(); }
+                {
+                    ShowOldInformations();
+                }
             }
         }
         /// <summary>
         /// 显示待修改的设备的信息
         /// </summary>
         private void ShowOldInformations()
-        { 
+        {
             var id = ParseInt(Utility.Decrypt(_key));
             var equipment = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
             if (null != equipment)

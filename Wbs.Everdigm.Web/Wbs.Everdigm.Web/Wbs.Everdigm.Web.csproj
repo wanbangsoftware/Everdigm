@@ -112,6 +112,13 @@
     <Content Include="images\sprites.png" />
     <Content Include="images\updown.png" />
     <Content Include="iridium_model_register.aspx" />
+    <Content Include="js\CanvasJS\canvasjs.min.js" />
+    <Content Include="js\CanvasJS\instruction.txt" />
+    <Content Include="js\CanvasJS\jquery.canvasjs.min.js" />
+    <Content Include="js\CanvasJS\license.txt" />
+    <Content Include="js\CanvasJS\source\canvasjs.js" />
+    <Content Include="js\CanvasJS\source\excanvas.js" />
+    <Content Include="js\CanvasJS\source\jquery.canvasjs.js" />
     <Content Include="js\CryptoJS.v3.1.2\components\aes-min.js" />
     <Content Include="js\CryptoJS.v3.1.2\components\aes.js" />
     <Content Include="js\CryptoJS.v3.1.2\components\cipher-core-min.js" />

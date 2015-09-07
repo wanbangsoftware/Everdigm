@@ -25,6 +25,7 @@ namespace Wbs.Everdigm.Web.main
                     }
                     else
                     {
+                        Session[SessionKey] = _key;
                         ShowStaticPosition();
                     }
                 }

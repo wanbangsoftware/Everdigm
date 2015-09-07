@@ -1,12 +1,34 @@
 ﻿
-
 $(document).ready(function () {
-    $(".date-test").datepicker("update", $("[id$=\"hiddenLastDate\"]").val());
-    $(".btn-success").click(function () { showWorktimes(); });
 
-    // 初始化查询最近5天内的启动情况
-    showWorktimes();
+    $(".input-daterange").each(function () {
+        updateDatepicker();
+    });
+
+    $(".input-daterange").datepicker({
+        format: _datepickerFMT,
+        weekStart: 0,
+        autoclose: true
+    });
+
+    //$(".date-test").datepicker("update", $("[id$=\"hiddenLastDate\"]").val());
+    $(".btn-success").click(function () { getWorktimes(); });
+
+    // 初始化查询最近一个月的运转时间
+    getWorktimes();
+    // 查询指定时间内的最新运转时间
+    getWorktime();
 });
+
+function updateDatepicker() {
+    var inputs = $(".input-md");
+    var now = new Date();
+    var then = now.dateAfter(-10, 1);
+    var $datepicker = $(".input-daterange");
+    $datepicker.find("#start").datepicker("update", then.pattern(_datepatternFMT));
+    $datepicker.find("#end").datepicker("update", now.pattern(_datepatternFMT));
+    $datepicker.datepicker("updateDates");
+}
 
 var worktimeItem = "<tr><td class=\"panel-body-td\"><img alt=\"%alt%\" src=\"equipment_today_works.aspx?key=%key%&date=%date%&width=600\" /></td></tr>";
 var lastQueryDate = "";
@@ -28,6 +50,37 @@ function showWorktimes() {
     }
     // 查询指定时间内的最新运转时间
     getWorktime();
+}
+// 获取指定查询日期范围内的运转时间信息
+function getWorktimes() {
+    GetJsonData("../ajax/query.ashx", {
+        "type": "equipment", "cmd": "worktime", "data": $("[id$=\"hidKey\"]").val(),
+        "date": $(".form-control:eq(0)").val(), "date1": $(".form-control:eq(1)").val()
+    },
+        function (data) {
+            for (var i = 0; i < data.Average.length;i++){
+                data.Average[i].x = new Date(data.Average[i].x);
+                data.Worktime[i].x = new Date(data.Worktime[i].x);
+                if (data.Worktime[i].y > 0) {
+                    data.Worktime[i].indexLabel = floatToHHMM(data.Worktime[i].y);
+                }
+            }
+            showChart(data);
+        });
+}
+function floatToHHMM(value) {
+    if (0 == value) return "0";
+    var ret = "";
+    var str = value.toString();
+    var hour = parseInt(Math.floor(value));
+    if (hour > 0) ret = hour + "h";
+    var index = str.indexOf(".");
+    if (index > 0) {
+        // 有分钟
+        var min = str.substr(index + 1);
+        ret += (min.length > 1 ? min : ("0" + min)) + "m";
+    }
+    return ret;
 }
 // 获取最新的运转时间信息
 function getWorktime() {
@@ -138,4 +191,68 @@ function displayWorkTimes(obj) {
     $("#lblOprWaterempHour1").html(parseInt(obj.CoolantTemp40 / 60));
     $("#lblOprWaterempMin1").html(obj.CoolantTemp40 % 60);
     $("#imgOprWateremp1 .bar").css({ "width": (parseInt(obj.CoolantTemp40 / obj.TotalWorkTime * 100) + "%") });
+}
+
+function showChart(data) {
+    var chart = new CanvasJS.Chart("runtimeChart",
+		{
+		    zoomEnabled: true,
+		    animationEnabled: true,
+		    title: {
+		        text: "Daily work time"
+		    }, axisX: {
+		        valueFormatString: "MMM DD"
+		    },
+		    axisY2: {
+		        valueFormatString: "00 hr",
+		        maximum: 24,
+		        interval: 2,
+		        interlacedColor: "#F5F5F5",
+		        gridColor: "#D7D7D7",
+		        tickColor: "#D7D7D7"
+		    },
+		    theme: "theme2",
+		    toolTip: {
+		        shared: true
+		    },
+		    legend: {
+		        verticalAlign: "bottom",
+		        horizontalAlign: "center",
+		        fontSize: 15,
+		        fontFamily: "Lucida Sans Unicode"
+
+		    },
+		    data: [
+			{
+			    type: "line",
+			    lineThickness: 3,
+			    axisYType: "secondary",
+			    showInLegend: true,
+			    name: "Average",
+			    dataPoints: data.Average
+			},
+			{
+			    type: "spline",
+			    lineThickness: 3,
+			    showInLegend: true,
+			    name: "Worktime",
+			    axisYType: "secondary",
+			    dataPoints: data.Worktime
+			}
+		    ],
+		    legend: {
+		        cursor: "pointer",
+		        itemclick: function (e) {
+		            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+		                e.dataSeries.visible = false;
+		            }
+		            else {
+		                e.dataSeries.visible = true;
+		            }
+		            chart.render();
+		        }
+		    }
+		});
+
+    chart.render();
 }

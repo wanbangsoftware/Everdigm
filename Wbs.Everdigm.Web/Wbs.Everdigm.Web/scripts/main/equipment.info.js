@@ -18,12 +18,12 @@
         autoclose: true
     });
 
-    $("#functionBar a").hover(function () {
-        var href = $(this).attr("href");
-        if (href.indexOf("#") < 0) {
-            if (href.indexOf("?key") < 0) {
-                $(this).attr("href", href + "?key=" + $("#hidKey").val());
-            }
-        }
-    });
+    //$("#functionBar a").hover(function () {
+    //    var href = $(this).attr("href");
+    //    if (href.indexOf("#") < 0) {
+    //        if (href.indexOf("?key") < 0) {
+    //            $(this).attr("href", href + "?key=" + $("#hidKey").val());
+    //        }
+    //    }
+    //});
 });

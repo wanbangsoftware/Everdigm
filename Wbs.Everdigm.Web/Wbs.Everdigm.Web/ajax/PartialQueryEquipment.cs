@@ -6,6 +6,8 @@ using System.Web;
 using Wbs.Protocol.TX300;
 using Wbs.Protocol.TX300.Analyse;
 using Wbs.Everdigm.Database;
+using Wbs.Protocol;
+using Wbs.Utilities;
 
 namespace Wbs.Everdigm.Web.ajax
 {
@@ -91,6 +93,9 @@ namespace Wbs.Everdigm.Web.ajax
                     break;
                 case "faults":
                     ret = HandleEquipmentEposFaultHistory();
+                    break;
+                case "worktime":
+                    ret = HandleEquipmentWorktime();
                     break;
             }
             ResponseJson(ret);
@@ -209,6 +214,127 @@ namespace Wbs.Everdigm.Web.ajax
             catch
             { }
             return ret;
+        }
+        /// <summary>
+        /// 查询指定设备在指定日期范围内每日运转时间
+        /// </summary>
+        /// <returns></returns>
+        private string HandleEquipmentWorktime()
+        {
+            var ret = "{}";
+            var id = ParseInt(Utility.Decrypt(data));
+            var obj = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
+            if (null != obj)
+            {
+                var date = DateTime.Parse(GetParamenter("date") + " 00:00:00");
+                var date1 = DateTime.Parse(GetParamenter("date1") + " 23:59:59");
+                List<WorktimeChart> avg = new List<WorktimeChart>();
+                List<WorktimeChart> work = new List<WorktimeChart>();
+                DateTime dt = date;
+                // 循环每天一个节点
+                while (dt.Ticks < date1.Ticks)
+                {
+                    avg.Add(new WorktimeChart() { x = Utility.DateTimeToJavascriptDate(dt.Date), y = 0 });
+                    work.Add(new WorktimeChart() { x = Utility.DateTimeToJavascriptDate(dt.Date), y = 0 });
+                    dt = dt.AddDays(1);
+                }
+                var macid = EquipmentInstance.GetFullNumber(obj);
+                var cmds = new String[] { "0x1000", "0x6004" };
+                var runtimes = DataInstance.FindList(f => f.mac_id.Equals(macid) && cmds.Contains(f.command_id) &&
+                    f.receive_time >= date && f.receive_time <= date1).OrderBy(o => o.receive_time);
+                if (null != runtimes)
+                {
+                    long today = 0;
+                    uint times = 0, first = 0, last = 0, total = 0;
+                    foreach (var r in runtimes)
+                    {
+                        var t = Utility.DateTimeToJavascriptDate(r.receive_time.Value.Date);
+                        // 日期不同则重置日期和运转时间
+                        if (today != t)
+                        {
+                            total += times;
+                            today = t;
+                            times = 0;
+                            first = 0;
+                            last = 0;
+                        }
+                        byte[] temp = null;
+                        int index = 0;
+                        if (r.command_id.Equals("0x1000"))
+                        {
+                            if (r.protocol_type != ProtocolTypes.SATELLITE)
+                                continue;
+                            else
+                            {
+                                temp = CustomConvert.GetBytes(r.message_content);
+                                index = 13;
+                            }
+                        }
+                        else
+                        {
+                            temp = CustomConvert.GetBytes(r.message_content);
+
+                            byte tp = r.terminal_type.Value;
+                            index = tp == TerminalTypes.DH ? 2 : (tp == TerminalTypes.DX ? 5 : 1);
+                        }
+                        if (null == temp) continue;
+
+                        uint run = BitConverter.ToUInt32(temp, index);
+                        if (first == 0)
+                            first = run;
+                        else
+                        {
+                            last = run;
+                            if (last > first)
+                            {
+                                times = last - first;
+                                // 如果时间大于24小时则直接设定为24小时
+                                if (times >= 24 * 60) times = 24 * 60;
+                                work.First(f => f.x == today).y = FormatTime(times);
+                            }
+                        }
+                    }
+                    // 计算平均值
+                    var avgg = FormatTime((uint)(total / work.Count));
+                    foreach (var a in avg)
+                    { a.y = avgg; }
+                }
+                ret = string.Format("{0}\"Average\":{1},\"Worktime\":{2}{3}", "{", JsonConverter.ToJson(avg), JsonConverter.ToJson(work), "}");
+            }
+            return ret;
+        }
+        private double FormatTime(uint time)
+        {
+            uint hour = time / 60;
+            uint minute = time % 60;
+            return double.Parse(string.Format("{0}.{1}", hour, minute), System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+        }
+    }
+    /// <summary>
+    /// 提供给web画chat图形的类
+    /// </summary>
+    public class WorktimeChart : IEquatable<WorktimeChart>
+    {
+        public long x;
+        public double y;
+
+        public override bool Equals(object obj)
+        {
+            if (null == obj) return false;
+            WorktimeChart wc = obj as WorktimeChart;
+            if (null == wc) return false;
+            return Equals(wc);
+        }
+
+        public bool Equals(WorktimeChart other)
+        {
+            if (null == other) return false;
+            return other.x == this.x;
+        }
+
+        public override int GetHashCode()
+        {
+            return (int)this.x;
         }
     }
 }

@@ -19,6 +19,7 @@ namespace Wbs.Everdigm.Web.main
             {
                 if (!HasSessionLose)
                 {
+                    initializeSessionKey();
                     ShowCustomCommands();
                 }
             }

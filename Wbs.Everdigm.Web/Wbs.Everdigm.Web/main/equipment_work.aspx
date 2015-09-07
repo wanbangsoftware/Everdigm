@@ -38,33 +38,21 @@
     <!--Daily working time-->
     <div class="panel panel-default" style="margin-top: 2px; margin-bottom: 2px;">
         <div class="panel-heading">
-            <span>Daily working time</span>
+            <span>Daily working time</span>(recently 10 days)
             <input type="hidden" id="hiddenLastDate" runat="server" />
             <div class="input-group" style="float: right; margin-top: -7px;">
-                <div class="input-group" style="float: left; margin-left: 2px;">
-                    <span class="input-group-addon">Date: </span>
-                    <input type="text" class="input-md form-control little-input click-input date-test" id="worktimeDate" />
-                <span class="input-group-btn" style="float: left;">
-                    <button class="btn btn-success" type="button">Query</button>
-                </span>
+                <div class="input-daterange input-group" style="float: left; margin-left: 2px;">
+                    <input type="text" class="input-md form-control little-input click-input" id="start" />
+                    <span class="input-group-addon">to </span>
+                    <input type="text" class="input-md form-control little-input click-input" id="end" />
+                    <span class="input-group-btn" style="float: left;">
+                        <button class="btn btn-success" type="button">Query</button>
+                    </span>
                 </div>
             </div>
         </div>
         <div class="panel-body" style="min-height: 120px;">
-            <table class="table table-hover">
-                <tbody id="tbodyWorktimes">
-                    <tr>
-                        <td class="panel-body-td">
-                            Loading data...
-                        </td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td style="height: 2px;" class="panel-body-td"></td>
-                    </tr>
-                </tfoot>
-            </table>
+            <div id="runtimeChart" style="height: 300px; width: 100%;">Loading data...</div>
         </div>
     </div>
     <!--Position History-->
@@ -203,7 +191,9 @@
             <div class="col-sm-4">
                 <table class="tbtb">
                     <thead>
-                        <tr><th colspan="6" class="alert-info">Power mode</th></tr>
+                        <tr>
+                            <th colspan="6" class="alert-info">Power mode</th>
+                        </tr>
                     </thead>
                     <tbody>
                         <tr>
@@ -246,7 +236,9 @@
             <div class="col-sm-4">
                 <table class="tbtb">
                     <thead>
-                        <tr><th class="alert-info" colspan="6">Work mode</th></tr>
+                        <tr>
+                            <th class="alert-info" colspan="6">Work mode</th>
+                        </tr>
                     </thead>
                     <tbody>
                         <tr>
@@ -288,7 +280,11 @@
             </div>
             <div class="col-sm-4">
                 <table class="tbtb">
-                    <thead><tr><th class="alert-info" colspan="6">RPM 1700</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th class="alert-info" colspan="6">RPM 1700</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <tr>
                             <td class="name">&uarr;</td>
@@ -329,7 +325,11 @@
             </div>
             <div class="col-sm-4">
                 <table class="tbtb">
-                    <thead><tr><th class="alert-info" colspan="6">Hyd oil temperature</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th class="alert-info" colspan="6">Hyd oil temperature</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <tr>
                             <td class="name">96&#176;C+</td>
@@ -439,7 +439,11 @@
             </div>
             <div class="col-sm-4">
                 <table class="tbtb">
-                    <thead><tr><th class="alert-info" colspan="6">Coolant temperature</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th class="alert-info" colspan="6">Coolant temperature</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <tr>
                             <td class="name">106&#176;C</td>
@@ -551,5 +555,6 @@
     </div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="FooterContentPlaceHolder" runat="server">
+    <script type="text/javascript" src="../js/CanvasJS/canvasjs.min.js"></script>
     <script type="text/javascript" src="../scripts/main/equipment.work.js"></script>
 </asp:Content>
