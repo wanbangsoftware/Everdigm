@@ -1,6 +1,17 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main/EquipmentInfo.Master" AutoEventWireup="true" CodeBehind="equipment_work.aspx.cs" Inherits="Wbs.Everdigm.Web.main.equipment_work" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="header" runat="server"></asp:Content>
+<asp:Content ID="Content1" ContentPlaceHolderID="header" runat="server">
+    <style type="text/css">
+        .custom-modal-header {
+            -webkit-border-top-left-radius: 5px;
+            -webkit-border-top-right-radius: 5px;
+            -moz-border-radius-topleft: 5px;
+            -moz-border-radius-topright: 5px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+    </style>
+</asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="TitleContentPlaceHolder" runat="server">Equipment: Work</asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="NavigatorContentPlaceHolder" runat="server">
     <!-- Nav tabs -->
@@ -550,6 +561,24 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="warningLoading" tabindex="-1" role="dialog" aria-labelledby="deletelLabel" data-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header custom-modal-header btn-primary">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="deletelLabel">Loading...</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <img alt="" src="../images/loading.gif"/><span style="margin-left: 10px;">Loading data, please wait...</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -53,20 +53,28 @@ function showWorktimes() {
 }
 // 获取指定查询日期范围内的运转时间信息
 function getWorktimes() {
-    GetJsonData("../ajax/query.ashx", {
-        "type": "equipment", "cmd": "worktime", "data": $("[id$=\"hidKey\"]").val(),
-        "date": $(".form-control:eq(0)").val(), "date1": $(".form-control:eq(1)").val()
-    },
-        function (data) {
-            for (var i = 0; i < data.Average.length;i++){
-                data.Average[i].x = new Date(data.Average[i].x);
-                data.Worktime[i].x = new Date(data.Worktime[i].x);
-                if (data.Worktime[i].y > 0) {
-                    data.Worktime[i].indexLabel = floatToHHMM(data.Worktime[i].y);
+    var queryTime = $(".form-control:eq(0)").val() + "," + $(".form-control:eq(1)").val();
+    if ($("[id$=\"hiddenLastDate\"]").val() != queryTime) {
+        $("[id$=\"hiddenLastDate\"]").val(queryTime);
+
+        $("#warningLoading").modal("show");
+
+        GetJsonData("../ajax/query.ashx", {
+            "type": "equipment", "cmd": "worktime", "data": $("[id$=\"hidKey\"]").val(),
+            "date": $(".form-control:eq(0)").val(), "date1": $(".form-control:eq(1)").val()
+        },
+            function (data) {
+                for (var i = 0; i < data.Average.length; i++) {
+                    data.Average[i].x = new Date(data.Average[i].x);
+                    data.Worktime[i].x = new Date(data.Worktime[i].x);
+                    if (data.Worktime[i].y > 0) {
+                        data.Worktime[i].indexLabel = floatToHHMM(data.Worktime[i].y);
+                    }
                 }
-            }
-            showChart(data);
-        });
+                showChart(data);
+                $("#warningLoading").modal("hide");
+            });
+    }
 }
 function floatToHHMM(value) {
     if (0 == value) return "0";

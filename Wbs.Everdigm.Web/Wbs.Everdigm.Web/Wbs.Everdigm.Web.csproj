@@ -109,6 +109,7 @@
     <Content Include="ajax\BaseHttpHandler.ashx" />
     <Content Include="ajax\query.ashx" />
     <Content Include="ajax\equipment_models.ashx" />
+    <Content Include="images\loading.gif" />
     <Content Include="images\sprites.png" />
     <Content Include="images\updown.png" />
     <Content Include="iridium_model_register.aspx" />
