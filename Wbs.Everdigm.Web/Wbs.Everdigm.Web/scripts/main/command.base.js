@@ -106,7 +106,7 @@ function showWarningMessage(obj) {
 function showWarningLine(time, code, desc) {
     var content = $(".bs-callout-warning");
     var html = content.html();
-    html += cmdStatus.replace(/%time%/, time).replace(/%code%/, code).replace(/%desc%/, desc);
+    html += cmdStatus.replace(/%time%/, time).replace(/%code%/, currentTestCommandTitle).replace(/%desc%/, desc);
     content.html(html);
 }
 

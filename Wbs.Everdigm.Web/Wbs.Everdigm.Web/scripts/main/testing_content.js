@@ -9,13 +9,15 @@ $(document).ready(function () {
 
     $("[id^=\"bt_\"]").on("click", function () {
         $("[id^=\"bt_\"]").prop("disabled", true);
+        var text = $(this).text();
         var $btn = $(this).button("loading");
         var cmd = $(this).prop("id").replace("bt_", "");
 
         $("#analyseModal").modal("show");
         if (!isInTestProgress) {
             currentTestingCommand = cmd;
-            $(".modal-title").text("Testing progress of: " + cmd + ", please wait...");
+            currentTestCommandTitle = text;
+            $(".modal-title").text("Testing " + text + ", please wait...");
             sendTerminalCommand(cmd);
         }
     })

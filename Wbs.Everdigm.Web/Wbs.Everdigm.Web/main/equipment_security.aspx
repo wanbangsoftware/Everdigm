@@ -58,6 +58,7 @@
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
                     </ul>
                     <input type="hidden" id="cmdInfo" value="" />
+                    <input type="hidden" id="cmdTitle" value="" />
                 </li>
                 <li role="presentation" style="margin-top: 4px;">
                     <button class="btn btn-info" type="button"><span class="glyphicon glyphicon-repeat"></span>Send</button>

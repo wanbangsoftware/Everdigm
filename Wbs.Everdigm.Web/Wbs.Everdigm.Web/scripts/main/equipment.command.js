@@ -35,6 +35,7 @@ $(document).ready(function () {
         var parent = $(this).parent().parent();
         parent.prev().children("span:eq(0)").text(text);
         parent.next().val(cmd);
+        parent.next().next().val(text);
     });
     initializeCommandList();
     queryCommandHistory("history");
@@ -77,6 +78,7 @@ function sendCommandTo(cmd, param) {
                 if (data.status == 0) {
                     isInTestProgress = true;
                     currentTestingCommand = cmd;
+                    currentTestCommandTitle = $("#cmdTitle").val();
                     _lastCommandId = parseInt(data.desc);
                     //var btn = $(".btn:eq(0)");
                     setButtonsSendingState(true);
