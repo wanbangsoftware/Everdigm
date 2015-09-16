@@ -529,7 +529,6 @@ namespace Wbs.Everdigm.Desktop
                         try
                         {
                             cs.Dispose();
-                            cs.client.GetStream().Close();
                             cs.client.Close();
                             if (_iridium.ShowPackageInformation)
                                 ShowHistory("MT operation complete, client disconnected.", true);

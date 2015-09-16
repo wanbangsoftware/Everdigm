@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("wanbangsoftware.com")]
-[assembly: AssemblyProduct("Wbs.Everdigm.Desktop")]
+[assembly: AssemblyProduct("Wbs Everdigm Project")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

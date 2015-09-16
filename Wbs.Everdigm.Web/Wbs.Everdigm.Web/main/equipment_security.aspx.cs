@@ -32,7 +32,7 @@ namespace Wbs.Everdigm.Web.main
             var id = ParseInt(Utility.Decrypt(_key));
             var equipment = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
             var functional = null == equipment ? EquipmentFunctional.Mechanical : (EquipmentFunctional)equipment.Functional;
-
+            var link = (LinkType)equipment.OnlineStyle;
             var commands = CommandUtility.GetCommand(true);
             var html = "";
             foreach (var command in commands)
@@ -50,6 +50,18 @@ namespace Wbs.Everdigm.Web.main
                     // 电子式的挖掘机，不显示普通挖掘机的EPOS命令
                     if (command.Title.IndexOf("Security") < 0)
                     {
+                        // 卫星链接时，不能发送以下几个命令  2015/09/16 15:50
+                        if (link == LinkType.SATELLITE)
+                        {
+                            if (command.Flag == "satenable" || command.Flag == "satdisable" || command.Flag == "reset_sat")
+                            {
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            if (command.Flag == "reset_gsm") continue;
+                        }
                         html += "<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"-1\" href=\"#" + command.Flag + "\">" + command.Title.Replace("Loader", "Equipment") + "</a></li>";
                     }
                 }
@@ -58,6 +70,18 @@ namespace Wbs.Everdigm.Web.main
                     // 装载机不显示挖掘机的命令
                     if (command.Title.IndexOf("Security") < 0)
                     {
+                        // 卫星链接时，不能发送以下几个命令  2015/09/16 15:50
+                        if (link == LinkType.SATELLITE)
+                        {
+                            if (command.Flag == "satenable" || command.Flag == "satdisable" || command.Flag == "reset_sat")
+                            {
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            if (command.Flag == "reset_gsm") continue;
+                        }
                         html += "<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"-1\" href=\"#" + command.Flag + "\">" + command.Title + "</a></li>";
                     }
                 }

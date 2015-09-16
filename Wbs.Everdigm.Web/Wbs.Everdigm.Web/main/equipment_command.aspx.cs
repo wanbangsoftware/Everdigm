@@ -33,6 +33,7 @@ namespace Wbs.Everdigm.Web.main
             var equipment = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
             var functional = null == equipment ? EquipmentFunctional.Mechanical : (EquipmentFunctional)equipment.Functional;
             var commands = CommandUtility.GetCommand(false);
+            var link = (LinkType)equipment.OnlineStyle;
             var html = "";
             foreach (var command in commands)
             {
@@ -48,6 +49,18 @@ namespace Wbs.Everdigm.Web.main
                     // 电子式的挖掘机，不显示普通挖掘机的EPOS命令
                     if (command.Title.IndexOf("Equipment") < 0)
                     {
+                        // 卫星链接时，不能发送以下几个命令  2015/09/16 15:40
+                        if (link == LinkType.SATELLITE)
+                        {
+                            if (command.Flag == "signal" || command.Flag == "ld_daily" || command.Flag == "ld_worktime")
+                            {
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            if (command.Flag == "ld_daily") continue;
+                        }
                         html += "<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"-1\" href=\"#" + command.Flag + "\">" + command.Title.Replace("Loader", "Equipment") + "</a></li>";
                     }
                 }
@@ -56,6 +69,19 @@ namespace Wbs.Everdigm.Web.main
                     // 装载机不显示挖掘机的命令
                     if (command.Title.IndexOf("Equipment") < 0)
                     {
+                        // 卫星链接时，不能发送以下几个命令  2015/09/16 15:40
+                        if (link == LinkType.SATELLITE)
+                        {
+                            // 卫星链接时，不能发送信号强度、总工作时间、每日工作时间命令
+                            if (command.Flag == "signal" || command.Flag == "ld_daily" || command.Flag == "ld_worktime")
+                            {
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            if (command.Flag == "ld_daily") continue;
+                        }
                         html += "<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"-1\" href=\"#" + command.Flag + "\">" + command.Title + "</a></li>";
                     }
                 }

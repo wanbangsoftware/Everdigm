@@ -52,7 +52,7 @@ namespace Wbs.Everdigm.Desktop
         /// </summary>
         private void HandleIridiumCommandResponseed(IridiumData data)
         {
-            CommandInstance.Update(f => f.TB_Terminal.TB_Satellite.CardNo.Equals(data.IMEI) &&
+            CommandInstance.Update(f => f.TB_Terminal.TB_Satellite.CardNo.Equals(data.IMEI) && f.Command == "0x1000" &&
             f.Status == (byte)CommandStatus.SentToDestBySAT && f.ActualSendTime > DateTime.Now.AddMinutes(-60), act =>
             {
                 act.Status = (byte)CommandStatus.Returned;
@@ -85,8 +85,8 @@ namespace Wbs.Everdigm.Desktop
                 // 新版的卫星通讯协议
                 uint worktime = BitConverter.ToUInt32(data.Payload, 13);
                 string locks = CustomConvert.GetHex(data.Payload[1]);
-                string alarms = CustomConvert.IntToDigit(data.Payload[3], CustomConvert.BIN, 8) +
-                    CustomConvert.IntToDigit(data.Payload[4], CustomConvert.BIN, 8);
+                string alarms = CustomConvert.IntToDigit(data.Payload[2], CustomConvert.BIN, 8) +
+                    CustomConvert.IntToDigit(data.Payload[3], CustomConvert.BIN, 8);
                 IridiumLocation location = new IridiumLocation();
                 location.LatLng = new byte[IridiumLocation.SIZE];
                 Buffer.BlockCopy(data.Payload, 4, location.LatLng, 0, IridiumLocation.SIZE);
@@ -127,7 +127,7 @@ namespace Wbs.Everdigm.Desktop
                                 // 如果回来的运转时间比当前时间大则更新成为On状态  暂时  2015/09/02
                                 if (worktime > act.Runtime)
                                 {
-                                    act.Voltage = "G2400";
+                                    // act.Voltage = "G2400";
                                     act.Runtime = (int)worktime;
                                 }
                                 else
@@ -186,8 +186,8 @@ namespace Wbs.Everdigm.Desktop
                         });
                     }
                 }
-                // 更新卫星方式的命令状态
-                if (location.ReportType == 1)
+                // 更新卫星方式的命令状态(只处理命令回复的1000，其他的命令在普通命令过程中处理)
+                if (location.ReportType == 1 && data.Payload.Length <= 17)
                 {
                     HandleIridiumCommandResponseed(data);
                 }

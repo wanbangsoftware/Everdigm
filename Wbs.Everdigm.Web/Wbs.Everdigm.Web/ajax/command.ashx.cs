@@ -355,6 +355,10 @@ namespace Wbs.Everdigm.Web.ajax
                             {
                                 list = list.Where(w => w.Content.Substring(w.Content.Length - 4, 2) == command.Param);
                             }
+                            else if (security && command.Code.Equals("4000"))
+                            {
+                                list = list.Where(w => w.Content.Substring(w.Content.Length - 4, 2) == command.Param);
+                            }
                         }
                         if (list.Count() > 0)
                         {
@@ -366,6 +370,8 @@ namespace Wbs.Everdigm.Web.ajax
                                 if (record.Command == "0x6007")
                                     param = record.Content.Substring(record.Content.Length - 2);
                                 if (record.Command == "0x3000")
+                                    param = record.Content.Substring(record.Content.Length - 4, 2);
+                                if (record.Command == "0x4000")
                                     param = record.Content.Substring(record.Content.Length - 4, 2);
                                 Command _cmd = CommandUtility.GetCommand(record.Command.Replace("0x", ""), param);
                                 var func = (EquipmentFunctional)obj.Functional;

@@ -50,7 +50,7 @@ namespace Wbs.Everdigm.Common
                 foreach (var cmd in cmds)
                 {
                     var c = cmd.Split(new char[] { '|' });
-                    sec = (c[2] == "0F" || c[2] == "F0") ? "3000" : (c[1].IndexOf("sat") >= 0 ? "DD02" : "6007");
+                    sec = (c[2] == "0F" || c[2] == "F0") ? "3000" : (c[1].IndexOf("reset") >= 0 ? "4000" : (c[1].IndexOf("sat") >= 0 ? "DD02" : "6007"));
                     commands.Add(new Command()
                     {
                         Title = c[0],
@@ -62,15 +62,24 @@ namespace Wbs.Everdigm.Common
                     });
                 }
                 // 初始化终端重置命令Terminal: Reset|reset|4000
-                commands.Add(new Command()
-                {
-                    Title = "Terminal: Reset to Satellite",
-                    Flag = "reset",
-                    Code = "4000",
-                    Param = "",
-                    Security = true,
-                    Content = ConfigurationManager.AppSettings["0x4000"]
-                });
+                //commands.Add(new Command()
+                //{
+                //    Title = "Terminal: Reset to Satellite",
+                //    Flag = "reset",
+                //    Code = "4000",
+                //    Param = "",
+                //    Security = true,
+                //    Content = ConfigurationManager.AppSettings["0x4000"]
+                //});
+                //commands.Add(new Command()
+                //{
+                //    Title = "Terminal: Reset to GSM",
+                //    Flag = "reset_gsm",
+                //    Code = "4000",
+                //    Param = "",
+                //    Security = true,
+                //    Content = ConfigurationManager.AppSettings["0x4000_"]
+                //});
             }
         }
         /// <summary>
@@ -132,6 +141,10 @@ namespace Wbs.Everdigm.Common
             }
             else if (cmd.Code.Equals("DD02")) {
                 content = content.Substring(0, content.Length - 8) + cmd.Param + "000000";
+            }
+            else if (cmd.Code.Equals("4000"))
+            {
+                content = content.Substring(0, content.Length - 4) + cmd.Param + "00";
             }
             string sim = terminal.Sim;
             sim = (sim[0] == '8' && sim[1] == '9' && sim.Length < 11) ? (sim + "000") : sim;
