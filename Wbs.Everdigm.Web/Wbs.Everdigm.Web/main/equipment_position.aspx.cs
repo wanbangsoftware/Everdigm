@@ -19,6 +19,7 @@ namespace Wbs.Everdigm.Web.main
             {
                 if (!IsPostBack)
                 {
+                    initializeSessionKey();
                     if (string.IsNullOrEmpty(_key))
                     {
                         ShowNotification("./equipment_inquiry.aspx", "Can not find object with null paramenter.", false);

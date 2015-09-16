@@ -1,0 +1,85 @@
+﻿.marker {
+    cursor: pointer;
+    position: absolute;
+    width: 110px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 3px;
+    padding: 3px;
+    color: #FFFFFF;
+}
+
+    .marker.gray {
+        background: #808080;
+    }
+
+        .marker.gray:hover {
+            background: #707070;
+        }
+
+    .marker.red {
+        background: #d11f5b;
+    }
+
+        .marker.red:hover {
+            background: #ae1b4d;
+        }
+
+    .marker.orange {
+        background: #ff6a00;
+    }
+
+        .marker.orange:hover {
+            background: #e15e00;
+        }
+
+    .marker.green {
+        background: #0f9412;
+    }
+
+        .marker.green:hover {
+            background: #0da335;
+        }
+
+    .marker .arrow {
+        position: absolute;
+        top: 20px;
+        left: 47px;
+        right: 0; /* 圆角的位置需要细心调试哦 */
+        width: 0;
+        height: 0;
+        font-size: 0;
+        border: solid 8px;
+    }
+
+        .marker .arrow.gray {
+            border-color: #808080 rgba(0, 0, 0, 0.00) rgba(0, 0, 0, 0.00) rgba(0, 0, 0, 0.00);
+        }
+
+            .marker .arrow.gray:hover {
+                border-color: #707070 rgba(0, 0, 0, 0.00) rgba(0, 0, 0, 0.00) rgba(0, 0, 0, 0.00);
+            }
+
+        .marker .arrow.red {
+            border-color: #d11f5b rgba(0, 0, 0, 0.00) rgba(0, 0, 0, 0.00) rgba(0, 0, 0, 0.00);
+        }
+
+            .marker .arrow.red:hover {
+                border-color: #ae1b4d rgba(0, 0, 0, 0.00) rgba(0, 0, 0, 0.00) rgba(0, 0, 0, 0.00);
+            }
+
+        .marker .arrow.orange {
+            border-color: #ff6a00 rgba(0, 0, 0, 0.00) rgba(0, 0, 0, 0.00) rgba(0, 0, 0, 0.00);
+        }
+
+            .marker .arrow.orange:hover {
+                border-color: #e15e00 rgba(0, 0, 0, 0.00) rgba(0, 0, 0, 0.00) rgba(0, 0, 0, 0.00);
+            }
+
+        .marker .arrow.green {
+            border-color: #0f9412 rgba(0, 0, 0, 0.00) rgba(0, 0, 0, 0.00) rgba(0, 0, 0, 0.00);
+        }
+
+            .marker .arrow.green:hover {
+                border-color: #0da335 rgba(0, 0, 0, 0.00) rgba(0, 0, 0, 0.00) rgba(0, 0, 0, 0.00);
+            }

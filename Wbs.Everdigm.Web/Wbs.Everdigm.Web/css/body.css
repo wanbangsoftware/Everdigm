@@ -4,6 +4,7 @@ body {
     font: Arial, Helvetica, sans-serif "宋体";
     font-size: 12px;
     margin: 0;
+    overflow-y: hidden;
 }
 
 a {

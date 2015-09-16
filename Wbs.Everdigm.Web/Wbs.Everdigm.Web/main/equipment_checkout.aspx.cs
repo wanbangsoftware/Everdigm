@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 
 using Wbs.Everdigm.Database;
+using Wbs.Everdigm.BLL;
 
 namespace Wbs.Everdigm.Web.main
 {
@@ -96,7 +97,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td class=\"in-tab-txt-b textoverflow\" style=\"text-align: left !important;\">" +
                             (n == obj.Model ? "-" : ("<a id=\"a_" + obj.id + "\" style=\"cursor: pointer;\" data-toggle=\"modal\" data-target=\"#modalCheckout\">" + EquipmentInstance.GetFullNumber(obj) + "</a>")) + "</td>" +
                         "<td class=\"in-tab-txt-b\" style=\"text-align: left !important;\">" + Utility.GetEquipmentFunctional(obj.Functional.Value) + "</td>" +
-                        "<td class=\"in-tab-txt-b\" style=\"text-align: right !important;\">" + EquipmentInstance.GetRuntime(obj.Runtime + obj.InitializedRuntime) + "</td>" +
+                        "<td class=\"in-tab-txt-b\" style=\"text-align: right !important;\">" + EquipmentBLL.GetRuntime(obj.Runtime + obj.InitializedRuntime) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + EquipmentInstance.GetEngStatus(obj) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\" title=\"" + obj.GpsAddress + "\">" + obj.GpsAddress + "</td>" +
                         "<td class=\"in-tab-txt-rb\" title=\"" + EquipmentInstance.GetStatusTitle(obj) + "\">" + EquipmentInstance.GetStatus(obj) + "</td>" +

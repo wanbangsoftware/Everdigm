@@ -178,7 +178,7 @@ namespace Wbs.Everdigm.Web.main
                              "<td style=\"text-align: center;\">" + cnt + "</td>" +
                              "<td>" + (n == obj.Model ? "-" : obj.TB_EquipmentModel.TB_EquipmentType.Code) + "</td>" +
                              "<td>" + EquipmentInstance.GetFullNumber(obj) + "</td>" +
-                             "<td style=\"text-align: right;\">" + EquipmentInstance.GetRuntime(obj.Runtime + obj.InitializedRuntime) + "</td>" +
+                             "<td style=\"text-align: right;\">" + EquipmentBLL.GetRuntime(obj.Runtime + obj.InitializedRuntime) + "</td>" +
                              "<td style=\"text-align: center;\" title=\"" + EquipmentInstance.GetStatusTitle(obj) + "\">" + EquipmentInstance.GetStatus(obj) + "</td>" +
                              "<td>" + (n == obj.Terminal ? "not bind" : obj.TB_Terminal.Number) + "</td>" +
                              "<td>" + (n == obj.Warehouse ? "-" : obj.TB_Warehouse.Name) + "</td>" +

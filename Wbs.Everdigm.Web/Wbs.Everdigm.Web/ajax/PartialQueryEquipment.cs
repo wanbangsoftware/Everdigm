@@ -18,6 +18,15 @@ namespace Wbs.Everdigm.Web.ajax
         public string Terminal { get; set; }
         public string Sim { get; set; }
         public string Satellite { get; set; }
+        public string Functional { get; set; }
+        public string Worktime { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public string Online { get; set; }
+        public string Lock { get; set; }
+        public long Acttime { get; set; }
+        public string Voltage { get; set; }
+        public string Alarm { get; set; }
 
         public TempEquipment(TB_Equipment obj)
         {
@@ -27,6 +36,15 @@ namespace Wbs.Everdigm.Web.ajax
             Terminal = n == obj.Terminal ? "" : obj.TB_Terminal.Number;
             Sim = n == obj.Terminal ? "" : obj.TB_Terminal.Sim;
             Satellite = n == obj.Terminal ? "" : (n == obj.TB_Terminal.Satellite ? "" : obj.TB_Terminal.TB_Satellite.CardNo);
+            Functional = Utility.GetEquipmentFunctional(obj.Functional.Value);
+            Worktime = Wbs.Everdigm.BLL.EquipmentBLL.GetRuntime(obj.Runtime + obj.InitializedRuntime, true);
+            Latitude = obj.Latitude.Value;
+            Longitude = obj.Longitude.Value;
+            Online = Utility.GetOnlineStyle(obj.OnlineStyle);
+            Lock = obj.LockStatus;
+            Acttime = (DateTime?)null == obj.LastActionTime ? 0 : Utilities.CustomConvert.DateTimeToJavascriptDate(obj.LastActionTime.Value);
+            Voltage = obj.Voltage;
+            Alarm = obj.Alarm;
         }
     }
     /// <summary>
@@ -96,6 +114,9 @@ namespace Wbs.Everdigm.Web.ajax
                     break;
                 case "worktime":
                     ret = HandleEquipmentWorktime();
+                    break;
+                case "province":
+                    ret = HandleEquipmentProvinceQuest();
                     break;
             }
             ResponseJson(ret);
@@ -308,6 +329,20 @@ namespace Wbs.Everdigm.Web.ajax
             uint hour = time / 60;
             uint minute = time % 60;
             return double.Parse(string.Format("{0}.{1}", hour, minute), System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+        }
+        /// <summary>
+        /// 查找定位地址属于某个省份的设备列表
+        /// </summary>
+        /// <returns></returns>
+        private string HandleEquipmentProvinceQuest() {
+            var ret = "[]";
+            var list = EquipmentInstance.FindList(f => f.GpsAddress.IndexOf(data) >= 0 && f.Deleted == false);
+            var objs = new List<TempEquipment>();
+            foreach (var obj in list) {
+                objs.Add(new TempEquipment(obj));
+            }
+            ret = JsonConverter.ToJson(objs);
+            return ret;
         }
     }
     /// <summary>

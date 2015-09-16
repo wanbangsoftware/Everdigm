@@ -85,6 +85,7 @@
     <Content Include="css\body_equipment.css" />
     <Content Include="css\fonts\engine.dev.svg" />
     <Content Include="css\fonts\engine.svg" />
+    <Content Include="css\google.custom.marker.css" />
     <Content Include="css\links.css" />
     <Content Include="css\pagging.css" />
     <Content Include="css\style_font.css" />
@@ -110,9 +111,35 @@
     <Content Include="ajax\query.ashx" />
     <Content Include="ajax\equipment_models.ashx" />
     <Content Include="images\loading.gif" />
+    <Content Include="images\provinces\Arhangai.png" />
+    <Content Include="images\provinces\Bayankhongor.png" />
+    <Content Include="images\provinces\Bayan_Olgii.png" />
+    <Content Include="images\provinces\Bulgan.png" />
+    <Content Include="images\provinces\DarkhanUul.png" />
+    <Content Include="images\provinces\Dornod.png" />
+    <Content Include="images\provinces\Dornogovi.png" />
+    <Content Include="images\provinces\Dundgovi.png" />
+    <Content Include="images\provinces\Govaltai.gif" />
+    <Content Include="images\provinces\Govsumber.gif" />
+    <Content Include="images\provinces\icon_all.png" />
+    <Content Include="images\provinces\Khentii.gif" />
+    <Content Include="images\provinces\Khovd.png" />
+    <Content Include="images\provinces\Khuvsgul.png" />
+    <Content Include="images\provinces\Orkhon.png" />
+    <Content Include="images\provinces\Selenge.gif" />
+    <Content Include="images\provinces\Sukhbaatar.png" />
+    <Content Include="images\provinces\Tov.gif" />
+    <Content Include="images\provinces\Ulaanbaatar.png" />
+    <Content Include="images\provinces\Uvs.gif" />
+    <Content Include="images\provinces\Uvurkhangay.png" />
+    <Content Include="images\provinces\Zavkhan.gif" />
+    <Content Include="images\provinces\Ömnögovǐ.jpg" />
     <Content Include="images\sprites.png" />
     <Content Include="images\updown.png" />
     <Content Include="iridium_model_register.aspx" />
+    <Content Include="js\BootSiderMenu\css\BootSideMenu.css" />
+    <Content Include="js\BootSiderMenu\js\BootSideMenu.js" />
+    <Content Include="js\BootSiderMenu\test.html" />
     <Content Include="js\CanvasJS\canvasjs.min.js" />
     <Content Include="js\CanvasJS\instruction.txt" />
     <Content Include="js\CanvasJS\jquery.canvasjs.min.js" />
@@ -208,8 +235,18 @@
     <Content Include="js\CryptoJS.v3.1.2\rollups\sha384.js" />
     <Content Include="js\CryptoJS.v3.1.2\rollups\sha512.js" />
     <Content Include="js\CryptoJS.v3.1.2\rollups\tripledes.js" />
+    <Content Include="js\CustomGoogleMapMarker.js" />
     <Content Include="js\google.map.api.js" />
     <Content Include="js\jquery.timer.js" />
+    <Content Include="js\js.marker.clusterer\images\m1.png" />
+    <Content Include="js\js.marker.clusterer\images\m2.png" />
+    <Content Include="js\js.marker.clusterer\images\m3.png" />
+    <Content Include="js\js.marker.clusterer\images\m4.png" />
+    <Content Include="js\js.marker.clusterer\images\m5.png" />
+    <Content Include="js\js.marker.clusterer\src\markerclusterer.js" />
+    <Content Include="js\js.marker.clusterer\src\markerclusterer.min.js" />
+    <Content Include="js\js.marker.clusterer\src\markerclusterer_compiled.js" />
+    <Content Include="js\js.marker.clusterer\src\markerclusterer_packaged.js" />
     <Content Include="js\twbsPagination\jquery.twbsPagination.js" />
     <Content Include="js\twbsPagination\jquery.twbsPagination.min.js" />
     <Content Include="main\astest.aspx" />
@@ -224,6 +261,7 @@
     <Content Include="main\equipment_checkout.aspx" />
     <Content Include="main\equipment_command.aspx" />
     <Content Include="main\equipment_delivery.aspx" />
+    <Content Include="main\equipment_map.aspx" />
     <Content Include="main\equipment_new_product.aspx" />
     <Content Include="main\equipment_overhaul.aspx" />
     <Content Include="main\equipment_position.aspx" />
@@ -264,6 +302,7 @@
     <Content Include="scripts\main\equipment.command.js" />
     <Content Include="scripts\main\equipment.delivery.js" />
     <Content Include="scripts\main\equipment.info.js" />
+    <Content Include="scripts\main\equipment.map.js" />
     <Content Include="scripts\main\equipment.new.product.js" />
     <Content Include="scripts\main\equipment.overhaul.js" />
     <Content Include="scripts\main\equipment.position.js" />
@@ -798,6 +837,13 @@
     </Compile>
     <Compile Include="main\equipment_in_storage.aspx.designer.cs">
       <DependentUpon>equipment_in_storage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="main\equipment_map.aspx.cs">
+      <DependentUpon>equipment_map.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\equipment_map.aspx.designer.cs">
+      <DependentUpon>equipment_map.aspx</DependentUpon>
     </Compile>
     <Compile Include="main\equipment_model.aspx.cs">
       <DependentUpon>equipment_model.aspx</DependentUpon>

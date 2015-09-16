@@ -433,6 +433,7 @@ namespace Wbs.Everdigm.Desktop
                         ShowHistory("Iridium server has connected.", true);
                     }
                     ClientState cs = new ClientState();
+                    cs.IsConnected = true;
                     cs.client = client;
                     cs.length = 0;
                     cs.received = null;
@@ -498,6 +499,8 @@ namespace Wbs.Everdigm.Desktop
                     cs.client = null;
                     return;
                 }
+                if (cs.IsConnected == false) return;
+
                 var len = cs.client.GetStream().EndRead(ar);
                 if (len > 0)
                 {
@@ -571,11 +574,17 @@ namespace Wbs.Everdigm.Desktop
             public byte[] buffer = new byte[SIZE];
             public int length = 0;
             public byte[] received = null;
+            /// <summary>
+            /// 增加客户端是否还正常连接的标记，Connect_Callback时标记为true
+            /// Read_Callback的时候判断MT流程结束时为false
+            /// </summary>
+            public bool IsConnected = false;
             ~ClientState()
             { Dispose(); }
             public void Dispose()
             {
                 length = 0;
+                IsConnected = false;
                 received = null;
             }
         }

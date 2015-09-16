@@ -398,6 +398,17 @@ namespace Wbs.Everdigm.Desktop
                     //{
                     //    act.Runtime = (int)x1001.WorkTime;
                     //}
+                    // 更新0x1001里的定位信息  2015/09/09 23:29
+                    if (x1001.Available_2)
+                    {
+                        act.Latitude = x1001.Latitude_2;
+                        act.Longitude = x1001.Longitude_2;
+                    }
+                    else if (x1001.Available_1)
+                    {
+                        act.Latitude = x1001.Latitude_1;
+                        act.Longitude = x1001.Longitude_1;
+                    }
                 });
             }
 
@@ -442,6 +453,8 @@ namespace Wbs.Everdigm.Desktop
                         // 主电断报警之后进入睡眠状态
                         act.OnlineStyle = (byte)LinkType.SLEEP;
                     }
+                    // 同时更新设备的报警状态  2015/09/10 14:02
+                    act.Alarm = x2000.AlarmBIN;
                     if (x2000.GPSInfo.Available)
                     {
                         act.Latitude = x2000.GPSInfo.Latitude;

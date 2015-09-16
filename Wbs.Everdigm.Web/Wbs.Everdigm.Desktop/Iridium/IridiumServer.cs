@@ -129,6 +129,9 @@ namespace Wbs.Everdigm.Desktop
                 StateObject so = (StateObject)ar.AsyncState;
                 if (null == so) return;
                 Socket s = so.socket;
+                // 增加判断socket是否还正常连接的判断 2015/09/16 12:40
+                if (null == s) return;
+                if (!s.Connected) return;
 
                 int read = s.EndReceive(ar);
                 if (read > 0)

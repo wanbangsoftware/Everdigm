@@ -110,9 +110,18 @@ namespace Wbs.Everdigm.Desktop
                             {
                                 act.OnlineStyle = (byte)LinkType.SATELLITE;
                                 act.OnlineTime = data.Time;
+                                // 更新设备的报警状态 2015/09/10 14:04
+                                act.Alarm = alarms;
+
                                 act.LastAction = "0x1000";
                                 act.LastActionBy = "SAT";
                                 act.LastActionTime = data.Time;
+                                // 更新定位信息 2015/09/09 23:29
+                                if (location.Available)
+                                {
+                                    act.Latitude = location.Latitude;
+                                    act.Longitude = location.Longitude;
+                                }
                                 // 更新启动与否状态 2015/08/31
                                 act.Voltage = location.EngFlag == "On" ? "G2400" : "G0000";
                                 // 如果回来的运转时间比当前时间大则更新成为On状态  暂时  2015/09/02

@@ -3,6 +3,7 @@
 
 body {
     margin: 5px;
+    overflow-y: hidden;
 }
 
 .tablist-item-input {
@@ -205,5 +206,3 @@ body {
         transform: scale(1) rotate(360deg);
     }
 }
-
-

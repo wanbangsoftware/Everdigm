@@ -6,6 +6,7 @@ using System.Configuration;
 
 using Wbs.Everdigm.Common;
 using Wbs.Everdigm.Database;
+using Wbs.Everdigm.BLL;
 using Wbs.Protocol.TX300;
 using Wbs.Protocol.TX300.Analyse;
 
@@ -89,10 +90,10 @@ namespace Wbs.Everdigm.Web.ajax
                     break;
                 case "0x6004":
                     start = data.terminal_type == Wbs.Protocol.TerminalTypes.DX ? 5 : 1;
-                    ret = string.Format("Worktime: {0}", EquipmentInstance.GetRuntime((int?)BitConverter.ToUInt32(buffer, start), true));
+                    ret = string.Format("Worktime: {0}", EquipmentBLL.GetRuntime((int?)BitConverter.ToUInt32(buffer, start), true));
                     break;
                 case "0x600B":
-                    ret = string.Format("Worktime: {0}", EquipmentInstance.GetRuntime((int?)BitConverter.ToUInt32(buffer, 0), true));
+                    ret = string.Format("Worktime: {0}", EquipmentBLL.GetRuntime((int?)BitConverter.ToUInt32(buffer, 0), true));
                     break;
                 case "0x6007": ret = string.Format("Security: {0}", _0x6007.GetSecurity(buffer[1])); break;
                 case "0x3000": ret = string.Format("Security: {0}", _0x3000.GetFlag(buffer[0])); break;

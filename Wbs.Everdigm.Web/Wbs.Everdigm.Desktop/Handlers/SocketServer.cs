@@ -311,8 +311,15 @@ namespace Wbs.Everdigm.Desktop
                             // 每2秒处理一次未发的命令
                             if (gpsHandler % 2 == 0)
                             {
-                                _handler.CheckTcpCommand();
-                                _handler.CheckIridiumCommand();
+                                try
+                                {
+                                    _handler.CheckTcpCommand();
+                                    _handler.CheckIridiumCommand();
+                                }
+                                catch (Exception e)
+                                {
+                                    HandleDisplayMessage(string.Format("Can not handle CheckTcpCommand/CheckIridiumCommand: ", e.Message));
+                                }
                             }
 
                             // 10秒处理一次获取GPS地理位置

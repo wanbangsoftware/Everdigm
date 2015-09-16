@@ -53,6 +53,7 @@ namespace Wbs.Everdigm.BLL
                 ServerName = "",
                 Signal = 0,
                 Socket = 0,
+                Alarm = "0000000000000000",
                 Status = (int?)null,
                 Terminal = (int?)null,
                 Voltage = "G0000",
@@ -179,7 +180,7 @@ namespace Wbs.Everdigm.BLL
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
-        public string GetRuntime(int? time, bool showHour = false)
+        public static string GetRuntime(int? time, bool showHour = false)
         {
             var ret = "";
             if ((int?)null == time || 0 == time)
