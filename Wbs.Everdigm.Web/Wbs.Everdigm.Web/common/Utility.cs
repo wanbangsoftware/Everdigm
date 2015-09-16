@@ -478,7 +478,7 @@ namespace Wbs.Everdigm.Web
         /// <returns></returns>
         public static string ASU2DBM(byte asu)
         {
-            return asu > 31 ? "unknown" : string.Format("-{0} dBm", ((2 * asu) - 113)); 
+            return asu > 31 ? "unknown" : string.Format("{0} dBm", ((2 * asu) - 113)); 
             //("-" + ((2 * asu) - 113).ToString());
         }
         /// <summary>

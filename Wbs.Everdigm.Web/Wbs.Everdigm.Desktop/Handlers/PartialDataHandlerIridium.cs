@@ -101,7 +101,7 @@ namespace Wbs.Everdigm.Desktop
                         {
                             act.OnlineStyle = (byte)LinkType.SATELLITE;
                             // 同时更新终端的最后链接时间
-                            act.OnlineTime = data.Time;
+                            act.OnlineTime = DateTime.Now;
                         });
                         equipment = EquipmentInstance.Find(f => f.Terminal == terminal.id);
                         if (null != equipment)
@@ -109,7 +109,7 @@ namespace Wbs.Everdigm.Desktop
                             EquipmentInstance.Update(f => f.id == equipment.id, act =>
                             {
                                 act.OnlineStyle = (byte)LinkType.SATELLITE;
-                                act.OnlineTime = data.Time;
+                                act.OnlineTime = DateTime.Now;
                                 // 更新设备的报警状态 2015/09/10 14:04
                                 act.Alarm = alarms;
 
@@ -228,7 +228,7 @@ namespace Wbs.Everdigm.Desktop
                             IP = "",
                             PackageType = Sockets.AsyncDataPackageType.SAT,
                             Port = 0,
-                            ReceiveTime = data.Time,
+                            ReceiveTime = DateTime.Now,
                             SocketHandle = 0
                         });
                     }

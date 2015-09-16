@@ -71,9 +71,13 @@ function commandHistoryStatus(stat) {
             ret.classs = "label-info"; ret.text = "In progress...";
             break;
         case 10:
-        case 12:
             ret.classs = "label-success text-muted"; ret.text = "Success"; break;
         case 11: ret.classs = "label-warning text-danger"; ret.text = "Timedout"; break;
+        case 12: ret.classs = "label-warning text-danger"; ret.text = "EPOS Fail"; break;
+        case 13: ret.classs = "label-warning text-danger"; ret.text = "Security Blocked"; break;
+        case 16: ret.classs = "label-danger text-danger"; ret.text = "Firmware cannot handle"; break;
+        case 17: ret.classs = "label-danger text-danger"; ret.text = "Eng. not start"; break;
+        case 18: ret.classs = "label-success text-danger"; ret.text = "Not need return"; break;
         default: ret.classs = "label-danger text-danger"; ret.text = "Fail"; break;
     }
     return ret;

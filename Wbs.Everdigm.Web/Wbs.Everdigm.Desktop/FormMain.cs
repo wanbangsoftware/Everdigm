@@ -105,7 +105,7 @@ namespace Wbs.Everdigm.Desktop
             this.BeginInvoke((MyInvoker)delegate
             {
                 performSend();
-                ShowHistory("Iridium Command: " + CustomConvert.GetHex(SendContent), true);
+                ShowHistory(Environment.NewLine + Now + "Iridium Command: " + CustomConvert.GetHex(SendContent), false);
             });
         }
         /// <summary>
