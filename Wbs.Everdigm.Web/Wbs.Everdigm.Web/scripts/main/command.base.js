@@ -77,7 +77,7 @@ function commandHistoryStatus(stat) {
         case 13: ret.classs = "label-warning text-danger"; ret.text = "Security Blocked"; break;
         case 16: ret.classs = "label-danger text-danger"; ret.text = "Firmware cannot handle"; break;
         case 17: ret.classs = "label-danger text-danger"; ret.text = "Eng. not start"; break;
-        case 18: ret.classs = "label-success text-danger"; ret.text = "Not need return"; break;
+        case 18: ret.classs = "label-success text-danger"; ret.text = "Not need reply"; break;
         default: ret.classs = "label-danger text-danger"; ret.text = "Fail"; break;
     }
     return ret;

@@ -105,14 +105,20 @@ namespace Wbs.Everdigm.Web.ajax
         /// 处理查询命令发送状态的请求
         /// </summary>
         /// <returns></returns>
-        private string HandleQueryCommandStatusRequest() {
+        private string HandleQueryCommandStatusRequest()
+        {
             string ret = "";
             var cmd = CommandInstance.Find(f => f.id == ParseInt(data));
-            if (null == cmd) { ret = ResponseMessage(-1, "No such command record exists."); }
-            else {
+            if (null == cmd)
+            {
+                ret = ResponseMessage(-1, "No such command record exists.");
+            }
+            else
+            {
                 byte status = cmd.Status.Value;
                 CommandStatus state = (CommandStatus)status;
-                if (state == CommandStatus.Returned) {
+                if (state == CommandStatus.Returned)
+                {
                     var list = DataInstance.FindList<TB_HISTORIES>(f =>
                         f.command_id.Equals(cmd.Command) && f.terminal_id.Equals(cmd.DestinationNo) &&
                         f.receive_time > cmd.ActualSendTime, "receive_time", true);
@@ -127,6 +133,14 @@ namespace Wbs.Everdigm.Web.ajax
                 else
                 {
                     ret = ResponseMessage(status, CommandUtility.GetCommandStatus(state));
+                    if (cmd.Command == "0x4000" && (state == CommandStatus.SentBySMS || state == CommandStatus.SentByTCP))
+                    {
+                        // 将重置终端连接的命令状态改成不需要回复的状态
+                        CommandInstance.Update(f => f.id == cmd.id, act =>
+                        {
+                            act.Status = (byte)CommandStatus.NotNeedReturn;
+                        });
+                    }
                 }
             }
             return ret;
@@ -135,14 +149,23 @@ namespace Wbs.Everdigm.Web.ajax
         /// 处理终端命令的请求
         /// </summary>
         /// <returns></returns>
-        private string HandleTerminalCommandRequest() {
+        private string HandleTerminalCommandRequest()
+        {
             string ret = "{}";
-            try {
+            try
+            {
                 var t = TerminalInstance.Find(f => f.Number.Equals(data));
-                if (null == t) { ret = ResponseMessage(-1, "No terminal like \"" + data + "\" exists"); }
-                else { ret = HandleTerminalCommandRequest(t); }
+                if (null == t)
+                {
+                    ret = ResponseMessage(-1, "No terminal like \"" + data + "\" exists");
+                }
+                else
+                {
+                    ret = HandleTerminalCommandRequest(t);
+                }
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 ret = ResponseMessage(-1, "Handle Terminal command error:" + e.Message);
             }
             return ret;

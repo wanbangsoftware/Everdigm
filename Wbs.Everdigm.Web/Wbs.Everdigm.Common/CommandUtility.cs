@@ -249,7 +249,7 @@ namespace Wbs.Everdigm.Common
                 case CommandStatus.TCPNetworkError: ret = "TCP network handle error"; break;
                 case CommandStatus.EngNotStart: ret = "Eng. not start"; break;
                 case CommandStatus.NoFunction: ret = "Terminal has no function to handle this command"; break;
-                case CommandStatus.NotNeedReturn: ret = "Not need return"; break;
+                case CommandStatus.NotNeedReturn: ret = "Not need reply"; break;
             }
             return ret;
         }
