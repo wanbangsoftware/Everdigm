@@ -208,9 +208,20 @@ namespace Wbs.Everdigm.Web.ajax
                     break;
                 case LinkType.UDP:
                 case LinkType.SMS:
-                case LinkType.SLEEP:
                     // 通过SMS方式发送命令
                     ret = SendCommand(obj, true);
+                    break;
+                case LinkType.SLEEP:
+                    // 睡眠模式下如果发送转Satellite命令的话，控制
+                    if (cmd == "reset_sat")
+                    {
+                        ret = ResponseMessage(-1, "Command has blocked(Main power lose).");
+                    }
+                    else
+                    {
+                        // 通过SMS方式发送命令
+                        ret = SendCommand(obj, true);
+                    }
                     break;
                 default:
                     ret = ResponseMessage(-1, "Terminal has no communication with server long time.");

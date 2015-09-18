@@ -47,7 +47,9 @@ namespace Wbs.Everdigm.Web.main
                 }
                 else
                 {
-                    if (command.Flag == "reset_gsm") continue;
+                    // 睡眠模式下禁止发送转Satellite命令  2015/09/18 11:00
+                    if (command.Flag == "reset_gsm" || (equipment.OnlineStyle == (byte)LinkType.SLEEP && command.Flag == "reset_sat"))
+                        continue;
                 }
                 if (functional == EquipmentFunctional.Mechanical)
                 {
