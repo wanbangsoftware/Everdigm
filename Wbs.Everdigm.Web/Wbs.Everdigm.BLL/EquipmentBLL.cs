@@ -149,10 +149,18 @@ namespace Wbs.Everdigm.BLL
         public string GetTerinalTitleInfo(TB_Equipment obj)
         {
             var n = (int?)null;
-            return n == obj.Terminal ? "" :
-                (("GSM Card: " + obj.TB_Terminal.Sim) +
-                (n == obj.TB_Terminal.Satellite ? "" :
-                ("&#10;SAT Card: " + obj.TB_Terminal.TB_Satellite.CardNo)));
+            return n == obj.Terminal ? "" : ("Terminal: " + obj.TB_Terminal.Number);
+        }
+        /// <summary>
+        /// 获取终端的卫星模块号码作为title
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public string GetSatelliteTitleInfo(TB_Equipment obj)
+        {
+            var n = (int?)null;
+            bool no = (n == obj.Terminal || n == obj.TB_Terminal.Satellite);
+            return no ? "no satellite model" : obj.TB_Terminal.TB_Satellite.CardNo;
         }
         /// <summary>
         /// 获取信号强度标识

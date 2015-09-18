@@ -70,9 +70,9 @@
                                 <tr>
                                     <th class="bg-primary"></th>
                                     <th colspan="7" class="in-tab-title-rb bg-primary">Equipment Information</th>
-                                    <th colspan="2" class="in-tab-title-rb bg-primary">RENT/SOLD SMH</th>
+                                    <!--<th colspan="2" class="in-tab-title-rb bg-primary">RENT/SOLD SMH</th>-->
                                     <th colspan="2" class="in-tab-title-rb bg-primary">Customer</th>
-                                    <th colspan="3" class="in-tab-title-rb bg-primary">Terminal Information</th>
+                                    <th colspan="4" class="in-tab-title-rb bg-primary">Terminal Information</th>
                                     <th class="in-tab-title-b bg-primary">Storage</th>
                                 </tr>
                                 <tr>
@@ -84,14 +84,15 @@
                                     <th class="in-tab-title-b bg-warning textoverflow">Eng.</th>
                                     <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Location</th>
                                     <th class="in-tab-title-rb bg-warning">Status</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow">Days</th>
-                                    <th class="in-tab-title-rb bg-warning textoverflow">Hr/Day</th>
+                                    <!--<th class="in-tab-title-b bg-warning textoverflow">Days</th>
+                                    <th class="in-tab-title-rb bg-warning textoverflow">Hr/Day</th>-->
                                     <th class="in-tab-title-b bg-warning">Number</th>
                                     <th class="in-tab-title-rb bg-warning">Name</th>
                                     <!--<th class="in-tab-title-b bg-warning">Signal</th>-->
                                     <th class="in-tab-title-b bg-warning">Link</th>
                                     <th class="in-tab-title-b bg-warning">Last received</th>
-                                    <th class="in-tab-title-rb bg-warning">Terminal No.</th>
+                                    <th class="in-tab-title-b bg-warning">Terminal</th>
+                                    <th class="in-tab-title-rb bg-warning">SAT</th>
                                     <!--<th class="in-tab-title-b bg-warning textoverflow">In Date</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">In Type</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">Out Date</th>
@@ -101,7 +102,7 @@
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="16">
+                                    <td colspan="15">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>
@@ -118,8 +119,9 @@
                                     <td class="in-tab-txt-b">OFF</td>
                                     <td class="in-tab-txt-b textoverflow">山东省烟台市</td>
                                     <td class="in-tab-txt-b">W</td>
-                                    <td class="in-tab-txt-b">30</td>
-                                    <td class="in-tab-txt-rb">4 hr 30 min</td>
+                                    <!--<td class="in-tab-txt-b">30</td>
+                                    <td class="in-tab-txt-rb">4 hr 30 min</td>-->
+                                    <td class="in-tab-txt-b">23553523</td>
                                     <td class="in-tab-txt-b">23553523</td>
                                     <td class="in-tab-txt-rb">23553523</td>
                                     <td class="in-tab-txt-b">
