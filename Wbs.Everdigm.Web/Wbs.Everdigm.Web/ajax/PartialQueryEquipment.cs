@@ -153,6 +153,7 @@ namespace Wbs.Everdigm.Web.ajax
                 var id = ParseInt(Utility.Decrypt(data));
                 var start = DateTime.Parse(GetParamenter("start") + " 00:00:00");
                 var end = DateTime.Parse(GetParamenter("end") + " 23:59:59");
+                // 更改为直接查询报警时间  2015/09/18 08:30
                 var armList = AlarmInstance.FindList<TB_Data_Alarm>(f => f.Equipment == id &&
                     f.AlarmTime >= start && f.AlarmTime <= end, "id", true);
                 var list = new List<CustomAlarm>();

@@ -29,6 +29,7 @@ namespace Wbs.Everdigm.BLL
                 id = 0,
                 Code = "0000000000000000",
                 Terminal = "",
+                // 增加了报警时间  2015/09/18 08:30
                 AlarmTime = DateTime.Now,
                 Equipment = (int?)null,
                 Position = (int?)null,

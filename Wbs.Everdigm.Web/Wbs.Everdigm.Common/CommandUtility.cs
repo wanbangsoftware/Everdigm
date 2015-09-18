@@ -156,12 +156,12 @@ namespace Wbs.Everdigm.Common
             content = content.Substring(0, 6) + type + content.Substring(8);
 
             // 终端不是卫星方式连接且需要SMS方式发送时，发送SMS命令
-            if (terminal.OnlineStyle != (byte)LinkType.SATELLITE && sms)
-            {
-                return SendSMSCommand(terminal, content, sender);
-            }
-            else
-            {
+            //if (terminal.OnlineStyle != (byte)LinkType.SATELLITE && sms)
+            //{
+            //    return SendSMSCommand(terminal, content, sender);
+            //}
+            //else
+            //{
                 var CommandInstance = new CommandBLL();
                 var command = CommandInstance.GetObject();
                 command.DestinationNo = sim;
@@ -172,7 +172,7 @@ namespace Wbs.Everdigm.Common
                 command.SendUser = (0 == sender ? (int?)null : sender);
                 command.Terminal = terminal.id;
                 return CommandInstance.Add(command).id;
-            }
+            //}
         }
         /// <summary>
         /// 发送命令并返回新增命令的id，外部捕获这个id并轮询这条命令的发送状态
@@ -201,13 +201,17 @@ namespace Wbs.Everdigm.Common
             ct.Terminal = terminal.id;
             ct.SendUser = (0 == sender ? (int?)null : sender);
 
-            return CommandInstance.Add(ct).id;
+            var id= CommandInstance.Add(ct).id;
+            // 保存终端的命令发送条数
+
+            return id;
         }
         /// <summary>
         /// 直接发送SMS命令
         /// </summary>
         /// <param name="cmd"></param>
-        public static void SendSMSCommand(TB_Command cmd)
+        /// <returns>返回发送是否成功</returns>
+        public static bool SendSMSCommand(TB_Command cmd)
         {
             string simno = cmd.DestinationNo;
             // 判断Unitel的卡号，前面两位是89，且长度是8位数字
@@ -221,6 +225,7 @@ namespace Wbs.Everdigm.Common
                 act.Status = (byte)cs;
                 act.ActualSendTime = DateTime.Now;
             });
+            return cs == CommandStatus.SentBySMS;
         }
         /// <summary>
         /// 获取命令的发送状态描述

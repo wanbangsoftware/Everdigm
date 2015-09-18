@@ -396,6 +396,8 @@ namespace Wbs.Everdigm.Web.ajax
                                     param = record.Content.Substring(record.Content.Length - 4, 2);
                                 if (record.Command == "0x4000")
                                     param = record.Content.Substring(record.Content.Length - 4, 2);
+                                if (record.Command == "0xDD02")
+                                    param = record.Content.Substring(record.Content.Length - 8, 2);
                                 Command _cmd = CommandUtility.GetCommand(record.Command.Replace("0x", ""), param);
                                 var func = (EquipmentFunctional)obj.Functional;
                                 var called = (func == EquipmentFunctional.Mechanical || func == EquipmentFunctional.Electric) ? "Equipment" : "Loader";

@@ -30,25 +30,32 @@ namespace Wbs.Everdigm.Desktop
         /// 3、终端为TCP链接状态的
         /// </summary>
         /// <returns></returns>
-        public void CheckTcpCommand()
+        public void CheckGSMCommand()
         {
             if (null == _server) return;
 
             var list = CommandInstance.FindList(f => f.ScheduleTime >= DateTime.Now.AddSeconds(-30) &&
                 GsmStatus.Take(2).Contains(f.Status.Value) &&
-                f.TB_Terminal.OnlineStyle == (byte)LinkType.TCP).ToList();
+                f.TB_Terminal.OnlineStyle != (byte)LinkType.SATELLITE).ToList();
             foreach (var cmd in list)
             {
                 var sim = cmd.DestinationNo;
                 if (sim[0] == '8' || sim[0] == '9') sim = sim.Substring(0, 8);
-                // 0==链接不存在1=发送成功2=网络处理错误
-                var ret = _server.Send(cmd.TB_Terminal.Socket.Value, Wbs.Utilities.CustomConvert.GetBytes(cmd.Content));
-                if (ret == 0)
+                byte ret = 0;
+                if (cmd.TB_Terminal.OnlineStyle == (byte)LinkType.TCP)
+                {
+                    // 0==链接不存在1=发送成功2=网络处理错误
+                    ret = _server.Send(cmd.TB_Terminal.Socket.Value, Wbs.Utilities.CustomConvert.GetBytes(cmd.Content));
+                }
+                if (ret != 1)
                 {
                     // TCP链接丢失，重新用SMS方式发送
-                    CommandUtility.SendSMSCommand(cmd);
-                    SaveTerminalData((int?)null == cmd.Terminal ? -1 : cmd.Terminal.Value, sim, AsyncDataPackageType.SMS, 1, false);
-                    ShowUnhandledMessage(Now + "Send Command(SentBySMS): " + cmd.Content);
+                    bool b = CommandUtility.SendSMSCommand(cmd);
+                    if (b)
+                    {
+                        SaveTerminalData((int?)null == cmd.Terminal ? -1 : cmd.Terminal.Value, sim, AsyncDataPackageType.SMS, 1, false);
+                    }
+                    ShowUnhandledMessage(Now + "Send Command(SMS: " + (b ? "Success" : "Fail") + "): " + cmd.Content);
                 }
                 else
                 {

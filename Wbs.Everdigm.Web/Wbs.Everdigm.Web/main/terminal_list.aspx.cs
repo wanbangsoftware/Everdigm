@@ -188,7 +188,7 @@ namespace Wbs.Everdigm.Web.main
             obj.DestinationNo = sim;
             obj.Terminal = terminal.id;
             obj = CommandInstance.Add(obj);
-            CommandUtility.SendSMSCommand(obj);
+            //CommandUtility.SendSMSCommand(obj);
         }
         private string GetDD02Command(bool bound, string sim)
         {

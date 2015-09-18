@@ -313,7 +313,7 @@ namespace Wbs.Everdigm.Desktop
                             {
                                 try
                                 {
-                                    _handler.CheckTcpCommand();
+                                    _handler.CheckGSMCommand();
                                     _handler.CheckIridiumCommand();
                                 }
                                 catch (Exception e)

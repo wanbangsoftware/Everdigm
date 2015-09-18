@@ -122,10 +122,10 @@ namespace Wbs.Everdigm.Web
             obj.SendUser = (int?)null;
             obj = CommandInstance.Add(obj);
 
-            CommandUtility.SendSMSCommand(obj);
+            //CommandUtility.SendSMSCommand(obj);
 
             // 保存SMS发送流量
-            saveTerminalFlow(null == terminal ? -1 : terminal.id, sender);
+            //saveTerminalFlow(null == terminal ? -1 : terminal.id, sender);
         }
         /// <summary>
         /// 保存命令发送流量
