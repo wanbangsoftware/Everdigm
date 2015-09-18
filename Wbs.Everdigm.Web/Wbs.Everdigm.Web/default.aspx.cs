@@ -56,7 +56,8 @@ namespace Wbs.Everdigm.Web
             var account = AccountInstance.Find(name, md5);
             if (null != account)
             {
-                if (account.Locked == true) {
+                if (account.Locked == true)
+                {
                     SaveHistory(new TB_AccountHistory()
                     {
                         Account = account.id,
@@ -75,6 +76,10 @@ namespace Wbs.Everdigm.Web
                     });
                     updateAccount(account);
                 }
+            }
+            else
+            {
+                ShowNotification("../default.aspx", "Login fail: Maybe your password is not correct?", false);
             }
         }
         /// <summary>

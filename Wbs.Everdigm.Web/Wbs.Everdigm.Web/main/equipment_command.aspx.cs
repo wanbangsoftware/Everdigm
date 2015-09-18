@@ -33,6 +33,10 @@ namespace Wbs.Everdigm.Web.main
             var equipment = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
             var functional = null == equipment ? EquipmentFunctional.Mechanical : (EquipmentFunctional)equipment.Functional;
             var commands = CommandUtility.GetCommand(false);
+
+            // 链接未知时，不能发送任何命令  2015/09/18 18:20
+            if ((byte?)null == equipment.OnlineStyle) return;
+
             var link = (LinkType)equipment.OnlineStyle;
             var html = "";
             foreach (var command in commands)

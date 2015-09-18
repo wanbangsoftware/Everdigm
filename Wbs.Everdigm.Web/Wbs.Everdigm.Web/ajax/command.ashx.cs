@@ -205,34 +205,41 @@ namespace Wbs.Everdigm.Web.ajax
             }
             else
             {
-                LinkType link = (LinkType)obj.OnlineStyle;
-                switch (link)
+                if ((byte?)null == obj.OnlineStyle)
                 {
-                    case LinkType.OFF: ret = ResponseMessage(-1, "Terminal is power off."); break;
-                    case LinkType.TCP:// 通过TCP方式发送命令
-                    case LinkType.SATELLITE:// 通过卫星方式发送命令
-                        ret = SendCommand(obj, false);
-                        break;
-                    case LinkType.UDP:
-                    case LinkType.SMS:
-                        // 通过SMS方式发送命令
-                        ret = SendCommand(obj, true);
-                        break;
-                    case LinkType.SLEEP:
-                        // 睡眠模式下如果发送转Satellite命令的话，控制
-                        if (cmd == "reset_sat")
-                        {
-                            ret = ResponseMessage(-1, "Command has blocked(Main power lose).");
-                        }
-                        else
-                        {
+                    ret = ResponseMessage(-1, "Cannot send any commands with this situation(Link: Unknow).");
+                }
+                else
+                {
+                    LinkType link = (LinkType)obj.OnlineStyle;
+                    switch (link)
+                    {
+                        case LinkType.OFF: ret = ResponseMessage(-1, "Terminal is power off."); break;
+                        case LinkType.TCP:// 通过TCP方式发送命令
+                        case LinkType.SATELLITE:// 通过卫星方式发送命令
+                            ret = SendCommand(obj, false);
+                            break;
+                        case LinkType.UDP:
+                        case LinkType.SMS:
                             // 通过SMS方式发送命令
                             ret = SendCommand(obj, true);
-                        }
-                        break;
-                    default:
-                        ret = ResponseMessage(-1, "Terminal has no communication with server long time.");
-                        break;
+                            break;
+                        case LinkType.SLEEP:
+                            // 睡眠模式下如果发送转Satellite命令的话，控制
+                            if (cmd == "reset_sat")
+                            {
+                                ret = ResponseMessage(-1, "Command has blocked(Main power lose).");
+                            }
+                            else
+                            {
+                                // 通过SMS方式发送命令
+                                ret = SendCommand(obj, true);
+                            }
+                            break;
+                        default:
+                            ret = ResponseMessage(-1, "Terminal has no communication with server long time.");
+                            break;
+                    }
                 }
             }
             return ret;

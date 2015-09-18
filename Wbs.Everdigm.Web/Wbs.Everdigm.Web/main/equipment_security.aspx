@@ -55,7 +55,7 @@
                 <li role="presentation" class="dropdown active">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Select command:</span><span class="caret"></span></a>
                     <ul id="menuCommands" runat="server" class="dropdown-menu" role="menu" aria-labelledby="dropTypes">
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Cannot send any command</a></li>
                     </ul>
                     <input type="hidden" id="cmdInfo" value="" />
                     <input type="hidden" id="cmdTitle" value="" />
