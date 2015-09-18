@@ -402,6 +402,8 @@ namespace Wbs.Everdigm.Web.ajax
                                 var func = (EquipmentFunctional)obj.Functional;
                                 var called = (func == EquipmentFunctional.Mechanical || func == EquipmentFunctional.Electric) ? "Equipment" : "Loader";
                                 record.Command = (null == _cmd ? "" : _cmd.Title.Replace("Equipment", called).Replace("Loader", called));
+                                // 加入命令发送者  2015/09/18 10:36
+                                record.Content = (int?)null == record.SendUser ? "Server" : record.TB_Account.Name;
                             }
                         }
                         ret = JsonConverter.ToJson(list);

@@ -83,7 +83,7 @@ function commandHistoryStatus(stat) {
     return ret;
 }
 
-var _his_Item = "<div style=\"margin-bottom: 1px;\">[%time%] <code>%cmd%</code>, response <span class=\"command-status label %class%\">%text%</span>.</div>";
+var _his_Item = "<div style=\"margin-bottom: 1px;\">[%time%] <code>%user%</code> sent \"<code>%cmd%</code>\", response <span class=\"command-status label %class%\">%text%</span>.</div>";
 
 // 显示命令历史记录
 function showHistoryList(list) {
@@ -92,7 +92,7 @@ function showHistoryList(list) {
         var obj = list[i];
         var stat = commandHistoryStatus(obj.Status);
         var time = convertDateTimeToJavascriptDate(obj.ScheduleTime);
-        html += _his_Item.replace(/%time%/, time.pattern(_datetimepatternFMT))
+        html += _his_Item.replace(/%time%/, time.pattern(_datetimepatternFMT)).replace(/%user%/,obj.Content)
             .replace(/%cmd%/, obj.Command).replace(/%class%/, stat.classs).replace(/%text%/, stat.text);
     }
     if (isStringNull(html)) { html = "No records."; }
