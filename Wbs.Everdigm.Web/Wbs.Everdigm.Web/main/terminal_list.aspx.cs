@@ -164,7 +164,26 @@ namespace Wbs.Everdigm.Web.main
                 else
                 {
                     string satno = t.TB_Satellite.CardNo;
-                    TerminalInstance.Update(f => f.id == t.id, act => { act.Satellite = (int?)null; });
+                    TerminalInstance.Update(f => f.id == t.id, act =>
+                    {
+                        act.Satellite = (int?)null;
+                        // 更新终端的链接为OFF
+                        if (act.OnlineStyle == (byte)LinkType.SATELLITE)
+                        {
+                            act.OnlineStyle = (byte)LinkType.OFF;
+                        }
+                        // 更新卫星功能为false
+                        act.SatelliteStatus = false;
+                    });
+                    // 更新设备的链接为OFF
+                    EquipmentInstance.Update(f => f.Terminal == t.id, act => 
+                    {
+                        if (act.OnlineStyle == (byte)LinkType.SATELLITE)
+                        {
+                            act.OnlineStyle = (byte)LinkType.OFF;
+                        }
+                        act.SatelliteStatus = false;
+                    });
                     SatelliteInstance.Update(f => f.id == t.Satellite, act => { act.Bound = false; });
                     // 发送解绑卫星模块的命令
                     SendDD02Command(false, t);
