@@ -170,7 +170,7 @@ namespace Wbs.Everdigm.Web.main
                         // 更新终端的链接为OFF
                         if (act.OnlineStyle == (byte)LinkType.SATELLITE)
                         {
-                            act.OnlineStyle = (byte)LinkType.OFF;
+                            act.OnlineStyle = (byte?)null;
                         }
                         // 更新卫星功能为false
                         act.SatelliteStatus = false;
@@ -180,7 +180,7 @@ namespace Wbs.Everdigm.Web.main
                     {
                         if (act.OnlineStyle == (byte)LinkType.SATELLITE)
                         {
-                            act.OnlineStyle = (byte)LinkType.OFF;
+                            act.OnlineStyle = (byte?)null;
                         }
                         act.SatelliteStatus = false;
                     });
