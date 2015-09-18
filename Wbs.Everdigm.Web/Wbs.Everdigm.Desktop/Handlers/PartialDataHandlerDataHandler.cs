@@ -277,6 +277,8 @@ namespace Wbs.Everdigm.Desktop
                     Handle0xDD00(obj, equipment, terminal);
                     break;
                 case 0xDD02:
+                    // 增加处理DD02命令的功能 2015/09/18 14:10
+                    Handle0xDD02(obj, equipment, terminal);
                     break;
                 case 0xEE00:
                     Handle0xEE00(obj, equipment, terminal);
@@ -672,6 +674,22 @@ namespace Wbs.Everdigm.Desktop
             //{
             //    TerminalInstance.Update(f => f.id == terminal.id, act => { act.Firmware = xdd00.Firmware; });
             //}
+        }
+        /// <summary>
+        /// 处理DD02卫星功能命令
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="equipment"></param>
+        /// <param name="terminal"></param>
+        private void Handle0xDD02(TX300 obj, TB_Equipment equipment, TB_Terminal terminal)
+        {
+            _0xDD02 xdd02 = new _0xDD02();
+            xdd02.Content = obj.MsgContent;
+            xdd02.Unpackage();
+            if (null != equipment)
+            { EquipmentInstance.Update(f => f.id == equipment.id, act => { act.SatelliteStatus = xdd02.Status; }); }
+            if (null != terminal)
+            { TerminalInstance.Update(f => f.id == terminal.id, act => { act.SatelliteStatus = xdd02.Status; }); }
         }
         /// <summary>
         /// 处理EE00命令

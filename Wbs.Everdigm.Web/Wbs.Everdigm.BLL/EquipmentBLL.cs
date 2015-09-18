@@ -27,6 +27,8 @@ namespace Wbs.Everdigm.BLL
                 Customer = (int?)null,
                 Deleted = false,
                 GpsAddress = "",
+                // 加入卫星功能确认 2015/09/18 14:00
+                SatelliteStatus = false,
                 GpsUpdated = true,
                 Functional = 10,
                 id = 0,

@@ -27,6 +27,8 @@ namespace Wbs.Everdigm.BLL
             {
                 id = 0,
                 HasBound = false,
+                // 加入卫星功能确认 2015/09/18 14:00
+                SatelliteStatus = false,
                 Delete = false,
                 Booked = false,
                 Firmware = "",
