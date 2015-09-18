@@ -168,7 +168,8 @@ namespace Wbs.Everdigm.Desktop
                     {
                         PositionInstance.Add(pos);
                         // 处理报警信息
-                        if (alarms != ALARM) {
+                        if (alarms != ALARM)
+                        {
                             var arm = AlarmInstance.GetObject();
                             arm.Code = alarms;
                             arm.Equipment = null == equipment ? (int?)null : equipment.id;
