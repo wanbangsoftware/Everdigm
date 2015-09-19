@@ -53,10 +53,15 @@ namespace Wbs.Everdigm.Web.main
             foreach (var u in users)
                 user.Add(u.id);
 
+            var login = -1;
+            if (cbIgnoreLogin.Checked)
+            {
+                login = ActionInstance.Find(f => f.Name.Equals("Login")).id;
+            }
             var totalRecords = 0;
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             var list = HistoryInstance.FindPageList<TB_AccountHistory>(pageIndex, PageSize, out totalRecords,
-                f => user.Contains(f.Account.Value) &&
+                f => user.Contains(f.Account.Value) && (login > 0 ? f.ActionId != login : f.ActionId > 0) &&
                     f.ActionTime >= then && f.ActionTime <= now, "ActionTime", true);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             pageIndex = 0 == pageIndex ? totalPages : pageIndex;
@@ -64,7 +69,7 @@ namespace Wbs.Everdigm.Web.main
             {
                 pageIndex = totalPages;
                 list = HistoryInstance.FindPageList<TB_AccountHistory>(pageIndex, PageSize, out totalRecords,
-                    f => user.Contains(f.Account.Value) &&
+                    f => user.Contains(f.Account.Value) && (login > 0 ? f.ActionId != login : f.ActionId > 0) &&
                         f.ActionTime >= then && f.ActionTime <= now && f.Account == Account.id, "ActionTime", true);
             }
 

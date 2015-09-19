@@ -264,9 +264,11 @@ namespace Wbs.Everdigm.Web.main
                         }
                         else
                         {
-                            TerminalInstance.Update(f => f.id == t.id, act => {
+                            TerminalInstance.Update(f => f.id == t.id, act =>
+                            {
                                 act.Satellite = g.id;
                             });
+                            t = TerminalInstance.Find(f => f.id == t.id);
                             SatelliteInstance.Update(f => f.id == g.id, act => { act.Bound = true; });
                             // 发送绑定卫星模块的命令
                             SendDD02Command(true, t);

@@ -40,6 +40,9 @@
                                         <input type="text" class="input-md form-control text-input click-input" runat="server" id="end" name="end" />
                                     </div>
                                 </td>
+                                <td class="table_header" style="border-left: 0px; width: 150px;">
+                                    <input type="checkbox" runat="server" id="cbIgnoreLogin" checked="checked" /> Ignore login info
+                                </td>
                                 <td class="table_header1" style="border-left: 0px;">
                                     <asp:Button ID="btQuery" runat="server" Text="Query" CssClass="button" OnClick="btQuery_Click" />
                                 </td>
