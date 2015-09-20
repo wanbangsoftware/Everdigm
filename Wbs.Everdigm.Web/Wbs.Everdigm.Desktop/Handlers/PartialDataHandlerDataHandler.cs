@@ -110,7 +110,11 @@ namespace Wbs.Everdigm.Desktop
                 // 更新设备状态
                 HandleTX300Status(x300, data);
                 // 处理命令回复
-                HandleGsmCommandResponsed(x300);
+                if (x300.CommandID != 0xBB0F)
+                {
+                    // 不要处理0xBB0F的命令返回数据
+                    HandleGsmCommandResponsed(x300);
+                }
                 // SMS消息不需要返回包
                 if (x300.ProtocolType >= Protocol.ProtocolTypes.SMS) return;
 

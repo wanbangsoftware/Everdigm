@@ -117,7 +117,7 @@ namespace Wbs.Everdigm.Web
             obj.DestinationNo = sender + "000";
             obj.Status = (byte)CommandStatus.Waiting;
             obj.Content = cmd;
-            obj.ActualSendTime = DateTime.Now;
+            //obj.ActualSendTime = DateTime.Now;
             obj.Terminal = null == terminal ? (int?)null : terminal.id;
             obj.SendUser = (int?)null;
             obj = CommandInstance.Add(obj);
