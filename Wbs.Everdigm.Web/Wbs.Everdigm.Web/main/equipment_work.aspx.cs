@@ -41,6 +41,7 @@ namespace Wbs.Everdigm.Web.main
                     hiddenLastDate.Value = (DateTime?)null == obj.LastActionTime ? DateTime.Now.ToString("yyyy/MM/dd") :
                         obj.LastActionTime.Value.ToString("yyyy/MM/dd");
                 }
+                divWorkTime.Visible = (null != obj && obj.Functional == (byte)EquipmentFunctional.Mechanical);
             }
         }
     }

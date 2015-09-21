@@ -67,7 +67,7 @@
         </div>
     </div>
     <!--Position History-->
-    <div class="panel panel-default" style="margin-top: 2px;">
+    <div class="panel panel-default" style="margin-top: 2px;" id="divWorkTime" runat="server">
         <div class="panel-heading">
             <span>Work time: </span><span id="reportTime"></span>
         </div>
