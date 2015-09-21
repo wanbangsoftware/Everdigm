@@ -182,9 +182,9 @@ namespace Wbs.Everdigm.BLL
             return "<span class=\"glyphicon glyphicon-signal label label-primary\" aria-hidden=\"true\"></span>";
         }
 
-        private string eng_off = "<span class=\"text-custom-gray\" title=\"Eng. Off\"><span class=\"signal cell-engine\"></span></span>";
-        private string eng_on = "<span class=\"text-custom-success\" title=\"Eng. On\"><span class=\"signal cell-engine\"></span></span>";
-        private string eng_lock = "<span class=\"text-custom-warning\" title=\"Locked\"><i class=\"fa fa-lock\"></i></span>";
+        private string eng_off = "<span class=\"text-custom-gray\" title=\"Eng. Off\"><span class=\"signal cell-engine\" style=\"font-size: 130%;\"></span></span>";
+        private string eng_on = "<span class=\"text-custom-success\" title=\"Eng. On\"><span class=\"signal cell-engine\" style=\"font-size: 130%;\"></span></span>";
+        private string eng_lock = "<span class=\"text-custom-warning\" title=\"Locked\"><span class=\"glyphicon glyphicon-lock\"></span></span>";
         /// <summary>
         /// 获取发动机的启动状态(开、关、锁定)
         /// </summary>
