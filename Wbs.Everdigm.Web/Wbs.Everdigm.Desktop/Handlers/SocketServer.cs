@@ -271,7 +271,7 @@ namespace Wbs.Everdigm.Desktop
                             _handler.CheckSMSData();
                         }
                         catch (Exception sms)
-                        { HandleDisplayMessage(string.Format("{0} Cannot handle CheckSMSData: {1}", Now, sms.Message)); }
+                        { HandleDisplayMessage(string.Format("{0} Cannot handle CheckSMSData: {1}, Trace: {2}", Now, sms.Message, sms.StackTrace)); }
                     }
                 }
 
@@ -286,7 +286,7 @@ namespace Wbs.Everdigm.Desktop
                         _handler.HandleIridiumData(iridium);
                     }
                     catch (Exception iri)
-                    { HandleDisplayMessage("Cannot handle HandleIridiumData: " + iri.Message); }
+                    { HandleDisplayMessage(string.Format("{0} Cannot handle HandleIridiumData: {1}, Trace: {2}", Now, iri.Message, iri.StackTrace)); }
                 }
                 // 只有第一个线程有权处理命令后面的数据
                 if (stat > 0)
@@ -318,7 +318,7 @@ namespace Wbs.Everdigm.Desktop
                                 }
                                 catch (Exception e)
                                 {
-                                    HandleDisplayMessage(string.Format("Can not handle CheckTcpCommand/CheckIridiumCommand: ", e.Message));
+                                    HandleDisplayMessage(string.Format("{0} Can not handle CheckTcpCommand/CheckIridiumCommand: {1}, Trace: {2}", Now, e.Message, e.StackTrace));
                                 }
                             }
 
@@ -334,7 +334,7 @@ namespace Wbs.Everdigm.Desktop
                         }
                         catch(Exception e)
                         {
-                            HandleDisplayMessage("Cannot handle CheckCommand: " + e.Message);
+                            HandleDisplayMessage(string.Format("{0} Cannot handle CheckCommand: {1}, Trace: {2}", Now, e.Message, e.StackTrace));
                         }
                     }
                 }
@@ -351,7 +351,7 @@ namespace Wbs.Everdigm.Desktop
                                 _handler.HandleOlderClients();
                             }
                             catch(Exception e)
-                            { HandleDisplayMessage("Cannot handle OlderClients: " + e.Message); }
+                            { HandleDisplayMessage(string.Format("{0} Cannot handle OlderClients: {1}, Trace: {2}", Now, e.Message, e.StackTrace)); }
                         }
                     }
                 }

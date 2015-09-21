@@ -116,8 +116,6 @@
             // 
             // tsmiShowIridiumPackage
             // 
-            this.tsmiShowIridiumPackage.Checked = true;
-            this.tsmiShowIridiumPackage.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tsmiShowIridiumPackage.Name = "tsmiShowIridiumPackage";
             this.tsmiShowIridiumPackage.Size = new System.Drawing.Size(316, 22);
             this.tsmiShowIridiumPackage.Text = "Show Iridium packages";

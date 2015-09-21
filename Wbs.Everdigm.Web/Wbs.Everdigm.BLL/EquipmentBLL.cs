@@ -184,7 +184,7 @@ namespace Wbs.Everdigm.BLL
 
         private string eng_off = "<span class=\"text-custom-gray\" title=\"Eng. Off\"><span class=\"signal cell-engine\"></span></span>";
         private string eng_on = "<span class=\"text-custom-success\" title=\"Eng. On\"><span class=\"signal cell-engine\"></span></span>";
-        private string eng_lock = "<span class=\"text-custom-warning\" title=\"Locked\"><span class=\"glyphicon glyphicon-lock\"></span></span>";
+        private string eng_lock = "<span class=\"text-custom-warning\" title=\"Locked\"><i class=\"fa fa-lock\"></i></span>";
         /// <summary>
         /// 获取发动机的启动状态(开、关、锁定)
         /// </summary>
@@ -200,7 +200,7 @@ namespace Wbs.Everdigm.BLL
         }
         private static string alarm_none = "0000000000000000";
         //private static string alarm_available = "<span class=\"text-custom-attention\"><i class=\"fa fa-bell\"></i></span>";
-        private static string alarm_invalid = "<span class=\"text-custom-gray\" title=\"No Alarm\"><i class=\"fa fa-bell\"></i></span>";
+        private static string alarm_invalid = "<span class=\"text-custom-gray\" title=\"No Alarm\"><i class=\"fa fa-bell-o\"></i></span>";
         /// <summary>
         /// 获取报警状态
         /// </summary>

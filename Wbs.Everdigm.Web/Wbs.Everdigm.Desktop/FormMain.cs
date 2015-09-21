@@ -101,6 +101,9 @@ namespace Wbs.Everdigm.Desktop
             Buffer.BlockCopy(e.Data.Payload, 0, SendContent, 0, e.Data.Length);
             // 服务器生成的MTMSN
             SendMTMSN = e.Data.MTMSN;
+            // 加入新生成的MTMSN到监控列表里
+            _iridium.AddMTMSN(e.Data.MTMSN);
+
             e = null;
             this.BeginInvoke((MyInvoker)delegate
             {
@@ -370,7 +373,7 @@ namespace Wbs.Everdigm.Desktop
 
         private void tsbtSend_Click(object sender, EventArgs e)
         {
-            if (_iridium.ShowPackageInformation)
+            //if (_iridium.ShowPackageInformation)
             {
                 ShowHistory(Environment.NewLine + Now + "MT operation begin, try to connect Iridium server...", false);
             }
@@ -428,7 +431,7 @@ namespace Wbs.Everdigm.Desktop
                 if (client.Connected)
                 {
                     client.EndConnect(ar);
-                    if (_iridium.ShowPackageInformation)
+                    //if (_iridium.ShowPackageInformation)
                     {
                         ShowHistory("Iridium server has connected.", true);
                     }
@@ -530,7 +533,7 @@ namespace Wbs.Everdigm.Desktop
                         {
                             cs.Dispose();
                             cs.client.Close();
-                            if (_iridium.ShowPackageInformation)
+                            //if (_iridium.ShowPackageInformation)
                                 ShowHistory("MT operation complete, client disconnected.", true);
                         }
                         catch (Exception e)

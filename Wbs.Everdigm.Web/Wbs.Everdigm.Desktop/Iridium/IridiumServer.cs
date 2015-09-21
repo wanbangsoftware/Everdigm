@@ -12,6 +12,34 @@ using Wbs.Sockets;
 
 namespace Wbs.Everdigm.Desktop
 {
+    public class MTMSN : IEquatable<MTMSN>
+    {
+        public DateTime time { get; set; }
+        public ushort mtmsn { get; set; }
+        public byte HandleTimes { get; set; }
+        public MTMSN(ushort mtmsn)
+        {
+            time = DateTime.Now;
+            this.mtmsn = mtmsn;
+            HandleTimes = 0;
+        }
+        public override bool Equals(object obj)
+        {
+            if (null == obj) return false;
+            MTMSN m = obj as MTMSN;
+            if (null == m) return false;
+            return Equals(m);
+        }
+        public bool Equals(MTMSN other)
+        {
+            if (null == other) return false;
+            return other.mtmsn == this.mtmsn;
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+    }
     /// <summary>
     /// 铱星DirectIP本地服务
     /// </summary>
@@ -20,6 +48,27 @@ namespace Wbs.Everdigm.Desktop
         private bool IsStop = false;
         private Thread _handleThread = null;
         private bool _showPackage = false;
+        private object lock_momsn = new object();
+        private List<MTMSN> MOMSNs = new List<MTMSN>();
+        /// <summary>
+        /// 清理MOMSN列表的时间
+        /// </summary>
+        private long MOMSNTicks = DateTime.Now.Ticks;
+        /// <summary>
+        /// 将服务器新生成的MTMSN加入监控队列
+        /// </summary>
+        /// <param name="mtmsn"></param>
+        public void AddMTMSN(ushort mtmsn)
+        {
+            var m = new MTMSN(mtmsn);
+            lock (lock_momsn)
+            {
+                if (MOMSNs.Contains(m))
+                    MOMSNs.Remove(m);
+
+                MOMSNs.Add(m);
+            }
+        }
         /// <summary>
         /// 设置是否显示铱星数据拆包结果
         /// </summary>
@@ -42,7 +91,7 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="message"></param>
         private void HandleOnMessage(string message)
         {
-            if (_showPackage)
+            //if (_showPackage)
             {
                 if (null != OnMessage)
                 {
@@ -110,7 +159,8 @@ namespace Wbs.Everdigm.Desktop
                     so.socket = ss;
                     so.point = ss.RemoteEndPoint as IPEndPoint;
                     ss.BeginReceive(so.buffer, 0, StateObject.BUFFER_SIZE, SocketFlags.None, new AsyncCallback(Read_Callback), so);
-                    HandleOnMessage(Environment.NewLine + Now + "Iridium server [" + so.point.Address.ToString() + ":" + so.point.Port + "] connected.");
+                    if (_showPackage)
+                        HandleOnMessage(Environment.NewLine + Now + "Iridium server [" + so.point.Address.ToString() + ":" + so.point.Port + "] connected.");
                     _listener.BeginAcceptSocket(new AsyncCallback(Listen_Callback), _listener);
                 }
             }
@@ -118,7 +168,7 @@ namespace Wbs.Everdigm.Desktop
             {
                 if (!IsStop)
                 {
-                    HandleOnMessage(Now + "Listen_Callback error: " + e.Message + Environment.NewLine + e.StackTrace);
+                    HandleOnMessage(string.Format("{0} Listen_Callback error: {1}, Trace: {2}", Now, e.Message, e.StackTrace));
                 }
             }
         }
@@ -136,7 +186,8 @@ namespace Wbs.Everdigm.Desktop
                 int read = s.EndReceive(ar);
                 if (read > 0)
                 {
-                    HandleOnMessage(string.Format("{0}Received data(length:{1}) from {2}:{3}", Now, read, so.point.Address.ToString(), so.point.Port));
+                    if (_showPackage)
+                        HandleOnMessage(string.Format("{0}Received data(length:{1}) from {2}:{3}", Now, read, so.point.Address.ToString(), so.point.Port));
                     if (null == so.Received)
                     {
                         so.Received = new byte[read];
@@ -164,13 +215,17 @@ namespace Wbs.Everdigm.Desktop
                 }
                 else
                 {
-                    HandleOnMessage(string.Format("{0}Iridium server {1}:{2} disconnected.", Now, so.point.Address.ToString(), so.point.Port));
+                    if (_showPackage)
+                        HandleOnMessage(string.Format("{0}Iridium server {1}:{2} disconnected.", Now, so.point.Address.ToString(), so.point.Port));
                     //so.socket.Shutdown(SocketShutdown.Both);
                     //so.socket.Close();
                 }
             }
-            catch(Exception e)
-            { HandleOnMessage(Now + "Read_Callback error: " + e.Message + Environment.NewLine + e.StackTrace); }
+            catch (Exception e)
+            {
+                if (e.Message.IndexOf("forcibly") < 0)
+                    HandleOnMessage(string.Format("{0} Read_Callback error: {1}, Trace: {2}",Now,e.Message,e.StackTrace));
+            }
         }
         /// <summary>
         /// 将数据加入待处理队列
@@ -193,6 +248,7 @@ namespace Wbs.Everdigm.Desktop
         /// 获取当前系统时间的字符串
         /// </summary>
         private string Now { get { return DateTime.Now.ToString("[yyyy/MM/dd HH:mm:ss.fff] "); } }
+        private List<string> _history = new List<string>();
         /// <summary>
         /// 处理接收到的铱星数据包
         /// </summary>
@@ -200,6 +256,7 @@ namespace Wbs.Everdigm.Desktop
         {
             int sleep = 100;
             int index = 0;
+            ushort momsn = 0;
             IridiumBuffer obj;
             bool NeedConfirmation = false;
 
@@ -212,10 +269,14 @@ namespace Wbs.Everdigm.Desktop
 
                 if (null != obj)
                 {
+                    bool showPayload = false;
                     try
                     {
                         NeedConfirmation = false;
-                        HandleOnMessage(Now + "Iridium package(length: " + obj.length + "): " + Wbs.Utilities.CustomConvert.GetHex(obj.buffer));
+                        momsn = 0;
+
+                        _history.Add(Now + "Iridium package(length: " + obj.length + "): " + Wbs.Utilities.CustomConvert.GetHex(obj.buffer));
+
                         // 分析整包铱星数据
                         Iridium iridum = new Iridium();
                         iridum.PackageContent = obj.buffer;
@@ -240,12 +301,13 @@ namespace Wbs.Everdigm.Desktop
                                         moh.Content = new byte[length];
                                         Buffer.BlockCopy(ie.Content, 0, moh.Content, 0, length);
                                         moh.Unpackage();
-                                        HandleOnMessage(Now + moh.ToString());
+                                        _history.Add(Now + moh.ToString());
                                         data.Data = new IridiumData();
                                         // 默认为终端接收数据的状态
                                         data.Data.Type = IridiumDataType.MTModelReceiveStatus;
                                         data.Data.IMEI = moh.IMEI;
                                         data.Data.MTMSN = moh.MTMSN;
+                                        momsn = moh.MTMSN;
                                         data.Data.Time = moh.Time;
                                         data.Data.Status = moh.SessionStatus;
                                         moh = null;
@@ -256,7 +318,7 @@ namespace Wbs.Everdigm.Desktop
                                         mol.Content = new byte[length];
                                         Buffer.BlockCopy(ie.Content, 0, mol.Content, 0, length);
                                         mol.Unpackage();
-                                        HandleOnMessage(Now + mol.ToString());
+                                        _history.Add(Now + mol.ToString());
                                         mol = null;
                                         NeedConfirmation = true;
                                         break;
@@ -265,11 +327,12 @@ namespace Wbs.Everdigm.Desktop
                                         mop.Content = new byte[length];
                                         Buffer.BlockCopy(ie.Content, 0, mop.Content, 0, length);
                                         mop.Unpackage();
-                                        HandleOnMessage(Now + mop.ToString());
+                                        _history.Add(Now + mop.ToString());
                                         // 终端发送了数据上来
                                         data.Data.Type = IridiumDataType.MOPayload;
                                         data.Data.Payload = mop.Payload;
                                         mop = null;
+                                        showPayload = true;
                                         NeedConfirmation = true;
                                         break;
                                     case IE.MO_CONFIRMATION:
@@ -277,7 +340,7 @@ namespace Wbs.Everdigm.Desktop
                                         moc.Content = new byte[length];
                                         Buffer.BlockCopy(ie.Content, 0, moc.Content, 0, length);
                                         moc.Unpackage();
-                                        HandleOnMessage(Now + moc.ToString());
+                                        _history.Add(Now + moc.ToString());
                                         moc = null;
                                         break;
                                     case IE.MT_CONFIRMATION:
@@ -289,9 +352,10 @@ namespace Wbs.Everdigm.Desktop
                                         data.Data = new IridiumData();
                                         data.Data.Type = IridiumDataType.MTServerSendStatus;
                                         data.Data.MTMSN = (ushort)mtc.UniqueID;
+                                        momsn = (ushort)mtc.UniqueID;
                                         data.Data.IMEI = mtc.IMEI;
                                         data.Data.Status = mtc.Status;
-                                        HandleOnMessage(Now + mtc.ToString());
+                                        _history.Add(Now + mtc.ToString());
                                         mtc = null;
                                         break;
                                     case IE.MT_HEADER:
@@ -299,7 +363,8 @@ namespace Wbs.Everdigm.Desktop
                                         mth.Content = new byte[length];
                                         Buffer.BlockCopy(ie.Content, 0, mth.Content, 0, length);
                                         mth.Unpackage();
-                                        HandleOnMessage(Now + mth.ToString());
+                                        momsn = (ushort)mth.UniqueID;
+                                        _history.Add(Now + mth.ToString());
                                         mth = null;
                                         break;
                                     case IE.MT_PAYLOAD:
@@ -307,7 +372,7 @@ namespace Wbs.Everdigm.Desktop
                                         mtp.Content = new byte[length];
                                         Buffer.BlockCopy(ie.Content, 0, mtp.Content, 0, length);
                                         mtp.Unpackage();
-                                        HandleOnMessage(Now + mtp.ToString());
+                                        _history.Add(Now + mtp.ToString());
                                         mtp = null;
                                         break;
                                     case IE.MT_PRIORITY:
@@ -344,11 +409,11 @@ namespace Wbs.Everdigm.Desktop
                                 try
                                 {
                                     obj.socket.Send(iridum.PackageContent);
-                                    HandleOnMessage(Now + "Send MO Confirmation: " + Wbs.Utilities.CustomConvert.GetHex(iridum.PackageContent));
+                                    _history.Add(Now + "Send MO Confirmation: " + Wbs.Utilities.CustomConvert.GetHex(iridum.PackageContent));
                                 }
                                 catch (Exception send)
                                 {
-                                    HandleOnMessage(Now + "" + send.Message + Environment.NewLine + send.StackTrace);
+                                    HandleOnMessage(string.Format("{0} Send iridiu package error: {1}, Trace: {2}", Now, send.Message, send.StackTrace));
                                 }
                                 AddQueue(iridum.PackageContent);
                                 //HandleOnMessage(Now + "MO confirmation: " + Wbs.Utilities.CustomConvert.GetHex(iridum.PackageContent));
@@ -358,13 +423,36 @@ namespace Wbs.Everdigm.Desktop
                     }
                     catch (Exception e)
                     {
-                        HandleOnMessage(Now + "HandleIridiumPackage error: " + e.Message + Environment.NewLine + e.StackTrace);
+                        HandleOnMessage(string.Format("{0} HandleIridiumPackage error: {1}, Trace: {2}", Now, e.Message, e.StackTrace));
                     }
                     finally
                     {
                         obj.Dispose();
                         obj = null;
                     }
+                    // 检测是否可以显示当前分析的数据包
+                    string text = "";
+                    lock (lock_momsn)
+                    {
+                        var m = MOMSNs.FirstOrDefault(f => f.mtmsn == momsn);
+                        if (null != m)
+                        {
+                            showPayload = true;
+                            m.HandleTimes++;
+                        }
+                        if (showPayload)
+                        { 
+                            foreach (var s in _history)
+                                text += s + Environment.NewLine;
+                        }
+                        // 移除超时的MTMSN监控记录
+                        MOMSNs.RemoveAll(r => r.HandleTimes >= 3 || r.time < DateTime.Now.AddDays(-7));
+                    }
+                    if(!string.IsNullOrEmpty(text))
+                        HandleOnMessage(text);
+
+                    // 清空分析的历史记录
+                    _history.Clear();
                 }
             }
         }

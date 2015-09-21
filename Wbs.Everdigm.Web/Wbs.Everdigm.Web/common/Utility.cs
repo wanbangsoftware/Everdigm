@@ -422,7 +422,7 @@ namespace Wbs.Everdigm.Web
         {
             var ret = "";
             if ((byte?)null == type)
-                ret = "<span title=\"Unknown\">" + (forShort ? "UKN" : "Unknown") + "</span>";
+                ret = "<span class=\"text-danger\"><i class=\"fa fa-question\" title=\"Unknown\"></i></span>";
 
             switch (type)
             {
