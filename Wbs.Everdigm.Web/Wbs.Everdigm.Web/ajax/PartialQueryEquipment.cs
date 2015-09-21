@@ -309,8 +309,8 @@ namespace Wbs.Everdigm.Web.ajax
                             if (last > first)
                             {
                                 times = last - first;
-                                // 如果时间大于24小时则直接设定为24小时
-                                if (times >= 24 * 60) times = 24 * 60;
+                                // 如果时间大于24小时则直接设定为0小时 2015/09/21 11:30
+                                if (times >= 24 * 60) times = 0;
                                 work.First(f => f.x == today).y = FormatTime(times);
                             }
                         }
