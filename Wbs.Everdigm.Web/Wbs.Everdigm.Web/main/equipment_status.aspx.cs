@@ -52,6 +52,9 @@ namespace Wbs.Everdigm.Web.main
 
             var rental = StatusInstance.Find(f => f.IsItRental == true);
             cbIsRental.Enabled = null == rental;
+
+            var testing = StatusInstance.Find(f => f.IsItTesting == true);
+            cbIsTesting.Enabled = null == testing;
         }
 
         private void ShowEdit()
@@ -80,6 +83,10 @@ namespace Wbs.Everdigm.Web.main
                 cbIsRental.Checked = s.IsItRental.Value;
                 if (s.IsItRental == true)
                     cbIsRental.Enabled = true;
+
+                cbIsTesting.Checked = s.IsItTesting.Value;
+                if (s.IsItTesting == true)
+                    cbIsTesting.Enabled = true;
             }
             else
             {
@@ -96,6 +103,7 @@ namespace Wbs.Everdigm.Web.main
             obj.IsItOverhaul = cbIsOverhaul.Checked;
             obj.IsItWaiting = cbIsWaiting.Checked;
             obj.IsItRental = cbIsRental.Checked;
+            obj.IsItTesting = cbIsTesting.Checked;
         }
 
         private void NewStatus()
@@ -187,6 +195,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td>" + (obj.IsItOverhaul == true ? "Yes" : "-") + "</td>" +
                         "<td>" + (obj.IsItWaiting == true ? "Yes" : "-") + "</td>" +
                         "<td>" + (obj.IsItRental == true ? "Yes" : "-") + "</td>" +
+                        "<td>" + (obj.IsItTesting == true ? "Yes" : "-") + "</td>" +
                         "<td></td>" +
                         "</tr>";
                 }

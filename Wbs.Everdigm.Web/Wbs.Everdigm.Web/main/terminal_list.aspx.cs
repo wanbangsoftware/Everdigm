@@ -329,5 +329,54 @@ namespace Wbs.Everdigm.Web.main
 
             ShowNotification("./terminal_list.aspx", "You have unbind the terminal and equipment.");
         }
+
+        protected void bt_Test_Click(object sender, EventArgs e)
+        {
+            if (!HasSessionLose)
+            {
+                if ("" != hidID.Value)
+                {
+                    var id = int.Parse(Utility.Decrypt(hidID.Value));
+                    var terminal = TerminalInstance.Find(f => f.id == id && f.Delete == false);
+                    if (null != terminal)
+                    {
+                        if (terminal.HasBound.Value == false)
+                        {
+                            ShowNotification("./terminal_list.aspx", "No equipment bind on this terminal.", false);
+                        }
+                        else
+                        {
+                            var test = StatusInstance.Find(f => f.IsItTesting == true);
+                            if (null == test)
+                            {
+                                ShowNotification("Situation code is not exist.", "", false);
+                            }
+                            else
+                            {
+                                var equip = terminal.TB_Equipment.FirstOrDefault();
+                                if (null != equip)
+                                {
+                                    EquipmentInstance.Update(f => f.id == equip.id, act =>
+                                    {
+                                        act.Status = StatusInstance.Find(f => f.IsItTesting == true).id;
+                                    });
+                                    SaveHistory(new TB_AccountHistory
+                                    {
+                                        ActionId = ActionInstance.Find(f => f.Name.Equals("EditTerminal")).id,
+                                        ObjectA = EquipmentInstance.GetFullNumber(equip) + ", " + terminal.Number + ", set to test mode"
+                                    });
+                                    ShowNotification("./terminal_list.aspx", EquipmentInstance.GetFullNumber(equip) + ", " + terminal.Number + ", set to test mode");
+                                }
+                                else
+                                {
+                                    ShowNotification("./terminal_list.aspx", "No equipment bind on this terminal.", false);
+                                }
+                            }
+                        }
+                    }
+                    else ShowNotification("./terminal_list.aspx", "Terminal is not exist.", false);
+                }
+            }
+        }
     }
 }

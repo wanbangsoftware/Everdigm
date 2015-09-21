@@ -114,6 +114,7 @@ namespace Wbs.Everdigm.Web
                 act.IsItOverhaul = obj.IsItOverhaul;
                 act.IsItWaiting = obj.IsItWaiting;
                 act.IsItRental = obj.IsItRental;
+                act.IsItTesting = obj.IsItTesting;
             });
         }
         /// <summary>

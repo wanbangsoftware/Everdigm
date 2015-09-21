@@ -42,6 +42,10 @@ namespace Wbs.Everdigm.Web
         /// </summary>
         protected IridiumFlowBLL IridiumInstance { get { return new IridiumFlowBLL(); } }
         /// <summary>
+        /// 设备状态业务处理实体
+        /// </summary>
+        protected EquipmentStatusBLL StatusInstance { get { return new EquipmentStatusBLL(); } }
+        /// <summary>
         /// 更新终端的信息
         /// </summary>
         /// <param name="obj"></param>

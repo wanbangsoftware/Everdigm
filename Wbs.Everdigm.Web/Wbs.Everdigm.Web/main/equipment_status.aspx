@@ -50,32 +50,32 @@
                                 <td class="td_left">&nbsp;</td>
                             </tr>
                             <tr>
-                                <td class="td_right">Is Inventory:</td>
+                                <td class="td_right">Is It Inventory:</td>
                                 <td class="td_left">
                                     <label><asp:CheckBox ID="cbIsInventory" runat="server" />&nbsp;Set situation as inventory</label>
                                 </td>
-                                <td class="td_right">Is Delivered:</td>
+                                <td class="td_right">Is It Delivered:</td>
                                 <td class="td_left">
                                     <label><asp:CheckBox ID="cbIsOutstorage" runat="server" />&nbsp;Set situation as delivered</label>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="td_right">Is Overhaul:</td>
+                                <td class="td_right">Is It Overhaul:</td>
                                 <td class="td_left">
                                     <label><asp:CheckBox ID="cbIsOverhaul" runat="server" />&nbsp;Set situation as overhaul</label>
                                 </td>
-                                <td class="td_right">Is Waiting:</td>
+                                <td class="td_right">Is It Waiting:</td>
                                 <td class="td_left">
                                     <label><asp:CheckBox ID="cbIsWaiting" runat="server" />&nbsp;Set situation as waiting storage in</label>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="td_right">Is Rental:</td>
+                                <td class="td_right">Is It Rental:</td>
                                 <td class="td_left">
                                     <label><asp:CheckBox ID="cbIsRental" runat="server" />&nbsp;Set situation as rental</label>
                                 </td>
-                                <td class="td_right"></td>
-                                <td class="td_left"></td>
+                                <td class="td_right">Is It Testing:</td>
+                                <td class="td_left"><label><asp:CheckBox ID="cbIsTesting" runat="server" />&nbsp;Set situation as testing</label></td>
                             </tr>
                         </table>
                         <table id="tbTable" width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #ccc; margin-top: 2px;">
@@ -91,12 +91,13 @@
                                     <th>Is it Overhaul?</th>
                                     <th>Is it Waiting?</th>
                                     <th>Is it Rental?</th>
+                                    <th>Is it Testing?</th>
                                     <th>-</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="10">
+                                    <td colspan="11">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>

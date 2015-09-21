@@ -31,7 +31,8 @@ namespace Wbs.Everdigm.BLL
                 IsItOutstorage = false,
                 IsItOverhaul = false,
                 IsItWaiting = false,
-                IsItRental = false
+                IsItRental = false,
+                IsItTesting = false
             };
         }
         public override string ToString(TB_EquipmentStatusName entity)

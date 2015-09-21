@@ -93,12 +93,21 @@ namespace Wbs.Everdigm.BLL
         /// <returns></returns>
         public string GetStatus(TB_Equipment entity)
         {
-            if (entity.TB_EquipmentStatusName.IsItOutstorage == true || entity.TB_EquipmentStatusName.IsItRental == true)
-            {
-                return "<span class=\"label label-warning\">" + entity.TB_EquipmentStatusName.Code + "</span>";
-            }
-            else if (entity.TB_EquipmentStatusName.IsItOverhaul == true)
+            // 售出
+            if (entity.TB_EquipmentStatusName.IsItOutstorage == true)
+                return "<span class=\"label label-primary\">" + entity.TB_EquipmentStatusName.Code + "</span>";
+            // 租赁
+            if (entity.TB_EquipmentStatusName.IsItRental == true)
+                return "<span class=\"label label-info\">" + entity.TB_EquipmentStatusName.Code + "</span>";
+            // 维修
+            if (entity.TB_EquipmentStatusName.IsItOverhaul == true)
                 return "<span class=\"label label-danger\">" + entity.TB_EquipmentStatusName.Code + "</span>";
+            // 测试
+            if (entity.TB_EquipmentStatusName.IsItTesting == true)
+                return "<span class=\"label label-warning\">" + entity.TB_EquipmentStatusName.Code + "</span>";
+            // 等待
+            if(entity.TB_EquipmentStatusName.IsItWaiting==true)
+                return "<span class=\"label label-default\">" + entity.TB_EquipmentStatusName.Code + "</span>";
 
             return "<span class=\"label label-success\">" + entity.TB_EquipmentStatusName.Code + "</span>";
         }

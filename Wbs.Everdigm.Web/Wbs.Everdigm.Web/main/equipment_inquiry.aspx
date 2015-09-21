@@ -78,14 +78,14 @@
                                     <th class="in-tab-title-b bg-primary">Storage</th>
                                 </tr>
                                 <tr>
-                                    <th class="in-tab-title-b bg-warning">#</th>
-                                    <th class="in-tab-title-b bg-warning">Type</th>
-                                    <th class="in-tab-title-b bg-warning">Model</th>
-                                    <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Functional</th>
-                                    <th class="in-tab-title-b bg-warning" style="text-align: right !important;">SMH</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow">ENG.</th>
+                                    <th class="in-tab-title-b bg-warning" style="width: 20px;">#</th>
+                                    <th class="in-tab-title-b bg-warning" style="width: 20px;">Type</th>
+                                    <th class="in-tab-title-b bg-warning" style="width: 20px;">Model</th>
+                                    <th class="in-tab-title-b bg-warning" style="text-align: left !important; width: 80px;">Functional</th>
+                                    <th class="in-tab-title-b bg-warning" style="text-align: right !important; width: 80px;">SMH</th>
+                                    <th class="in-tab-title-b bg-warning" style="width: 20px;">ENG</th>
                                     <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Location</th>
-                                    <th class="in-tab-title-rb bg-warning">Status</th>
+                                    <th class="in-tab-title-rb bg-warning" style="width: 20px;">Status</th>
                                     <!--<th class="in-tab-title-b bg-warning textoverflow">Days</th>
                                     <th class="in-tab-title-rb bg-warning textoverflow">Hr/Day</th>-->
                                     <th class="in-tab-title-b bg-warning">Number</th>

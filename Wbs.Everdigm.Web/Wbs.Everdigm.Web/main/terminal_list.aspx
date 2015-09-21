@@ -37,6 +37,7 @@
                                     <input type="hidden" runat="server" id="hidBoundSatellite" />
                                     <asp:Button ID="btBoundSatellite" runat="server" CssClass="hidding" OnClick="btBoundSatellite_Click" />
                                     <asp:Button ID="bt_Delete" runat="server" Text="Delete" CssClass="button" OnClick="btDelete_Click" />
+                                    <asp:Button ID="bt_Test" runat="server" Text="Set to test" CssClass="button" OnClick="bt_Test_Click" />
                                     <asp:Button ID="btUnbindEquipment" runat="server" CssClass="hidding" OnClick="btUnbindEquipment_Click" />
                                 </td>
                             </tr>
