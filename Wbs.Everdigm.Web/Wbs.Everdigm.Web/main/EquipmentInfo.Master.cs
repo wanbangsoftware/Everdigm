@@ -61,7 +61,7 @@ namespace Wbs.Everdigm.Web.main
                     objectInfo.Rows[2].Cells[3].Attributes["title"] = obj.TB_EquipmentStatusName.Name;
 
                     objectInfo.Rows[3].Cells[1].InnerHtml = EquipmentBLL.GetRuntime(obj.Runtime + obj.InitializedRuntime);
-                    objectInfo.Rows[3].Cells[3].InnerText = EquipmentInstance.GetEngStatus(obj);
+                    objectInfo.Rows[3].Cells[3].InnerHtml = EquipmentInstance.GetEngStatus(obj);
 
                     objectInfo.Rows[4].Cells[1].InnerText = obj.GpsAddress;
 
@@ -81,7 +81,7 @@ namespace Wbs.Everdigm.Web.main
                     objectInfo.Rows[8].Cells[1].InnerText = (int?)null == obj.Warehouse ? "-" : obj.TB_Warehouse.Name;
 
                     objectInfo.Rows[10].Cells[1].InnerText = (n == obj.Terminal ? "-" : obj.TB_Terminal.Number);
-                    objectInfo.Rows[10].Cells[3].InnerHtml = Utility.GetOnlineStyle(obj.OnlineStyle);
+                    objectInfo.Rows[10].Cells[3].InnerHtml = Utility.GetOnlineStyle(obj.OnlineStyle, false);
 
                     objectInfo.Rows[11].Cells[1].InnerText = (n == obj.Terminal ? "-" : obj.TB_Terminal.Sim);
                     objectInfo.Rows[11].Cells[3].InnerText =

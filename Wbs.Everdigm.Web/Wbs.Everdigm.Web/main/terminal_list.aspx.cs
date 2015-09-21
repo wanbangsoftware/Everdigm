@@ -110,7 +110,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td>" + obj.ProductionDate.Value.ToString("yyyy/MM/dd") + "</td>" +
                         "<td style=\"text-align: center;\">" + (obj.HasBound == true ? "yes" : "no") + "</td>" +
                         "<td>" + GetEquipment(obj, equipment) + "</td>" +
-                        "<td>" + Utility.GetOnlineStyle(obj.OnlineStyle) + "</td>" +
+                        "<td>" + Utility.GetOnlineStyle(obj.OnlineStyle, false) + "</td>" +
                         "<td></td>" +
                         "</tr>";
                 }

@@ -173,17 +173,36 @@ namespace Wbs.Everdigm.BLL
             return "<span class=\"glyphicon glyphicon-signal label label-primary\" aria-hidden=\"true\"></span>";
         }
 
+        private string eng_off = "<span class=\"text-custom-gray\" title=\"Eng. Off\"><span class=\"signal cell-engine\"></span></span>";
+        private string eng_on = "<span class=\"text-custom-success\" title=\"Eng. On\"><span class=\"signal cell-engine\"></span></span>";
+        private string eng_lock = "<span class=\"text-custom-warning\" title=\"Locked\"><span class=\"glyphicon glyphicon-lock\"></span></span>";
         /// <summary>
-        /// 获取发动机的启动状态
+        /// 获取发动机的启动状态(开、关、锁定)
         /// </summary>
         /// <param name="voltage"></param>
         /// <returns></returns>
         public string GetEngStatus(TB_Equipment obj)
         {
+            if (obj.LockStatus == "40" || obj.LockStatus == "0F") return eng_lock;
             var voltage = obj.Voltage;
-            if (null == voltage) return "OFF";
-            if (voltage.IndexOf("G2") >= 0) return "ON";
-            return "OFF";
+            if (null == voltage) return eng_off;
+            if (voltage.IndexOf("G2") >= 0) return eng_on;
+            return eng_off;
+        }
+        private static string alarm_none = "0000000000000000";
+        //private static string alarm_available = "<span class=\"text-custom-attention\"><i class=\"fa fa-bell\"></i></span>";
+        private static string alarm_invalid = "<span class=\"text-custom-gray\" title=\"No Alarm\"><i class=\"fa fa-bell\"></i></span>";
+        /// <summary>
+        /// 获取报警状态
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public string GetAlarmStatus(string alarm)
+        {
+            if (string.IsNullOrEmpty(alarm)) return alarm_invalid;
+            if (alarm.Equals(alarm_none)) return alarm_invalid;
+            return "<span class=\"text-custom-attention\" title=\"" + 
+                Wbs.Protocol.TX300.Analyse._0x2000.GetAlarm(alarm) + "\"><i class=\"fa fa-bell\"></i></span>";
         }
         /// <summary>
         /// 获取运转时间

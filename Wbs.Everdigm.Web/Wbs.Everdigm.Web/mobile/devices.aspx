@@ -28,7 +28,9 @@
             <em class="status">Excavator</em>
         </dt>
         <dd>
-            <span class="text-success"><span class="signal cell-engine"></span> Engine On</span>
+            <span class="text-success"><span class="signal cell-engine"></span></span>
+            <span class="text-light-gray"><span class="signal cell-engine"></span></span>
+            <span class="text-custom-warning"><span class="glyphicon glyphicon-lock"></span></span>
             <em class="status"><span class="glyphicon glyphicon-time"></span> 224 hr 32 min</em>
         </dd>
         <dd>

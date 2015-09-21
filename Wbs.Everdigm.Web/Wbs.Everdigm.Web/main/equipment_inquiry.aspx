@@ -7,8 +7,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
     <link href="../bootstrap3/css/bootstrap.css" rel="stylesheet" />
+    <link href="../bootstrap3/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" />
     <link href="../bootstrap3/models/css/bootstrap-dialog.min.css" rel="stylesheet" />
     <link href="../bootstrap3/bootstrap-datepicker-1.3.0/css/datepicker3.css" rel="stylesheet" />
+    <link href="../mobile/css/style.css" rel="stylesheet" />
     <link href="../css/body_equipment.css" rel="stylesheet" />
     <link href="../css/pagging.css" rel="stylesheet" />
 </head>
@@ -72,7 +74,7 @@
                                     <th colspan="7" class="in-tab-title-rb bg-primary">Equipment Information</th>
                                     <!--<th colspan="2" class="in-tab-title-rb bg-primary">RENT/SOLD SMH</th>-->
                                     <th colspan="2" class="in-tab-title-rb bg-primary">Customer</th>
-                                    <th colspan="4" class="in-tab-title-rb bg-primary">Terminal Information</th>
+                                    <th colspan="5" class="in-tab-title-rb bg-primary">Terminal Information</th>
                                     <th class="in-tab-title-b bg-primary">Storage</th>
                                 </tr>
                                 <tr>
@@ -81,7 +83,7 @@
                                     <th class="in-tab-title-b bg-warning">Model</th>
                                     <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Functional</th>
                                     <th class="in-tab-title-b bg-warning" style="text-align: right !important;">SMH</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow">Eng.</th>
+                                    <th class="in-tab-title-b bg-warning textoverflow">ENG.</th>
                                     <th class="in-tab-title-b bg-warning" style="text-align: left !important;">Location</th>
                                     <th class="in-tab-title-rb bg-warning">Status</th>
                                     <!--<th class="in-tab-title-b bg-warning textoverflow">Days</th>
@@ -89,10 +91,11 @@
                                     <th class="in-tab-title-b bg-warning">Number</th>
                                     <th class="in-tab-title-rb bg-warning">Name</th>
                                     <!--<th class="in-tab-title-b bg-warning">Signal</th>-->
-                                    <th class="in-tab-title-b bg-warning">Link</th>
-                                    <th class="in-tab-title-b bg-warning">Last received</th>
-                                    <th class="in-tab-title-b bg-warning">Terminal</th>
-                                    <th class="in-tab-title-rb bg-warning">SAT</th>
+                                    <th class="in-tab-title-b bg-warning" style="width: 30px;">Link</th>
+                                    <th class="in-tab-title-b bg-warning" style="width: 20px;"></th>
+                                    <th class="in-tab-title-b bg-warning" style="width: 90px;">Last received</th>
+                                    <th class="in-tab-title-b bg-warning" style="width: 70px;">Terminal</th>
+                                    <th class="in-tab-title-rb bg-warning" style="width: 20px;">SAT</th>
                                     <!--<th class="in-tab-title-b bg-warning textoverflow">In Date</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">In Type</th>
                                     <th class="in-tab-title-b bg-warning textoverflow">Out Date</th>
@@ -102,7 +105,7 @@
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="15">
+                                    <td colspan="16">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>

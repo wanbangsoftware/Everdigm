@@ -8,6 +8,18 @@
 	font-weight: normal;
 	font-style: normal;
 }
+.text-custom-attention {
+    color: #d4114d;
+}
+.text-custom-success {
+    color: #337ab7;
+}
+.text-custom-gray {
+    color: #e0dfdf;
+}
+.text-custom-warning {
+    color: #ed831e;
+}
 
 .signal {
 	font-family: 'cell-custom';

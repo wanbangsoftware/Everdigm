@@ -418,16 +418,16 @@ namespace Wbs.Everdigm.Web
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static string GetOnlineStyle(byte? type)
+        public static string GetOnlineStyle(byte? type, bool forShort = true)
         {
             var ret = "";
             if ((byte?)null == type)
-                ret = "Unknown";
+                ret = "<span title=\"Unknown\">" + (forShort ? "UKN" : "Unknown") + "</span>";
 
             switch (type)
             {
                 case 0x00:// OFF
-                    ret = "<span class=\"label label-default\">Battery off</span>";
+                    ret = "<span class=\"label label-default\" title=\"Battery Off\">" + (forShort ? "OFF" : "Battery Off") + "</span>";
                     break;
                 case 0x10:// TCP
                     ret = "<span class=\"label label-info\">TCP</span>";
@@ -439,16 +439,16 @@ namespace Wbs.Everdigm.Web
                     ret = "<span class=\"label label-warning\">SMS</span>";
                     break;
                 case 0x40:// SLEEP
-                    ret = "<span class=\"label label-warning\">Sleep</span>";
+                    ret = "<span class=\"label label-warning\" title=\"Sleep\">" + (forShort ? "SLP" : "Sleep") + "</span>";
                     break;
                 case 0x50:// BLIND
-                    ret = "<span class=\"label label-danger\">Blind</span>";
+                    ret = "<span class=\"label label-danger\" title=\"Blind\">" + (forShort ? "BLD" : "Blind") + "</span>";
                     break;
                 case 0x60:// SATELLITE
-                    ret = "<span class=\"label label-primary\">Satellite</span>";
+                    ret = "<span class=\"label label-primary\" title=\"Satellite\">" + (forShort ? "SAT" : "Satellite") + "</span>";
                     break;
                 case 0xFF:// TROUBLE
-                    ret = "<span class=\"label label-danger\">Trouble</span>";
+                    ret = "<span class=\"label label-danger\" title=\"Trouble\">" + (forShort ? "TRB" : "Trouble") + "</span>";
                     break;
             }
             return ret;

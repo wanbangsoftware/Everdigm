@@ -56,7 +56,7 @@ namespace Wbs.Everdigm.Web.mobile
                     "            </dd>" +
                     "            <dd>" +
                     "                <span class=\"text-info\"><span class=\"signal cell-signal-" + Utility.ASU2Signal(item.Signal.Value) + "\"></span> Signal: " + Utility.ASU2DBM(item.Signal.Value) + "dBm(ASU: " + item.Signal + ")</span>" +
-                    "                <div class=\"total-num\">" + Utility.GetOnlineStyle(item.OnlineStyle) + "</div>" +
+                    "                <div class=\"total-num\">" + Utility.GetOnlineStyle(item.OnlineStyle, false) + "</div>" +
                     "            </dd>" +
                     "            <dd class=\"desc\"><span class=\"glyphicon glyphicon-globe\"></span> " + item.GpsAddress + "</dd>" +
                     "</dl>";
