@@ -143,6 +143,13 @@ namespace Wbs.Everdigm.Desktop
                             });
                         }
                     }
+                    else
+                    {
+                        OnUnhandledMessage(this, new Sockets.UIEventArgs()
+                        {
+                            Message = string.Format("Satellite has no terminal, data will save as terminal number: \"{0}\"", data.IMEI.Substring(4))
+                        });
+                    }
                     // 保存TX300历史记录
                     SaveTX300History(new Protocol.TX300.TX300()
                     {
