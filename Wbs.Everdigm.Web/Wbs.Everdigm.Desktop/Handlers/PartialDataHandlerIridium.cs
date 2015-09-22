@@ -149,8 +149,10 @@ namespace Wbs.Everdigm.Desktop
                         CommandID = 0x1000,
                         MsgContent = data.Payload,
                         ProtocolType = Wbs.Protocol.ProtocolTypes.SATELLITE,
-                        TerminalType = terminal.Type.Value,
-                        TerminalID = null == terminal ? "" : terminal.Sim,
+                        // 默认装载机终端类型 2015/09/22 09:40
+                        TerminalType = null == terminal ? Protocol.TerminalTypes.LD : terminal.Type.Value,
+                        // 没有终端时，用IMEI号码的末尾11位数字表示终端号码 2015/09/22 09:40
+                        TerminalID = null == terminal ? data.IMEI.Substring(4) : terminal.Sim,
                         TotalLength = (ushort)data.Payload.Length
                     }, data.Time, EquipmentInstance.GetFullNumber(equipment));
 
@@ -162,7 +164,8 @@ namespace Wbs.Everdigm.Desktop
                     pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
                     pos.GpsTime = data.Time;
                     pos.Equipment = null == equipment ? (int?)null : equipment.id;
-                    pos.Terminal = null == terminal ? "" : (terminal.Sim.Length < 11 ? (terminal.Sim + "000") : terminal.Sim);
+                    // 没有终端时，用IMEI号码的末尾11位数字表示终端号码 2015/09/22 09:40
+                    pos.Terminal = null == terminal ? data.IMEI.Substring(4) : (terminal.Sim.Length < 11 ? (terminal.Sim + "000") : terminal.Sim);
                     pos.Type = location.Report + "(Eng " + location.EngFlag + ")(SAT)";
                     try
                     {
@@ -175,7 +178,8 @@ namespace Wbs.Everdigm.Desktop
                             arm.Equipment = null == equipment ? (int?)null : equipment.id;
                             arm.Position = pos.id;
                             arm.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
-                            arm.Terminal = null == terminal ? "" : (terminal.Sim.Length < 11 ? (terminal.Sim + "000") : terminal.Sim);
+                            // 没有终端时，用IMEI号码的末尾11位数字表示终端号码 2015/09/22 09:40
+                            arm.Terminal = null == terminal ? data.IMEI.Substring(4) : (terminal.Sim.Length < 11 ? (terminal.Sim + "000") : terminal.Sim);
                             AlarmInstance.Add(arm);
                         }
                     }

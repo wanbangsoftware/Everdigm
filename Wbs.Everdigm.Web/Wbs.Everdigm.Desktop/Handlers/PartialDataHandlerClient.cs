@@ -57,6 +57,7 @@ namespace Wbs.Everdigm.Desktop
             LastOlderLinkHandledTime = DateTime.Now;
 
             // 所有更新集合到一个事务中2015/08/14
+            // 更新设备状态的同时也更新终端的状态 2015/09/22 09:30
             // 更新设备连接状态
             EquipmentInstance.Update(f => f.OnlineStyle > (byte)LinkType.OFF && f.OnlineTime < DateTime.Now.AddMinutes(-75), act =>
             {
@@ -64,15 +65,31 @@ namespace Wbs.Everdigm.Desktop
                 act.Voltage = "G0000";
                 act.Rpm = 0;
                 act.Signal = 0;
+                // 长时间主电报警的睡眠转为Off
+                if (act.OnlineTime < DateTime.Now.AddMinutes(-4320) && act.OnlineStyle == (byte)LinkType.SLEEP &&
+                    (act.Alarm.Substring(0, 1) == "1" || act.Alarm.Substring(15, 1) == "1"))
+                {
+                    act.OnlineStyle = (byte)LinkType.OFF;
+                    act.TB_Terminal.OnlineStyle = (byte)LinkType.OFF;
+                }
                 // 长时间睡眠的转为盲区
-                if (act.OnlineTime < DateTime.Now.AddMinutes(-10800) && act.OnlineStyle < (byte)LinkType.BLIND)
-                { act.OnlineStyle = (byte)LinkType.BLIND; }
+                else if (act.OnlineTime < DateTime.Now.AddMinutes(-10800) && act.OnlineStyle < (byte)LinkType.BLIND)
+                { 
+                    act.OnlineStyle = (byte)LinkType.BLIND;
+                    act.TB_Terminal.OnlineStyle = (byte)LinkType.BLIND;
+                }
                 // 长时间SMS的转为睡眠
                 else if (act.OnlineTime < DateTime.Now.AddMinutes(-720) && act.OnlineStyle < (byte)LinkType.SLEEP)
-                { act.OnlineStyle = (byte)LinkType.SLEEP; }
+                { 
+                    act.OnlineStyle = (byte)LinkType.SLEEP;
+                    act.TB_Terminal.OnlineStyle = (byte)LinkType.SLEEP;
+                }
                 // 长时间没有UDP、TCP信息的转为SMS
                 else if (act.OnlineStyle < (byte)LinkType.SMS)
-                { act.OnlineStyle = (byte)LinkType.SMS; }
+                { 
+                    act.OnlineStyle = (byte)LinkType.SMS;
+                    act.TB_Terminal.OnlineStyle = (byte)LinkType.SMS;
+                }
                 // 卫星超过2小时没有数据的，Eng. On更新为Eng. Off
                 else if (act.OnlineTime < DateTime.Now.AddMinutes(-120) && act.OnlineStyle == (byte)LinkType.SATELLITE
                     && act.Voltage != "G0000")
