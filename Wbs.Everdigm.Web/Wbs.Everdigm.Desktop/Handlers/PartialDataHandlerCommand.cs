@@ -108,7 +108,7 @@ namespace Wbs.Everdigm.Desktop
         /// </summary>
         private void Handle0xBB0FStatus()
         {
-            CommandInstance.Update(f => f.ScheduleTime <= DateTime.Now.AddMinutes(-10) && 
+            CommandInstance.Update(f => f.ScheduleTime >= DateTime.Now.AddMinutes(-10) && 
                 f.Status == (byte)CommandStatus.SentBySMS && f.Command == "0xBB0F", act =>
             {
                 act.Status = (byte)CommandStatus.Returned;
