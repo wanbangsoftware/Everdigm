@@ -104,6 +104,17 @@ namespace Wbs.Everdigm.Desktop
             }
         }
         /// <summary>
+        /// 根据CC00的返回时间更新之前的0xBB0F命令发送状态为成功返回状态
+        /// </summary>
+        private void Handle0xBB0FStatus()
+        {
+            CommandInstance.Update(f => f.ScheduleTime <= DateTime.Now.AddMinutes(-10) && 
+                f.Status == (byte)CommandStatus.SentBySMS && f.Command == "0xBB0F", act =>
+            {
+                act.Status = (byte)CommandStatus.Returned;
+            });
+        }
+        /// <summary>
         /// 清理超时的命令为发送失败状态
         /// </summary>
         private void ClearTimedoutCommands()

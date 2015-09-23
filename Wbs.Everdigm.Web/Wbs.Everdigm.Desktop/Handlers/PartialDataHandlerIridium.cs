@@ -101,7 +101,7 @@ namespace Wbs.Everdigm.Desktop
                         {
                             act.OnlineStyle = (byte)LinkType.SATELLITE;
                             // 同时更新终端的最后链接时间
-                            act.OnlineTime = DateTime.Now;
+                            act.OnlineTime = data.Time;
                         });
                         equipment = EquipmentInstance.Find(f => f.Terminal == terminal.id);
                         if (null != equipment)
@@ -109,7 +109,7 @@ namespace Wbs.Everdigm.Desktop
                             EquipmentInstance.Update(f => f.id == equipment.id, act =>
                             {
                                 act.OnlineStyle = (byte)LinkType.SATELLITE;
-                                act.OnlineTime = DateTime.Now;
+                                act.OnlineTime = data.Time;
                                 // 更新设备的报警状态 2015/09/10 14:04
                                 act.Alarm = alarms;
 
@@ -147,7 +147,8 @@ namespace Wbs.Everdigm.Desktop
                     {
                         OnUnhandledMessage(this, new Sockets.UIEventArgs()
                         {
-                            Message = string.Format("Satellite has no terminal, data will save as terminal number: \"{0}\"", data.IMEI.Substring(4))
+                            Message = string.Format("{0} Satellite has no terminal, data will save as terminal number: \"{1}\".{2}",
+                            Now, data.IMEI.Substring(4), Environment.NewLine)
                         });
                     }
                     // 保存TX300历史记录
@@ -182,6 +183,7 @@ namespace Wbs.Everdigm.Desktop
                         {
                             var arm = AlarmInstance.GetObject();
                             arm.Code = alarms;
+                            arm.AlarmTime = data.Time;
                             arm.Equipment = null == equipment ? (int?)null : equipment.id;
                             arm.Position = pos.id;
                             arm.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
@@ -194,7 +196,8 @@ namespace Wbs.Everdigm.Desktop
                     {
                         OnUnhandledMessage(this, new Sockets.UIEventArgs()
                         {
-                            Message = e.Message + Environment.NewLine + e.StackTrace + Environment.NewLine + PositionInstance.ToString(pos)
+                            Message = string.Format("{0} {1}{2}{3}{4}{5}", Now, e.Message, Environment.NewLine,
+                                e.StackTrace, Environment.NewLine, PositionInstance.ToString(pos))
                         });
                     }
                 }

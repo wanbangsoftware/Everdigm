@@ -105,7 +105,7 @@
         <classShapeMoniker Id="f118c3e2-831e-4108-ae72-d80ab45ed6c0" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(13.5 : 8.92625549316406); (15.25 : 8.92625549316406); (15.25 : 5.02648152669271)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(13.5 : 8.84375); (14.0104166666667 : 8.84375 : JumpStart); (14.1770833333333 : 8.84375 : JumpEnd); (16.15625 : 8.84375); (16.15625 : 5.02648152669271)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/EverdigmDataContext/TB_AccountAction/TB_AccountAction_TB_AccountHistory" />
       <nodes>
         <classShapeMoniker Id="0498269a-1bc1-4141-b29d-a9da01db2243" />
@@ -164,33 +164,13 @@
         <elementListCompartment Id="acc596e8-516f-42e8-8847-8b162ed642d0" absoluteBounds="7.015, 0.96, 1.9700000000000002, 1.346893310546875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="576c057e-e0ba-425e-b328-831ad7cf90fd" absoluteBounds="14, 9.875, 2, 2.8308638509114581">
-      <DataClassMoniker Name="/EverdigmDataContext/TB_Command" />
-      <nestedChildShapes>
-        <elementListCompartment Id="40fccaf7-5743-4b9f-bc44-f8cb845ad2b7" absoluteBounds="14.015, 10.335, 1.9700000000000002, 2.270863850911458" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
-    <associationConnector edgePoints="[(16 : 10.3936525472005); (17 : 10.3936525472005)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/EverdigmDataContext/TB_Command/TB_Command_TB_CommandHistory" />
-      <nodes>
-        <classShapeMoniker Id="576c057e-e0ba-425e-b328-831ad7cf90fd" />
-        <classShapeMoniker Id="d7ce80d0-3f8c-4401-a733-7b1e8ac0323d" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(13.5 : 5.51430501302083); (14.09375 : 5.51430501302083); (14.09375 : 9.875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/EverdigmDataContext/TB_Account/TB_Account_TB_Command" />
-      <nodes>
-        <classShapeMoniker Id="a8aeb5ff-54ca-4827-a42a-4b6444a53469" />
-        <classShapeMoniker Id="576c057e-e0ba-425e-b328-831ad7cf90fd" />
-      </nodes>
-    </associationConnector>
     <classShape Id="97b071a1-b244-4a88-b480-ca53b1372cfb" absoluteBounds="5.375, 20, 2, 2.0916874186197916">
       <DataClassMoniker Name="/EverdigmDataContext/TB_IridiumFlow" />
       <nestedChildShapes>
         <elementListCompartment Id="819fdfac-cae5-4d24-9f6d-fa05ba752032" absoluteBounds="5.3900000000000006, 20.46, 1.9700000000000002, 1.5316874186197915" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(3.5 : 21.0550256347656); (4.35416666666667 : 21.0550256347656 : JumpStart); (4.52083333333333 : 21.0550256347656 : JumpEnd); (4.82291916666667 : 21.0550256347656 : JumpStart); (4.98958583333333 : 21.0550256347656 : JumpEnd); (5.375 : 21.0550256347656)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(3.5 : 21.0550256347656); (4.82291916666667 : 21.0550256347656 : JumpStart); (4.98958583333333 : 21.0550256347656 : JumpEnd); (5.375 : 21.0550256347656)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/EverdigmDataContext/TB_Satellite/TB_Satellite_TB_IridiumFlow" />
       <nodes>
         <classShapeMoniker Id="82492e20-48f6-47d7-a3b2-7bdacd1f011f" />
@@ -342,13 +322,6 @@
         <elementListCompartment Id="f96c2550-f7eb-49bc-88c3-c6da210be3a2" absoluteBounds="0.765, 15.21, 1.9700000000000002, 3.010040283203125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(1.75 : 14.75); (1.75 : 13.597099202474); (3.125 : 13.597099202474); (3.125 : 10.5); (3.44791666666667 : 10.5 : JumpStart); (3.61458333333333 : 10.5 : JumpEnd); (3.86979166666667 : 10.5 : JumpStart); (4.03645833333333 : 10.5 : JumpEnd); (4.29166666666667 : 10.5 : JumpStart); (4.45833333333333 : 10.5 : JumpEnd); (4.82291916666667 : 10.5 : JumpStart); (4.98958583333333 : 10.5 : JumpEnd); (6 : 10.5); (6 : 12.6460697428385); (9 : 12.6460697428385); (9 : 10.6562505); (11.4166666666667 : 10.6562505 : JumpStart); (11.5833333333333 : 10.6562505 : JumpEnd); (14 : 10.6562505)]" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/EverdigmDataContext/TB_Terminal/TB_Terminal_TB_Command" />
-      <nodes>
-        <classShapeMoniker Id="a3ed8c21-7b24-4db4-b1ab-d5cbb915b5b6" />
-        <classShapeMoniker Id="576c057e-e0ba-425e-b328-831ad7cf90fd" />
-      </nodes>
-    </associationConnector>
     <associationConnector edgePoints="[(2.75 : 18.1992313639323); (10.84375 : 18.1992313639323); (10.84375 : 23.75)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/EverdigmDataContext/TB_Terminal/TB_Terminal_TB_WorkDetail" />
       <nodes>
@@ -383,18 +356,45 @@
         <elementListCompartment Id="8ef95a51-ea89-4202-9fc0-beaa6f9bbc74" absoluteBounds="0.765, 4.71, 1.9700000000000002, 1.901275634765625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(2.75 : 6.41813781738281); (3.44791666666667 : 6.41813781738281 : JumpStart); (3.61458333333333 : 6.41813781738281 : JumpEnd); (4.82291916666667 : 6.41813781738281 : JumpStart); (4.98958583333333 : 6.41813781738281 : JumpEnd); (6.25 : 6.41813781738281)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.75 : 6.41813781738281); (3.44791666666667 : 6.41813781738281 : JumpStart); (3.61458333333333 : 6.41813781738281 : JumpEnd); (4.82291916666667 : 6.41813781738281 : JumpStart); (4.98958583333333 : 6.41813781738281 : JumpEnd); (6.25 : 6.41813781738281)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/EverdigmDataContext/TB_EquipmentStatusName/TB_EquipmentStatusName_TB_EquipmentStockHistory" />
       <nodes>
         <classShapeMoniker Id="c60721d1-f2ce-43ff-8c9a-fb62525a9a80" />
         <classShapeMoniker Id="b5d83678-a1f9-4237-9e33-ba942a8ee095" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 5.30281640869141); (3.44791666666667 : 5.30281640869141 : JumpStart); (3.61458333333333 : 5.30281640869141 : JumpEnd); (4.9062525 : 5.30281640869141); (4.9062525 : 10.75)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.75 : 5.30281640869141); (3.44791666666667 : 5.30281640869141 : JumpStart); (3.61458333333333 : 5.30281640869141 : JumpEnd); (4.9062525 : 5.30281640869141); (4.9062525 : 10.75)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/EverdigmDataContext/TB_EquipmentStatusName/TB_EquipmentStatusName_TB_Equipment" />
       <nodes>
         <classShapeMoniker Id="c60721d1-f2ce-43ff-8c9a-fb62525a9a80" />
         <classShapeMoniker Id="17b8c5a2-2445-46cd-8c2e-1be5cbe351ae" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="34ad4059-7ccf-4069-b776-532caaa0943b" absoluteBounds="14, 9.5, 2, 3.0156579589843751">
+      <DataClassMoniker Name="/EverdigmDataContext/TB_Command" />
+      <nestedChildShapes>
+        <elementListCompartment Id="ad9cc9cd-6c84-4edf-849e-2ff5d34fa40d" absoluteBounds="14.015, 9.96, 1.9700000000000002, 2.455657958984375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(16 : 10.2061525472005); (17 : 10.2061525472005)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/EverdigmDataContext/TB_Command/TB_Command_TB_CommandHistory" />
+      <nodes>
+        <classShapeMoniker Id="34ad4059-7ccf-4069-b776-532caaa0943b" />
+        <classShapeMoniker Id="d7ce80d0-3f8c-4401-a733-7b1e8ac0323d" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(13.5 : 5.51430501302083); (14.09375 : 5.51430501302083); (14.09375 : 9.5)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/EverdigmDataContext/TB_Account/TB_Account_TB_Command" />
+      <nodes>
+        <classShapeMoniker Id="a8aeb5ff-54ca-4827-a42a-4b6444a53469" />
+        <classShapeMoniker Id="34ad4059-7ccf-4069-b776-532caaa0943b" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(1.75 : 14.75); (1.75 : 13.597099202474); (3.125 : 13.597099202474); (3.125 : 9.5); (3.44791666666667 : 9.5 : JumpStart); (3.61458333333333 : 9.5 : JumpEnd); (3.86979166666667 : 9.5 : JumpStart); (4.03645833333333 : 9.5 : JumpEnd); (4.29166666666667 : 9.5 : JumpStart); (4.45833333333333 : 9.5 : JumpEnd); (4.82291916666667 : 9.5 : JumpStart); (4.98958583333333 : 9.5 : JumpEnd); (11 : 9.5); (11 : 10.6762544931641); (11.4166666666667 : 10.6762544931641 : JumpStart); (11.5833333333333 : 10.6762544931641 : JumpEnd); (14 : 10.6762544931641)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/EverdigmDataContext/TB_Terminal/TB_Terminal_TB_Command" />
+      <nodes>
+        <classShapeMoniker Id="a3ed8c21-7b24-4db4-b1ab-d5cbb915b5b6" />
+        <classShapeMoniker Id="34ad4059-7ccf-4069-b776-532caaa0943b" />
       </nodes>
     </associationConnector>
   </nestedChildShapes>

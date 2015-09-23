@@ -91,9 +91,6 @@ namespace Wbs.Everdigm.Database
     partial void InsertTB_SMS(TB_SMS instance);
     partial void UpdateTB_SMS(TB_SMS instance);
     partial void DeleteTB_SMS(TB_SMS instance);
-    partial void InsertTB_Command(TB_Command instance);
-    partial void UpdateTB_Command(TB_Command instance);
-    partial void DeleteTB_Command(TB_Command instance);
     partial void InsertTB_IridiumFlow(TB_IridiumFlow instance);
     partial void UpdateTB_IridiumFlow(TB_IridiumFlow instance);
     partial void DeleteTB_IridiumFlow(TB_IridiumFlow instance);
@@ -127,6 +124,9 @@ namespace Wbs.Everdigm.Database
     partial void InsertTB_EquipmentStatusName(TB_EquipmentStatusName instance);
     partial void UpdateTB_EquipmentStatusName(TB_EquipmentStatusName instance);
     partial void DeleteTB_EquipmentStatusName(TB_EquipmentStatusName instance);
+    partial void InsertTB_Command(TB_Command instance);
+    partial void UpdateTB_Command(TB_Command instance);
+    partial void DeleteTB_Command(TB_Command instance);
     #endregion
 		
 		public EverdigmDataContext(string connection) : 
@@ -313,14 +313,6 @@ namespace Wbs.Everdigm.Database
 			}
 		}
 		
-		public System.Data.Linq.Table<TB_Command> TB_Command
-		{
-			get
-			{
-				return this.GetTable<TB_Command>();
-			}
-		}
-		
 		public System.Data.Linq.Table<TB_IridiumFlow> TB_IridiumFlow
 		{
 			get
@@ -406,6 +398,14 @@ namespace Wbs.Everdigm.Database
 			get
 			{
 				return this.GetTable<TB_EquipmentStatusName>();
+			}
+		}
+		
+		public System.Data.Linq.Table<TB_Command> TB_Command
+		{
+			get
+			{
+				return this.GetTable<TB_Command>();
 			}
 		}
 	}
@@ -1685,7 +1685,7 @@ namespace Wbs.Everdigm.Database
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Command_TB_CommandHistory", Storage="_TB_Command", ThisKey="Command", OtherKey="id", IsForeignKey=true, DeleteRule="SET NULL")]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Command_TB_CommandHistory", Storage="_TB_Command", ThisKey="Command", OtherKey="id", IsForeignKey=true)]
 		public TB_Command TB_Command
 		{
 			get
@@ -6849,464 +6849,6 @@ namespace Wbs.Everdigm.Database
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TB_Command")]
-	[global::System.Runtime.Serialization.DataContractAttribute()]
-	public partial class TB_Command : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _id;
-		
-		private System.Nullable<byte> _DataType;
-		
-		private System.Nullable<byte> _Status;
-		
-		private System.Nullable<int> _SendUser;
-		
-		private System.Nullable<int> _Terminal;
-		
-		private System.Nullable<int> _IridiumMTMSN;
-		
-		private System.Nullable<System.DateTime> _ScheduleTime;
-		
-		private System.Nullable<System.DateTime> _ActualSendTime;
-		
-		private string _Command;
-		
-		private string _DestinationNo;
-		
-		private string _Content;
-		
-		private EntitySet<TB_CommandHistory> _TB_CommandHistory;
-		
-		private EntityRef<TB_Account> _TB_Account;
-		
-		private EntityRef<TB_Terminal> _TB_Terminal;
-		
-		private bool serializing;
-		
-    #region 可扩展性方法定义
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnidChanging(int value);
-    partial void OnidChanged();
-    partial void OnDataTypeChanging(System.Nullable<byte> value);
-    partial void OnDataTypeChanged();
-    partial void OnStatusChanging(System.Nullable<byte> value);
-    partial void OnStatusChanged();
-    partial void OnSendUserChanging(System.Nullable<int> value);
-    partial void OnSendUserChanged();
-    partial void OnTerminalChanging(System.Nullable<int> value);
-    partial void OnTerminalChanged();
-    partial void OnIridiumMTMSNChanging(System.Nullable<int> value);
-    partial void OnIridiumMTMSNChanged();
-    partial void OnScheduleTimeChanging(System.Nullable<System.DateTime> value);
-    partial void OnScheduleTimeChanged();
-    partial void OnActualSendTimeChanging(System.Nullable<System.DateTime> value);
-    partial void OnActualSendTimeChanged();
-    partial void OnCommandChanging(string value);
-    partial void OnCommandChanged();
-    partial void OnDestinationNoChanging(string value);
-    partial void OnDestinationNoChanged();
-    partial void OnContentChanging(string value);
-    partial void OnContentChanged();
-    #endregion
-		
-		public TB_Command()
-		{
-			this.Initialize();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
-		public int id
-		{
-			get
-			{
-				return this._id;
-			}
-			set
-			{
-				if ((this._id != value))
-				{
-					this.OnidChanging(value);
-					this.SendPropertyChanging();
-					this._id = value;
-					this.SendPropertyChanged("id");
-					this.OnidChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DataType", DbType="TinyInt")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
-		public System.Nullable<byte> DataType
-		{
-			get
-			{
-				return this._DataType;
-			}
-			set
-			{
-				if ((this._DataType != value))
-				{
-					this.OnDataTypeChanging(value);
-					this.SendPropertyChanging();
-					this._DataType = value;
-					this.SendPropertyChanged("DataType");
-					this.OnDataTypeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="TinyInt")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
-		public System.Nullable<byte> Status
-		{
-			get
-			{
-				return this._Status;
-			}
-			set
-			{
-				if ((this._Status != value))
-				{
-					this.OnStatusChanging(value);
-					this.SendPropertyChanging();
-					this._Status = value;
-					this.SendPropertyChanged("Status");
-					this.OnStatusChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SendUser", DbType="Int")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=4)]
-		public System.Nullable<int> SendUser
-		{
-			get
-			{
-				return this._SendUser;
-			}
-			set
-			{
-				if ((this._SendUser != value))
-				{
-					if (this._TB_Account.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnSendUserChanging(value);
-					this.SendPropertyChanging();
-					this._SendUser = value;
-					this.SendPropertyChanged("SendUser");
-					this.OnSendUserChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Terminal", DbType="Int")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=5)]
-		public System.Nullable<int> Terminal
-		{
-			get
-			{
-				return this._Terminal;
-			}
-			set
-			{
-				if ((this._Terminal != value))
-				{
-					if (this._TB_Terminal.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnTerminalChanging(value);
-					this.SendPropertyChanging();
-					this._Terminal = value;
-					this.SendPropertyChanged("Terminal");
-					this.OnTerminalChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IridiumMTMSN", DbType="Int")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=6)]
-		public System.Nullable<int> IridiumMTMSN
-		{
-			get
-			{
-				return this._IridiumMTMSN;
-			}
-			set
-			{
-				if ((this._IridiumMTMSN != value))
-				{
-					this.OnIridiumMTMSNChanging(value);
-					this.SendPropertyChanging();
-					this._IridiumMTMSN = value;
-					this.SendPropertyChanged("IridiumMTMSN");
-					this.OnIridiumMTMSNChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ScheduleTime", DbType="DateTime")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=7)]
-		public System.Nullable<System.DateTime> ScheduleTime
-		{
-			get
-			{
-				return this._ScheduleTime;
-			}
-			set
-			{
-				if ((this._ScheduleTime != value))
-				{
-					this.OnScheduleTimeChanging(value);
-					this.SendPropertyChanging();
-					this._ScheduleTime = value;
-					this.SendPropertyChanged("ScheduleTime");
-					this.OnScheduleTimeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ActualSendTime", DbType="DateTime")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=8)]
-		public System.Nullable<System.DateTime> ActualSendTime
-		{
-			get
-			{
-				return this._ActualSendTime;
-			}
-			set
-			{
-				if ((this._ActualSendTime != value))
-				{
-					this.OnActualSendTimeChanging(value);
-					this.SendPropertyChanging();
-					this._ActualSendTime = value;
-					this.SendPropertyChanged("ActualSendTime");
-					this.OnActualSendTimeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Command", DbType="Char(6)")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=9)]
-		public string Command
-		{
-			get
-			{
-				return this._Command;
-			}
-			set
-			{
-				if ((this._Command != value))
-				{
-					this.OnCommandChanging(value);
-					this.SendPropertyChanging();
-					this._Command = value;
-					this.SendPropertyChanged("Command");
-					this.OnCommandChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DestinationNo", DbType="VarChar(11)")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=10)]
-		public string DestinationNo
-		{
-			get
-			{
-				return this._DestinationNo;
-			}
-			set
-			{
-				if ((this._DestinationNo != value))
-				{
-					this.OnDestinationNoChanging(value);
-					this.SendPropertyChanging();
-					this._DestinationNo = value;
-					this.SendPropertyChanged("DestinationNo");
-					this.OnDestinationNoChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Content", DbType="VarChar(200)")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=11)]
-		public string Content
-		{
-			get
-			{
-				return this._Content;
-			}
-			set
-			{
-				if ((this._Content != value))
-				{
-					this.OnContentChanging(value);
-					this.SendPropertyChanging();
-					this._Content = value;
-					this.SendPropertyChanged("Content");
-					this.OnContentChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Command_TB_CommandHistory", Storage="_TB_CommandHistory", ThisKey="id", OtherKey="Command")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=12, EmitDefaultValue=false)]
-		public EntitySet<TB_CommandHistory> TB_CommandHistory
-		{
-			get
-			{
-				if ((this.serializing 
-							&& (this._TB_CommandHistory.HasLoadedOrAssignedValues == false)))
-				{
-					return null;
-				}
-				return this._TB_CommandHistory;
-			}
-			set
-			{
-				this._TB_CommandHistory.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Account_TB_Command", Storage="_TB_Account", ThisKey="SendUser", OtherKey="id", IsForeignKey=true, DeleteRule="SET NULL")]
-		public TB_Account TB_Account
-		{
-			get
-			{
-				return this._TB_Account.Entity;
-			}
-			set
-			{
-				TB_Account previousValue = this._TB_Account.Entity;
-				if (((previousValue != value) 
-							|| (this._TB_Account.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._TB_Account.Entity = null;
-						previousValue.TB_Command.Remove(this);
-					}
-					this._TB_Account.Entity = value;
-					if ((value != null))
-					{
-						value.TB_Command.Add(this);
-						this._SendUser = value.id;
-					}
-					else
-					{
-						this._SendUser = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("TB_Account");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Terminal_TB_Command", Storage="_TB_Terminal", ThisKey="Terminal", OtherKey="id", IsForeignKey=true)]
-		public TB_Terminal TB_Terminal
-		{
-			get
-			{
-				return this._TB_Terminal.Entity;
-			}
-			set
-			{
-				TB_Terminal previousValue = this._TB_Terminal.Entity;
-				if (((previousValue != value) 
-							|| (this._TB_Terminal.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._TB_Terminal.Entity = null;
-						previousValue.TB_Command.Remove(this);
-					}
-					this._TB_Terminal.Entity = value;
-					if ((value != null))
-					{
-						value.TB_Command.Add(this);
-						this._Terminal = value.id;
-					}
-					else
-					{
-						this._Terminal = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("TB_Terminal");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_TB_CommandHistory(TB_CommandHistory entity)
-		{
-			this.SendPropertyChanging();
-			entity.TB_Command = this;
-		}
-		
-		private void detach_TB_CommandHistory(TB_CommandHistory entity)
-		{
-			this.SendPropertyChanging();
-			entity.TB_Command = null;
-		}
-		
-		private void Initialize()
-		{
-			this._TB_CommandHistory = new EntitySet<TB_CommandHistory>(new Action<TB_CommandHistory>(this.attach_TB_CommandHistory), new Action<TB_CommandHistory>(this.detach_TB_CommandHistory));
-			this._TB_Account = default(EntityRef<TB_Account>);
-			this._TB_Terminal = default(EntityRef<TB_Terminal>);
-			OnCreated();
-		}
-		
-		[global::System.Runtime.Serialization.OnDeserializingAttribute()]
-		[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
-		public void OnDeserializing(StreamingContext context)
-		{
-			this.Initialize();
-		}
-		
-		[global::System.Runtime.Serialization.OnSerializingAttribute()]
-		[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
-		public void OnSerializing(StreamingContext context)
-		{
-			this.serializing = true;
-		}
-		
-		[global::System.Runtime.Serialization.OnSerializedAttribute()]
-		[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
-		public void OnSerialized(StreamingContext context)
-		{
-			this.serializing = false;
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TB_IridiumFlow")]
 	[global::System.Runtime.Serialization.DataContractAttribute()]
 	public partial class TB_IridiumFlow : INotifyPropertyChanging, INotifyPropertyChanged
@@ -11314,13 +10856,13 @@ namespace Wbs.Everdigm.Database
 		
 		private string _Sim;
 		
-		private EntitySet<TB_Command> _TB_Command;
-		
 		private EntitySet<TB_WorkDetail> _TB_WorkDetail;
 		
 		private EntitySet<TB_TerminalFlow> _TB_TerminalFlow;
 		
 		private EntitySet<TB_Equipment> _TB_Equipment;
+		
+		private EntitySet<TB_Command> _TB_Command;
 		
 		private EntityRef<TB_Satellite> _TB_Satellite;
 		
@@ -11686,27 +11228,8 @@ namespace Wbs.Everdigm.Database
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Terminal_TB_Command", Storage="_TB_Command", ThisKey="id", OtherKey="Terminal")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=16, EmitDefaultValue=false)]
-		public EntitySet<TB_Command> TB_Command
-		{
-			get
-			{
-				if ((this.serializing 
-							&& (this._TB_Command.HasLoadedOrAssignedValues == false)))
-				{
-					return null;
-				}
-				return this._TB_Command;
-			}
-			set
-			{
-				this._TB_Command.Assign(value);
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Terminal_TB_WorkDetail", Storage="_TB_WorkDetail", ThisKey="id", OtherKey="BookedTerminal")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=17, EmitDefaultValue=false)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=16, EmitDefaultValue=false)]
 		public EntitySet<TB_WorkDetail> TB_WorkDetail
 		{
 			get
@@ -11725,7 +11248,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Terminal_TB_TerminalFlow", Storage="_TB_TerminalFlow", ThisKey="id", OtherKey="Terminal")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=18, EmitDefaultValue=false)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=17, EmitDefaultValue=false)]
 		public EntitySet<TB_TerminalFlow> TB_TerminalFlow
 		{
 			get
@@ -11744,7 +11267,7 @@ namespace Wbs.Everdigm.Database
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Terminal_TB_Equipment", Storage="_TB_Equipment", ThisKey="id", OtherKey="Terminal")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=19, EmitDefaultValue=false)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=18, EmitDefaultValue=false)]
 		public EntitySet<TB_Equipment> TB_Equipment
 		{
 			get
@@ -11759,6 +11282,25 @@ namespace Wbs.Everdigm.Database
 			set
 			{
 				this._TB_Equipment.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Terminal_TB_Command", Storage="_TB_Command", ThisKey="id", OtherKey="Terminal")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=19, EmitDefaultValue=false)]
+		public EntitySet<TB_Command> TB_Command
+		{
+			get
+			{
+				if ((this.serializing 
+							&& (this._TB_Command.HasLoadedOrAssignedValues == false)))
+				{
+					return null;
+				}
+				return this._TB_Command;
+			}
+			set
+			{
+				this._TB_Command.Assign(value);
 			}
 		}
 		
@@ -11816,18 +11358,6 @@ namespace Wbs.Everdigm.Database
 			}
 		}
 		
-		private void attach_TB_Command(TB_Command entity)
-		{
-			this.SendPropertyChanging();
-			entity.TB_Terminal = this;
-		}
-		
-		private void detach_TB_Command(TB_Command entity)
-		{
-			this.SendPropertyChanging();
-			entity.TB_Terminal = null;
-		}
-		
 		private void attach_TB_WorkDetail(TB_WorkDetail entity)
 		{
 			this.SendPropertyChanging();
@@ -11864,12 +11394,24 @@ namespace Wbs.Everdigm.Database
 			entity.TB_Terminal = null;
 		}
 		
+		private void attach_TB_Command(TB_Command entity)
+		{
+			this.SendPropertyChanging();
+			entity.TB_Terminal = this;
+		}
+		
+		private void detach_TB_Command(TB_Command entity)
+		{
+			this.SendPropertyChanging();
+			entity.TB_Terminal = null;
+		}
+		
 		private void Initialize()
 		{
-			this._TB_Command = new EntitySet<TB_Command>(new Action<TB_Command>(this.attach_TB_Command), new Action<TB_Command>(this.detach_TB_Command));
 			this._TB_WorkDetail = new EntitySet<TB_WorkDetail>(new Action<TB_WorkDetail>(this.attach_TB_WorkDetail), new Action<TB_WorkDetail>(this.detach_TB_WorkDetail));
 			this._TB_TerminalFlow = new EntitySet<TB_TerminalFlow>(new Action<TB_TerminalFlow>(this.attach_TB_TerminalFlow), new Action<TB_TerminalFlow>(this.detach_TB_TerminalFlow));
 			this._TB_Equipment = new EntitySet<TB_Equipment>(new Action<TB_Equipment>(this.attach_TB_Equipment), new Action<TB_Equipment>(this.detach_TB_Equipment));
+			this._TB_Command = new EntitySet<TB_Command>(new Action<TB_Command>(this.attach_TB_Command), new Action<TB_Command>(this.detach_TB_Command));
 			this._TB_Satellite = default(EntityRef<TB_Satellite>);
 			OnCreated();
 		}
@@ -12231,6 +11773,489 @@ namespace Wbs.Everdigm.Database
 		{
 			this._TB_EquipmentStockHistory = new EntitySet<TB_EquipmentStockHistory>(new Action<TB_EquipmentStockHistory>(this.attach_TB_EquipmentStockHistory), new Action<TB_EquipmentStockHistory>(this.detach_TB_EquipmentStockHistory));
 			this._TB_Equipment = new EntitySet<TB_Equipment>(new Action<TB_Equipment>(this.attach_TB_Equipment), new Action<TB_Equipment>(this.detach_TB_Equipment));
+			OnCreated();
+		}
+		
+		[global::System.Runtime.Serialization.OnDeserializingAttribute()]
+		[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+		public void OnDeserializing(StreamingContext context)
+		{
+			this.Initialize();
+		}
+		
+		[global::System.Runtime.Serialization.OnSerializingAttribute()]
+		[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+		public void OnSerializing(StreamingContext context)
+		{
+			this.serializing = true;
+		}
+		
+		[global::System.Runtime.Serialization.OnSerializedAttribute()]
+		[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+		public void OnSerialized(StreamingContext context)
+		{
+			this.serializing = false;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TB_Command")]
+	[global::System.Runtime.Serialization.DataContractAttribute()]
+	public partial class TB_Command : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private System.Nullable<byte> _DataType;
+		
+		private System.Nullable<byte> _Status;
+		
+		private System.Nullable<int> _SendUser;
+		
+		private System.Nullable<int> _Terminal;
+		
+		private System.Nullable<int> _IridiumMTMSN;
+		
+		private System.Nullable<long> _TimeUsed;
+		
+		private System.Nullable<System.DateTime> _ScheduleTime;
+		
+		private System.Nullable<System.DateTime> _ActualSendTime;
+		
+		private string _Command;
+		
+		private string _DestinationNo;
+		
+		private string _Content;
+		
+		private EntitySet<TB_CommandHistory> _TB_CommandHistory;
+		
+		private EntityRef<TB_Account> _TB_Account;
+		
+		private EntityRef<TB_Terminal> _TB_Terminal;
+		
+		private bool serializing;
+		
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnDataTypeChanging(System.Nullable<byte> value);
+    partial void OnDataTypeChanged();
+    partial void OnStatusChanging(System.Nullable<byte> value);
+    partial void OnStatusChanged();
+    partial void OnSendUserChanging(System.Nullable<int> value);
+    partial void OnSendUserChanged();
+    partial void OnTerminalChanging(System.Nullable<int> value);
+    partial void OnTerminalChanged();
+    partial void OnIridiumMTMSNChanging(System.Nullable<int> value);
+    partial void OnIridiumMTMSNChanged();
+    partial void OnTimeUsedChanging(System.Nullable<long> value);
+    partial void OnTimeUsedChanged();
+    partial void OnScheduleTimeChanging(System.Nullable<System.DateTime> value);
+    partial void OnScheduleTimeChanged();
+    partial void OnActualSendTimeChanging(System.Nullable<System.DateTime> value);
+    partial void OnActualSendTimeChanged();
+    partial void OnCommandChanging(string value);
+    partial void OnCommandChanged();
+    partial void OnDestinationNoChanging(string value);
+    partial void OnDestinationNoChanged();
+    partial void OnContentChanging(string value);
+    partial void OnContentChanged();
+    #endregion
+		
+		public TB_Command()
+		{
+			this.Initialize();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DataType", DbType="TinyInt")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+		public System.Nullable<byte> DataType
+		{
+			get
+			{
+				return this._DataType;
+			}
+			set
+			{
+				if ((this._DataType != value))
+				{
+					this.OnDataTypeChanging(value);
+					this.SendPropertyChanging();
+					this._DataType = value;
+					this.SendPropertyChanged("DataType");
+					this.OnDataTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="TinyInt")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+		public System.Nullable<byte> Status
+		{
+			get
+			{
+				return this._Status;
+			}
+			set
+			{
+				if ((this._Status != value))
+				{
+					this.OnStatusChanging(value);
+					this.SendPropertyChanging();
+					this._Status = value;
+					this.SendPropertyChanged("Status");
+					this.OnStatusChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SendUser", DbType="Int")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=4)]
+		public System.Nullable<int> SendUser
+		{
+			get
+			{
+				return this._SendUser;
+			}
+			set
+			{
+				if ((this._SendUser != value))
+				{
+					if (this._TB_Account.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnSendUserChanging(value);
+					this.SendPropertyChanging();
+					this._SendUser = value;
+					this.SendPropertyChanged("SendUser");
+					this.OnSendUserChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Terminal", DbType="Int")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=5)]
+		public System.Nullable<int> Terminal
+		{
+			get
+			{
+				return this._Terminal;
+			}
+			set
+			{
+				if ((this._Terminal != value))
+				{
+					if (this._TB_Terminal.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnTerminalChanging(value);
+					this.SendPropertyChanging();
+					this._Terminal = value;
+					this.SendPropertyChanged("Terminal");
+					this.OnTerminalChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IridiumMTMSN", DbType="Int")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=6)]
+		public System.Nullable<int> IridiumMTMSN
+		{
+			get
+			{
+				return this._IridiumMTMSN;
+			}
+			set
+			{
+				if ((this._IridiumMTMSN != value))
+				{
+					this.OnIridiumMTMSNChanging(value);
+					this.SendPropertyChanging();
+					this._IridiumMTMSN = value;
+					this.SendPropertyChanged("IridiumMTMSN");
+					this.OnIridiumMTMSNChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TimeUsed", DbType="BigInt")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=7)]
+		public System.Nullable<long> TimeUsed
+		{
+			get
+			{
+				return this._TimeUsed;
+			}
+			set
+			{
+				if ((this._TimeUsed != value))
+				{
+					this.OnTimeUsedChanging(value);
+					this.SendPropertyChanging();
+					this._TimeUsed = value;
+					this.SendPropertyChanged("TimeUsed");
+					this.OnTimeUsedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ScheduleTime", DbType="DateTime")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=8)]
+		public System.Nullable<System.DateTime> ScheduleTime
+		{
+			get
+			{
+				return this._ScheduleTime;
+			}
+			set
+			{
+				if ((this._ScheduleTime != value))
+				{
+					this.OnScheduleTimeChanging(value);
+					this.SendPropertyChanging();
+					this._ScheduleTime = value;
+					this.SendPropertyChanged("ScheduleTime");
+					this.OnScheduleTimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ActualSendTime", DbType="DateTime")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=9)]
+		public System.Nullable<System.DateTime> ActualSendTime
+		{
+			get
+			{
+				return this._ActualSendTime;
+			}
+			set
+			{
+				if ((this._ActualSendTime != value))
+				{
+					this.OnActualSendTimeChanging(value);
+					this.SendPropertyChanging();
+					this._ActualSendTime = value;
+					this.SendPropertyChanged("ActualSendTime");
+					this.OnActualSendTimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Command", DbType="Char(6)")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=10)]
+		public string Command
+		{
+			get
+			{
+				return this._Command;
+			}
+			set
+			{
+				if ((this._Command != value))
+				{
+					this.OnCommandChanging(value);
+					this.SendPropertyChanging();
+					this._Command = value;
+					this.SendPropertyChanged("Command");
+					this.OnCommandChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DestinationNo", DbType="VarChar(11)")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=11)]
+		public string DestinationNo
+		{
+			get
+			{
+				return this._DestinationNo;
+			}
+			set
+			{
+				if ((this._DestinationNo != value))
+				{
+					this.OnDestinationNoChanging(value);
+					this.SendPropertyChanging();
+					this._DestinationNo = value;
+					this.SendPropertyChanged("DestinationNo");
+					this.OnDestinationNoChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Content", DbType="VarChar(200)")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=12)]
+		public string Content
+		{
+			get
+			{
+				return this._Content;
+			}
+			set
+			{
+				if ((this._Content != value))
+				{
+					this.OnContentChanging(value);
+					this.SendPropertyChanging();
+					this._Content = value;
+					this.SendPropertyChanged("Content");
+					this.OnContentChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Command_TB_CommandHistory", Storage="_TB_CommandHistory", ThisKey="id", OtherKey="Command")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=13, EmitDefaultValue=false)]
+		public EntitySet<TB_CommandHistory> TB_CommandHistory
+		{
+			get
+			{
+				if ((this.serializing 
+							&& (this._TB_CommandHistory.HasLoadedOrAssignedValues == false)))
+				{
+					return null;
+				}
+				return this._TB_CommandHistory;
+			}
+			set
+			{
+				this._TB_CommandHistory.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Account_TB_Command", Storage="_TB_Account", ThisKey="SendUser", OtherKey="id", IsForeignKey=true)]
+		public TB_Account TB_Account
+		{
+			get
+			{
+				return this._TB_Account.Entity;
+			}
+			set
+			{
+				TB_Account previousValue = this._TB_Account.Entity;
+				if (((previousValue != value) 
+							|| (this._TB_Account.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._TB_Account.Entity = null;
+						previousValue.TB_Command.Remove(this);
+					}
+					this._TB_Account.Entity = value;
+					if ((value != null))
+					{
+						value.TB_Command.Add(this);
+						this._SendUser = value.id;
+					}
+					else
+					{
+						this._SendUser = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("TB_Account");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Terminal_TB_Command", Storage="_TB_Terminal", ThisKey="Terminal", OtherKey="id", IsForeignKey=true)]
+		public TB_Terminal TB_Terminal
+		{
+			get
+			{
+				return this._TB_Terminal.Entity;
+			}
+			set
+			{
+				TB_Terminal previousValue = this._TB_Terminal.Entity;
+				if (((previousValue != value) 
+							|| (this._TB_Terminal.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._TB_Terminal.Entity = null;
+						previousValue.TB_Command.Remove(this);
+					}
+					this._TB_Terminal.Entity = value;
+					if ((value != null))
+					{
+						value.TB_Command.Add(this);
+						this._Terminal = value.id;
+					}
+					else
+					{
+						this._Terminal = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("TB_Terminal");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_TB_CommandHistory(TB_CommandHistory entity)
+		{
+			this.SendPropertyChanging();
+			entity.TB_Command = this;
+		}
+		
+		private void detach_TB_CommandHistory(TB_CommandHistory entity)
+		{
+			this.SendPropertyChanging();
+			entity.TB_Command = null;
+		}
+		
+		private void Initialize()
+		{
+			this._TB_CommandHistory = new EntitySet<TB_CommandHistory>(new Action<TB_CommandHistory>(this.attach_TB_CommandHistory), new Action<TB_CommandHistory>(this.detach_TB_CommandHistory));
+			this._TB_Account = default(EntityRef<TB_Account>);
+			this._TB_Terminal = default(EntityRef<TB_Terminal>);
 			OnCreated();
 		}
 		

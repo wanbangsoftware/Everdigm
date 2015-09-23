@@ -27,6 +27,7 @@ namespace Wbs.Everdigm.BLL
                 Command = "",
                 Content = "",
                 IridiumMTMSN = 0,
+                TimeUsed = 0,
                 DataType = 2,
                 Terminal = (int?)null,
                 DestinationNo = "",

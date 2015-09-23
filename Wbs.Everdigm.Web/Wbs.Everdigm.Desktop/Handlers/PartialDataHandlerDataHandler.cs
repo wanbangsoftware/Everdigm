@@ -645,19 +645,22 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="terminal"></param>
         private void Handle0xCC00(TX300 obj, TB_Terminal terminal)
         {
+            // 更新最近发送的0xBB0F命令为成功状态
+            Handle0xBB0FStatus();
+            return;
             // 返回铱星方式的0xCC00数据
-            if (obj.ProtocolType == Protocol.ProtocolTypes.SATELLITE)
-            {
-                var cc00 = Get0xCC00(obj);
-                var cmd = CommandInstance.GetObject();
-                cmd.Command = "0xCC00";
-                cmd.Content = CustomConvert.GetHex(cc00);
-                cc00 = null;
-                cmd.DestinationNo = terminal.Sim + (terminal.Sim.Length < 11 ? "000" : "");
-                cmd.Status = (byte)CommandStatus.WaitingForSatellite;
-                cmd.Terminal = terminal.id;
-                CommandInstance.Add(cmd);
-            }
+            //if (obj.ProtocolType == Protocol.ProtocolTypes.SATELLITE)
+            //{
+            //    var cc00 = Get0xCC00(obj);
+            //    var cmd = CommandInstance.GetObject();
+            //    cmd.Command = "0xCC00";
+            //    cmd.Content = CustomConvert.GetHex(cc00);
+            //    cc00 = null;
+            //    cmd.DestinationNo = terminal.Sim + (terminal.Sim.Length < 11 ? "000" : "");
+            //    cmd.Status = (byte)CommandStatus.WaitingForSatellite;
+            //    cmd.Terminal = terminal.id;
+            //    CommandInstance.Add(cmd);
+            //}
         }
         /// <summary>
         /// 处理DD00命令
