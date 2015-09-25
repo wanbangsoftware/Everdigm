@@ -434,14 +434,22 @@ namespace Wbs.Everdigm.Desktop
                     string text = "";
                     lock (lock_momsn)
                     {
-                        var m = MOMSNs.FirstOrDefault(f => f.mtmsn == momsn);
-                        if (null != m)
+                        if (!_showPackage)
                         {
+                            var m = MOMSNs.FirstOrDefault(f => f.mtmsn == momsn);
+                            if (null != m)
+                            {
+                                showPayload = true;
+                                m.HandleTimes++;
+                            }
+                        }
+                        else
+                        {
+                            // 如果显示数据包数据则直接显示
                             showPayload = true;
-                            m.HandleTimes++;
                         }
                         if (showPayload)
-                        { 
+                        {
                             foreach (var s in _history)
                                 text += s + Environment.NewLine;
                         }

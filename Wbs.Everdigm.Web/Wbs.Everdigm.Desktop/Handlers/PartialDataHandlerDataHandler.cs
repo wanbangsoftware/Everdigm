@@ -529,9 +529,16 @@ namespace Wbs.Everdigm.Desktop
             x5000.Unpackage();
             if (null != equipment)
             {
+                string vol = string.Format("G{0}0", ((int)Math.Floor(x5000.GeneratorVoltage * 10)).ToString("000"));
                 EquipmentInstance.Update(f => f.id == equipment.id, act =>
                 {
-                    act.Voltage = string.Format("G{0}0", ((int)Math.Floor(x5000.GeneratorVoltage * 10)).ToString("000"));
+                    act.Voltage = vol;
+                    if (x5000.GeneratorVoltage > 20.0)
+                    {
+                        // 开机的时候清空报警信息  2015/09/24 08:00
+                        act.Alarm = ALARM;
+                    }
+
                     if (x5000.GeneratorVoltage < 20)
                     { act.Rpm = 0; }
                     if (x5000.WorkTime > 0)
@@ -569,6 +576,8 @@ namespace Wbs.Everdigm.Desktop
                 EquipmentInstance.Update(f => f.id == equipment.id, act =>
                 {
                     act.Rpm = (short)x6000.RPM;
+                    // EPOS命令时清空报警  2015/09/24 08:00
+                    act.Alarm = ALARM;
                 });
             }
         }
@@ -594,6 +603,11 @@ namespace Wbs.Everdigm.Desktop
                         if (x6004.TotalWorkTime >= act.Runtime)
                         {
                             act.Runtime = (int)x6004.TotalWorkTime;
+                            if (obj.TerminalType == Protocol.TerminalTypes.DH || obj.TerminalType == Protocol.TerminalTypes.DX)
+                            {
+                                // EPOS命令时清空报警  2015/09/24 08:00
+                                act.Alarm = ALARM;
+                            }
                         }
                     });
                 }
@@ -615,6 +629,11 @@ namespace Wbs.Everdigm.Desktop
                 EquipmentInstance.Update(f => f.id == equipment.id, act =>
                 {
                     act.LockStatus = CustomConvert.GetHex(x6007.Code);
+                    if (obj.TerminalType == Protocol.TerminalTypes.DH || obj.TerminalType == Protocol.TerminalTypes.DX)
+                    {
+                        // EPOS命令时清空报警  2015/09/24 08:00
+                        act.Alarm = ALARM;
+                    }
                 });
             }
         }
@@ -647,7 +666,6 @@ namespace Wbs.Everdigm.Desktop
         {
             // 更新最近发送的0xBB0F命令为成功状态
             Handle0xBB0FStatus();
-            return;
             // 返回铱星方式的0xCC00数据
             //if (obj.ProtocolType == Protocol.ProtocolTypes.SATELLITE)
             //{
