@@ -214,6 +214,62 @@ namespace Wbs.Everdigm.BLL
                 Wbs.Protocol.TX300.Analyse._0x2000.GetAlarm(alarm) + "\"><i class=\"fa fa-bell\"></i></span>";
         }
         /// <summary>
+        /// 获取链接状态
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="forShort"></param>
+        /// <returns></returns>
+        public string GetOnlineStyle(TB_Equipment obj, bool forShort = true)
+        {
+            var type = obj.OnlineStyle;
+            var ret = "";
+            if ((byte?)null == type)
+                ret = "<span class=\"text-danger\"><i class=\"fa fa-question\" title=\"Unknown\"></i></span>";
+
+            switch (type)
+            {
+                case 0x00:// OFF
+                    ret = "<span class=\"label label-default\" title=\"Battery Off\">" + (forShort ? "OFF" : "Battery Off") + "</span>";
+                    break;
+                case 0x10:// TCP
+                    ret = "<span class=\"label label-info\">TCP</span>";
+                    break;
+                case 0x20:// UDP
+                    ret = "<span class=\"label label-success\">UDP</span>";
+                    break;
+                case 0x30:// SMS
+                    ret = "<span class=\"label label-warning\">SMS</span>";
+                    break;
+                case 0x40:// SLEEP
+                    ret = "<span class=\"label label-warning\" title=\"Sleep\">" + (forShort ? "SLP" : "Sleep") + "</span>";
+                    break;
+                case 0x50:// BLIND
+                    ret = "<span class=\"label label-danger\" title=\"Blind\">" + (forShort ? "BLD" : "Blind") + "</span>";
+                    break;
+                case 0x60:// SATELLITE
+                    // 卫星链接状态下根据最后信息时间改变链接的背景颜色
+                    var span = DateTime.Now.Subtract(obj.OnlineTime.Value).Duration().TotalMinutes;
+                    var cls = "primary";
+                    var title = "";
+                    if (span > 60 * 24 * 5)
+                    {
+                        cls = "danger";
+                        title = "(Activated 5 days ago)";
+                    }
+                    else if (span > 60 * 24 * 3)
+                    {
+                        cls = "warning";
+                        title = "(Activated 3 days ago)";
+                    }
+                    ret = "<span class=\"label label-" + cls + "\" title=\"Satellite" + title + "\">" + (forShort ? "SAT" : "Satellite") + "</span>";
+                    break;
+                case 0xFF:// TROUBLE
+                    ret = "<span class=\"label label-danger\" title=\"Trouble\">" + (forShort ? "TRB" : "Trouble") + "</span>";
+                    break;
+            }
+            return ret;
+        }
+        /// <summary>
         /// 获取运转时间
         /// </summary>
         /// <param name="time"></param>
