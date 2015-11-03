@@ -34,13 +34,6 @@ namespace Wbs.Everdigm.Web.main
             var list = CustomerInstance.FindPageList<TB_Customer>(pageIndex, PageSize, out totalRecords,
                 f => f.Name.IndexOf(query) >= 0 && f.Delete == false, "Name");
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
-            pageIndex = 0 == pageIndex ? totalPages : pageIndex;
-            if (totalRecords > 0 && pageIndex > totalPages)
-            {
-                pageIndex = totalPages;
-                list = CustomerInstance.FindPageList<TB_Customer>(pageIndex, PageSize, out totalRecords,
-                    f => f.Name.IndexOf(query) >= 0 && f.Delete == false, "Name");
-            }
 
             string html = "";
             if (totalRecords < 1)

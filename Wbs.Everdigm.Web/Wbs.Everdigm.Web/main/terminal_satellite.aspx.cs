@@ -35,12 +35,6 @@ namespace Wbs.Everdigm.Web.main
             var list = SatelliteInstance.FindPageList<TB_Satellite>(pageIndex, _page_size, out totalRecords,
                 f => f.Bound == false, "CardNo");
             var totalPages = totalRecords / _page_size + (totalRecords % _page_size > 0 ? 1 : 0);
-            pageIndex = 0 == pageIndex ? totalPages : pageIndex;
-            if (pageIndex > totalPages)
-            {
-                list = SatelliteInstance.FindPageList<TB_Satellite>(pageIndex, _page_size, out totalRecords,
-                    f => f.Bound == false, "CardNo");
-            }
 
             string html = "";
             if (totalRecords < 1)

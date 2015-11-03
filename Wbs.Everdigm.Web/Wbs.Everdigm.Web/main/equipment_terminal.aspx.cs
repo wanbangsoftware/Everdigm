@@ -150,14 +150,6 @@ namespace Wbs.Everdigm.Web.main
                 f => f.Terminal == (int?)null && f.Number.IndexOf(txtEquipment.Value.Trim()) >= 0 &&
                     f.Functional == GetEquipmentTypeByTerminalType() && f.Deleted == false, null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
-            pageIndex = 0 == pageIndex ? totalPages : pageIndex;
-            if (pageIndex > totalPages)
-            {
-                pageIndex = totalPages;
-                list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
-                    f => f.Terminal == (int?)null && f.Number.IndexOf(txtEquipment.Value.Trim()) >= 0 &&
-                    f.Functional == GetEquipmentTypeByTerminalType() && f.Deleted == false, null);
-            }
 
             string html = "";
             if (totalRecords < 1)

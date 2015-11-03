@@ -51,13 +51,6 @@ namespace Wbs.Everdigm.Web.main
             var list = HistoryInstance.FindPageList<TB_AccountHistory>(pageIndex, PageSize, out totalRecords,
                 f => f.ActionTime >= then && f.ActionTime <= now && f.Account == Account.id, "ActionTime", true);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
-            pageIndex = 0 == pageIndex ? totalPages : pageIndex;
-            if (pageIndex >= totalPages)
-            {
-                pageIndex = totalPages;
-                list = HistoryInstance.FindPageList<TB_AccountHistory>(pageIndex, PageSize, out totalRecords,
-                f => f.ActionTime >= then && f.ActionTime <= now && f.Account == Account.id, "ActionTime", true);
-            }
 
             string html = "";
             if (totalRecords < 1)

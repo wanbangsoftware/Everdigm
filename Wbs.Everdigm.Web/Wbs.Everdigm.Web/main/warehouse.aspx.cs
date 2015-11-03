@@ -115,13 +115,6 @@ namespace Wbs.Everdigm.Web.main
             var list = WarehouseInstance.FindPageList<TB_Warehouse>(pageIndex, PageSize, out totalRecords,
                 f => f.Delete == false, "Name");
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
-            pageIndex = 0 == pageIndex ? totalPages : pageIndex;
-            if (pageIndex >= totalPages)
-            {
-                pageIndex = totalPages;
-                list = WarehouseInstance.FindPageList<TB_Warehouse>(pageIndex, PageSize, out totalRecords,
-                    f => f.Delete == false, "Name");
-            }
 
             string html = "";
             if (totalRecords < 1)

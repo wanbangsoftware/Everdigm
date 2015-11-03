@@ -498,4 +498,14 @@
       <Association Name="TB_Terminal_TB_Command" Member="TB_Terminal" ThisKey="Terminal" OtherKey="id" Type="TB_Terminal" IsForeignKey="true" />
     </Type>
   </Table>
+  <Function Name="dbo.sp_ClearOldLinks" Method="sp_ClearOldLinks">
+    <Parameter Name="datetime" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="arm2sleep" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="sleep2blind" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="sms2sleep" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="tcpudp2sms" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="satellite" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Parameter Name="terminals" Type="System.Int32" DbType="Int" Direction="InOut" />
+    <Return Type="System.Int32" />
+  </Function>
 </Database>

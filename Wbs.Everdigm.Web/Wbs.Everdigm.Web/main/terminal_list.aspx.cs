@@ -74,14 +74,6 @@ namespace Wbs.Everdigm.Web.main
                 f => f.Delete == false && f.Number.Contains(txtNumber.Value) &&
                     f.Sim.Contains(txtSimcard.Value), "Number");
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
-            pageIndex = 0 == pageIndex ? totalPages : pageIndex;
-            if (pageIndex > totalPages)
-            {
-                pageIndex = totalPages;
-                list = TerminalInstance.FindPageList<TB_Terminal>(pageIndex, PageSize, out totalRecords, 
-                    f => f.Delete == false && f.Number.Contains(txtNumber.Value) && 
-                        f.Sim.Contains(txtSimcard.Value), "Number");
-            }
 
             string html = "";
             if (totalRecords < 1)

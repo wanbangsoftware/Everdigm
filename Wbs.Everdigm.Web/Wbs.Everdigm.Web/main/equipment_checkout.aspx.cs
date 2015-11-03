@@ -61,16 +61,6 @@ namespace Wbs.Everdigm.Web.main
                     (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0), null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             hidTotalPages.Value = totalPages.ToString();
-            pageIndex = 0 == pageIndex ? totalPages : pageIndex;
-            if (totalRecords > 0 && pageIndex > totalPages)
-            {
-                pageIndex = totalPages;
-                list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
-                    f => (f.TB_EquipmentStatusName.IsItInventory == true || f.TB_EquipmentStatusName.IsItOutstorage == true) && 
-                        f.Deleted == false && (model <= 0 ? f.Model >= 0 : f.Model == model) &&
-                        (house <= 0 ? (f.Warehouse >= 0 || f.Warehouse == (int?)null) : f.Warehouse == house) &&
-                        (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0), null);
-            }
 
             string html = "";
             if (totalRecords < 1)

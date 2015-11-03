@@ -9,8 +9,9 @@ $(document).ready(function () {
 
     $("#divPagging a").on("click", function (e) {
         var p = $(this).html();
-        p = "«" == p ? "1" : p;
-        p = "»" == p ? "0" : p;
+        var cls = $(this).attr("class");
+        if (cls.indexOf("_") >= 0)
+            p = cls.replace("_", "");
         $("#hidPageIndex").val(p);
         e.preventDefault();
         if ($(this).outerHTML().indexOf("current") < 0)

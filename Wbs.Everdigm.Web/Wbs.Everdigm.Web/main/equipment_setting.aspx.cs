@@ -75,58 +75,97 @@ namespace Wbs.Everdigm.Web.main
             var id = ParseInt(Utility.Decrypt(_key));
             var equipment = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
             bool needSave = false;
+            string msg = "";
+            int wh = 0, md = 0;
             if (null != equipment)
             {
+                msg = EquipmentInstance.GetFullNumber(equipment);
                 var tmp = int.Parse(hidWarehouse.Value);
                 if (tmp > 0)
                 {
-                    equipment.Warehouse = tmp;
+                    var oh = WarehouseInstance.Find(f => f.id == equipment.Warehouse);
+                    var nh = WarehouseInstance.Find(f => f.id == tmp && f.Delete == false);
+                    msg += ", " + oh.Name + " to " + nh.Name;
+                    //equipment.Warehouse = tmp;
+                    wh = tmp;
                     needSave = true;
                 }
                 tmp = int.Parse(selectedModel.Value);
                 if (tmp > 0)
                 {
-                    equipment.Model = tmp;
+                    var om = ModelInstance.Find(f => f.id == equipment.Model);
+                    var nm = ModelInstance.Find(f => f.id == tmp && f.Delete == false);
+                    msg += ", " + om.Code + " to " + nm.Code;
+                    //equipment.Model = tmp;
+                    md = tmp;
                     needSave = true;
                 }
                 tmp = int.Parse(hidFunctional.Value);
                 if (tmp != 0 && tmp != int.Parse(oldFunc.Value))
                 {
+                    msg += ", " + Utility.GetEquipmentFunctional(equipment.Functional.Value) + " to " + Utility.GetEquipmentFunctional((byte)tmp);
                     equipment.Functional = (byte)tmp;
                     needSave = true;
                 }
                 var num = number.Value.Trim();
                 if (!string.IsNullOrEmpty(num))
                 {
-                    equipment.Number = num;
-                    needSave = true;
+                    if (!num.Equals(equipment.Number))
+                    {
+                        msg += ", Number: " + equipment.Number + " to " + num;
+                        equipment.Number = num;
+                        needSave = true;
+                    }
                 }
                 //tmp = int.Parse(Utility.Decrypt(Utility.UrlDecode(oldTerminal.Value)));
                 var n = string.IsNullOrEmpty(newTerminal.Value) ? 0 : int.Parse(Utility.Decrypt(Utility.UrlDecode(newTerminal.Value)));
                 TB_Terminal newOne = null;
-                if (n > 0) {
+                if (n > 0)
+                {
+                    msg += ", Terminal: ";
                     // 更新旧终端为未绑定状态
                     if ((int?)null != equipment.Terminal)
                     {
+                        var ter = equipment.TB_Terminal.Number;
                         TerminalInstance.Update(f => f.id == equipment.Terminal, act =>
                         {
                             act.HasBound = false;
                         });
+                        // 保存旧终端的解绑状态
+                        SaveHistory(new TB_AccountHistory()
+                        {
+                            ActionId = ActionInstance.Find(f => f.Name.Equals("Unbind")).id,
+                            ObjectA = "unbind terminal " + ter + " and equipment " + EquipmentInstance.GetFullNumber(equipment)
+                        });
+                        msg += ter + "(unbind) to ";
                     }
                     newOne = TerminalInstance.Find(f => f.id == n);
+                    msg += newOne.Number + "(bind)";
                     equipment.Terminal = n;
                     // 更新新终端的绑定状态
                     TerminalInstance.Update(f => f.id == n, act => { act.HasBound = true; });
+                    // 保存新终端的绑定状态
+                    SaveHistory(new TB_AccountHistory()
+                    {
+                        ActionId = ActionInstance.Find(f => f.Name.Equals("Unbind")).id,
+                        ObjectA = "bind terminal " + newOne.Number + " and equipment " + EquipmentInstance.GetFullNumber(equipment)
+                    });
                     needSave = true;
                 }
                 if (needSave)
                 {
                     EquipmentInstance.Update(f => f.id == equipment.id && f.Deleted == false, act =>
                     {
-                        if (act.Model != equipment.Model)
-                            act.Model = equipment.Model;
-                        if (act.Warehouse != equipment.Warehouse)
-                            act.Warehouse = equipment.Warehouse;
+                        if (md > 0)
+                        {
+                            //if (act.Model != equipment.Model)
+                            act.Model = md;
+                        }
+                        if (wh > 0)
+                        {
+                            //if (act.Warehouse != equipment.Warehouse)
+                            act.Warehouse = wh;
+                        }
                         if (!act.Number.Equals(equipment.Number))
                             act.Number = equipment.Number;
                         if (act.Functional != equipment.Functional)
@@ -143,7 +182,7 @@ namespace Wbs.Everdigm.Web.main
                     SaveHistory(new Database.TB_AccountHistory()
                     {
                         ActionId = ActionInstance.Find(f => f.Name.Equals("EditEquipmentInfo")).id,
-                        ObjectA = EquipmentInstance.GetFullNumber(equipment)
+                        ObjectA = msg
                     });
                     ShowNotification("./equipment_setting.aspx?key=" + Utility.UrlEncode(_key), "You have saved the equipment info.", true);
                 }
@@ -207,11 +246,21 @@ namespace Wbs.Everdigm.Web.main
             else
             {
                 string number = EquipmentInstance.GetFullNumber(equipment);
-                // 解绑终端
-                TerminalInstance.Update(f => f.id == equipment.Terminal, act =>
+                if ((int?)null != equipment.Terminal)
                 {
-                    act.HasBound = false;
-                });
+                    var ter = equipment.TB_Terminal.Number;
+                    // 解绑终端
+                    TerminalInstance.Update(f => f.id == equipment.Terminal, act =>
+                    {
+                        act.HasBound = false;
+                    });
+                    // 保存解绑终端历史
+                    SaveHistory(new TB_AccountHistory()
+                    {
+                        ActionId = ActionInstance.Find(f => f.Name.Equals("Unbind")).id,
+                        ObjectA = "unbind terminal(delete equipment) " + ter + " and equipment " + EquipmentInstance.GetFullNumber(equipment)
+                    });
+                }
                 // 更新Deleted=true
                 EquipmentInstance.Update(f => f.id == equipment.id, act => {
                     act.Deleted = true;

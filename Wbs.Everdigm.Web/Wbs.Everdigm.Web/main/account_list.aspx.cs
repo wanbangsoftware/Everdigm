@@ -73,15 +73,6 @@ namespace Wbs.Everdigm.Web.main
                     (roles.Contains(f.Role.Value) || f.Role == (int?)null) &&
                     (depts.Contains(f.Department.Value) || f.Department == (int?)null), "Name");
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
-            pageIndex = 0 == pageIndex ? totalPages : pageIndex;
-            if (pageIndex > totalPages)
-            {
-                pageIndex = totalPages;
-                list = AccountInstance.FindPageList<TB_Account>(pageIndex, PageSize, out totalRecords,
-                    f => (f.Name.IndexOf(txtName.Value.Trim()) >= 0) &&
-                    (roles.Contains(f.Role.Value) || f.Role == (int?)null) &&
-                    (depts.Contains(f.Department.Value) || f.Department == (int?)null), "Name");
-            }
 
             string html = "";
             if (totalRecords < 1)

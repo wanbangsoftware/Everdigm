@@ -408,6 +408,19 @@ namespace Wbs.Everdigm.Database
 				return this.GetTable<TB_Command>();
 			}
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_ClearOldLinks")]
+		public int sp_ClearOldLinks([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTime")] System.Nullable<System.DateTime> datetime, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] ref System.Nullable<int> arm2sleep, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] ref System.Nullable<int> sleep2blind, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] ref System.Nullable<int> sms2sleep, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] ref System.Nullable<int> tcpudp2sms, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] ref System.Nullable<int> satellite, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] ref System.Nullable<int> terminals)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), datetime, arm2sleep, sleep2blind, sms2sleep, tcpudp2sms, satellite, terminals);
+			arm2sleep = ((System.Nullable<int>)(result.GetParameterValue(1)));
+			sleep2blind = ((System.Nullable<int>)(result.GetParameterValue(2)));
+			sms2sleep = ((System.Nullable<int>)(result.GetParameterValue(3)));
+			tcpudp2sms = ((System.Nullable<int>)(result.GetParameterValue(4)));
+			satellite = ((System.Nullable<int>)(result.GetParameterValue(5)));
+			terminals = ((System.Nullable<int>)(result.GetParameterValue(6)));
+			return ((int)(result.ReturnValue));
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TB_Account")]

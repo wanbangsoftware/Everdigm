@@ -122,7 +122,7 @@ namespace Wbs.Everdigm.Web
         {
             string html = "<span style=\"cursor: pointer;\" title=\"\">Click here</span> go to page " +
                 "<input type=\"text\" id=\"txtPage\" style=\"width: 20px;\" value=\"" +
-                _pageIndex + "\">/" + _totalPages + ", total " + _totalCount + " records <a href=\"" + _url + "\" title=\"First\">&laquo;</a>";
+                _pageIndex + "\">/" + _totalPages + ", total " + _totalCount + " records <a href=\"" + _url + "\" title=\"First\" class=\"_1\">&laquo;</a>";
             bool little = false, bigger = false;
             for (int i = 1; i <= _totalPages; i++)
             {
@@ -149,7 +149,7 @@ namespace Wbs.Everdigm.Web
                     }
                 }
             }
-            html += "<a href=\"" + _url + "\" title=\"Last\">&raquo;</a> ";
+            html += "<a href=\"" + _url + "\" title=\"Last\" class=\"_" + _totalPages + "\">&raquo;</a> ";
             _contaner.InnerHtml = html;
         }
     }

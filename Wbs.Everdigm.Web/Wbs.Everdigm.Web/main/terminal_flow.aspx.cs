@@ -73,13 +73,7 @@ namespace Wbs.Everdigm.Web.main
             var list = TerminalInstance.FindPageList<TB_Terminal>(pageIndex, PageSize, out totalRecords,
                 f => f.Delete == false && (f.Sim.Contains(query) || f.TB_Satellite.CardNo.Contains(query)), "Number");
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
-            pageIndex = 0 == pageIndex ? totalPages : pageIndex;
-            if (pageIndex > totalPages)
-            {
-                pageIndex = totalPages;
-                list = TerminalInstance.FindPageList<TB_Terminal>(pageIndex, PageSize, out totalRecords,
-                    f => f.Delete == false && (f.Sim.Contains(query) || f.TB_Satellite.CardNo.Contains(query)), "Number");
-            }
+
             var monthly = int.Parse(string.Format("{0}{1:00}", selectedYears.Value, month));
             string html = "";
             if (totalRecords < 1)

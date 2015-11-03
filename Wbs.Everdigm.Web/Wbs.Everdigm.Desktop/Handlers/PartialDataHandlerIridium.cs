@@ -91,115 +91,120 @@ namespace Wbs.Everdigm.Desktop
                 location.LatLng = new byte[IridiumLocation.SIZE];
                 Buffer.BlockCopy(data.Payload, 4, location.LatLng, 0, IridiumLocation.SIZE);
                 location.Unpackate();
-                if (location.Available)
+
+                // 通过卫星的IMEI号码查找终端
+                var terminal = TerminalInstance.Find(f => f.TB_Satellite.CardNo.Equals(data.IMEI));
+                TB_Equipment equipment = null;
+                if (null != terminal)
                 {
-                    var terminal = TerminalInstance.Find(f => f.TB_Satellite.CardNo.Equals(data.IMEI));
-                    TB_Equipment equipment = null;
-                    if (null != terminal)
+                    TerminalInstance.Update(f => f.id == terminal.id, act =>
                     {
-                        TerminalInstance.Update(f => f.id == terminal.id, act =>
+                        act.OnlineStyle = (byte)LinkType.SATELLITE;
+                        // 同时更新终端的最后链接时间
+                        act.OnlineTime = data.Time;
+                    });
+                    equipment = EquipmentInstance.Find(f => f.Terminal == terminal.id);
+                    if (null != equipment)
+                    {
+                        EquipmentInstance.Update(f => f.id == equipment.id, act =>
                         {
                             act.OnlineStyle = (byte)LinkType.SATELLITE;
-                            // 同时更新终端的最后链接时间
                             act.OnlineTime = data.Time;
-                        });
-                        equipment = EquipmentInstance.Find(f => f.Terminal == terminal.id);
-                        if (null != equipment)
-                        {
-                            EquipmentInstance.Update(f => f.id == equipment.id, act =>
-                            {
-                                act.OnlineStyle = (byte)LinkType.SATELLITE;
-                                act.OnlineTime = data.Time;
-                                // 更新设备的报警状态 2015/09/10 14:04
-                                act.Alarm = alarms;
+                            // 更新设备的报警状态 2015/09/10 14:04
+                            act.Alarm = alarms;
 
-                                act.LastAction = "0x1000";
-                                act.LastActionBy = "SAT";
-                                act.LastActionTime = data.Time;
-                                // 更新定位信息 2015/09/09 23:29
-                                if (location.Available)
+                            act.LastAction = "0x1000";
+                            act.LastActionBy = "SAT";
+                            act.LastActionTime = data.Time;
+                            // 更新定位信息 2015/09/09 23:29
+                            if (location.Available)
+                            {
+                                act.Latitude = location.Latitude;
+                                act.Longitude = location.Longitude;
+                            }
+                            // 更新启动与否状态 2015/08/31
+                            act.Voltage = location.EngFlag == "On" ? "G2400" : "G0000";
+                            // 如果回来的运转时间比当前时间大则更新成为On状态  暂时  2015/09/02
+                            if (worktime > act.Runtime)
+                            {
+                                // act.Voltage = "G2400";
+                                act.Runtime = (int)worktime;
+                            }
+                            else
+                            {
+                                if (worktime > 0)
                                 {
-                                    act.Latitude = location.Latitude;
-                                    act.Longitude = location.Longitude;
-                                }
-                                // 更新启动与否状态 2015/08/31
-                                act.Voltage = location.EngFlag == "On" ? "G2400" : "G0000";
-                                // 如果回来的运转时间比当前时间大则更新成为On状态  暂时  2015/09/02
-                                if (worktime > act.Runtime)
-                                {
-                                    // act.Voltage = "G2400";
+                                    // 运转时间不为零的话，更新运转时间
                                     act.Runtime = (int)worktime;
                                 }
-                                else
-                                {
-                                    if (worktime > 0)
-                                    {
-                                        // 运转时间不为零的话，更新运转时间
-                                        act.Runtime = (int)worktime;
-                                    }
-                                }
-                                // 锁车状态 2015/08/14
-                                if (act.LockStatus != locks) { act.LockStatus = locks; }
-                            });
-                        }
-                    }
-                    else
-                    {
-                        OnUnhandledMessage(this, new Sockets.UIEventArgs()
-                        {
-                            Message = string.Format("{0} Satellite has no terminal, data will save as terminal number: \"{1}\".{2}",
-                            Now, data.IMEI.Substring(4), Environment.NewLine)
+                            }
+                            // 锁车状态 2015/08/14
+                            if (act.LockStatus != locks) { act.LockStatus = locks; }
                         });
                     }
-                    // 保存TX300历史记录
-                    SaveTX300History(new Protocol.TX300.TX300()
+                }
+                else
+                {
+                    OnUnhandledMessage(this, new Sockets.UIEventArgs()
                     {
-                        CommandID = 0x1000,
-                        MsgContent = data.Payload,
-                        ProtocolType = Wbs.Protocol.ProtocolTypes.SATELLITE,
-                        // 默认装载机终端类型 2015/09/22 09:40
-                        TerminalType = null == terminal ? Protocol.TerminalTypes.LD : terminal.Type.Value,
-                        // 没有终端时，用IMEI号码的末尾11位数字表示终端号码 2015/09/22 09:40
-                        TerminalID = null == terminal ? data.IMEI.Substring(4) : terminal.Sim,
-                        TotalLength = (ushort)data.Payload.Length
-                    }, data.Time, EquipmentInstance.GetFullNumber(equipment));
-
-                    var pos = PositionInstance.GetObject();
-                    pos.Latitude = location.Latitude;
-                    pos.Longitude = location.Longitude;
-                    pos.NS = location.NSI;
-                    pos.EW = location.EWI;
-                    pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
-                    pos.GpsTime = data.Time;
-                    pos.Equipment = null == equipment ? (int?)null : equipment.id;
+                        Message = string.Format("{0} Satellite has no terminal, data will save as terminal number: \"{1}\".{2}",
+                        Now, data.IMEI.Substring(4), Environment.NewLine)
+                    });
+                }
+                // 保存TX300历史记录
+                SaveTX300History(new Protocol.TX300.TX300()
+                {
+                    CommandID = 0x1000,
+                    MsgContent = data.Payload,
+                    ProtocolType = Wbs.Protocol.ProtocolTypes.SATELLITE,
+                    // 默认装载机终端类型 2015/09/22 09:40
+                    TerminalType = null == terminal ? Protocol.TerminalTypes.LD : terminal.Type.Value,
                     // 没有终端时，用IMEI号码的末尾11位数字表示终端号码 2015/09/22 09:40
-                    pos.Terminal = null == terminal ? data.IMEI.Substring(4) : (terminal.Sim.Length < 11 ? (terminal.Sim + "000") : terminal.Sim);
-                    pos.Type = location.Report + "(Eng " + location.EngFlag + ")(SAT)";
-                    try
+                    TerminalID = null == terminal ? data.IMEI.Substring(4) : terminal.Sim,
+                    TotalLength = (ushort)data.Payload.Length
+                }, data.Time, EquipmentInstance.GetFullNumber(equipment));
+
+                try
+                {
+                    long? posId = (long?)null;
+                    if (location.Available)
                     {
+                        var pos = PositionInstance.GetObject();
+                        pos.Latitude = location.Latitude;
+                        pos.Longitude = location.Longitude;
+                        pos.NS = location.NSI;
+                        pos.EW = location.EWI;
+                        pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
+                        pos.GpsTime = data.Time;
+                        pos.Equipment = null == equipment ? (int?)null : equipment.id;
+                        // 没有终端时，用IMEI号码的末尾11位数字表示终端号码 2015/09/22 09:40
+                        pos.Terminal = null == terminal ? data.IMEI.Substring(4) : (terminal.Sim.Length < 11 ? (terminal.Sim + "000") : terminal.Sim);
+                        pos.Type = location.Report + "(Eng " + location.EngFlag + ")(SAT)";
                         PositionInstance.Add(pos);
-                        // 处理报警信息
-                        if (alarms != ALARM)
-                        {
-                            var arm = AlarmInstance.GetObject();
-                            arm.Code = alarms;
-                            arm.AlarmTime = data.Time;
-                            arm.Equipment = null == equipment ? (int?)null : equipment.id;
-                            arm.Position = pos.id;
-                            arm.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
-                            // 没有终端时，用IMEI号码的末尾11位数字表示终端号码 2015/09/22 09:40
-                            arm.Terminal = null == terminal ? data.IMEI.Substring(4) : (terminal.Sim.Length < 11 ? (terminal.Sim + "000") : terminal.Sim);
-                            AlarmInstance.Add(arm);
-                        }
+                        posId = pos.id;
                     }
-                    catch (Exception e)
+
+                    // 处理报警信息
+                    if (alarms != ALARM)
                     {
-                        OnUnhandledMessage(this, new Sockets.UIEventArgs()
-                        {
-                            Message = string.Format("{0} {1}{2}{3}{4}{5}", Now, e.Message, Environment.NewLine,
-                                e.StackTrace, Environment.NewLine, PositionInstance.ToString(pos))
-                        });
+                        var arm = AlarmInstance.GetObject();
+                        arm.Code = alarms;
+                        arm.AlarmTime = data.Time;
+                        arm.Equipment = null == equipment ? (int?)null : equipment.id;
+                        arm.Position = posId;
+                        arm.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
+                        // 没有终端时，用IMEI号码的末尾11位数字表示终端号码 2015/09/22 09:40
+                        arm.Terminal = null == terminal ? data.IMEI.Substring(4) : (terminal.Sim.Length < 11 ? (terminal.Sim + "000") : terminal.Sim);
+                        AlarmInstance.Add(arm);
                     }
+
+                }
+                catch (Exception e)
+                {
+                    OnUnhandledMessage(this, new Sockets.UIEventArgs()
+                    {
+                        Message = string.Format("{0}{1}{2}{3}", Now, e.Message, Environment.NewLine, e.StackTrace)
+                    });
                 }
                 // 更新卫星方式的命令状态(只处理命令回复的1000，其他的命令在普通命令过程中处理)
                 if (location.ReportType == 1 && data.Payload.Length <= 17)

@@ -41,12 +41,6 @@ namespace Wbs.Everdigm.Web.main
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             var list = SatelliteInstance.FindPageList<TB_Satellite>(pageIndex, PageSize, out totalRecords, null, "CardNo");
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
-            pageIndex = 0 == pageIndex ? totalPages : pageIndex;
-            if (pageIndex >= totalPages)
-            {
-                pageIndex = totalPages;
-                list = SatelliteInstance.FindPageList<TB_Satellite>(pageIndex, PageSize, out totalRecords, null, "CardNo");
-            }
 
             string html = "";
             if (totalRecords < 1)

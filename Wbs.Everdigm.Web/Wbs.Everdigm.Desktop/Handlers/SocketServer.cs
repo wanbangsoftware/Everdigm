@@ -268,7 +268,10 @@ namespace Wbs.Everdigm.Desktop
                         try
                         {
                             // 处理未处理的SMS信息
-                            _handler.CheckSMSData();
+                            if (_handler.CanCheckSMSData())
+                            {
+                                _handler.CheckSMSData();
+                            }
                         }
                         catch (Exception sms)
                         { HandleDisplayMessage(string.Format("{0} Cannot handle CheckSMSData: {1}, Trace: {2}", Now, sms.Message, sms.StackTrace)); }

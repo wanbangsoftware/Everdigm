@@ -40,13 +40,7 @@ namespace Wbs.Everdigm.Web.main
             var list = PermissionInstance.FindPageList<TB_Permission>(pageIndex, PageSize, out totalRecords,
                 p => p.Delete == false && (p.Name.IndexOf(txtName.Value.Trim()) >= 0) && menus.Contains(p.id), "Parent,DisplayOrder");
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
-            pageIndex = 0 == pageIndex ? totalPages : pageIndex;
-            if (pageIndex >= totalPages)
-            {
-                pageIndex = totalPages;
-                list = PermissionInstance.FindPageList<TB_Permission>(pageIndex, PageSize, out totalRecords,
-                    p => p.Delete == false && (p.Name.IndexOf(txtName.Value.Trim()) >= 0) && menus.Contains(p.id), "Parent,DisplayOrder");
-            }
+
             list.OrderBy(o => o.id).ThenBy(t => t.Name);
             string html = "";
             if (totalRecords < 1)

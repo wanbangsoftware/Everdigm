@@ -35,13 +35,6 @@ namespace Wbs.Everdigm.Web.service
                 f => (f.SimCard.IndexOf(query) >= 0 || f.CarNumber.IndexOf(query) >= 0) && f.Deleted == false, "SimCard");
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             hidTotalPages.Value = totalPages.ToString();
-            pageIndex = 0 == pageIndex ? totalPages : pageIndex;
-            if (totalRecords > 0 && pageIndex > totalPages)
-            {
-                pageIndex = totalPages;
-                list = TrackerInstance.FindPageList<TB_Tracker>(pageIndex, PageSize, out totalRecords,
-                f => (f.SimCard.IndexOf(query) >= 0 || f.CarNumber.IndexOf(query) >= 0) && f.Deleted == false, "SimCard");
-            }
 
             string html = "";
             if (totalRecords < 1)

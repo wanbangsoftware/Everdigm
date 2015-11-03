@@ -39,13 +39,6 @@ namespace Wbs.Everdigm.Web.main
             var list = DepartmentInstance.FindPageList<TB_Department>(pageIndex, PageSize, out totalRecords,
                 f => f.Delete == false && (f.Name.IndexOf(txtName.Value.Trim()) >= 0) && depts.Contains(f.id), "Parent,Name");
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
-            pageIndex = 0 == pageIndex ? totalPages : pageIndex;
-            if (pageIndex > totalPages)
-            {
-                pageIndex = totalPages;
-                list = DepartmentInstance.FindPageList<TB_Department>(pageIndex, PageSize, out totalRecords,
-                    f => f.Delete == false && (f.Name.IndexOf(txtName.Value.Trim()) >= 0) && depts.Contains(f.id), "Parent,Name");
-            }
 
             string html = "";
             if (totalRecords < 1)

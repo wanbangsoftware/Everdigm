@@ -133,13 +133,6 @@ namespace Wbs.Everdigm.Web.main
             var list = ModelInstance.FindPageList<TB_EquipmentType>(pageIndex, PageSize, out totalRecords,
                 f => f.Delete == false, "Type,Name");
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
-            pageIndex = 0 == pageIndex ? totalPages : pageIndex;
-            if (pageIndex >= totalPages)
-            {
-                pageIndex = totalPages;
-                list = ModelInstance.FindPageList<TB_EquipmentType>(pageIndex, PageSize, out totalRecords,
-                    f => f.Delete == false, "Type,Name");
-            }
 
             string html = "";
             if (totalRecords < 1)

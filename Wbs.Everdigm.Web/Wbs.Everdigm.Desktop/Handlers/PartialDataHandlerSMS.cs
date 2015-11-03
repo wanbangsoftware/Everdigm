@@ -11,8 +11,20 @@ namespace Wbs.Everdigm.Desktop
 {
     public partial class DataHandler
     {
+        private DateTime _lastCheckSMSData = DateTime.Now;
+        public bool CanCheckSMSData()
+        {
+            return _lastCheckSMSData.Subtract(DateTime.Now).Duration().TotalSeconds >= 5;
+        }
+        /// <summary>
+        /// 每5秒获取一次未处理的SMS数据
+        /// </summary>
         public void CheckSMSData()
         {
+            if (_lastCheckSMSData.Subtract(DateTime.Now).Duration().TotalSeconds < 5) 
+                return;
+            _lastCheckSMSData = DateTime.Now;
+
             var sms = SmsInstance.Find(f => f.Handled == false);
             if (null != sms)
             {

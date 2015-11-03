@@ -33,13 +33,6 @@ namespace Wbs.Everdigm.Web.main
             var list = RoleInstance.FindPageList<TB_Role>(pageIndex, PageSize, out totalRecords,
                 p => p.Delete == false && p.Name.IndexOf(txtName.Value.Trim()) >= 0, "Name");
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
-            pageIndex = 0 == pageIndex ? totalPages : pageIndex;
-            if (pageIndex >= totalPages)
-            {
-                pageIndex = totalPages;
-                list = RoleInstance.FindPageList<TB_Role>(pageIndex, PageSize, out totalRecords,
-                    p => p.Delete == false && p.Name.IndexOf(txtName.Value.Trim()) >= 0, "Name");
-            }
             //list = list.OrderBy(o => o.IsAdministrator).ThenBy(t => t.IsDefault).ThenBy(t => t.AddTime);
 
             string html = "";

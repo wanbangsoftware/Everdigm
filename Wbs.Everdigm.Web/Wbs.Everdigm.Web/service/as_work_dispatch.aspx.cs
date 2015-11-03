@@ -59,13 +59,6 @@ namespace Wbs.Everdigm.Web.service
             var list = WorkInstance.FindPageList<TB_Work>(pageIndex, PageSize, out totalRecords,
                 f => f.ScheduleStart >= then && f.ScheduleStart <= now && f.Deleted == false, null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
-            pageIndex = 0 == pageIndex ? totalPages : pageIndex;
-            if (pageIndex >= totalPages)
-            {
-                pageIndex = totalPages;
-                list = WorkInstance.FindPageList<TB_Work>(pageIndex, PageSize, out totalRecords,
-                f => f.ScheduleStart >= then && f.ScheduleStart <= now && f.Deleted == false, null);
-            }
 
             string html = "";
             if (totalRecords < 1)
