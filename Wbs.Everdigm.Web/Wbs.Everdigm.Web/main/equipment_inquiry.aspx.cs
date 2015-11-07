@@ -41,7 +41,7 @@ namespace Wbs.Everdigm.Web.main
             var model = ParseInt(selectedModels.Value);
             var house = ParseInt(hidQueryWarehouse.Value);
             var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
-                f => (model <= 0 ? f.Model >= 0 : f.Model == model) && f.Deleted == false &&
+                f => (model <= 0 ? f.Model >= 0 : f.Model == model) && f.Deleted == false && f.Terminal != (int?)null &&
                     (house <= 0 ? (f.Warehouse >= 0 || f.Warehouse == (int?)null) : f.Warehouse == house) &&
                     (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0), null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
