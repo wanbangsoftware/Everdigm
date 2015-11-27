@@ -21,6 +21,7 @@ namespace Wbs.Everdigm.Web.main
         /// 终端信息业务处理逻辑
         /// </summary>
         private TerminalBLL BLLInstance { get { return new TerminalBLL(); } }
+        private EquipmentBLL EquipmentInstance { get { return new EquipmentBLL(); } }
         /// <summary>
         /// 格式化显示终端信息
         /// </summary>
@@ -43,8 +44,11 @@ namespace Wbs.Everdigm.Web.main
                 var t = BLLInstance.Find(f => f.Number.Equals(_key) && f.Delete == false);
                 if (null != t)
                 {
+                    var mac = t.TB_Equipment.FirstOrDefault();
                     terminalInfo.InnerHtml = t.Number;
-                    terminalContent.Value = "Sim card: " + t.Sim + "<br />Satellite: " + t.Satellite+"<br />Equipment: ";
+                    var link = (LinkType)t.OnlineStyle;
+                    terminalContent.Value = "Sim card: " + t.Sim + "<br />Satellite: " + t.Satellite + "<br />Equipment: " +
+                        (null == mac ? "" : EquipmentInstance.GetFullNumber(mac)) + "<br />Link: " + link;
                 }
                 else
                 {

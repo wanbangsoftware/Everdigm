@@ -41,6 +41,11 @@ namespace Wbs.Everdigm.Web.main
             var html = "";
             foreach (var command in commands)
             {
+                // 禁止在这里发送启用或禁用卫星命令 2015/11/26 16:35
+                if (command.Flag == "satenable" || command.Flag == "satdisable")
+                {
+                    continue;
+                }
                 // 卫星链接时，不能发送以下几个命令  2015/09/16 15:50
                 if (link == LinkType.SATELLITE)
                 {

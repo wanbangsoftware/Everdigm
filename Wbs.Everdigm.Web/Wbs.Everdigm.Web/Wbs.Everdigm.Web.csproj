@@ -20,6 +20,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -237,6 +238,8 @@
     <Content Include="js\CryptoJS.v3.1.2\rollups\tripledes.js" />
     <Content Include="js\CustomGoogleMapMarker.js" />
     <Content Include="js\google.map.api.js" />
+    <Content Include="js\jquery-2.1.4.js" />
+    <Content Include="js\jquery-2.1.4.min.js" />
     <Content Include="js\jquery.timer.js" />
     <Content Include="js\js.marker.clusterer\images\m1.png" />
     <Content Include="js\js.marker.clusterer\images\m2.png" />
@@ -460,8 +463,6 @@
     <Content Include="js\common.js" />
     <Content Include="js\javascript.date.pattern.js" />
     <Content Include="js\jlinq-3.0.1.js" />
-    <Content Include="js\jquery-2.1.1.js" />
-    <Content Include="js\jquery-2.1.1.min.js" />
     <Content Include="js\jquery-ui-slider.js" />
     <Content Include="js\jquery.cookie.js" />
     <Content Include="js\jquery.json-2.4.js" />

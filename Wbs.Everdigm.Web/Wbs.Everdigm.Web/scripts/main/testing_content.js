@@ -34,22 +34,25 @@ $(document).ready(function () {
 function sendTerminalCommand(cmd) {
     $(".modal-header").removeClass("btn-danger").addClass("btn-primary");
     var ter = $("#terminalInfo").html();
-    GetJsonData("../ajax/command.ashx", { "type": "terminal", "cmd": cmd, "data": ter },
-            function (data) {
-                if (data.status == 0) {
-                    // 标记已进入测试环节，再点击其他按钮不会再发命令
-                    isInTestProgress = true;
-                    _lastCommandId = parseInt(data.desc);
-                    prepareTimer(function () {
-                        timerOnTime(function () {
-                            getCommandStatus(function (obj) {
-                            });
-                        }, function () { })
+    var force = $("input:radio[name =\"options\"]:checked").val();
+    GetJsonData("../ajax/command.ashx", { "type": "terminal", "cmd": cmd, "by": force, "data": ter }, function (data) {
+        if (data.status == 0) {
+            // 标记已进入测试环节，再点击其他按钮不会再发命令
+            isInTestProgress = true;
+            _lastCommandId = parseInt(data.desc);
+            prepareTimer(function () {
+                timerOnTime(function () {
+                    getCommandStatus(function (obj) {
                     });
-                    data.desc = "will be sent by server.";
-                    showWarningMessage(data);
-                } else {
-                    showWarningMessage(data);
-                }
+                }, function () { })
             });
+            data.desc = "will be sent by server.";
+            showWarningMessage(data);
+        } else {
+            showWarningMessage(data);
+        }
+    }, function (data) {
+        // 执行失败
+        showWarningMessage(data);
+    });
 }

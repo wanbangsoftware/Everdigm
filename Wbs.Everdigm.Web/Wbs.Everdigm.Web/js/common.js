@@ -230,9 +230,10 @@ function GetJsonData(url, data, funSucceed, funFailed) {
         success: function (data, textStatus) {
             funSucceed(data);
         },
-        error: function (msg) {
-            if (typeof (failed) != "undefined") {
-                funFailed(msg);
+        error: function (jqXHR, textStatus, errorThrown) {
+            var s = typeof (funFailed);
+            if (s != "undefined") {
+                funFailed(jqXHR.responseText);
             }
         }
     });

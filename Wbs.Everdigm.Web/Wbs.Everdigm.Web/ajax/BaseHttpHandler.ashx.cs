@@ -26,6 +26,14 @@ namespace Wbs.Everdigm.Web.ajax
         /// </summary>
         protected string cmd = "";
         /// <summary>
+        /// 客户端要求的命令发送方式
+        /// </summary>
+        private string force = "";
+        /// <summary>
+        /// 命令的发送方式
+        /// </summary>
+        protected ForceType forceType = ForceType.AutoDetect;
+        /// <summary>
         /// 客户端要求的命令字的详细内容
         /// </summary>
         protected string data = "";
@@ -49,6 +57,12 @@ namespace Wbs.Everdigm.Web.ajax
         {
             type = GetParamenter("type");
             cmd = GetParamenter("cmd");
+            force = GetParamenter("by");
+            if (!string.IsNullOrEmpty(force) && force.Equals("sms"))
+            {
+                // 坚持客户端的命令发送方式要求，默认为自动检测方式
+                forceType = ForceType.SMS;
+            }
             data = GetParamenter("data");
         }
 
@@ -111,5 +125,19 @@ namespace Wbs.Everdigm.Web.ajax
                 return false;
             }
         }
+    }
+    /// <summary>
+    /// 命令发送方式
+    /// </summary>
+    public enum ForceType
+    {
+        /// <summary>
+        /// 自动检测方式发送命令
+        /// </summary>
+        AutoDetect,
+        /// <summary>
+        /// 强制SMS发送
+        /// </summary>
+        SMS
     }
 }

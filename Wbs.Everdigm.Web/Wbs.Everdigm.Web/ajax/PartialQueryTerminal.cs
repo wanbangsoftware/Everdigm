@@ -34,6 +34,12 @@ namespace Wbs.Everdigm.Web.ajax
             var ret = "[]";
             switch (cmd)
             {
+                case "normal":
+                    // 普通查询 2015/11/27 08:17
+                    var normal = TerminalInstance.FindList(f => f.Delete == false && 
+                    (f.Number.IndexOf(data) >= 0 || f.Sim.IndexOf(data) >= 0)).Take(10).ToList();
+                    ret = JsonConverter.ToJson(normal);
+                    break;
                 case "bound":
                 case "notbound":
                     // 查询是否绑定设备的终端列表

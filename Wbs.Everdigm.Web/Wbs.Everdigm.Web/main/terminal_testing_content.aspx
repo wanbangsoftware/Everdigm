@@ -28,6 +28,24 @@
         </div>
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingSetting">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseNormal" aria-expanded="true" aria-controls="collapseOne">Command send as: 
+                        </a>
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary active">
+                                <input type="radio" name="options" value="normal" autocomplete="off" checked>
+                                Normal (auto detect)
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" value="sms" autocomplete="off">
+                                Force to SMS
+                            </label>
+                        </div>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingOne">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Retrieve GPS Position
@@ -41,7 +59,8 @@
                         </button>
                     </div>
                 </div>
-            </div><!--
+            </div>
+            <!--
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingTwo">
                     <h4 class="panel-title">
@@ -188,7 +207,7 @@
                     <h4 class="modal-title" id="myModalLabel">Testing progress</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="bs-callout bs-callout-warning" style="margin-top: 2px !important; font-size: 12px !important;  margin-bottom: 0px !important; height: 120px; overflow: auto;">
+                    <div class="bs-callout bs-callout-warning" style="margin-top: 2px !important; font-size: 12px !important; margin-bottom: 0px !important; height: 120px; overflow: auto;">
                         <!--11:22:04 <code>position data</code> Command is waiting in send queue.<br />
                         11:22:05 <code>0x1000</code> Command has been send to target.<br />
                         11:22:09 <code>0x1000</code> Target received the command.<br />
@@ -198,8 +217,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="satWarning" type="button" class="btn btn-warning" style="display:none;">
-                        <span class="glyphicon glyphicon-time"></span> Satellite mode may take more time to wait the result
+                    <button id="satWarning" type="button" class="btn btn-warning" style="display: none;">
+                        <span class="glyphicon glyphicon-time"></span>Satellite mode may take more time to wait the result
                     </button>
                     <button class="btn btn-primary" type="button">
                         time used: <span class="badge" id="timeUsed">00:00</span>
@@ -208,7 +227,7 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="../bootstrap3/js/bootstrap.js"></script>
     <script type="text/javascript" src="../js/javascript.date.pattern.js"></script>
     <script type="text/javascript" src="../js/jquery.timer.js"></script>

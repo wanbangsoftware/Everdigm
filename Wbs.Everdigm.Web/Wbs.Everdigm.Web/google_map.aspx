@@ -17,7 +17,7 @@
         <input type="hidden" id="hidLatLng" value="" runat="server" />
         <input type="hidden" id="hidAddress" value="" runat="server" />
     </form>
-    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="js/jquery.json-2.4.js"></script>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA3ZyjLQqMHZ7jtuVmCxbK11r86K2UuNLM&sensor=false&language=en"></script>
     <script type="text/javascript">

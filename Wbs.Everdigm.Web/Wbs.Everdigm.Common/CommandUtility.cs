@@ -165,9 +165,11 @@ namespace Wbs.Everdigm.Common
                 var CommandInstance = new CommandBLL();
                 var command = CommandInstance.GetObject();
                 command.DestinationNo = sim;
-                // 终端是卫星方式连接则使用卫星方式发送命令
-                command.Status = (terminal.OnlineStyle == (byte)LinkType.SATELLITE ?
-                    (byte)CommandStatus.WaitingForSatellite : (byte)CommandStatus.Waiting);
+            // 终端是卫星方式连接则使用卫星方式发送命令
+            command.Status = (terminal.OnlineStyle == (byte)LinkType.SATELLITE ?
+                (byte)CommandStatus.WaitingForSatellite : 
+                // SMS发送时值为 re-sending
+                (byte)(sms ? CommandStatus.WaitingForSMS : CommandStatus.Waiting));
                 command.Content = content;
                 command.SendUser = (0 == sender ? (int?)null : sender);
                 command.Terminal = terminal.id;
@@ -237,7 +239,7 @@ namespace Wbs.Everdigm.Common
             switch (status)
             {
                 case CommandStatus.Waiting: ret = "Waiting in send queue..."; break;
-                case CommandStatus.ReSending: ret = "Waiting for re-send again"; break;
+                case CommandStatus.WaitingForSMS: ret = "Waiting in SMS queue..."; break;
                 case CommandStatus.WaitingForSatellite: ret = "Waiting to handle by satellite"; break;
                 case CommandStatus.SatelliteHandled: ret = "Has been handled by Satellite Server"; break;
                 case CommandStatus.SentByTCP: ret = "Has been sent by TCP"; break;

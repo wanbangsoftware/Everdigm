@@ -64,7 +64,7 @@
     </dl>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="FootContentPlaceHolder" runat="server">
-    <script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript">
         function initialize() {
             var lat = parseFloat($("[id$=\"spanLat\"]").text());

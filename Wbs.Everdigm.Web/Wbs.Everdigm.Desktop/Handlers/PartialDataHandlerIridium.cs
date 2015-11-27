@@ -52,11 +52,13 @@ namespace Wbs.Everdigm.Desktop
         /// </summary>
         private void HandleIridiumCommandResponseed(IridiumData data)
         {
+            // 更新之前发送到网关或终端已读取的命令为发送成功  2015/11/27 12:38
             CommandInstance.Update(f => f.TB_Terminal.TB_Satellite.CardNo.Equals(data.IMEI) && f.Command == "0x1000" &&
-            f.Status == (byte)CommandStatus.SentToDestBySAT && f.ActualSendTime > DateTime.Now.AddMinutes(-60), act =>
-            {
-                act.Status = (byte)CommandStatus.Returned;
-            });
+            (f.Status == (byte)CommandStatus.SentToDestBySAT || f.Status == (byte)CommandStatus.SentBySAT) && 
+            f.ActualSendTime > DateTime.Now.AddMinutes(-60), act =>
+                {
+                    act.Status = (byte)CommandStatus.Returned;
+                });
         }
         /// <summary>
         /// 处理铱星终端接收命令的状态

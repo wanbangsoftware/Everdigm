@@ -62,7 +62,7 @@
             </asp:TreeView>
         </div>
     </form>
-    <script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="../js/common.js"></script>
     <script type="text/javascript" src="../scripts/main/department.js"></script>
 </body>

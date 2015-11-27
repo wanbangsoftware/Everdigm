@@ -17,7 +17,7 @@
         <a class="index_close_top" title="hide top banner" id="control_top_frame"></a>
         <a class="index_close_left" title="hide left menu" id="control_left_frame"></a>
     </form>
-    <script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="../js/common.js"></script>
     <script type="text/javascript" src="../scripts/main/center_frame.js"></script>
 </body>

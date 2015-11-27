@@ -88,7 +88,7 @@ namespace Wbs.Everdigm.Web.ajax
             {
                 var ret = "[]";
                 var obj = CommandInstance.Find(f => f.ScheduleTime >= DateTime.Now.AddSeconds(-60) &&
-                    f.Status <= (byte)CommandStatus.ReSending &&
+                    f.Status <= (byte)CommandStatus.WaitingForSMS &&
                     f.TB_Terminal.OnlineStyle == (byte)LinkType.SATELLITE);
                 var command = new Command(obj);
                 ret = JsonConvert.SerializeObject(command);

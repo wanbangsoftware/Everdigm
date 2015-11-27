@@ -41,11 +41,21 @@ namespace Wbs.Everdigm.Desktop
             {
                 var sim = cmd.DestinationNo;
                 if (sim[0] == '8' || sim[0] == '9') sim = sim.Substring(0, 8);
+                // 0==链接不存在1=发送成功2=网络处理错误3=强制SMS发送
                 byte ret = 0;
-                if (cmd.TB_Terminal.OnlineStyle == (byte)LinkType.TCP)
+                CommandStatus cs = (CommandStatus)cmd.Status;
+                if (cs == CommandStatus.WaitingForSMS)
                 {
-                    // 0==链接不存在1=发送成功2=网络处理错误
-                    ret = _server.Send(cmd.TB_Terminal.Socket.Value, Wbs.Utilities.CustomConvert.GetBytes(cmd.Content));
+                    // 强制SMS发送的
+                    ret = 3;
+                }
+                else
+                {
+                    if (cmd.TB_Terminal.OnlineStyle == (byte)LinkType.TCP)
+                    {
+                        // 0==链接不存在1=发送成功2=网络处理错误
+                        ret = _server.Send(cmd.TB_Terminal.Socket.Value, Wbs.Utilities.CustomConvert.GetBytes(cmd.Content));
+                    }
                 }
                 if (ret != 1)
                 {
@@ -95,7 +105,7 @@ namespace Wbs.Everdigm.Desktop
                 {
                     _gsmStatus = new List<byte>();
                     _gsmStatus.Add((byte)CommandStatus.Waiting);
-                    _gsmStatus.Add((byte)CommandStatus.ReSending);
+                    _gsmStatus.Add((byte)CommandStatus.WaitingForSMS);
                     _gsmStatus.Add((byte)CommandStatus.SentByTCP);
                     _gsmStatus.Add((byte)CommandStatus.SentBySMS);
                     _gsmStatus.Add((byte)CommandStatus.SentToDest);

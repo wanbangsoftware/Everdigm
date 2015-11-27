@@ -157,7 +157,7 @@ namespace Wbs.Everdigm.Web.ajax
                 var t = TerminalInstance.Find(f => f.Number.Equals(data));
                 if (null == t)
                 {
-                    ret = ResponseMessage(-1, "No terminal like \"" + data + "\" exists");
+                    ret = ResponseMessage(-1, "No terminal like \\\"" + data + "\\\" exists");
                 }
                 else
                 {
@@ -180,7 +180,7 @@ namespace Wbs.Everdigm.Web.ajax
         {
             if (null == User)
             {
-                return ResponseMessage(-1, "Your session has expired, Please try to login again.");
+                return ResponseMessage(-1, "Your session was expired, please try to login again.");
             }
             else
             {
@@ -197,25 +197,71 @@ namespace Wbs.Everdigm.Web.ajax
         /// <returns></returns>
         private string HandleTerminalCommandRequest(TB_Terminal obj)
         {
+            LinkType link = (LinkType)obj.OnlineStyle;
             string ret = "";
             // 判断是否是转到卫星链接命令
-            if (cmd == "reset_sat" && obj.SatelliteStatus == false)
+            if (cmd == "reset_sat")
             {
-                ret = ResponseMessage(-1, "Command has blocked(Satellite function was disabled)");
-            }
-            else
-            {
-                if ((byte?)null == obj.OnlineStyle)
+                // GSM连接下才能发送转卫星连接的命令
+                if (link >= LinkType.TCP && link <= LinkType.SMS)
                 {
-                    ret = ResponseMessage(-1, "Cannot send any commands with this situation(Link: Unknow).");
+                    // 卫星功能禁用时不能发送这个命令
+                    if (obj.SatelliteStatus == false)
+                    {
+                        ret = ResponseMessage(-1, "Command has blocked(Satellite function was disabled)");
+                    }
+                    else
+                    {
+                        var mac = obj.TB_Equipment.FirstOrDefault();
+                        // 主电报警时不能发送转到卫星链接的命令
+                        if (null != mac && (mac.Alarm[0] == '1' || mac.Alarm[15] == '1'))
+                        {
+                            ret = ResponseMessage(-1, "Can not turn to satellite mode when terminal use battery.");
+                        }
+                    }
                 }
                 else
                 {
-                    LinkType link = (LinkType)obj.OnlineStyle;
+                    // 非GSM在线状态不能发送强制转卫星连接的命令
+                    ret = ResponseMessage(-1, "Can not send this command with link: " + link + ".");
+                }
+            }
+            if (cmd == "satenable" || cmd == "satdisable")
+            {
+                bool enabled = cmd.Equals("satenable");
+                // 设置卫星功能
+                if (link >= LinkType.TCP && link <= LinkType.SMS)
+                {
+                    if (enabled && obj.SatelliteStatus == true)
+                    {
+                        ret = ResponseMessage(-1, "It is not nessesary to re-Enable satellite function.");
+                    }
+                    else if (!enabled && obj.SatelliteStatus == false)
+                    {
+                        ret = ResponseMessage(-1, "It is not nessesary to re-Disable satellite function.");
+                    }
+                }
+                else
+                {
+                    // 非GSM在线状态不能发送禁用或启用卫星命令
+                    ret = ResponseMessage(-1, "Can not send this command with link: " + link + ".");
+                }
+            }
+            if(string.IsNullOrEmpty(ret))
+            {
+                if ((byte?)null == obj.OnlineStyle)
+                {
+                    ret = ResponseMessage(-1, "Can not send any commands with this situation(Link: Unknow).");
+                }
+                else
+                {
                     switch (link)
                     {
                         case LinkType.OFF: ret = ResponseMessage(-1, "Terminal is power off."); break;
                         case LinkType.TCP:// 通过TCP方式发送命令
+                            // 增加强制SMS方式发送选择
+                            ret = SendCommand(obj, forceType == ForceType.SMS ? true : false);
+                            break;
                         case LinkType.SATELLITE:// 通过卫星方式发送命令
                             ret = SendCommand(obj, false);
                             break;

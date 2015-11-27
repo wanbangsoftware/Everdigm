@@ -15,7 +15,7 @@ public enum CommandStatus : byte
     /// <summary>
     /// 正在等待重新发送
     /// </summary>
-    ReSending,
+    WaitingForSMS,
     /// <summary>
     /// 正在等待卫星方式发送
     /// </summary>

@@ -117,7 +117,7 @@
             <div class="clear"></div>
         </div>
     </form>
-    <script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="../js/jquery.json-2.4.js"></script>
     <script type="text/javascript" src="../js/jlinq-3.0.1.js"></script>
     <script type="text/javascript" src="../js/jquery.cookie.js"></script>

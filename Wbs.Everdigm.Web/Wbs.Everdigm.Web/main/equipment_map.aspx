@@ -130,7 +130,7 @@
             </div>
         </div>
     </form>
-    <script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="../bootstrap3/js/bootstrap.js"></script>
     <script src="../js/BootSiderMenu/js/BootSideMenu.js"></script>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA3ZyjLQqMHZ7jtuVmCxbK11r86K2UuNLM&sensor=false"></script>

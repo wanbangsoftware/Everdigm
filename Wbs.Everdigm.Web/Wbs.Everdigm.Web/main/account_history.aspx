@@ -73,7 +73,7 @@
             <div class="clear"></div>
         </div>
     </form>
-    <script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="../js/jquery.cookie.js"></script>
     <script type="text/javascript" src="../bootstrap3/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../js/javascript.date.pattern.js"></script>

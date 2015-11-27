@@ -25,7 +25,7 @@ $(document).ready(function () {
     $("#txtNumber").autocomplete({
         source: function (request, response) {
             GetJsonData("../ajax/query.ashx",
-                { "type": "terminal", "cmd": "notbound", "data": $("#txtNumber").val() },
+                { "type": "terminal", "cmd": "normal", "data": $("#txtNumber").val() },
                 function (data) {
                     response($.map(data, function (item) {
                         return {
