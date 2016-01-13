@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Wbs.Sockets
+﻿namespace Wbs.Sockets
 {
     /// <summary>
     /// 需要服务器处理的数据类型。

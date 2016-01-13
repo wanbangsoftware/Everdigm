@@ -141,6 +141,7 @@
     <Content Include="js\BootSiderMenu\css\BootSideMenu.css" />
     <Content Include="js\BootSiderMenu\js\BootSideMenu.js" />
     <Content Include="js\BootSiderMenu\test.html" />
+    <Content Include="js\bootstrap.progressbar.js" />
     <Content Include="js\CanvasJS\canvasjs.min.js" />
     <Content Include="js\CanvasJS\instruction.txt" />
     <Content Include="js\CanvasJS\jquery.canvasjs.min.js" />
@@ -366,6 +367,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ajax\work.ashx" />
+    <Content Include="ajax\print.ashx" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -571,6 +573,9 @@
     <Compile Include="ajax\PartialCommandBLLs.cs" />
     <Compile Include="ajax\PartialQueryCustomer.cs" />
     <Compile Include="ajax\PartialQueryTracker.cs" />
+    <Compile Include="ajax\print.ashx.cs">
+      <DependentUpon>print.ashx</DependentUpon>
+    </Compile>
     <Compile Include="ajax\query.ashx.cs">
       <DependentUpon>query.ashx</DependentUpon>
     </Compile>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-/// <summary>
+﻿/// <summary>
 /// 终端连接状态
 /// </summary>
 public enum LinkType : byte
@@ -39,5 +34,22 @@ public enum LinkType : byte
     /// <summary>
     /// 其他
     /// </summary>
-    OTHER = 0xFF
+    OTHER = 0xFF,
+
+    /// <summary>
+    /// TCP链接状态的掩码
+    /// </summary>
+    LINK_TCP=0x01,
+    /// <summary>
+    /// UDP链接状态的掩码
+    /// </summary>
+    LINK_UDP = 0x02,
+    /// <summary>
+    /// SMS链接状态的掩码
+    /// </summary>
+    LINK_SMS = 0x04,
+    /// <summary>
+    /// SAT链接状态的掩码
+    /// </summary>
+    LINK_SAT = 0x08
 }

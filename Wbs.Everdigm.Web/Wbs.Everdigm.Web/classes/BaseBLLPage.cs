@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Database;
-using System.Configuration;
 
 namespace Wbs.Everdigm.Web
 {

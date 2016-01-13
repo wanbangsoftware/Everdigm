@@ -180,7 +180,7 @@
                                             <td class="popup-td" style="vertical-align: middle; text-align: right;">Equipment:</td>
                                             <td class="popup-td" colspan="3">
                                                 <input type="hidden" id="hiddenEquipment" runat="server" />
-                                                <input type="text" class="form-control" data-provide="typeahead" id="equipment" placeholder="equipment" maxlength="20">
+                                                <input type="text" class="form-control" data-provide="typeahead" id="equipment" placeholder="equipment" maxlength="20"/>
                                             </td>
                                         </tr>
                                         <tr id="equipmentInfo">
@@ -193,7 +193,7 @@
                                             <td class="popup-td" style="vertical-align: middle; text-align: right;">Book:</td>
                                             <td class="popup-td" colspan="3">
                                                 <input type="hidden" id="hiddenTerminal" runat="server" />
-                                                <input type="text" class="form-control" data-provide="typeahead" id="terminal" placeholder="terminal to install or displace" maxlength="10">
+                                                <input type="text" class="form-control" data-provide="typeahead" id="terminal" placeholder="terminal to install or displace" maxlength="10"/>
                                             </td>
                                         </tr>
                                         <tr>

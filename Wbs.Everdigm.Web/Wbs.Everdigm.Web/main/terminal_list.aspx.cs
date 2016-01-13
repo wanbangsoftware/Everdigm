@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 using Wbs.Everdigm.Database;
 using System.Configuration;
 using Wbs.Utilities;
-using Wbs.Everdigm.Common;
 using Wbs.Protocol;
 
 namespace Wbs.Everdigm.Web.main
@@ -84,7 +79,7 @@ namespace Wbs.Everdigm.Web.main
             else
             {
                 var cnt = (pageIndex - 1) * PageSize;
-                var n = (int?)null;
+                //var n = (int?)null;
                 foreach (var obj in list)
                 {
                     cnt++;

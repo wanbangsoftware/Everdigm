@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Configuration;
 
 using Wbs.Everdigm.Common;
@@ -44,7 +42,8 @@ namespace Wbs.Everdigm.Desktop
                 // 0==链接不存在1=发送成功2=网络处理错误3=强制SMS发送
                 byte ret = 0;
                 CommandStatus cs = (CommandStatus)cmd.Status;
-                if (cs == CommandStatus.WaitingForSMS)
+                // 所有GSM命令都强制SMS方式发送
+                if (cs == CommandStatus.WaitingForSMS || cs == CommandStatus.Waiting)
                 {
                     // 强制SMS发送的
                     ret = 3;

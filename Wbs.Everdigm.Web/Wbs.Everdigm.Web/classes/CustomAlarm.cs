@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 using Wbs.Everdigm.Database;
 using Wbs.Protocol.TX300.Analyse;

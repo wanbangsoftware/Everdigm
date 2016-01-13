@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Text;
 
 using Wbs.Sockets;
 using Wbs.Utilities;
-using System.Net;
-using System.IO;
-using System.Threading.Tasks;
-using System.Configuration;
 
 namespace Wbs.Everdigm.Desktop
 {

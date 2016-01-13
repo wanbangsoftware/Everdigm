@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.IO;
+﻿using System.Web;
 using System.Web.SessionState;
 using Wbs.Everdigm.Database;
 
@@ -30,9 +26,9 @@ namespace Wbs.Everdigm.Web.ajax
         /// </summary>
         private string force = "";
         /// <summary>
-        /// 命令的发送方式
+        /// 命令的发送方式:默认为强制SMS方式发送
         /// </summary>
-        protected ForceType forceType = ForceType.AutoDetect;
+        protected ForceType forceType = ForceType.SMS;
         /// <summary>
         /// 客户端要求的命令字的详细内容
         /// </summary>

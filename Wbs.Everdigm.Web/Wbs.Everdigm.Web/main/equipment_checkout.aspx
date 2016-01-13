@@ -175,7 +175,7 @@
                                         <tr>
                                             <td class="popup-td" colspan="2" style="width: 50%;">
                                                 <div class="input-group" style="width: 180px;">
-                                                    <input type="text" class="form-control" id="number" placeholder="Customer number" maxlength="10" data-provide="typeahead">
+                                                    <input type="text" class="form-control" id="number" placeholder="Customer number" maxlength="10" data-provide="typeahead"/>
                                                     <span class="input-group-btn">
                                                         <button class="btn btn-warning" type="button" id="queryCustomer"><span class="glyphicon glyphicon-search"></span></button>
                                                     </span>

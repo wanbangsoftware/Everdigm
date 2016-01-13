@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using Wbs.Everdigm.Database;
-using System.Data.Linq;
 
 namespace Wbs.Everdigm.Web.service
 {

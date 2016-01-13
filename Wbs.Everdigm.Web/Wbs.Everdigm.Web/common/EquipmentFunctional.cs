@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Wbs.Everdigm.Web
+﻿namespace Wbs.Everdigm.Web
 {
     /// <summary>
     /// 设备类型

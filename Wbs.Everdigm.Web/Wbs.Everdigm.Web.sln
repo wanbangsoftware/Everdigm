@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Everdigm.Web", "Wbs.Everdigm.Web\Wbs.Everdigm.Web.csproj", "{74AB6C1F-5887-4CED-9908-98823D4727F0}"
 EndProject
@@ -22,6 +22,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Sockets", "Wbs.Sockets\Wbs.Sockets.csproj", "{70D482DF-AF02-4ABC-83D9-7551B782F21B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Everdigm.Desktop", "Wbs.Everdigm.Desktop\Wbs.Everdigm.Desktop.csproj", "{1C73FC61-F05B-47B7-9999-E258CA7BE369}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Everdigm.Printer", "..\Wbs.Everdigm.Printer\Wbs.Everdigm.Printer.csproj", "{AD871B7B-4C62-4B08-91D0-2FB82CEA3085}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wbs.Label.Printer", "..\Wbs.Label.Printer\Wbs.Label.Printer.csproj", "{EC457B03-157C-4DD5-9AC2-A10E3100A1A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +73,14 @@ Global
 		{1C73FC61-F05B-47B7-9999-E258CA7BE369}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C73FC61-F05B-47B7-9999-E258CA7BE369}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C73FC61-F05B-47B7-9999-E258CA7BE369}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD871B7B-4C62-4B08-91D0-2FB82CEA3085}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD871B7B-4C62-4B08-91D0-2FB82CEA3085}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD871B7B-4C62-4B08-91D0-2FB82CEA3085}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD871B7B-4C62-4B08-91D0-2FB82CEA3085}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC457B03-157C-4DD5-9AC2-A10E3100A1A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC457B03-157C-4DD5-9AC2-A10E3100A1A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC457B03-157C-4DD5-9AC2-A10E3100A1A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC457B03-157C-4DD5-9AC2-A10E3100A1A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

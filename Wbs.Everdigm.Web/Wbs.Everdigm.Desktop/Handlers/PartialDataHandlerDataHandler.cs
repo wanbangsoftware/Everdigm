@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using Wbs.Protocol.TX300;
 using Wbs.Protocol.TX300.Analyse;
@@ -653,6 +650,9 @@ namespace Wbs.Everdigm.Desktop
                 EquipmentInstance.Update(f => f.id == equipment.id, act =>
                 {
                     act.Runtime = (int)x600B.Worktime;
+                    // 装载机的总运转时间初始化时，将其特定的初始化时间设为0
+                    if (act.InitializedRuntime > 0)
+                        act.InitializedRuntime = 0;
                 });
             }
         }

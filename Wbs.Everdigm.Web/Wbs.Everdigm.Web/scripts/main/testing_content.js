@@ -46,7 +46,7 @@ function sendTerminalCommand(cmd) {
                     });
                 }, function () { })
             });
-            data.desc = "will be sent by server.";
+            data.desc = "will be sent by server" + (force == "sms" ? "(force to SMS)" : "") + ".";
             showWarningMessage(data);
         } else {
             showWarningMessage(data);

@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="GpsSystem" Class="EverdigmDataContext" Serialization="Unidirectional" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=.;Initial Catalog=GpsSystem;Integrated Security=True" SettingsObjectName="Wbs.Everdigm.Database.Properties.Settings" SettingsPropertyName="GpsSystemConnectionString" Provider="System.Data.SqlClient" />
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="GPSSYSTEM" Class="EverdigmDataContext" Serialization="Unidirectional" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.TB_Account" Member="TB_Account">
     <Type Name="TB_Account">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -189,16 +188,6 @@
       <Column Name="Description" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
       <Column Name="Permission" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
       <Association Name="TB_Role_TB_Account" Member="TB_Account" ThisKey="id" OtherKey="Role" Type="TB_Account" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_Satellite" Member="TB_Satellite">
-    <Type Name="TB_Satellite">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Bound" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="RegisterDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="CardNo" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Association Name="TB_Satellite_TB_IridiumFlow" Member="TB_IridiumFlow" ThisKey="id" OtherKey="Iridium" Type="TB_IridiumFlow" />
-      <Association Name="TB_Satellite_TB_Terminal" Member="TB_Terminal" ThisKey="id" OtherKey="Satellite" Type="TB_Terminal" />
     </Type>
   </Table>
   <Table Name="dbo.TB_Setting" Member="TB_Setting">
@@ -496,6 +485,24 @@
       <Association Name="TB_Command_TB_CommandHistory" Member="TB_CommandHistory" ThisKey="id" OtherKey="Command" Type="TB_CommandHistory" />
       <Association Name="TB_Account_TB_Command" Member="TB_Account" ThisKey="SendUser" OtherKey="id" Type="TB_Account" IsForeignKey="true" />
       <Association Name="TB_Terminal_TB_Command" Member="TB_Terminal" ThisKey="Terminal" OtherKey="id" Type="TB_Terminal" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_Satellite" Member="TB_Satellite">
+    <Type Name="TB_Satellite">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Bound" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="LabelPrinted" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="LabelPrintStatus" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="LabelPrintSchedule" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="RegisterDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ManufactureDate" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="CardNo" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="PcbNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="FWVersion" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="RatedVoltage" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Manufacturer" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Association Name="TB_Satellite_TB_IridiumFlow" Member="TB_IridiumFlow" ThisKey="id" OtherKey="Iridium" Type="TB_IridiumFlow" />
+      <Association Name="TB_Satellite_TB_Terminal" Member="TB_Terminal" ThisKey="id" OtherKey="Satellite" Type="TB_Terminal" />
     </Type>
   </Table>
   <Function Name="dbo.sp_ClearOldLinks" Method="sp_ClearOldLinks">

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 using Wbs.Protocol.TX300;
 using Wbs.Protocol.TX300.Analyse;
@@ -260,7 +259,7 @@ namespace Wbs.Everdigm.Web.ajax
                     dt = dt.AddDays(1);
                 }
                 var macid = EquipmentInstance.GetFullNumber(obj);
-                var cmds = new String[] { "0x1000", "0x6004" };
+                var cmds = new String[] { "0x1000", "0x1001", "0x5000", "0x6004" };
                 var runtimes = DataInstance.FindList(f => f.mac_id.Equals(macid) && cmds.Contains(f.command_id) &&
                     f.receive_time >= date && f.receive_time <= date1).OrderBy(o => o.receive_time);
                 if (null != runtimes)
@@ -290,6 +289,21 @@ namespace Wbs.Everdigm.Web.ajax
                                 temp = CustomConvert.GetBytes(r.message_content);
                                 index = 13;
                             }
+                        }
+                        else if (r.command_id.Equals("0x1001"))
+                        {
+                            temp = CustomConvert.GetBytes(r.message_content);
+                            index = 37;
+                        }
+                        else if (r.command_id.Equals("0x5000"))
+                        {
+                            // 只有装载机和电装的挖掘机才能有5000命令的总运转时间
+                            if (r.terminal_type >= TerminalTypes.DXE)
+                            {
+                                temp = CustomConvert.GetBytes(r.message_content);
+                                index = 0;
+                            }
+                            else continue;
                         }
                         else
                         {
