@@ -196,6 +196,21 @@
                     </div>
                 </div>
             </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingEleven">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseEleven" aria-expanded="false" aria-controls="collapseEleven">Security: Reset to GSM(SMS)
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseEleven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEleven">
+                    <div class="panel-body">
+                        <button type="button" id="bt_reset_gsm" data-loading-text="Testing reset to satellite progress..." data-complete-text="testing finished!" class="btn btn-default" autocomplete="off">
+                            Reset to GSM(SMS)
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
     <!-- Modal -->

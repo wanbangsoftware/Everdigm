@@ -52,6 +52,11 @@ namespace Wbs.Everdigm.Web.main
                     // 机械式的挖掘机，不显示装载机的命令
                     if (command.Title.IndexOf("Loader") < 0)
                     {
+                        // 未启动时不能发送EPOS命令
+                        var vol = equipment.Voltage;
+                        if (!vol.Contains("G2") && command.Title.Contains("Equipment"))
+                            continue;
+
                         html += "<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"-1\" href=\"#" + command.Flag + "\">" + command.Title + "</a></li>";
                     }
                 }

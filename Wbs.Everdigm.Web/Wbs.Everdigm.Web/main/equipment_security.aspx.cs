@@ -37,7 +37,7 @@ namespace Wbs.Everdigm.Web.main
             foreach (var command in commands)
             {
                 // 禁止在这里发送启用或禁用卫星命令 2015/11/26 16:35
-                if (command.Flag == "satenable" || command.Flag == "satdisable")
+                if (command.Flag == "satenable" || command.Flag == "satdisable" || command.Flag == "reset_gsm")
                 {
                     continue;
                 }
@@ -60,6 +60,21 @@ namespace Wbs.Everdigm.Web.main
                     // 机械式的挖掘机，不显示装载机的命令
                     if (command.Title.IndexOf("Loader") < 0)
                     {
+                        var lok = equipment.LockStatus;
+                        if (string.IsNullOrEmpty(lok))
+                            lok = "00";
+                        // 未锁车时不显示解锁
+                        if (lok.Equals("00"))
+                        {
+                            if (command.Flag.Equals("enable"))
+                                continue;
+                        }
+                        else
+                        {
+                            if (command.Flag.Equals("full"))
+                                // 锁车时不显示锁车
+                                continue;
+                        }
                         html += "<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"-1\" href=\"#" + command.Flag + "\">" + command.Title + "</a></li>";
                     }
                 }

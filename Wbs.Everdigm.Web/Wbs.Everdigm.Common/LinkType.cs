@@ -39,7 +39,7 @@ public enum LinkType : byte
     /// <summary>
     /// TCP链接状态的掩码
     /// </summary>
-    LINK_TCP=0x01,
+    LINK_TCP = 0x01,
     /// <summary>
     /// UDP链接状态的掩码
     /// </summary>
