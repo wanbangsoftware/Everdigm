@@ -103,6 +103,8 @@ namespace Wbs.Everdigm.Desktop
                         act.OnlineTime = data.Time;
                     });
                     equipment = EquipmentInstance.Find(f => f.Terminal == terminal.id);
+                    // 更新设备的总运转时间
+                    HandleEquipmentRuntime(equipment, worktime);
                     if (null != equipment)
                     {
                         EquipmentInstance.Update(f => f.id == equipment.id, act =>
@@ -123,20 +125,24 @@ namespace Wbs.Everdigm.Desktop
                             }
                             // 更新启动与否状态 2015/08/31
                             act.Voltage = location.EngFlag == "On" ? "G2400" : "G0000";
+
+                            // 更新总运转时间
+                            act.Runtime = equipment.Runtime;
+                            act.AccumulativeRuntime = equipment.AccumulativeRuntime;
                             // 如果回来的运转时间比当前时间大则更新成为On状态  暂时  2015/09/02
-                            if (worktime > act.Runtime)
-                            {
-                                // act.Voltage = "G2400";
-                                act.Runtime = (int)worktime;
-                            }
-                            else
-                            {
-                                if (worktime > 0)
-                                {
-                                    // 运转时间不为零的话，更新运转时间
-                                    act.Runtime = (int)worktime;
-                                }
-                            }
+                            //if (worktime > act.Runtime)
+                            //{
+                            //    // act.Voltage = "G2400";
+                            //    act.Runtime = (int)worktime;
+                            //}
+                            //else
+                            //{
+                            //    if (worktime > 0)
+                            //    {
+                            //        // 运转时间不为零的话，更新运转时间
+                            //        act.Runtime = (int)worktime;
+                            //    }
+                            //}
                             // 锁车状态 2015/08/14
                             if (act.LockStatus != locks) { act.LockStatus = locks; }
                         });

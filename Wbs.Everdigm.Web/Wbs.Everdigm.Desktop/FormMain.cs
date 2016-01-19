@@ -112,24 +112,35 @@ namespace Wbs.Everdigm.Desktop
         public void StartService()
         {
             var port = int.Parse(ConfigurationManager.AppSettings["SERVER_PORT"]);
-            if (null == _server)
+            try
             {
-                _server = new SocketServer(port);
-                _server.OnMessage += new EventHandler<UIEventArgs>(OnServerMessage);
-                _server.OnIridiumSend += new EventHandler<IridiumDataEvent>(OnIridiumSend);
-                _server.StartUDP = true;
-                _server.Start();
-                tsmiStartService.Enabled = !_server.Started;
-                tsmiStopService.Enabled = _server.Started;
-                tsslServerState.Text = "Service Start at: " + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                if (null == _server)
+                {
+                    _server = new SocketServer(port);
+                    _server.OnMessage += new EventHandler<UIEventArgs>(OnServerMessage);
+                    _server.OnIridiumSend += new EventHandler<IridiumDataEvent>(OnIridiumSend);
+                    _server.StartUDP = true;
+                    _server.Start();
+                    tsmiStartService.Enabled = !_server.Started;
+                    tsmiStopService.Enabled = _server.Started;
+                    tsslServerState.Text = "Service Start at: " + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                }
+                if (null == _iridium)
+                {
+                    _iridium = new IridiumServer();
+                    _iridium.ShowPackageInformation = tsmiShowIridiumPackage.Checked;
+                    _iridium.OnMessage += new EventHandler<UIEventArgs>(OnServerMessage);
+                    _iridium.OnIridiumReceive += new EventHandler<IridiumDataEvent>(OnIridiumReceive);
+                    _iridium.Start(int.Parse(tstbIridiumPort.Text));
+                }
             }
-            if (null == _iridium)
+            catch (SocketException e)
             {
-                _iridium = new IridiumServer();
-                _iridium.ShowPackageInformation = tsmiShowIridiumPackage.Checked;
-                _iridium.OnMessage += new EventHandler<UIEventArgs>(OnServerMessage);
-                _iridium.OnIridiumReceive += new EventHandler<IridiumDataEvent>(OnIridiumReceive);
-                _iridium.Start(int.Parse(tstbIridiumPort.Text));
+                if (e.SocketErrorCode == SocketError.AddressAlreadyInUse)
+                {
+                    MessageBox.Show("There was another instance of this program still running.\nIf that one is not created by you, please contact the administrator.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    tsmiExit_Click(this, EventArgs.Empty);
+                }
             }
         }
         /// <summary>
