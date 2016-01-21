@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Linq;
 using Wbs.Everdigm.Database;
 using Wbs.Protocol;
 
@@ -19,10 +19,27 @@ namespace Wbs.Everdigm.Web.main
                         hidID.Value = _key;
                         ShowEdit();
                     }
+                    else {
+                        // 显示新注册一个终端号码
+                        NewTerminalNo();
+                    }
                 }
             }
         }
-
+        private void NewTerminalNo()
+        {
+            var no = DateTime.Now.ToString("yyyyMMdd");
+            // 查找当前日期中比1号更大的终端号码并倒叙排列
+            var ter = TerminalInstance.FindList<TB_Terminal>(f => f.Number.StartsWith(no) && f.Delete == false, "Number", true).FirstOrDefault();
+            if (null != ter)
+            {
+                no = (ParseInt(ter.Number) + 1).ToString();
+            }
+            else {
+                no += "01";
+            }
+            txtNumber.Value = no;
+        }
         private void ShowEdit()
         {
             var t = TerminalInstance.Find(f => f.id == ParseInt(Utility.Decrypt(hidID.Value)));

@@ -39,8 +39,8 @@
                                 </td>
                                 <td class="td_right" rowspan="2">Type:</td>
                                 <td class="td_left" rowspan="2">
-                                    <input type="radio" name="_type" value="20" id="_dx_normal" runat="server" checked="true" />DX(Mechanical)<br />
-                                    <input type="radio" name="_type" value="21" id="_dx" runat="server" />DX(Electronic)<br />
+                                    <input type="radio" name="_type" value="20" id="_dx_normal" runat="server" />DX(Mechanical)<br />
+                                    <input type="radio" name="_type" value="21" id="_dx" runat="server" checked="true" />DX(Electronic)<br />
                                     <input type="radio" name="_type" value="30" id="_ld" runat="server" />Loader
                                 </td>
                             </tr>

@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace Wbs.Everdigm.Web.wbs
 {
-    public partial class sim_card_inport : System.Web.UI.Page
+    public partial class semi_terminal_test : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {

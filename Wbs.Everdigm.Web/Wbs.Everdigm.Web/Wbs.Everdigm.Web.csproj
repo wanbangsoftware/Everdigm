@@ -535,6 +535,7 @@
     <Content Include="scripts\service\as.trackers.js" />
     <Content Include="scripts\service\as.work.details.js" />
     <Content Include="scripts\service\as.work.js" />
+    <Content Include="scripts\wbs\semi.test.js" />
     <Content Include="service\as_tracker.aspx" />
     <Content Include="service\as_trackers.aspx" />
     <Content Include="service\as_work_details.aspx" />
@@ -556,7 +557,7 @@
     <Content Include="tree_images\t.gif" />
     <Content Include="tree_images\tminus.gif" />
     <Content Include="tree_images\tplus.gif" />
-    <Content Include="wbs\sim_card_inport.aspx" />
+    <Content Include="wbs\semi_terminal_test.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1220,12 +1221,12 @@
     <Compile Include="sms_test.aspx.designer.cs">
       <DependentUpon>sms_test.aspx</DependentUpon>
     </Compile>
-    <Compile Include="wbs\sim_card_inport.aspx.cs">
-      <DependentUpon>sim_card_inport.aspx</DependentUpon>
+    <Compile Include="wbs\semi_terminal_test.aspx.cs">
+      <DependentUpon>semi_terminal_test.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="wbs\sim_card_inport.aspx.designer.cs">
-      <DependentUpon>sim_card_inport.aspx</DependentUpon>
+    <Compile Include="wbs\semi_terminal_test.aspx.designer.cs">
+      <DependentUpon>semi_terminal_test.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -1258,9 +1259,7 @@
       <Name>Wbs.Everdigm.Database</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="scripts\wbs\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
