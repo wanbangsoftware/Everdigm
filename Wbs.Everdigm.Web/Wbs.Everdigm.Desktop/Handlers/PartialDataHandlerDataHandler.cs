@@ -270,8 +270,8 @@ namespace Wbs.Everdigm.Desktop
                 case 0xBB0F:
                     break;
                 case 0xCC00:
-                    Handle0xCC00(obj, terminal);
-                    HandleTerminalVersion(obj, terminal);
+                    Handle0xCC00(obj, equipment, terminal);
+                    //HandleTerminalVersion(obj, terminal);
                     break;
                 case 0xDD00:
                     HandleTerminalVersion(obj, terminal);
@@ -390,6 +390,7 @@ namespace Wbs.Everdigm.Desktop
             _0x1001 x1001 = new _0x1001();
             x1001.Content = obj.MsgContent;
             x1001.Unpackage();
+            HandleEquipmentRuntime(equipment, x1001.WorkTime);
             if (null != equipment)
             {
                 EquipmentInstance.Update(f => f.id == equipment.id, act =>
@@ -399,7 +400,8 @@ namespace Wbs.Everdigm.Desktop
                     // 去掉 0x1001 里面的运转时间更新
                     //if (x1001.WorkTime > 0)
                     //{
-                    //    act.Runtime = (int)x1001.WorkTime;
+                    act.AccumulativeRuntime = equipment.AccumulativeRuntime;
+                    act.Runtime = equipment.Runtime;
                     //}
                     // 更新0x1001里的定位信息  2015/09/09 23:29
                     if (x1001.Available_2)
@@ -524,6 +526,7 @@ namespace Wbs.Everdigm.Desktop
             x5000.Type = obj.TerminalType;
             x5000.Content = obj.MsgContent;
             x5000.Unpackage();
+            HandleEquipmentRuntime(equipment, x5000.WorkTime);
             if (null != equipment)
             {
                 string vol = string.Format("G{0}0", ((int)Math.Floor(x5000.GeneratorVoltage * 10)).ToString("000"));
@@ -538,14 +541,17 @@ namespace Wbs.Everdigm.Desktop
 
                     if (x5000.GeneratorVoltage < 20)
                     { act.Rpm = 0; }
-                    if (x5000.WorkTime > 0)
-                    {
-                        // 如果总运转时间大于等于当前服务器中保存的时间则更新，否则不更新
-                        if (x5000.WorkTime >= act.Runtime)
-                        {
-                            act.Runtime = (int)x5000.WorkTime;
-                        }
-                    }
+
+                    act.Runtime = equipment.Runtime;
+                    act.AccumulativeRuntime = equipment.AccumulativeRuntime;
+                    //if (x5000.WorkTime > 0)
+                    //{
+                    //    // 如果总运转时间大于等于当前服务器中保存的时间则更新，否则不更新
+                    //    if (x5000.WorkTime >= act.Runtime)
+                    //    {
+                    //        act.Runtime = (int)x5000.WorkTime;
+                    //    }
+                    //}
                     if (x5000.GPSInfo.Available)
                     {
                         act.Latitude = x5000.GPSInfo.Latitude;
@@ -590,24 +596,19 @@ namespace Wbs.Everdigm.Desktop
             x6004.Type = obj.TerminalType;
             x6004.Content = obj.MsgContent;
             x6004.Unpackage();
+            HandleEquipmentRuntime(equipment, x6004.TotalWorkTime);
             if (null != equipment)
             {
-                if (x6004.TotalWorkTime > 0)
+                EquipmentInstance.Update(f => f.id == equipment.id, act =>
                 {
-                    EquipmentInstance.Update(f => f.id == equipment.id, act =>
+                    act.Runtime = equipment.Runtime;
+                    act.AccumulativeRuntime = equipment.AccumulativeRuntime;
+                    if (obj.TerminalType == Protocol.TerminalTypes.DH || obj.TerminalType == Protocol.TerminalTypes.DX)
                     {
-                        // 如果回来的运转时间大于等于当前服务器上的运转时间则更新，否则不更新
-                        if (x6004.TotalWorkTime >= act.Runtime)
-                        {
-                            act.Runtime = (int)x6004.TotalWorkTime;
-                            if (obj.TerminalType == Protocol.TerminalTypes.DH || obj.TerminalType == Protocol.TerminalTypes.DX)
-                            {
-                                // EPOS命令时清空报警  2015/09/24 08:00
-                                act.Alarm = ALARM;
-                            }
-                        }
-                    });
-                }
+                        // EPOS命令时清空报警  2015/09/24 08:00
+                        act.Alarm = ALARM;
+                    }
+                });
             }
         }
         /// <summary>
@@ -649,11 +650,48 @@ namespace Wbs.Everdigm.Desktop
             {
                 EquipmentInstance.Update(f => f.id == equipment.id, act =>
                 {
+                    // 600B时直接重置所有的运转时间
                     act.Runtime = (int)x600B.Worktime;
+                    act.AccumulativeRuntime = (int)x600B.Worktime;
                     // 装载机的总运转时间初始化时，将其特定的初始化时间设为0
                     if (act.InitializedRuntime > 0)
                         act.InitializedRuntime = 0;
                 });
+            }
+        }
+        /// <summary>
+        /// 一天的分钟数
+        /// </summary>
+        private static int day = 60 * 24;
+        private void HandleEquipmentRuntime(TB_Equipment equipment, uint newTime)
+        {
+            if (null != equipment)
+            {
+                var time = (int)newTime;
+                int old = (int)equipment.AccumulativeRuntime;
+                // 新运转时间大于旧运转时间时
+                if (time > old)
+                {
+                    int interval = time - old;
+                    // 更新旧时间为新的时间
+                    equipment.AccumulativeRuntime = time;
+                    // 如果新旧时间之差大于1天则说明可能是修改了终端的运转时间了
+                    if (interval > day)
+                    {
+                        // 修改真实的总运转时间为当前新时间
+                        equipment.Runtime = time;
+                    }
+                    else
+                    {
+                        // 真实的总运转时间累计新旧时间之差
+                        equipment.Runtime += interval;
+                    }
+                }
+                else
+                {
+                    // 新时间小于旧时间，则直接将旧时间更新成新时间，但不更新真实的总运转时间
+                    equipment.AccumulativeRuntime = time;
+                }
             }
         }
         /// <summary>
@@ -662,8 +700,24 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="obj"></param>
         /// <param name="equipment"></param>
         /// <param name="terminal"></param>
-        private void Handle0xCC00(TX300 obj, TB_Terminal terminal)
+        private void Handle0xCC00(TX300 obj, TB_Equipment equipment, TB_Terminal terminal)
         {
+            _0xCC00 cc00 = new _0xCC00();
+            cc00.Content = obj.MsgContent;
+            cc00.Unpackage();
+            HandleEquipmentRuntime(equipment, cc00.WorkTime);
+            if (null != equipment)
+            {
+                EquipmentInstance.Update(f => f.id == equipment.id, act =>
+                {
+                    act.Runtime = equipment.Runtime;
+                    act.AccumulativeRuntime = equipment.AccumulativeRuntime;
+                    if ((int?)null != act.Terminal)
+                    {
+                        act.TB_Terminal.Firmware = cc00.Firmware;
+                    }
+                });
+            }
             // 更新最近发送的0xBB0F命令为成功状态
             Handle0xBB0FStatus();
             // 返回铱星方式的0xCC00数据

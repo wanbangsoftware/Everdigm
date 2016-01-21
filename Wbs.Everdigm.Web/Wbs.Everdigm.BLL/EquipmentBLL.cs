@@ -47,6 +47,7 @@ namespace Wbs.Everdigm.BLL
                 Port = 0,
                 RegisterTime = DateTime.Now,
                 Runtime = 0,
+                AccumulativeRuntime = 0,
                 InitializedRuntime = 0,
                 ServerName = "",
                 Signal = 0,
