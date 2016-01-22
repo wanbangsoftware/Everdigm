@@ -23,6 +23,9 @@ namespace Wbs.Everdigm.BLL
             {
                 id = 0,
                 HasBound = false,
+                LabelPrinted = 0,
+                LabelPrintSchedule = (DateTime?)null,
+                LabelPrintStatus = 0,
                 // 加入卫星功能确认 2015/09/18 14:00
                 SatelliteStatus = false,
                 Delete = false,

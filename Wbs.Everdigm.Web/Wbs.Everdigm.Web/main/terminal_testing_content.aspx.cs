@@ -45,6 +45,7 @@ namespace Wbs.Everdigm.Web.main
                     var link = (LinkType)t.OnlineStyle;
                     terminalContent.Value = "Sim card: " + t.Sim + "<br />Satellite: " + t.Satellite + "<br />Equipment: " +
                         (null == mac ? "" : EquipmentInstance.GetFullNumber(mac)) + "<br />Link: " + link;
+                    terminalCardNumber.Value = t.Sim;
                 }
                 else
                 {

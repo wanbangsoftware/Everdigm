@@ -122,11 +122,11 @@ function calculateTimeused() {
     $("#timeUsed").html(time.pattern(_timerMaxtimes == _MAX_GSM_ ? "mm:ss" : "H:mm:ss"));
     var max = _timerInterval * _timerMaxtimes;
     if (used > max * 0.7) {
-        $(".modal-header").removeClass("btn-warning").addClass("btn-danger");
+        $("#analyseModal.modal-header").removeClass("btn-warning").addClass("btn-danger");
         return;
     }
     if (used > max * 0.5) {
-        $(".modal-header").removeClass("btn-primary").addClass("btn-warning");
+        $("#analyseModal.modal-header").removeClass("btn-primary").addClass("btn-warning");
         return;
     }
 }

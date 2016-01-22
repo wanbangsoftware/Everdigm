@@ -67,7 +67,7 @@
 <body>
     <form id="form1" runat="server">
         <div class="panel panel-default">
-            <div class="panel-heading"><strong>半成品测试</strong></div>
+            <div class="panel-heading"><strong id="heading">半成品测试</strong></div>
             <div class="panel-body">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">

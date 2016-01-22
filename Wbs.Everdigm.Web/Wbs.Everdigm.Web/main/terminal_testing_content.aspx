@@ -26,6 +26,7 @@
             You are testing terminal 
             <strong id="terminalInfo" runat="server" style="cursor: pointer;" data-toggle="popover" data-placement="bottom" data-trigger="focus"></strong>&nbsp;now. Command send type: 
             <input type="hidden" id="terminalContent" runat="server" />
+            <input type="hidden" id="terminalCardNumber" runat="server" />
             <div class="btn-group" data-toggle="buttons">
                 <label class="btn btn-warning active">
                     <input type="radio" name="options" value="normal" autocomplete="off" checked />
@@ -289,11 +290,19 @@
                     } else {
                         $(item).hide();
                     }
+                } else if (type == "finished") {
+                    if (index <= 1 || index == 7) {
+                        $(item).show();
+                    } else {
+                        $(item).hide();
+                    }
                 }
             });
 
-            if (type == "semi") {
+            if (type != "normal") {
                 queryDataHistory();
+            } else {
+                $("#printLabel").hide();
             }
         });
     </script>

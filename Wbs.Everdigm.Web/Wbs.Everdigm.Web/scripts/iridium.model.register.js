@@ -80,6 +80,7 @@ function showPrintProgress() {
             var percentage = parseInt(curWaitPrintTimes / maxWaitPrintTimes * 100);
             $(".progress-bar").css("width", percentage + "%");
             if (curWaitPrintTimes >= maxWaitPrintTimes) {
+                $("#spanPrintStatusText").text("Print fail: timeout.");
                 stopTimer();
             } else {
                 if (curWaitPrintTimes % 5 == 4) {

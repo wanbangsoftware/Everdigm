@@ -16,8 +16,7 @@ namespace Wbs.Everdigm.Web.ajax
         /// </summary>
         private void HandleIridiumLabelPrintQuery()
         {
-            var label = SatelliteInstance.Find(f => f.LabelPrintSchedule >= DateTime.Now.AddMinutes(-5) &&
-            f.LabelPrintStatus == (byte)Common.PrintStatus.Waiting);
+            var label = SatelliteInstance.Find(f => f.LabelPrintSchedule >= DateTime.Now.AddMinutes(-5) && f.LabelPrintStatus == (byte)Common.PrintStatus.Waiting);
             if (null != label)
             {
                 ResponseJson(JsonConverter.ToJson(label));

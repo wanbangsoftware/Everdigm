@@ -4,6 +4,7 @@ var curWaitPrintTimes = 0;
 var printType = "terminal";
 var isPrinting = false;
 var startTimeTicks = 0;
+var historyQueryInterval = 10000;
 
 $(document).ready(function () {
     $(".alert").alert();
@@ -23,7 +24,7 @@ $(document).ready(function () {
         if (!isInTestProgress) {
             currentTestingCommand = cmd;
             currentTestCommandTitle = text;
-            $(".modal-title").text("Testing " + text + ", please wait...");
+            $(".modal-title:eq(0)").text("Testing " + text + ", please wait...");
             sendTerminalCommand(cmd);
         }
     })
@@ -57,7 +58,7 @@ $(document).ready(function () {
 });
 
 function sendTerminalCommand(cmd) {
-    $(".modal-header").removeClass("btn-danger").addClass("btn-primary");
+    $("#analyseModal.modal-header").removeClass("btn-danger").addClass("btn-primary");
     var ter = $("#terminalInfo").html();
     var force = $("input:radio[name =\"options\"]:checked").val();
     GetJsonData("../ajax/command.ashx", { "type": "terminal", "cmd": cmd, "by": force, "data": ter }, function (data) {
@@ -90,6 +91,7 @@ function showPrintProgress() {
             var percentage = parseInt(curWaitPrintTimes / maxWaitPrintTimes * 100);
             $(".progress-bar").css("width", percentage + "%");
             if (curWaitPrintTimes >= maxWaitPrintTimes) {
+                $("#spanPrintStatusText").text("打印失败：超时未处理");
                 stopTimer();
             } else {
                 if (curWaitPrintTimes % 5 == 4) {
@@ -102,6 +104,7 @@ function showPrintProgress() {
 }
 
 function stopTimer() {
+    isPrinting = false;
     printProgressTimer.stop();
     printProgressTimer = null;
     $("#printLabel").button("reset");
@@ -148,12 +151,13 @@ function requestPrintStatus() {
 
 // 获取终端回报的历史纪录
 function queryDataHistory() {
-    var ter = $("#terminalInfo").html();
+    //Sim card: 89001483<br />Satellite: <br />Equipment: DX500LCA-10039<br />Link: BLIND
+    var ter = $("#terminalCardNumber").val();
     GetJsonData("../ajax/query.ashx", { "type": printType, "cmd": "history", "data": ter, "time": startTimeTicks }, function (data) {
         if (startTimeTicks <= 0) {
             // 第一次的时候获取的是服务器的当前时间
             startTimeTicks = data.Time;
-            setTimeout("queryDataHistory();", 10000);
+            setTimeout("queryDataHistory();", historyQueryInterval);
         } else {
             showTerminalHistory(data);
         }
@@ -170,5 +174,5 @@ function showTerminalHistory(data) {
         });
     }
     $(".bs-callout-info").html(html);
-    setTimeout("queryDataHistory();", 10000);
+    setTimeout("queryDataHistory();", historyQueryInterval);
 }

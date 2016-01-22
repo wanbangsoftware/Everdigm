@@ -34,7 +34,8 @@
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textBox = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonIridiumLabel = new System.Windows.Forms.Button();
+            this.buttonTerminalLabel = new System.Windows.Forms.Button();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,30 +63,46 @@
             // 
             // textBox
             // 
+            this.textBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox.Location = new System.Drawing.Point(12, 12);
             this.textBox.Multiline = true;
             this.textBox.Name = "textBox";
             this.textBox.ReadOnly = true;
             this.textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox.Size = new System.Drawing.Size(470, 209);
+            this.textBox.Size = new System.Drawing.Size(577, 232);
             this.textBox.TabIndex = 1;
             // 
-            // button1
+            // buttonIridiumLabel
             // 
-            this.button1.Location = new System.Drawing.Point(403, 18);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonIridiumLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonIridiumLabel.Location = new System.Drawing.Point(455, 21);
+            this.buttonIridiumLabel.Name = "buttonIridiumLabel";
+            this.buttonIridiumLabel.Size = new System.Drawing.Size(106, 23);
+            this.buttonIridiumLabel.TabIndex = 2;
+            this.buttonIridiumLabel.Text = "Iridium Label";
+            this.buttonIridiumLabel.UseVisualStyleBackColor = true;
+            this.buttonIridiumLabel.Click += new System.EventHandler(this.buttonIridiumLabel_Click);
+            // 
+            // buttonTerminalLabel
+            // 
+            this.buttonTerminalLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonTerminalLabel.Location = new System.Drawing.Point(455, 58);
+            this.buttonTerminalLabel.Name = "buttonTerminalLabel";
+            this.buttonTerminalLabel.Size = new System.Drawing.Size(106, 23);
+            this.buttonTerminalLabel.TabIndex = 3;
+            this.buttonTerminalLabel.Text = "Terminal Label";
+            this.buttonTerminalLabel.UseVisualStyleBackColor = true;
+            this.buttonTerminalLabel.Click += new System.EventHandler(this.buttonTerminalLabel_Click);
             // 
             // FormPrinter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(494, 233);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(601, 256);
+            this.Controls.Add(this.buttonTerminalLabel);
+            this.Controls.Add(this.buttonIridiumLabel);
             this.Controls.Add(this.textBox);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormPrinter";
@@ -104,7 +121,8 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.TextBox textBox;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonIridiumLabel;
+        private System.Windows.Forms.Button buttonTerminalLabel;
     }
 }
 

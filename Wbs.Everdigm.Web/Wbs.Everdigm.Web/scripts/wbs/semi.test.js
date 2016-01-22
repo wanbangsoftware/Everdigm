@@ -1,4 +1,9 @@
-﻿$(document).ready(function () {
+﻿var urlType = "semi";
+$(document).ready(function () {
+
+    urlType = $.getUrlParam("type");
+    urlType = isStringNull(urlType) ? "semi" : urlType;
+    $("#heading").text((urlType == "semi" ? "半" : "") + "成品测试");
 
     //$("#terminal_list").BootSideMenu({ side: "right" });
     $("#terminal_list").BootSideMenu({ side: "left" });
@@ -66,7 +71,7 @@ function parseTerminals(data) {
 var tabItem = "<li role=\"presentation\"><a href=\"#content_%id%\" aria-controls=\"content_%id%\" id=\"tab_%id%\" role=\"tab\" data-toggle=\"tab\">%id%</a><span>&times;</span></li>";
 var tabContentItem = "<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"content_%id%\">" +
                      "   <iframe frameborder=\"0\" scrolling=\"auto\" style=\"padding: 10px;\" height=\"500px\" width=\"100%\" " +
-                     "src=\"../main/terminal_testing_content.aspx?key=%id%\&type=semi\"></iframe>" +
+                     "src=\"../main/terminal_testing_content.aspx?key=%id%&type=%type%\"></iframe>" +
                      "</div>";
 function appendTestTerminal(terminal) {
     var len = $(".nav-tabs a").length;
@@ -83,7 +88,7 @@ function appendTestTerminal(terminal) {
     });
     if (!exist) {
         $(".nav-tabs").append(tabItem.replace(/%id%/g, terminal));
-        $('.tab-content').append(tabContentItem.replace(/%id%/g, terminal));
+        $('.tab-content').append(tabContentItem.replace(/%id%/g, terminal).replace(/%type%/g, urlType));
     } else {
         showWarning("终端“" + terminal + "”已经在测试中了");
     }

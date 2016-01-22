@@ -119,13 +119,13 @@
                         <div class="col-lg-8">
                             <div class="input-group">
                                 <span class="input-group-addon" id="basic-addon1" style="width: 90px;">Hours:</span>
-                                <input type="text" id="txtHour" class="form-control" placeholder="hour" aria-describedby="basic-addon1">
+                                <input type="text" id="txtHour" class="form-control" placeholder="hour" aria-describedby="basic-addon1" />
                             </div>
                         </div>
                         <div class="col-lg-8" style="margin-top: 5px;">
                             <div class="input-group">
                                 <span class="input-group-addon" id="basic-addon2" style="width: 90px;">Minutes:</span>
-                                <input type="text" id="txtMinute" class="form-control" placeholder="minute" aria-describedby="basic-addon2">
+                                <input type="text" id="txtMinute" class="form-control" placeholder="minute" aria-describedby="basic-addon2"/>
                             </div>
                         </div>
                     </div>
