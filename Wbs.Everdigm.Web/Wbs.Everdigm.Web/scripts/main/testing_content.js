@@ -1,4 +1,10 @@
-﻿
+﻿var printProgressTimer = null;
+var maxWaitPrintTimes = 150;// 150 sec
+var curWaitPrintTimes = 0;
+var printType = "terminal";
+var isPrinting = false;
+var startTimeTicks = 0;
+
 $(document).ready(function () {
     $(".alert").alert();
 
@@ -29,6 +35,25 @@ $(document).ready(function () {
         //title:"Base Information",
         content: $("#terminalContent").val()
     });
+    $("#modalPrinting").on("hide.bs.modal", function (event) {
+        //event.stopPropagation();
+        $("#printLabel").button("reset");
+    });
+    $("#printLabel").on("click", function () {
+        if (!isPrinting) {
+            // 打印标签
+            $(this).button("loading");
+
+            $(".progress-bar").css("width", "0%");
+            curWaitPrintTimes = 0;
+            $("#spanPrintStatus").text();
+            $("#spanPrintStatusText").text(printStatus(1));
+            requestPrint();
+        } else {
+            // 如果处于打印过程中则显示打印过程
+            $("#modalPrinting").modal("show");
+        }
+    });
 });
 
 function sendTerminalCommand(cmd) {
@@ -55,4 +80,95 @@ function sendTerminalCommand(cmd) {
         // 执行失败
         showWarningMessage(data);
     });
+}
+
+function showPrintProgress() {
+    if (null == printProgressTimer) {
+        printProgressTimer = $.timer(1000, function () {
+            curWaitPrintTimes++;
+            $("#spanPrintStatus").text(curWaitPrintTimes + "s");
+            var percentage = parseInt(curWaitPrintTimes / maxWaitPrintTimes * 100);
+            $(".progress-bar").css("width", percentage + "%");
+            if (curWaitPrintTimes >= maxWaitPrintTimes) {
+                stopTimer();
+            } else {
+                if (curWaitPrintTimes % 5 == 4) {
+                    // 获取打印状态
+                    requestPrintStatus();
+                }
+            }
+        });
+    }
+}
+
+function stopTimer() {
+    printProgressTimer.stop();
+    printProgressTimer = null;
+    $("#printLabel").button("reset");
+}
+
+// 请求打印一个终端标签
+function requestPrint() {
+    var ter = $("#terminalInfo").html();
+    var obj = {};
+    obj.Number = ter;
+    GetJsonData("../ajax/print.ashx", { "type": printType, "cmd": "request", "data": $.toJSON(obj), "timestamp": new Date().getTime() }, function (data) {
+        if (data.State != 0) {
+            showWarningDialog(data.Data);
+        } else {
+            isPrinting = true;
+            $("#modalPrinting").modal("show");
+            showPrintProgress();
+        }
+    });
+}
+
+function printStatus(state) {
+    switch (state) {
+        case 1: return "正在等待打印机处理...";
+        case 2: return "标签正在打印中...";
+        case 3: return "标签已打印完毕";
+        default: return "未知的标签打印状态";
+    }
+}
+
+function requestPrintStatus() {
+    var ter = $("#terminalInfo").html();
+    var obj = {};
+    obj.Number = ter;
+    GetJsonData("../ajax/print.ashx", { "type": printType, "cmd": "status", "data": $.toJSON(obj), "timestamp": new Date().getTime() }, function (data) {
+        if (data.State >= 0) {
+            $("#spanPrintStatusText").text(printStatus(data.State));
+            if (data.State >= 3) {
+                stopTimer();
+            }
+        } else { showWarningDialog(data.Data); }
+    });
+}
+
+// 获取终端回报的历史纪录
+function queryDataHistory() {
+    var ter = $("#terminalInfo").html();
+    GetJsonData("../ajax/query.ashx", { "type": printType, "cmd": "history", "data": ter, "time": startTimeTicks }, function (data) {
+        if (startTimeTicks <= 0) {
+            // 第一次的时候获取的是服务器的当前时间
+            startTimeTicks = data.Time;
+            setTimeout("queryDataHistory();", 10000);
+        } else {
+            showTerminalHistory(data);
+        }
+    });
+}
+var hisItem = "%time% <code>%cmd%</code> %content%<br />";
+function showTerminalHistory(data) {
+    var html = "<code>history data</code> will display in here.<br />";
+    var d = $(data.Data);
+    if (d.length > 0) {
+        $(d).each(function (index, item) {
+            var time = convertDateTimeToJavascriptDate(item.receive_time).pattern("HH:mm:ss");
+            html += hisItem.replace(/%time%/, time).replace(/%cmd%/, item.command_id).replace(/%content%/, item.message_content);
+        });
+    }
+    $(".bs-callout-info").html(html);
+    setTimeout("queryDataHistory();", 10000);
 }

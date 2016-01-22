@@ -2,6 +2,8 @@
 var maxWaitPrintTimes = 150;// 150 sec
 var curWaitPrintTimes = 0;
 var curIMEI = "";
+var printType = "iridium";
+var isPrinting = false;
 
 $(document).ready(function () {
     $("#query").click(function () {
@@ -49,11 +51,15 @@ $(document).ready(function () {
     });
 
     $("#print").click(function () {
-        $(".progress-bar").css("width", "0%");
-        curWaitPrintTimes = 0;
-        $("#spanPrintStatus").text();
-        $("#spanPrintStatusText").text(printStatus(1));
-        requestPrint();
+        if (!isPrinting) {
+            $(".progress-bar").css("width", "0%");
+            curWaitPrintTimes = 0;
+            $("#spanPrintStatus").text();
+            $("#spanPrintStatusText").text(printStatus(1));
+            requestPrint();
+        } else {
+            $("#modalPrinting").modal("show");
+        }
     });
 
     $("#save").click(function () {
@@ -86,6 +92,7 @@ function showPrintProgress() {
 }
 
 function stopTimer() {
+    isPrinting = false;
     printProgressTimer.stop();
     printProgressTimer = null;
 }
@@ -98,7 +105,7 @@ function savePrintInformation() {
     obj.ManufactureDate = $("#manufDate").val();
     obj.RatedVoltage = $("#rateVoltate").val();
     obj.Manufacturer = $("#manuf").val();
-    GetJsonData("ajax/print.ashx", { "type": "iridium", "cmd": "save", "data": $.toJSON(obj), "timestamp": new Date().getTime() }, function (data) {
+    GetJsonData("ajax/print.ashx", { "type": printType, "cmd": "save", "data": $.toJSON(obj), "timestamp": new Date().getTime() }, function (data) {
         if (data.State != 0) {
             showWarningDialog(data.Data);
         } else {
@@ -112,10 +119,11 @@ function savePrintInformation() {
 function requestPrint() {
     var obj = {};
     obj.CardNo = curIMEI;
-    GetJsonData("ajax/print.ashx", { "type": "iridium", "cmd": "request", "data": $.toJSON(obj), "timestamp": new Date().getTime() }, function (data) {
+    GetJsonData("ajax/print.ashx", { "type": printType, "cmd": "request", "data": $.toJSON(obj), "timestamp": new Date().getTime() }, function (data) {
         if (data.State != 0) {
             showWarningDialog(data.Data);
         } else {
+            isPrinting = true;
             $("#modalPrinting").modal("show");
             showPrintProgress();
         }
@@ -124,9 +132,9 @@ function requestPrint() {
 
 function printStatus(state) {
     switch (state) {
-        case 1: return "Waiting...";
+        case 1: return "Waiting for printer...";
         case 2: return "Printing...";
-        case 3: return "Printed!";
+        case 3: return "Print success!";
         default: return "???";
     }
 }
@@ -134,7 +142,7 @@ function printStatus(state) {
 function requestPrintStatus() {
     var obj = {};
     obj.CardNo = curIMEI;
-    GetJsonData("ajax/print.ashx", { "type": "iridium", "cmd": "status", "data": $.toJSON(obj), "timestamp": new Date().getTime() }, function (data) {
+    GetJsonData("ajax/print.ashx", { "type": printType, "cmd": "status", "data": $.toJSON(obj), "timestamp": new Date().getTime() }, function (data) {
         if (data.State >= 0) {
             $("#spanPrintStatusText").text(printStatus(data.State));
             if (data.State >= 3) {

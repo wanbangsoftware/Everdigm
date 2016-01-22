@@ -112,6 +112,7 @@
     <Content Include="ajax\query.ashx" />
     <Content Include="ajax\equipment_models.ashx" />
     <Content Include="images\loading.gif" />
+    <Content Include="images\loading_orange.gif" />
     <Content Include="images\provinces\Arhangai.png" />
     <Content Include="images\provinces\Bayankhongor.png" />
     <Content Include="images\provinces\Bayan_Olgii.png" />
@@ -135,8 +136,10 @@
     <Content Include="images\provinces\Uvurkhangay.png" />
     <Content Include="images\provinces\Zavkhan.gif" />
     <Content Include="images\provinces\Ömnögovǐ.jpg" />
+    <Content Include="images\sim_card.png" />
     <Content Include="images\sprites.png" />
     <Content Include="images\updown.png" />
+    <Content Include="images\wifi_modem.png" />
     <Content Include="iridium_model_register.aspx" />
     <Content Include="js\BootSiderMenu\css\BootSideMenu.css" />
     <Content Include="js\BootSiderMenu\js\BootSideMenu.js" />
@@ -573,6 +576,8 @@
       <DependentUpon>equipment_models.ashx</DependentUpon>
     </Compile>
     <Compile Include="ajax\PartialCommandBLLs.cs" />
+    <Compile Include="ajax\PartialPrintIridium.cs" />
+    <Compile Include="ajax\PartialPrintTerminalcs.cs" />
     <Compile Include="ajax\PartialQueryCustomer.cs" />
     <Compile Include="ajax\PartialQueryTracker.cs" />
     <Compile Include="ajax\print.ashx.cs">

@@ -8,6 +8,7 @@
     <title></title>
     <link href="../bootstrap3/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../bootstrap3/models/css/bootstrap-dialog.min.css" rel="stylesheet" />
+    <link href="../css/body_equipment.css" rel="stylesheet" />
     <style type="text/css">
         .custom-modal-header {
             -webkit-border-top-left-radius: 5px;
@@ -21,30 +22,28 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <div class="alert alert-danger alert-dismissible fade in" role="alert">
-            You are in testing progress of Terminal 
-            <strong id="terminalInfo" runat="server" style="cursor: pointer;" data-toggle="popover" data-placement="bottom" data-trigger="focus"></strong> now. Please select testing progress blow...
+        <div class="alert alert-warning" style="padding: 5px !important;" role="alert">
+            You are testing terminal 
+            <strong id="terminalInfo" runat="server" style="cursor: pointer;" data-toggle="popover" data-placement="bottom" data-trigger="focus"></strong>&nbsp;now. Command send type: 
             <input type="hidden" id="terminalContent" runat="server" />
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-warning active">
+                    <input type="radio" name="options" value="normal" autocomplete="off" checked />
+                    Normal (auto detect)
+                </label>
+                <label class="btn btn-warning">
+                    <input type="radio" name="options" value="sms" autocomplete="off" />
+                    Force to SMS
+                </label>
+            </div>
+            <button type="button" id="printLabel" style="float: right;" data-loading-text="Printing..." class="btn btn-primary" autocomplete="off">
+                Print Label
+            </button>
+        </div>
+        <div class="bs-callout bs-callout-info" style="font-size: 12px !important; margin-bottom: 5px !important; margin-top: -15px; height: 120px; overflow: auto;">
+            <code>history data</code> will display in here.<br />
         </div>
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-            <div class="panel panel-default">
-                <div class="panel-heading" role="tab" id="headingSetting">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseNormal" aria-expanded="true" aria-controls="collapseOne">Command send as: 
-                        </a>
-                        <div class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-primary active">
-                                <input type="radio" name="options" value="normal" autocomplete="off" checked>
-                                Normal (auto detect)
-                            </label>
-                            <label class="btn btn-primary">
-                                <input type="radio" name="options" value="sms" autocomplete="off">
-                                Force to SMS
-                            </label>
-                        </div>
-                    </h4>
-                </div>
-            </div>
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingOne">
                     <h4 class="panel-title">
@@ -60,7 +59,6 @@
                     </div>
                 </div>
             </div>
-            <!--
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingTwo">
                     <h4 class="panel-title">
@@ -121,6 +119,7 @@
                     </div>
                 </div>
             </div>
+            <!--
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingSix">
                     <h4 class="panel-title">
@@ -135,7 +134,7 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            </div>-->
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingSeven">
                     <h4 class="panel-title">
@@ -150,7 +149,7 @@
                         </button>
                     </div>
                 </div>
-            </div>-->
+            </div>
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingEight">
                     <h4 class="panel-title">
@@ -242,12 +241,61 @@
             </div>
         </div>
     </div>
+    <!--标签打印对话框-->
+    <div class="modal fade" id="modalPrinting" tabindex="-1" style="z-index: 1300;" role="dialog" data-backdrop="static" aria-labelledby="NewStorageIn" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header custom-modal-header btn-danger">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><strong>标签打印</strong></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 show-grid">
+                            <span id="spanWarningPrinting">正在打印终端标签，请稍候...</span><br />
+                            <span>如果打印机长时间没有动作，请检查打印驱动程序是否安装正确</span><br />
+                            <br />
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                                    <span id="spanPrintStatus" class="sr-only"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 show-grid">
+                            <span id="spanPrintStatusText"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.json-2.4.js"></script>
     <script type="text/javascript" src="../bootstrap3/js/bootstrap.js"></script>
     <script type="text/javascript" src="../js/javascript.date.pattern.js"></script>
     <script type="text/javascript" src="../js/jquery.timer.js"></script>
     <script type="text/javascript" src="../js/common.js"></script>
     <script type="text/javascript" src="../scripts/main/command.base.js"></script>
     <script type="text/javascript" src="../scripts/main/testing_content.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var type = $.getUrlParam("type");
+            type = null == type ? "normal" : type;
+            // 半成品测试的话，只显示2个命令
+            $(".panel-default").each(function (index, item) {
+                if (type == "semi") {
+                    if (index <= 1) {
+                        $(item).show();
+                    } else {
+                        $(item).hide();
+                    }
+                }
+            });
+
+            if (type == "semi") {
+                queryDataHistory();
+            }
+        });
+    </script>
 </body>
 </html>

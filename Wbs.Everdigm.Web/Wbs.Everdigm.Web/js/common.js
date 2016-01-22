@@ -338,3 +338,17 @@ function confirmDialog(title, text, confirmed, canceled) {
         return $(this).clone().wrap('<div></div>').parent().html();
     }
 })(jQuery);
+
+/*
+获取url中的某个参数
+如：http://localhost:33064/WebForm2.aspx?reurl=WebForm1.aspx
+要获取reurl的值：
+var xx = getUrlParam('reurl');
+*/
+(function ($) {
+    $.getUrlParam = function (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+})(jQuery);

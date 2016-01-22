@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System;
 
 using Wbs.Everdigm.Database;
 
@@ -62,8 +63,33 @@ namespace Wbs.Everdigm.Web.ajax
                     var single = TerminalInstance.FindList(f => f.Number.Equals(data) && f.Delete == false).ToList();
                     ret = JsonConverter.ToJson(single);
                     break;
+                case "history":
+                    // 查询终端的历史纪录
+                    ret = QueryTerminalHistiry();
+                    break;
             }
             ResponseJson(ret);
+        }
+        /// <summary>
+        /// 查询按终端号码的历史纪录
+        /// </summary>
+        /// <returns></returns>
+        private string QueryTerminalHistiry() {
+            string ret;
+            var time = GetParamenter("time");
+            time = string.IsNullOrEmpty(time) ? "0" : time;
+            long t = long.Parse(time);
+            if (t <= 0)
+            {
+                ret = "{\"Time\":" + DateTime.Now.Ticks + ",\"Data\":[]}";
+            }
+            else {
+                var dt = new DateTime(t);
+                // 查询指定时间之后的通讯记录
+                var his = DataInstance.FindList(f => f.terminal_id.Equals(data + "000") && f.receive_time >= dt);
+                ret = "{\"Time\":" + time + ",\"Data\":" + JsonConverter.ToJson(his) + "}";
+            }
+            return ret;
         }
     }
 }
