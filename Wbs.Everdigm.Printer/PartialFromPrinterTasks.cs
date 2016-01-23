@@ -9,6 +9,7 @@ namespace Wbs.Everdigm.Printer
     {
         private Timer timer;
         private HttpClient httpClient = new HttpClient();
+        private static int PRINT_DELAY = 5000;
         /// <summary>
         /// 每5s调用一次
         /// </summary>
@@ -27,8 +28,8 @@ namespace Wbs.Everdigm.Printer
         private void ConfirmTaskHandleComplete()
         {
             timespanEnd = new TimeSpan(DateTime.Now.Ticks);
-            log(string.Format("Time used: {0}ms", (timespanEnd - timespanStart).Duration().TotalMilliseconds));
-            log("================ process end\r\n");
+            //log(string.Format("Time used: {0}ms", (timespanEnd - timespanStart).Duration().TotalMilliseconds));
+            //log("================ process end\r\n");
             // 打印处理完毕，设置下一次轮训
             PerformExitOrContinue();
         }
@@ -42,10 +43,10 @@ namespace Wbs.Everdigm.Printer
             string text = "";
             try
             {
-                log(url);
+                //log(url);
                 HttpResponseMessage response = await httpClient.GetAsync(url);
                 text = await response.Content.ReadAsStringAsync();
-                log(text);
+                //log(text);
             }
             catch { }
             return text;
@@ -56,7 +57,7 @@ namespace Wbs.Everdigm.Printer
         private void QueryTask()
         {
             handleTerminal = !handleTerminal;
-            log("================ process start");
+            //log("================ process start");
             timespanStart = new TimeSpan(DateTime.Now.Ticks);
             try
             {
@@ -67,6 +68,7 @@ namespace Wbs.Everdigm.Printer
                     // 过滤掉返回的json={}的情况
                     if (text.Length > 2)
                     {
+                        log(text);
                         if (handleTerminal)
                         {
                             // 处理普通终端标签打印
@@ -80,15 +82,15 @@ namespace Wbs.Everdigm.Printer
                     }
                     else
                     {
-                        log("================ process end of null query.\r\n");
+                        //log("================ process end of null query.\r\n");
                         PerformExitOrContinue();
                     }
                 });
             }
             catch (Exception e)
             {
-                log(string.Format("Error: {0}", e.StackTrace));
-                log("================ process end with error.\r\n");
+                log(string.Format("Handle query error: {0}", e.StackTrace));
+                //log("================ process end with error.\r\n");
                 PerformExitOrContinue();
             }
         }

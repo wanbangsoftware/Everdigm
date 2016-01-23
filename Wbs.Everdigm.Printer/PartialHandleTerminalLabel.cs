@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Configuration;
+using System.Collections.Specialized;
 using Wbs.Everdigm.Database;
 using Wbs.Everdigm.Common;
+using Wbs.Label.Printer;
 using Wbs.Utilities;
 
 namespace Wbs.Everdigm.Printer
@@ -43,7 +46,7 @@ namespace Wbs.Everdigm.Printer
                 }
                 else
                 {
-                    log(format("================ process end of handle \"{0}\" error: {1}\r\n", (PrintStatus)state, text));
+                    //log(format("================ process end of handle \"{0}\" error: {1}\r\n", (PrintStatus)state, text));
                     // 处理错误时，设置进行下一次轮训
                     PerformExitOrContinue();
                 }
@@ -78,21 +81,22 @@ namespace Wbs.Everdigm.Printer
             {
                 try
                 {
-                    //NameValueCollection nvc = ConfigurationManager.AppSettings;
-                    //TscLib.openport(nvc["PrinterName"]);
-                    //TscLib.clearbuffer();
-                    ////宽度mm,高度mm,速度,浓度,感应器,间距mm,偏移量mm
-                    //TscLib.setup(nvc["LabelWidth"], nvc["LabelHeight"], "2", "10", "0", "3", "0");
-                    //TscLib.windowsfont(int.Parse(nvc["IMEI_x"]), int.Parse(nvc["IMEI_y"]), 25, 180, 0, 0, "Arial", item.CardNo);
-                    //TscLib.windowsfont(int.Parse(nvc["PCB_x"]), int.Parse(nvc["PCB_y"]), 25, 180, 0, 0, "Arial", item.PcbNumber);
-                    //TscLib.windowsfont(int.Parse(nvc["FW_x"]), int.Parse(nvc["FW_y"]), 25, 180, 0, 0, "Arial", item.FWVersion);
-                    //TscLib.windowsfont(int.Parse(nvc["MFD_x"]), int.Parse(nvc["MFD_y"]), 25, 180, 0, 0, "Arial", item.ManufactureDate);
-                    //TscLib.windowsfont(int.Parse(nvc["RV_x"]), int.Parse(nvc["RV_y"]), 25, 180, 0, 0, "Arial", item.RatedVoltage);
-                    //TscLib.windowsfont(int.Parse(nvc["MF_x"]), int.Parse(nvc["MF_y"]), 25, 180, 0, 0, "Arial", item.Manufacturer);
-                    //// 条形码
-                    //TscLib.barcode(nvc["BAR_x"], nvc["BAR_x"], "128", "40", "0", "0", "4", "1", item.CardNo);
-                    //// 打印
-                    //TscLib.printlabel("1", "1");
+                    NameValueCollection nvc = ConfigurationManager.AppSettings;
+                    TscLib.openport(nvc["PrinterName"]);
+                    TscLib.clearbuffer();
+                    //宽度mm,高度mm,速度,浓度,感应器,间距mm,偏移量mm
+                    TscLib.setup(nvc["LabelWidth"], nvc["LabelHeight"], "2", "10", "0", "3", "0");
+                    TscLib.windowsfont(int.Parse(nvc["TerminalProductNo_x"]), int.Parse(nvc["TerminalProductNo_y"]), 25, 180, 0, 0, "Arial", nvc["TerminalProductNo"]);
+                    TscLib.windowsfont(int.Parse(nvc["TerminalModel_x"]), int.Parse(nvc["TerminalModel_y"]), 25, 180, 0, 0, "Arial", nvc["TerminalModel"]);
+                    TscLib.windowsfont(int.Parse(nvc["TerminalNumber_x"]), int.Parse(nvc["TerminalNumber_y"]), 25, 180, 0, 0, "Arial", item.Number);
+                    TscLib.windowsfont(int.Parse(nvc["TerminalSimCard_x"]), int.Parse(nvc["TerminalSimCard_y"]), 25, 180, 0, 0, "Arial", item.Sim);
+                    TscLib.windowsfont(int.Parse(nvc["TerminalMFD_x"]), int.Parse(nvc["TerminalMFD_y"]), 25, 180, 0, 0, "Arial", item.ProductionDate.Value.ToString("yyyy/MM/dd"));
+                    TscLib.windowsfont(int.Parse(nvc["TerminalRV_x"]), int.Parse(nvc["TerminalRV_y"]), 25, 180, 0, 0, "Arial", nvc["TerminalRV"]);
+                    TscLib.windowsfont(int.Parse(nvc["TerminalMF_x"]), int.Parse(nvc["TerminalMF_y"]), 25, 180, 0, 0, "Arial", nvc["TerminalMF"]);
+                    // 条形码
+                    TscLib.barcode(nvc["TerminalBAR_x"], nvc["TerminalBAR_x"], "128", "40", "0", "0", "4", "1", item.Number);
+                    // 打印
+                    TscLib.printlabel("1", "1");
                     Win32.TimeDelay(TIMER_INTEVAL);
 
                     // 打印完毕通知服务器保存已打印的状态
@@ -100,12 +104,12 @@ namespace Wbs.Everdigm.Printer
                 }
                 finally
                 {
-                    //TscLib.closeport();
+                    TscLib.closeport();
                 }
             }
             catch (Exception e)
             {
-                log(string.Format("Print label error: {0}, StackTrace: {1}", e.Message, e.StackTrace));
+                log(string.Format("Print terminal label error: {0}, StackTrace: {1}", e.Message, e.StackTrace));
                 PerformExitOrContinue();
             }
             DisableButtons(false);

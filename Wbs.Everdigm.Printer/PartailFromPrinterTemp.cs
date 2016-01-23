@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using Wbs.Everdigm.Database;
 
 namespace Wbs.Everdigm.Printer
@@ -17,6 +18,9 @@ namespace Wbs.Everdigm.Printer
 
         private TB_Terminal tempTerminal = new TB_Terminal()
         {
+            Number = "2016012301",
+            Sim = "89007423",
+            ProductionDate = DateTime.Now
         };
     }
 }

@@ -27,7 +27,7 @@ namespace Wbs.Everdigm.Printer
             }
             else
             {
-                log("================ process end of error json parse.\r\n");
+                //log("================ process end of error json parse.\r\n");
                 PerformExitOrContinue();
             }
         }
@@ -58,7 +58,7 @@ namespace Wbs.Everdigm.Printer
                 }
                 else
                 {
-                    log(format("================ process end of handle \"{0}\" error: {1}\r\n", (PrintStatus)state, text));
+                    //log(format("================ process end of handle \"{0}\" error: {1}\r\n", (PrintStatus)state, text));
                     // 处理错误时，设置进行下一次轮训
                     PerformExitOrContinue();
                 }
@@ -89,21 +89,21 @@ namespace Wbs.Everdigm.Printer
             {
                 try
                 {
-                    //NameValueCollection nvc = ConfigurationManager.AppSettings;
-                    //TscLib.openport(nvc["PrinterName"]);
-                    //TscLib.clearbuffer();
-                    ////宽度mm,高度mm,速度,浓度,感应器,间距mm,偏移量mm
-                    //TscLib.setup(nvc["LabelWidth"], nvc["LabelHeight"], "2", "10", "0", "3", "0");
-                    //TscLib.windowsfont(int.Parse(nvc["IMEI_x"]), int.Parse(nvc["IMEI_y"]), 25, 180, 0, 0, "Arial", item.CardNo);
-                    //TscLib.windowsfont(int.Parse(nvc["PCB_x"]), int.Parse(nvc["PCB_y"]), 25, 180, 0, 0, "Arial", item.PcbNumber);
-                    //TscLib.windowsfont(int.Parse(nvc["FW_x"]), int.Parse(nvc["FW_y"]), 25, 180, 0, 0, "Arial", item.FWVersion);
-                    //TscLib.windowsfont(int.Parse(nvc["MFD_x"]), int.Parse(nvc["MFD_y"]), 25, 180, 0, 0, "Arial", item.ManufactureDate);
-                    //TscLib.windowsfont(int.Parse(nvc["RV_x"]), int.Parse(nvc["RV_y"]), 25, 180, 0, 0, "Arial", item.RatedVoltage);
-                    //TscLib.windowsfont(int.Parse(nvc["MF_x"]), int.Parse(nvc["MF_y"]), 25, 180, 0, 0, "Arial", item.Manufacturer);
-                    //// 条形码
-                    //TscLib.barcode(nvc["BAR_x"], nvc["BAR_x"], "128", "40", "0", "0", "4", "1", item.CardNo);
-                    //// 打印
-                    //TscLib.printlabel("1", "1");
+                    NameValueCollection nvc = ConfigurationManager.AppSettings;
+                    TscLib.openport(nvc["PrinterName"]);
+                    TscLib.clearbuffer();
+                    //宽度mm,高度mm,速度,浓度,感应器,间距mm,偏移量mm
+                    TscLib.setup(nvc["IririumLabelWidth"], nvc["IririumLabelHeight"], "2", "10", "0", "3", "0");
+                    TscLib.windowsfont(int.Parse(nvc["IririumIMEI_x"]), int.Parse(nvc["IririumIMEI_y"]), 25, 180, 0, 0, "Arial", item.CardNo);
+                    TscLib.windowsfont(int.Parse(nvc["IririumPCB_x"]), int.Parse(nvc["IririumPCB_y"]), 25, 180, 0, 0, "Arial", item.PcbNumber);
+                    TscLib.windowsfont(int.Parse(nvc["IririumFW_x"]), int.Parse(nvc["IririumFW_y"]), 25, 180, 0, 0, "Arial", item.FWVersion);
+                    TscLib.windowsfont(int.Parse(nvc["IririumMFD_x"]), int.Parse(nvc["IririumMFD_y"]), 25, 180, 0, 0, "Arial", item.ManufactureDate);
+                    TscLib.windowsfont(int.Parse(nvc["IririumRV_x"]), int.Parse(nvc["IririumRV_y"]), 25, 180, 0, 0, "Arial", item.RatedVoltage);
+                    TscLib.windowsfont(int.Parse(nvc["IririumMF_x"]), int.Parse(nvc["IririumMF_y"]), 25, 180, 0, 0, "Arial", item.Manufacturer);
+                    // 条形码
+                    TscLib.barcode(nvc["IririumBAR_x"], nvc["IririumBAR_x"], "128", "40", "0", "0", "4", "1", item.CardNo);
+                    // 打印
+                    TscLib.printlabel("1", "1");
                     Win32.TimeDelay(TIMER_INTEVAL);
 
                     // 打印完毕通知服务器保存已打印的状态
@@ -111,12 +111,12 @@ namespace Wbs.Everdigm.Printer
                 }
                 finally
                 {
-                    //TscLib.closeport();
+                    TscLib.closeport();
                 }
             }
             catch (Exception e)
             {
-                log(string.Format("Print label error: {0}, StackTrace: {1}", e.Message, e.StackTrace));
+                log(string.Format("Print iridium label error: {0}, StackTrace: {1}", e.Message, e.StackTrace));
                 PerformExitOrContinue();
             }
             DisableButtons(false);

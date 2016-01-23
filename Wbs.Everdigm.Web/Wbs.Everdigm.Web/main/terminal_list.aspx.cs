@@ -185,6 +185,10 @@ namespace Wbs.Everdigm.Web.main
         }
         private void SendDD02Command(bool bound,TB_Terminal terminal)
         {
+            // 查看是否允许服务器自动修改卫星绑定关系
+            var ctrl = int.Parse(ConfigurationManager.AppSettings["SatelliteControl"]);
+            if (ctrl <= 0) return;
+
             var str = GetDD02Command(bound, terminal.Sim);
             var CommandInstance = new Wbs.Everdigm.BLL.CommandBLL();
             var obj = CommandInstance.GetObject();

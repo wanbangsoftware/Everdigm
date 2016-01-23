@@ -40,8 +40,8 @@ $(document).ready(function () {
         var a = $(event.relatedTarget);
         curIMEI = a.data("whatever");
         $("#spanImei").text(curIMEI);
-        //$("#print").attr("disabled", true);
-        //$("#save").removeAttr("disabled");
+        $("#print").attr("disabled", true);
+        $("#save").removeAttr("disabled");
 
         var manuDate = a.parent().next().next().next().next().text();
         if (manuDate.charAt(0) == '-') { manuDate = new Date().pattern("yyyy-MM-dd"); }
@@ -111,8 +111,8 @@ function savePrintInformation() {
             showWarningDialog(data.Data);
         } else {
             // 可以打印了
-            //$("#print").removeAttr("disabled");
-            //$("#save").attr("disabled", true);
+            $("#print").removeAttr("disabled");
+            $("#save").attr("disabled", true);
         }
     });
 }

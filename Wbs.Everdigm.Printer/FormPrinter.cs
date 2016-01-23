@@ -32,7 +32,7 @@ namespace Wbs.Everdigm.Printer
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            log("perform to close");
+            //log("perform to close");
             if (bExited)
             {
                 Close();
@@ -48,7 +48,7 @@ namespace Wbs.Everdigm.Printer
         private void FormPrinter_Load(object sender, EventArgs e)
         {
             frmThis = this;
-            log("Start.");
+            //log("Start.");
             notifyIcon.ShowBalloonTip(3000, "Everdigm", "Iridium Label Printer", ToolTipIcon.Info);
             // 每次调用完timer之后需要暂停timer，以待程序执行完毕之后再次调用timer
             timer = new System.Threading.Timer(new TimerCallback(Timer_Callback), 0, TIMER_INTEVAL, 0);
@@ -69,7 +69,7 @@ namespace Wbs.Everdigm.Printer
 
         private void buttonTerminalLabel_Click(object sender, EventArgs e)
         {
-
+            PrintTerminalLabel(tempTerminal);
         }
     }
 }
