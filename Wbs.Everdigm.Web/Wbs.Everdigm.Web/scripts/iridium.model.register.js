@@ -40,8 +40,6 @@ $(document).ready(function () {
         var a = $(event.relatedTarget);
         curIMEI = a.data("whatever");
         $("#spanImei").text(curIMEI);
-        $("#print").attr("disabled", true);
-        $("#save").removeAttr("disabled");
 
         var manuDate = a.parent().next().next().next().next().text();
         if (manuDate.charAt(0) == '-') { manuDate = new Date().pattern("yyyy-MM-dd"); }
@@ -52,6 +50,7 @@ $(document).ready(function () {
 
     $("#print").click(function () {
         if (!isPrinting) {
+            disableButtons(true);
             $(".progress-bar").css("width", "0%");
             curWaitPrintTimes = 0;
             $("#spanPrintStatus").text();
@@ -63,9 +62,23 @@ $(document).ready(function () {
     });
 
     $("#save").click(function () {
+        disableButtons(true);
         savePrintInformation();
     });
+    $("#imgLoading").hide();
 });
+
+function disableButtons(disable) {
+    if (disable) {
+        $("#imgLoading").show();
+        $("#print").attr("disabled", true);
+        $("#save").attr("disabled", true);
+    } else {
+        $("#imgLoading").hide();
+        $("#print").removeAttr("disabled");
+        $("#save").removeAttr("disabled");
+    }
+}
 
 function showWarningDialog(text) {
     $("#spanWarning").text(text);
@@ -94,6 +107,7 @@ function showPrintProgress() {
 
 function stopTimer() {
     isPrinting = false;
+    disableButtons(falase);
     printProgressTimer.stop();
     printProgressTimer = null;
 }
@@ -111,8 +125,7 @@ function savePrintInformation() {
             showWarningDialog(data.Data);
         } else {
             // 可以打印了
-            $("#print").removeAttr("disabled");
-            $("#save").attr("disabled", true);
+            disableButtons(false);
         }
     });
 }

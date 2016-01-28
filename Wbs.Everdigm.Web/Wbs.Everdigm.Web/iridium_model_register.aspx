@@ -199,6 +199,7 @@
                     </div>
                     <div class="modal-footer">
                         <label class="label label-danger" id="warning"></label>
+                        <img src="images/loading_orange.gif" id="imgLoading" />
                         <button type="button" class="btn btn-primary" id="save"><span class="glyphicon glyphicon-floppy-disk"></span> 1. Save</button>
                         <button type="button" class="btn btn-primary" id="print"><span class="glyphicon glyphicon-print"></span> 2. Print Label</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

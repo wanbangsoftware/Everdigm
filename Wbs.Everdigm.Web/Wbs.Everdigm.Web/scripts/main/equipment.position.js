@@ -34,7 +34,7 @@ $(document).ready(function () {
         setMarkerInMap(lat, lng, new Date($(this).children("td:eq(1)").html()));
     });
     initializeStaticPosition();
-    queryPositionHistory();
+    //queryPositionHistory();
 });
 
 function initializeStaticPosition() {
