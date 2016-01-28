@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Wbs.Everdigm.Database;
 
 namespace Wbs.Everdigm.Web
@@ -89,8 +90,18 @@ namespace Wbs.Everdigm.Web
                     }
                     else
                     {
+                        var old = SatelliteInstance.FindList<TB_Satellite>(f => f.PcbNumber.Contains("Satellite"), "PcbNumber", true).FirstOrDefault();
+                        var newNumber = "Satellite";
+                        var num = 0;
+                        if (null != old)
+                        {
+                            var tmp = old.PcbNumber.ToLower().Replace("satellite", "");
+                            num = int.Parse(tmp);
+                        }
+                        newNumber = string.Format("{0}{1:0000}", newNumber, num + 1);
                         var n = SatelliteInstance.GetObject();
                         n.CardNo = number;
+                        n.PcbNumber = newNumber;
                         SatelliteInstance.Add(n);
                         ShowSatellites();
                     }

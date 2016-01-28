@@ -26,11 +26,11 @@ namespace Wbs.Everdigm.BLL
                 LabelPrintSchedule = (DateTime?)null,
                 LabelPrintStatus = 0,
                 CardNo = "",
-                FWVersion = "",
-                ManufactureDate = "",
-                Manufacturer = "",
+                FWVersion = "1.00",
+                ManufactureDate = DateTime.Now.ToString("yyyy/MM/dd"),
+                Manufacturer = "T&R(Korea)",
                 PcbNumber = "",
-                RatedVoltage = "",
+                RatedVoltage = "9-32VDC 1A =",
                 RegisterDate = DateTime.Now
             };
         }

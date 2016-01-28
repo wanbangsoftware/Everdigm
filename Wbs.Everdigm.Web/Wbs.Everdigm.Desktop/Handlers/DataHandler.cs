@@ -54,8 +54,8 @@ namespace Wbs.Everdigm.Desktop
                         var len = data.Buffer.Length;
                         // 如果收到的数据长度小于TX300的包头则不用处理数据了
                         if (len >= Wbs.Protocol.TX300.TX300Items.header_length &&
-                            Wbs.Protocol.ProtocolTypes.IsTX300(data.Buffer[2]) &&
-                            Wbs.Protocol.TerminalTypes.IsTX300(data.Buffer[3]))
+                            Protocol.ProtocolTypes.IsTX300(data.Buffer[2]) &&
+                            Protocol.TerminalTypes.IsTX300(data.Buffer[3]))
                         {
                             handled = true;
                             if (data.Buffer[0] != len)

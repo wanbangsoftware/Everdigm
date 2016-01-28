@@ -107,7 +107,7 @@ function showPrintProgress() {
 
 function stopTimer() {
     isPrinting = false;
-    disableButtons(falase);
+    disableButtons(false);
     printProgressTimer.stop();
     printProgressTimer = null;
 }
