@@ -76,6 +76,37 @@
                 </div>
             </div>
             <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingTwelve">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwelve" aria-expanded="false" aria-controls="collapseTwelve">Security: Lock(Loader/Electric)
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseTwelve" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwelve">
+                    <div class="panel-body">
+                        <button type="button" id="bt_ldlock" data-loading-text="Testing reset to satellite progress..." data-complete-text="testing finished!" class="btn btn-default" autocomplete="off">
+                            Security: Lock(Loader/Electric)
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingThirteen">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThirteen" aria-expanded="false" aria-controls="collapseThirteen">Security: Unlock(Loader/Electric)
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseThirteen" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThirteen">
+                    <div class="panel-body">
+                        <button type="button" id="bt_ldunlock" data-loading-text="Testing reset to satellite progress..." data-complete-text="testing finished!" class="btn btn-default" autocomplete="off">
+                            Security: Unlock(Loader/Electric)
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!--
+            <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingThree">
                     <h4 class="panel-title">
                         <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Monitor data
@@ -120,7 +151,6 @@
                     </div>
                 </div>
             </div>
-            <!--
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingSix">
                     <h4 class="panel-title">
@@ -135,22 +165,22 @@
                         </button>
                     </div>
                 </div>
-            </div>-->
+            </div>
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingSeven">
                     <h4 class="panel-title">
-                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">Security: Full lock
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">Security: Lock
                         </a>
                     </h4>
                 </div>
                 <div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
                     <div class="panel-body">
                         <button type="button" id="bt_full" data-loading-text="Testing full lock progress..." data-complete-text="testing finished!" class="btn btn-default" autocomplete="off">
-                            Security: Full lock
+                            Security: Lock
                         </button>
                     </div>
                 </div>
-            </div>
+            </div>-->
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingEight">
                     <h4 class="panel-title">
@@ -181,7 +211,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default">
+            <!--<div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingTen">
                     <h4 class="panel-title">
                         <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTen" aria-expanded="false" aria-controls="collapseTen">Security: Satellite disable
@@ -210,7 +240,7 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
     </form>
     <!-- Modal -->
@@ -291,11 +321,14 @@
                         $(item).hide();
                     }
                 } else if (type == "finished") {
-                    if (index <= 1 || index == 7) {
+                    if (index <= 1 || index == 3) {
                         $(item).show();
                     } else {
                         $(item).hide();
                     }
+                    $("#printLabel").hide();
+                } else {
+                    $("#printLabel").hide();
                 }
             });
 
