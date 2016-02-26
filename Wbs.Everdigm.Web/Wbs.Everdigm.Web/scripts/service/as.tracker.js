@@ -167,6 +167,9 @@ function showPositionHistory(list) {
             strokeOpacity: 0.5,
             strokeWeight: 3
         };
+        if (null != polyline) {
+            polyline.setMap(null);
+        }
         polyline = new google.maps.Polyline(polyOptions);
         polyline.setMap(map);
         fitBounds(posArray);

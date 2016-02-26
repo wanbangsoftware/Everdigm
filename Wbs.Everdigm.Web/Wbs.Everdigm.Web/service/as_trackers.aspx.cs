@@ -23,6 +23,8 @@ namespace Wbs.Everdigm.Web.service
         private void ShowTrackers()
         {
             var query = txtQueryNumber.Value.Trim();
+            if (!string.IsNullOrEmpty(query)) { hidPageIndex.Value = ""; }
+
             var totalRecords = 0;
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             pageIndex = (0 >= pageIndex ? 1 : pageIndex);

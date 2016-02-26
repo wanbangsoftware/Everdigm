@@ -62,13 +62,13 @@ namespace Wbs.Everdigm.Desktop
                     bool b = CommandUtility.SendSMSCommand(cmd);
                     if (b)
                     {
-                        SaveTerminalData((int?)null == cmd.Terminal ? -1 : cmd.Terminal.Value, sim, AsyncDataPackageType.SMS, 1, false);
+                        SaveTerminalData((int?)null == cmd.Terminal ? -1 : cmd.Terminal.Value, sim, AsyncDataPackageType.SMS, 1, false, DateTime.Now);
                     }
                     ShowUnhandledMessage(Now + "Send Command(SMS: " + (b ? "Success" : "Fail") + "): " + cmd.Content);
                 }
                 else
                 {
-                    SaveTerminalData((int?)null == cmd.Terminal ? -1 : cmd.Terminal.Value, sim, AsyncDataPackageType.TCP, cmd.Content.Length / 2, false);
+                    SaveTerminalData((int?)null == cmd.Terminal ? -1 : cmd.Terminal.Value, sim, AsyncDataPackageType.TCP, cmd.Content.Length / 2, false, DateTime.Now);
                     ShowUnhandledMessage(Now + "Send command(" + (1 == ret ? CommandStatus.SentByTCP : CommandStatus.TCPNetworkError) + "): " + cmd.Content);
                     UpdateGsmCommand(cmd, (1 == ret ? CommandStatus.SentByTCP : CommandStatus.TCPNetworkError));
                 }

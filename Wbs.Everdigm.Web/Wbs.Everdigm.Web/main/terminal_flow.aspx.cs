@@ -64,6 +64,9 @@ namespace Wbs.Everdigm.Web.main
             spanMonthly.InnerText = string.Format("for {0}{1:00}", selectedYears.Value, (month == 0 ? " full year" : ("/" + month.ToString("00"))));
 
             var query = txtQueryNumber.Value.Trim();
+            // 模糊查询时页码置为空
+            if (!string.IsNullOrEmpty(query)) { hidPageIndex.Value = ""; }
+
             var totalRecords = 0;
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             var list = TerminalInstance.FindPageList<TB_Terminal>(pageIndex, PageSize, out totalRecords,

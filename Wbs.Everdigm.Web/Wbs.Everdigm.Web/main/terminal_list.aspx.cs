@@ -64,10 +64,14 @@ namespace Wbs.Everdigm.Web.main
         private void ShowTerminals()
         {
             var totalRecords = 0;
+            var number = txtNumber.Value.Trim();
+            var simcard = txtSimcard.Value.Trim();
+            // 模糊查询时页码置为空
+            if (!string.IsNullOrEmpty(number) || !string.IsNullOrEmpty(simcard)) { hidPageIndex.Value = ""; }
+
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             var list = TerminalInstance.FindPageList<TB_Terminal>(pageIndex, PageSize, out totalRecords,
-                f => f.Delete == false && f.Number.Contains(txtNumber.Value) &&
-                    f.Sim.Contains(txtSimcard.Value), "Number");
+                f => f.Delete == false && (f.Number.Contains(number) || f.Sim.Contains(simcard)), "Number");
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
 
             string html = "";

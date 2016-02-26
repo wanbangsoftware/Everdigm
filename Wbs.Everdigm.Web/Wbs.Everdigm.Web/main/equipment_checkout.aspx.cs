@@ -44,6 +44,10 @@ namespace Wbs.Everdigm.Web.main
         /// </summary>
         private void ShowInventoryEquipments()
         {
+            var query = txtQueryNumber.Value.Trim();
+            // 模糊查询时页码置为空
+            if (!string.IsNullOrEmpty(query)) { hidPageIndex.Value = ""; }
+
             var totalRecords = 0;
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             pageIndex = (0 >= pageIndex ? 1 : pageIndex);
@@ -54,7 +58,7 @@ namespace Wbs.Everdigm.Web.main
                 f => (f.TB_EquipmentStatusName.IsItInventory == true || f.TB_EquipmentStatusName.IsItOutstorage == true)
                     && f.Deleted == false && (model <= 0 ? f.Model >= 0 : f.Model == model) &&
                     (house <= 0 ? (f.Warehouse >= 0 || f.Warehouse == (int?)null) : f.Warehouse == house) &&
-                    (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0), null);
+                    f.Number.Contains(query), null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             hidTotalPages.Value = totalPages.ToString();
 

@@ -19,19 +19,11 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="data"></param>
         private void HandleTX10G(TX300 tx300, AsyncUserDataBuffer data)
         {
+            // 更新或新建Tracker信息
+            UpdateTrackerInfo(tx300, data);
             var sim = GetSimFromData(tx300);
             var tracker = TrackerInstance.Find(f => f.SimCard.Equals(sim));
-            if (null == tracker)
-            { 
-                // 新增一个tracker
-                tracker = TrackerInstance.GetObject();
-                tracker.SimCard = sim;
-                tracker.LastActionAt = DateTime.Now;
-                tracker.Socket = data.SocketHandle;
-                tracker.State = 1;
-                tracker = TrackerInstance.Add(tracker);
-            }
-            //HandleTrackerCSQ(tx300.MsgContent[0], sim);
+
             switch (tx300.CommandID)
             {
                 case 0x7000:
@@ -49,15 +41,45 @@ namespace Wbs.Everdigm.Desktop
                     break;
                 case 0x7040:
                     // 心跳
-                    if (null != tracker) { UpdateTrackerCSQ(tx300.MsgContent[0], tracker.id); }
+                    Handle0x7040(tx300, tracker);
                     break;
+            }
+        }
+        /// <summary>
+        /// 更新或新建Tracker的基本信息
+        /// </summary>
+        private void UpdateTrackerInfo(TX300 tx300, AsyncUserDataBuffer data)
+        {
+            var sim = GetSimFromData(tx300);
+            var tracker = TrackerInstance.Find(f => f.SimCard.Equals(sim));
+            if (null == tracker)
+            {
+                // 新增一个tracker
+                tracker = TrackerInstance.GetObject();
+                tracker.SimCard = sim;
+                tracker.LastActionAt = data.ReceiveTime;
+                tracker.Socket = data.SocketHandle;
+                tracker.State = 1;
+                TrackerInstance.Add(tracker);
+            }
+            else
+            {
+                TrackerInstance.Update(f => f.id == tracker.id, act =>
+                {
+                    act.LastActionAt = data.ReceiveTime;
+                    act.Socket = data.SocketHandle;
+                    if (tx300.CommandID == 0x7020 || tx300.CommandID == 0x7030 || tx300.CommandID == 0x7040)
+                    {
+                        act.CSQ = tx300.MsgContent[0];
+                    }
+                });
             }
         }
         /// <summary>
         /// 保存Tracker的历史定位记录
         /// </summary>
         /// <param name="tracker"></param>
-        private void SaveTrackerPosition(string sim,string car, int tracker, TX10G_Position position, string type)
+        private void SaveTrackerPosition(string sim, string car, int tracker, TX10G_Position position, string type, DateTime time)
         {
             var pos = TrackerPosition.GetObject();
             pos.Type = type;
@@ -65,19 +87,10 @@ namespace Wbs.Everdigm.Desktop
             pos.GPSTime = position.GPSTime;
             pos.Latitude = position.Latitude;
             pos.Longitude = position.Longitude;
-            pos.ReceiveTime = DateTime.Now;
+            pos.ReceiveTime = time;
             pos.SimCard = sim;
             pos.Tracker = 0 > tracker ? (int?)null : tracker;
             TrackerPosition.Add(pos);
-        }
-        /// <summary>
-        /// 更新Tracker的信号强度
-        /// </summary>
-        /// <param name="csq"></param>
-        /// <param name="tracker"></param>
-        private void UpdateTrackerCSQ(byte csq, int tracker)
-        {
-            TrackerInstance.Update(f => f.id == tracker, act => { act.CSQ = csq; });
         }
         /// <summary>
         /// 处理报警信息
@@ -88,9 +101,7 @@ namespace Wbs.Everdigm.Desktop
             _0x7020 x7020 = new _0x7020();
             x7020.Content = obj.MsgContent;
             x7020.Unpackage();
-
-            UpdateTrackerCSQ(x7020.CSQ, tracker.id);
-
+            
             var alarm = x7020.AlarmBIN;
 
             if (null != tracker)
@@ -101,22 +112,22 @@ namespace Wbs.Everdigm.Desktop
                     if (alarm[0] == '1')
                     {
                         // 终端后备电池耗光报警
-                        act.BatteryAlarm = DateTime.Now;
+                        act.BatteryAlarm = tracker.LastActionAt;
                     }
                     else if (alarm[1] == '1')
                     {
                         // 停车超时报警
-                        act.ParkingAlarm = DateTime.Now;
+                        act.ParkingAlarm = tracker.LastActionAt;
                     }
                     else if (alarm[2] == '1')
                     {
                         // 充电接线断开报警
-                        act.ChargingAlarm = DateTime.Now;
+                        act.ChargingAlarm = tracker.LastActionAt;
                     }
                     else if (alarm[2] == '0')
                     {
                         // 充电接线链接报警
-                        act.ChargingAlarm = (DateTime?)null;
+                        act.ChargingAlarm = null;
                     }
                 });
             }
@@ -126,7 +137,7 @@ namespace Wbs.Everdigm.Desktop
             if (x7020.Position.Available)
             {
                 SaveTrackerPosition(obj.TerminalID, (null == tracker ? "" : tracker.CarNumber),
-                    (null == tracker ? -1 : tracker.id), x7020.Position, type);
+                    (null == tracker ? -1 : tracker.id), x7020.Position, type, tracker.LastActionAt.Value);
             }
         }
 
@@ -135,27 +146,19 @@ namespace Wbs.Everdigm.Desktop
             _0x7030 x7030 = new _0x7030();
             x7030.Content = obj.MsgContent;
             x7030.Unpackage();
-
-            if (null != tracker)
-            {
-                UpdateTrackerCSQ(x7030.CSQ, tracker.id);
-            }
-
+            
             foreach (var pos in x7030.Positions)
             {
                 if (pos.Available)
                 {
                     SaveTrackerPosition(obj.TerminalID, (null == tracker ? "" : tracker.CarNumber),
-                      (null == tracker ? -1 : tracker.id), pos, "Tracking");
+                      (null == tracker ? -1 : tracker.id), pos, "Tracking", tracker.LastActionAt.Value);
                 }
             }
         }
         private void Handle0x7040(TX300 obj, TB_Tracker tracker)
         {
-            if (null != tracker)
-            {
-                UpdateTrackerCSQ(obj.MsgContent[0], tracker.id);
-            }
+            //if (null != tracker) { UpdateTrackerCSQ(obj.MsgContent[0], tracker.id); }
         }
     }
 }

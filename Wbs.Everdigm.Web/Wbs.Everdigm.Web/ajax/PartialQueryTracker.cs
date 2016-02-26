@@ -30,7 +30,7 @@ namespace Wbs.Everdigm.Web.ajax
                 var end = DateTime.Parse(GetParamenter("end") + " 23:59:59");
 
                 var list = TrackerPositionInstance.FindList<TB_Tracker_Position>(
-                    f => f.Tracker == id && f.ReceiveTime >= start && f.ReceiveTime <= end, "ReceiveTime");
+                    f => f.Tracker == id && f.GPSTime >= start && f.GPSTime <= end, "GPSTime");
                 ret = JsonConverter.ToJson(list);
             }
             catch { }

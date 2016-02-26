@@ -34,11 +34,18 @@ namespace Wbs.Everdigm.Desktop
             dt = null;
             return cc00;
         }
-
-        private void SaveTerminalData(int terminal, string sim, AsyncDataPackageType protocol, int len, bool receive)
+        /// <summary>
+        /// 保存终端流量
+        /// </summary>
+        /// <param name="terminal"></param>
+        /// <param name="sim"></param>
+        /// <param name="protocol"></param>
+        /// <param name="len"></param>
+        /// <param name="receive"></param>
+        private void SaveTerminalData(int terminal, string sim, AsyncDataPackageType protocol, int len, bool receive, DateTime time)
         {
             var n = (int?)null;
-            var monthly = int.Parse(DateTime.Now.ToString("yyyyMM"));
+            var monthly = int.Parse(time.ToString("yyyyMM"));
             var flow = TerminalFlow.Find(f => f.Sim.Equals(sim) && f.Monthly == monthly);
             if (null == flow)
             {
@@ -59,32 +66,60 @@ namespace Wbs.Everdigm.Desktop
                         flow.SMSReceive = 1;
                     else
                         flow.SMSDeliver = 1;
-                } 
+                }
                 TerminalFlow.Add(flow);
             }
             else
             {
-                TerminalFlow.Update(f => f.id == flow.id, act =>
+                // 如果终端不存在则更新sim卡号码的流量
+                if (flow.Terminal == n)
                 {
-                    if (n == act.Terminal && n != terminal)
+                    TerminalFlow.Update(f => f.Sim.Equals(sim) && f.Monthly == monthly, act =>
+                        {
+                            if (n == act.Terminal && 0 < terminal)
+                            {
+                                act.Terminal = terminal;
+                            }
+                            if (protocol == AsyncDataPackageType.TCP || protocol == AsyncDataPackageType.UDP)
+                            {
+                                if (receive)
+                                    act.GPRSReceive += len;
+                                else
+                                    act.GPRSDeliver += len;
+                            }
+                            else if (protocol == AsyncDataPackageType.SMS)
+                            {
+                                if (receive)
+                                    act.SMSReceive += 1;
+                                else
+                                    act.SMSDeliver += 1;
+                            }
+                        });
+                }
+                else
+                {
+                    TerminalFlow.Update(f => f.id == flow.id, act =>
                     {
-                        act.Terminal = terminal;
-                    }
-                    if (protocol == AsyncDataPackageType.TCP || protocol == AsyncDataPackageType.UDP)
-                    {
-                        if (receive)
-                            act.GPRSReceive += len;
-                        else
-                            act.GPRSDeliver += len;
-                    }
-                    else if (protocol == AsyncDataPackageType.SMS)
-                    {
-                        if (receive)
-                            act.SMSReceive += 1;
-                        else
-                            act.SMSDeliver += 1;
-                    } 
-                });
+                        if (n == act.Terminal && 0 < terminal)
+                        {
+                            act.Terminal = terminal;
+                        }
+                        if (protocol == AsyncDataPackageType.TCP || protocol == AsyncDataPackageType.UDP)
+                        {
+                            if (receive)
+                                act.GPRSReceive += len;
+                            else
+                                act.GPRSDeliver += len;
+                        }
+                        else if (protocol == AsyncDataPackageType.SMS)
+                        {
+                            if (receive)
+                                act.SMSReceive += 1;
+                            else
+                                act.SMSDeliver += 1;
+                        }
+                    });
+                }
             }
         }
         /// <summary>
@@ -113,7 +148,7 @@ namespace Wbs.Everdigm.Desktop
                     HandleGsmCommandResponsed(x300);
                 }
                 // SMS消息不需要返回包
-                if (x300.ProtocolType >= Protocol.ProtocolTypes.SMS) return;
+                if (x300.ProtocolType > Protocol.ProtocolTypes.SMS) return;
 
                 if (null != _server)
                 {
@@ -127,8 +162,7 @@ namespace Wbs.Everdigm.Desktop
                             ret = _server.Send(Port, IP, cc00);
                         if (1 != ret)
                         {
-                            ShowUnhandledMessage(Now + string.Format("Cannot send data to {0}:{1}: {2} [{3}]",
-                                IP, Port, CustomConvert.GetHex(cc00), data.PackageType));
+                            ShowUnhandledMessage(Now + string.Format("Cannot send data to ip:{0}({1}): {2} [{3}]", IP, Port, CustomConvert.GetHex(cc00), data.PackageType));
                         }
                         cc00 = null;
                     }
@@ -204,7 +238,7 @@ namespace Wbs.Everdigm.Desktop
             var sim = GetSimFromData(tx300);
             var equipment = EquipmentInstance.Find(f => f.TB_Terminal.Sim.Equals(sim));
             var terminal = TerminalInstance.Find(f => f.Sim.Equals(sim));
-            SaveTerminalData(null == terminal ? -1 : terminal.id, sim, data.PackageType, tx300.TotalLength, true);
+            SaveTerminalData(null == terminal ? -1 : terminal.id, sim, data.PackageType, tx300.TotalLength, true, data.ReceiveTime);
             // 终端不存在的话，不用再继续处理数据了
             if (!IsTracker(tx300.CommandID))
             {
