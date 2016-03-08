@@ -114,8 +114,7 @@ namespace Wbs.Everdigm.Web.main
                     html += "<tr>" +
                         "<td class=\"in-tab-txt-b\">" + cnt + "</td>" +
                         "<td class=\"in-tab-txt-b\" style=\"text-align: left;\">" + (null == equipment ? "not bind" : EquipmentInstance.GetFullNumber(equipment)) + "</td>" +
-                        "<td class=\"in-tab-txt-b\" style=\"text-align: left;\">" + obj.Number + "</td>" +
-                        "<td class=\"in-tab-txt-rb\" style=\"text-align: left;\">" + obj.Sim + "</td>" +
+                        "<td class=\"in-tab-txt-rb\" style=\"text-align: left;\">" + obj.Number + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + CustomConvert.FormatSize(_flow.GPRSReceive.Value) + "</td>" +
                         "<td class=\"in-tab-txt-rb\">" + CustomConvert.FormatSize(_flow.GPRSDeliver.Value) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + _flow.SMSReceive.Value.ToString() + "</td>" +

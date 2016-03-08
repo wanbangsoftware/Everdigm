@@ -79,7 +79,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td class=\"in-tab-txt-b\">" + EquipmentInstance.GetOnlineStyle(obj) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + EquipmentInstance.GetAlarmStatus(obj.Alarm) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\">" + ((DateTime?)null == obj.LastActionTime ? "" : obj.LastActionTime.Value.ToString("yyyy/MM/dd HH:mm")) + "</td>" +
-                        "<td class=\"in-tab-txt-b textoverflow\" title=\"" + EquipmentInstance.GetTerinalTitleInfo(obj) + "\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Sim) + "</td>" +
+                        "<td class=\"in-tab-txt-b textoverflow\" title=\"" + EquipmentInstance.GetTerinalTitleInfo(obj) + "\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Number) + "</td>" +
                         "<td class=\"in-tab-txt-rb\" title=\"" + EquipmentInstance.GetSatelliteTitleInfo(obj) + "\"><span class=\"glyphicon glyphicon-" + (sat ? "ok" : "remove") + " text-" + (sat ? "success" : "danger") + "\" aria-hidden=\"true\"></span></td>" +
                         //"<td class=\"in-tab-txt-b textoverflow\">" + (null == _in ? "-" : _in.Stocktime.Value.ToString("yyyy/MM/dd")) + "</td>" +
                         //"<td class=\"in-tab-txt-b\" title=\"" + StoreInstance.GetStatusTitle(_in) + "\">" + StoreInstance.GetStatus(_in) + "</td>" +

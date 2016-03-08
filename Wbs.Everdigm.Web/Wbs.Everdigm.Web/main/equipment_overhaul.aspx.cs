@@ -38,7 +38,7 @@ namespace Wbs.Everdigm.Web.main
             var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
                 f => f.TB_EquipmentStatusName.IsItOverhaul == true && (model <= 0 ? f.Model >= 0 : f.Model == model) &&
                     (house <= 0 ? (f.Warehouse >= 0 || f.Warehouse == (int?)null) : f.Warehouse == house) &&
-                    (f.Number.Contains(query) && f.Deleted == false), null);
+                    (f.Number.Contains(query) && f.Deleted == false && f.Terminal != (int?)null), null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             hidTotalPages.Value = totalPages.ToString();
 
