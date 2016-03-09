@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Linq.Expressions;
 using Wbs.Everdigm.Database;
 using Wbs.Everdigm.BLL;
 
@@ -33,12 +33,25 @@ namespace Wbs.Everdigm.Web.main
             var totalRecords = 0;
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             pageIndex = (0 >= pageIndex ? 1 : pageIndex);
+            var type = ParseInt(selectedTypes.Value);
             var model = ParseInt(selectedModels.Value);
             var house = ParseInt(hidQueryWarehouse.Value);
-            var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
-                f => (model <= 0 ? f.Model >= 0 : f.Model == model) && f.Deleted == false && f.Terminal != (int?)null &&
-                    (house <= 0 ? (f.Warehouse >= 0 || f.Warehouse == (int?)null) : f.Warehouse == house) &&
-                    (f.Number.IndexOf(txtQueryNumber.Value.Trim()) >= 0), null);
+            var query = txtQueryNumber.Value.Trim();
+
+            // 表达式
+            Expression<Func<TB_Equipment, bool>> expression = PredicateExtensions.True<TB_Equipment>();
+            // 设备类型
+            if (type > 0) { expression = expression.And(a => a.TB_EquipmentModel.Type == type); }
+            // 设备型号
+            if (model > 0) { expression = expression.And(a => a.Model == model); }
+            // 仓库
+            if (house > 0) { expression = expression.And(a => a.Warehouse == house); }
+            // 查询号码
+            if (!string.IsNullOrEmpty(query)) { expression = expression.And(a => a.Number.Contains(query)); }
+            // 已绑定终端的
+            expression = expression.And(a => a.Deleted == false && a.Terminal != (int?)null);
+
+            var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords, expression, null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             hidTotalPages.Value = totalPages.ToString();
 

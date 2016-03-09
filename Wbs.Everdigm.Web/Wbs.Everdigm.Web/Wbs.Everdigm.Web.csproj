@@ -636,6 +636,7 @@
     <Compile Include="common\ErrorChart.cs" />
     <Compile Include="common\JsonConverter.cs" />
     <Compile Include="common\OfficeConvert.cs" />
+    <Compile Include="common\PredicateExtensions.cs" />
     <Compile Include="common\TodayWorktimeChart.cs" />
     <Compile Include="common\Utility.cs" />
     <Compile Include="default.aspx.cs">
