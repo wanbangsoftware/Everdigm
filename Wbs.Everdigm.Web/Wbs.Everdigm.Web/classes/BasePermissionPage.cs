@@ -105,6 +105,10 @@ namespace Wbs.Everdigm.Web
             {
                 TreeNode node = new TreeNode();
                 node.Text = m.Name;
+                if (m.Name.ToLower().Equals("system"))
+                {
+                    node.Expanded = false;
+                }
                 if (string.IsNullOrEmpty(m.Url))
                     node.SelectAction = TreeNodeSelectAction.Expand;
                 node.ToolTip = m.Description;

@@ -35,7 +35,7 @@ namespace Wbs.Everdigm.Web.main
             // 只查询库存或租赁出去了的设备列表
             var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
                 f => (f.TB_EquipmentStatusName.IsItInventory == true || f.TB_EquipmentStatusName.IsItRental == true) && 
-                    (model <= 0 ? f.Model >= 0 : f.Model == model) && f.Deleted == false &&
+                    (model <= 0 ? f.Model >= 0 : f.Model == model) && f.Deleted == false && f.Terminal != (int?)null &&
                     (house <= 0 ? (f.Warehouse >= 0 || f.Warehouse == (int?)null) : f.Warehouse == house) &&
                     f.Number.Contains(query), null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);

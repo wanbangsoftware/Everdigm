@@ -206,9 +206,9 @@ namespace Wbs.Everdigm.BLL
         public string GetAlarmStatus(string alarm)
         {
             if (string.IsNullOrEmpty(alarm)) return alarm_invalid;
-            if (alarm.Equals(alarm_none)) return alarm_invalid;
-            return "<span class=\"text-custom-attention\" title=\"" + 
-                Wbs.Protocol.TX300.Analyse._0x2000.GetAlarm(alarm) + "\"><i class=\"fa fa-bell\"></i></span>";
+            string arms = Protocol.TX300.Analyse._0x2000.GetAlarm(alarm, true);
+            if (alarm.Equals(alarm_none) || arms.Equals("No Alarm")) return alarm_invalid;
+            return "<span class=\"text-custom-attention\" title=\"" + arms + "\"><i class=\"fa fa-bell\"></i></span>";
         }
         /// <summary>
         /// 获取链接状态
