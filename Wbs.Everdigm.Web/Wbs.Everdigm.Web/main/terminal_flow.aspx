@@ -69,7 +69,7 @@
                                 <thead>
                                     <tr>
                                         <th class="in-tab-title-b bg-primary" style="width: 50px;"></th>
-                                        <th class="in-tab-title-rb bg-primary" colspan="3">Basic Information</th>
+                                        <th class="in-tab-title-rb bg-primary" colspan="2">Basic Information</th>
                                         <th class="in-tab-title-rb bg-primary" colspan="4">GSM flow statistics</th>
                                         <th class="in-tab-title-b bg-primary" colspan="5">Satellite flow statistics</th>
                                         <th class="in-tab-title-b bg-primary"></th>
@@ -77,8 +77,7 @@
                                     <tr>
                                         <th class="in-tab-title-b bg-warning">#</th>
                                         <th class="in-tab-title-b bg-warning" style="width: 120px; text-align: left;">Equipment NO.</th>
-                                        <th class="in-tab-title-b bg-warning" style="width: 100px; text-align: left;">Terminal NO.</th>
-                                        <th class="in-tab-title-rb bg-warning" style="width: 100px; text-align: left;">Sim Card NO.</th>
+                                        <th class="in-tab-title-rb bg-warning" style="width: 100px; text-align: left;">Terminal NO.</th>
                                         <th class="in-tab-title-b bg-warning textoverflow" style="width: 80px;">TCP/IP(R)</th>
                                         <th class="in-tab-title-rb bg-warning textoverflow" style="width: 80px;">TCP/IP(S)</th>
                                         <th class="in-tab-title-b bg-warning textoverflow" style="width: 80px;">SMS(R)</th>
@@ -93,7 +92,7 @@
                                 </thead>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="14">
+                                        <td colspan="13">
                                             <div class="pagging" id="divPagging" runat="server">
                                             </div>
                                             <div class="clear"></div>
@@ -104,8 +103,7 @@
                                     <tr>
                                         <td class="in-tab-txt-b">1</td>
                                         <td class="in-tab-txt-b" style="text-align: left;">DX500LCA-10030</td>
-                                        <td class="in-tab-txt-b">2015090201</td>
-                                        <td class="in-tab-txt-rb">13999999999</td>
+                                        <td class="in-tab-txt-rb">2015090201</td>
                                         <td class="in-tab-txt-b">56.04KB</td>
                                         <td class="in-tab-txt-rb">46B</td>
                                         <td class="in-tab-txt-b">135</td>
