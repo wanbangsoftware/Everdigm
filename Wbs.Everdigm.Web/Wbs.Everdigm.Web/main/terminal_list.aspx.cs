@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Web.UI.WebControls;
 
+using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Database;
 using System.Configuration;
 using Wbs.Utilities;
@@ -20,9 +23,25 @@ namespace Wbs.Everdigm.Web.main
                 if (!IsPostBack)
                 {
                     hidPageIndex.Value = null == Request.Cookies[_cookie_name_] ? "" : Request.Cookies[_cookie_name_].Value;
-                    ShowTerminals();
+                    InitializeEquipmentTypes();
+                    bt_Delete.Visible = Account.TB_Role.IsAdministrator.Value;
+                    ShowQuery();
                 }
             }
+        }
+        private void InitializeEquipmentTypes()
+        {
+            var t = new EquipmentTypeBLL();
+            var tlist = t.FindList(f => f.Delete == false).OrderBy(o => o.Name);
+            ddlEquipmentType.Items.Clear();
+            ddlEquipmentType.Items.Add(new ListItem() { Text = "Equipment Type:", Value = "" });
+            foreach (var v in tlist)
+            {
+                ddlEquipmentType.Items.Add(new ListItem() { Text = v.Name, Value = v.id.ToString() });
+            }
+            var m = new EquipmentModelBLL();
+            var mlist = m.FindList(f => f.Delete == false).OrderBy(o => o.Name).ToList();
+            hidJson.Value = JsonConverter.ToJson(mlist);
         }
         /// <summary>
         /// 查询结果变颜色
@@ -30,27 +49,12 @@ namespace Wbs.Everdigm.Web.main
         /// <param name="obj">内容</param>
         /// <param name="type">0=终端号码，1=手机号码，2=卫星号码</param>
         /// <returns></returns>
-        private string CheckQueryString(string obj, int type)
+        private string CheckQueryString(string obj)
         {
-            var replace="";
-            switch (type)
-            {
-                case 0:
-                    // 终端号码查询
-                    replace = txtNumber.Value;
-                    break;
-                case 1:
-                    // 手机号码查询
-                    replace = txtSimcard.Value;
-                    break;
-                case 2:
-                    // 卫星号码查询
-                    //replace = txtSatellite.Value;
-                    break;
-            }
-
+            var replace= txtNumber.Value;
             return string.IsNullOrEmpty(replace) ? obj : obj.Replace(replace, ("<span style=\"color: #FF0000;\">" + replace + "</span>"));
         }
+
         private string GetEquipment(TB_Terminal terminal, TB_Equipment equipment)
         {
             if (null == equipment)
@@ -61,23 +65,59 @@ namespace Wbs.Everdigm.Web.main
             
             return "<a href=\"#unbind_" + terminal.id + "\">" + EquipmentInstance.GetFullNumber(equipment) + "</a>";
         }
-        private void ShowTerminals()
+        /// <summary>
+        /// 查询未绑定车辆的终端
+        /// </summary>
+        private void ShowQuery()
         {
-            var totalRecords = 0;
             var number = txtNumber.Value.Trim();
-            var simcard = txtSimcard.Value.Trim();
+            //var simcard = txtSimcard.Value.Trim();
             // 模糊查询时页码置为空
-            if (!string.IsNullOrEmpty(number) || !string.IsNullOrEmpty(simcard)) { hidPageIndex.Value = ""; }
+            if (!string.IsNullOrEmpty(number)) { hidPageIndex.Value = ""; }
 
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
-            var list = TerminalInstance.FindPageList<TB_Terminal>(pageIndex, PageSize, out totalRecords,
-                f => f.Delete == false && (f.Number.Contains(number) || f.Sim.Contains(simcard)), "Number");
+
+            if (selBind.SelectedIndex == 0)
+            {
+                ShowTerminalsNotBind(pageIndex);
+            }
+            else
+            {
+                ShowTerminalsBinded(pageIndex);
+            }
+        }
+
+        private void ShowTerminalsNotBind(int pageIndex)
+        {
+            var totalRecords = 0;
+
+            // 表达式
+            Expression<Func<TB_Terminal, bool>> expression = PredicateExtensions.True<TB_Terminal>();
+
+            expression = expression.And(a => a.Delete == false && a.HasBound == false);
+            // 是否绑定卫星
+            var sat = selSate.SelectedIndex;
+            if (sat > 0)
+            {
+                if (sat == 1) { expression = expression.And(a => a.Satellite == (int?)null); }
+                else
+                { expression = expression.And(a => a.Satellite != (int?)null); }
+            }
+
+            // 模糊查询
+            var query = txtNumber.Value.Trim();
+            if (!string.IsNullOrEmpty(query))
+            {
+                expression = expression.And(a => a.Number.Contains(query) || a.TB_Satellite.CardNo.Contains(query));
+            }
+
+            var list = TerminalInstance.FindPageList<TB_Terminal>(pageIndex, PageSize, out totalRecords, expression, "Number");
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
 
             string html = "";
             if (totalRecords < 1)
             {
-                html = "<tr><td colspan=\"13\">No records, You can change the condition and try again or " +
+                html = "<tr><td colspan=\"13\">No records, You can change condition and try again or " +
                     " <a href=\"./terminal_register.aspx\">ADD</a> new one.</td></tr>";
             }
             else
@@ -92,30 +132,106 @@ namespace Wbs.Everdigm.Web.main
                     html += "<tr>" +
                         "<td style=\"text-align: center;\"><input type=\"checkbox\" id=\"cb_" + id + "\" /></td>" +
                         "<td style=\"text-align: center;\">" + cnt + "</td>" +
-                        "<td><a href=\"./terminal_register.aspx?key=" + id + "\" >" + CheckQueryString(obj.Number, 0) + "</a></td>" +
-                        "<td>" + CheckQueryString(obj.Sim, 1) + "</td>" +
-                        "<td>" + TerminalInstance.GetSatellite(obj, true) + "</td>" +
+                        "<td><a href=\"./terminal_register.aspx?key=" + id + "\" >" + CheckQueryString(obj.Number) + "</a></td>" +
+                        "<td>" + CheckQueryString(TerminalInstance.GetSatellite(obj, true)) + "</td>" +
                         "<td>" + obj.Firmware + "</td>" +
                         "<td style=\"text-align: center;\">" + obj.Revision.ToString() + "</td>" +
                         "<td style=\"text-align: center;\">" + TerminalTypes.GetTerminalType(obj.Type.Value) + "</td>" +
                         "<td>" + obj.ProductionDate.Value.ToString("yyyy/MM/dd") + "</td>" +
                         "<td style=\"text-align: center;\">" + (obj.HasBound == true ? "yes" : "no") + "</td>" +
-                        "<td>" + GetEquipment(obj, equipment) + "</td>" +
+                        "<td>" + CheckQueryString(GetEquipment(obj, equipment)) + "</td>" +
                         "<td>" + Utility.GetOnlineStyle(obj.OnlineStyle, false) + "</td>" +
+                        "<td>" + obj.Sim + "</td>" +
                         "<td></td>" +
                         "</tr>";
                 }
             }
+            ShowFooter(totalRecords, pageIndex, totalPages, html);
+        }
+
+        private void ShowTerminalsBinded(int pageIndex)
+        {
+            var totalRecords = 0;
+            // 表达式
+            Expression<Func<TB_Equipment, bool>> expression = PredicateExtensions.True<TB_Equipment>();
+            // 必须是绑定了终端的设备
+            expression = expression.And(f => f.Deleted == false && f.Terminal != (int?)null);
+
+            // 设备type
+            var type = ddlEquipmentType.SelectedValue;
+            if (!string.IsNullOrEmpty(type))
+            {
+                expression = expression.And(a => a.TB_EquipmentModel.Type == ParseInt(type));
+            }
+
+            // 设备model
+            var model = selModel.Value;
+            if (!string.IsNullOrEmpty(model)) { expression = expression.And(a => a.Model == ParseInt(model)); }
+
+            // 是否绑定卫星
+            var sat = selSate.SelectedIndex;
+            if (sat > 0)
+            {
+                if (sat == 1) { expression = expression.And(a => a.TB_Terminal.Satellite == (int?)null); }
+                else
+                { expression = expression.And(a => a.TB_Terminal.Satellite != (int?)null); }
+            }
+
+            // 号码查询
+            var query = txtNumber.Value.Trim();
+            if (!string.IsNullOrEmpty(query))
+            {
+                expression = expression.And(a => a.Number.Contains(query) || a.TB_Terminal.Number.Contains(query) || a.TB_Terminal.TB_Satellite.CardNo.Contains(query));
+            }
+
+            var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords, expression, "Number");
+            var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
+
+            string html = "";
+            if (totalRecords < 1)
+            {
+                html = "<tr><td colspan=\"13\">No records, You can change condition and try again or " +
+                    " <a href=\"./terminal_register.aspx\">ADD</a> new one.</td></tr>";
+            }
+            else
+            {
+                var cnt = (pageIndex - 1) * PageSize;
+                foreach (var obj in list)
+                {
+                    cnt++;
+                    var id = Utility.UrlEncode(Utility.Encrypt(obj.id.ToString()));
+                    html += "<tr>" +
+                        "<td style=\"text-align: center;\"><input type=\"checkbox\" id=\"cb_" + id + "\" /></td>" +
+                        "<td style=\"text-align: center;\">" + cnt + "</td>" +
+                        "<td><a href=\"./terminal_register.aspx?key=" + id + "\" >" + CheckQueryString(obj.TB_Terminal.Number) + "</a></td>" +
+                        "<td>" + CheckQueryString(TerminalInstance.GetSatellite(obj.TB_Terminal, true)) + "</td>" +
+                        "<td>" + obj.TB_Terminal.Firmware + "</td>" +
+                        "<td style=\"text-align: center;\">" + obj.TB_Terminal.Revision.ToString() + "</td>" +
+                        "<td style=\"text-align: center;\">" + TerminalTypes.GetTerminalType(obj.TB_Terminal.Type.Value) + "</td>" +
+                        "<td>" + obj.TB_Terminal.ProductionDate.Value.ToString("yyyy/MM/dd") + "</td>" +
+                        "<td style=\"text-align: center;\">yes</td>" +
+                        "<td>" + CheckQueryString(GetEquipment(obj.TB_Terminal, obj)) + "</td>" +
+                        "<td>" + Utility.GetOnlineStyle(obj.OnlineStyle, false) + "</td>" +
+                        "<td>" + obj.TB_Terminal.Sim + "</td>" +
+                        "<td></td>" +
+                        "</tr>";
+                }
+            }
+            ShowFooter(totalRecords, pageIndex, totalPages, html);
+        }
+
+        private void ShowFooter(int totalRecords, int pageIndex, int totalPages, string html)
+        {
             tbodyBody.InnerHtml = html;
             divPagging.InnerHtml = "";
             if (totalRecords > 0)
                 ShowPaggings(pageIndex, totalPages, totalRecords, "./terminal_list.aspx", divPagging);
         }
-
+        
         protected void btQuery_Click(object sender, EventArgs e)
         {
             if (!HasSessionLose)
-            { ShowTerminals(); }
+            { ShowQuery(); }
         }
 
         protected void btDelete_Click(object sender, EventArgs e)

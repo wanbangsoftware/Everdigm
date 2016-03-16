@@ -77,7 +77,7 @@ namespace Wbs.Everdigm.Web.main
             string html = "";
             if (totalRecords < 1)
             {
-                html = "<tr><td colspan=\"14\">No records, Change condition and try again.</td></tr>";
+                html = "<tr><td colspan=\"13\">No records, Change condition and try again.</td></tr>";
             }
             else
             {
