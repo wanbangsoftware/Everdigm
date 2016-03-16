@@ -103,8 +103,7 @@
                                     <tr>
                                         <td class="in-tab-txt-b">1</td>
                                         <td class="in-tab-txt-b" style="text-align: left;">DX500LCA-10030</td>
-                                        <td class="in-tab-txt-b">2015090201</td>
-                                        <td class="in-tab-txt-rb">13999999999</td>
+                                        <td class="in-tab-txt-rb">2015090201</td>
                                         <td class="in-tab-txt-b">56.04KB</td>
                                         <td class="in-tab-txt-rb">46B</td>
                                         <td class="in-tab-txt-b">135</td>
