@@ -373,7 +373,9 @@
     </Content>
     <Content Include="ajax\work.ashx" />
     <Content Include="ajax\print.ashx" />
-    <Content Include="files\Operation_report.xlsx" />
+    <Content Include="files\equipment.daily.work.time.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -582,6 +584,7 @@
     <Compile Include="ajax\PartialPrintIridium.cs" />
     <Compile Include="ajax\PartialPrintTerminalcs.cs" />
     <Compile Include="ajax\PartialQueryCustomer.cs" />
+    <Compile Include="ajax\PartialQueryEquipmentExcel.cs" />
     <Compile Include="ajax\PartialQueryTracker.cs" />
     <Compile Include="ajax\print.ashx.cs">
       <DependentUpon>print.ashx</DependentUpon>

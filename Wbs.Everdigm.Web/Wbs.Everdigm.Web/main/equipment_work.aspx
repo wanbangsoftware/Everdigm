@@ -576,12 +576,15 @@
             <div class="modal-content">
                 <div class="modal-header custom-modal-header btn-primary">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="deletelLabel">Loading...</h4>
+                    <h4 class="modal-title" id="warningLabel">Loading...</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-lg-12">
+                        <div class="col-lg-12" id="loadingContent">
                             <img alt="" src="../images/loading.gif"/><span style="margin-left: 10px;">Loading data, please wait...</span>
+                        </div>
+                        <div class="col-lg-12" id="warningContent">
+                            <span style="margin-left: 10px;" id="warningContentText">Loading data, please wait...</span>
                         </div>
                     </div>
                 </div>

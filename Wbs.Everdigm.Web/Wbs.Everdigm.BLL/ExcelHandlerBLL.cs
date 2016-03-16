@@ -19,7 +19,11 @@ namespace Wbs.Everdigm.BLL
                 Source = "",
                 Target = "",
                 Work = (int?)null,
-                id = 0
+                id = 0,
+                Data = "",
+                EndDate = "",
+                Equipment = (int?)null,
+                StartDate = ""
             };
         }
 

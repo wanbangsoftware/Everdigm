@@ -206,7 +206,7 @@ namespace Wbs.Everdigm.BLL
         public string GetAlarmStatus(string alarm)
         {
             if (string.IsNullOrEmpty(alarm)) return alarm_invalid;
-            string arms = Protocol.TX300.Analyse._0x2000.GetAlarm(alarm, true);
+            string arms = Protocol.TX300.Analyse._0x2000.GetAlarm(alarm);
             if (alarm.Equals(alarm_none) || arms.Equals("No Alarm")) return alarm_invalid;
             return "<span class=\"text-custom-attention\" title=\"" + arms + "\"><i class=\"fa fa-bell\"></i></span>";
         }

@@ -31,7 +31,7 @@ namespace Wbs.Everdigm.Desktop
         {
             //var ret = "";
             var source = "";
-            Microsoft.Office.Interop.Excel.Application app = null;
+            Application app = null;
             Workbook book = null;
             Worksheet sheet = null;
             try
