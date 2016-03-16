@@ -4,6 +4,7 @@ namespace Wbs.Everdigm.Web.main
 {
     public partial class equipment_work : BaseEquipmentPage
     {
+        public string MacId = "";
         protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
@@ -33,6 +34,7 @@ namespace Wbs.Everdigm.Web.main
                 var obj = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
                 if (null != obj)
                 {
+                    MacId = EquipmentInstance.GetFullNumber(obj);
                     hiddenLastDate.Value = (DateTime?)null == obj.LastActionTime ? DateTime.Now.ToString("yyyy/MM/dd") :
                         obj.LastActionTime.Value.ToString("yyyy/MM/dd");
                 }

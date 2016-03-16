@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main/EquipmentInfo.Master" AutoEventWireup="true" CodeBehind="equipment_work.aspx.cs" Inherits="Wbs.Everdigm.Web.main.equipment_work" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="header" runat="server">
+    <link href="../bootstrap3/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" />
     <style type="text/css">
         .custom-modal-header {
             -webkit-border-top-left-radius: 5px;
@@ -11,6 +12,9 @@
             border-top-right-radius: 5px;
         }
     </style>
+    <script type="text/javascript">
+        var MacId = "<%=MacId%>";
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="TitleContentPlaceHolder" runat="server">Equipment: Work</asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="NavigatorContentPlaceHolder" runat="server">
@@ -47,9 +51,11 @@
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
     <!--Daily working time-->
-    <div class="panel panel-default" style="margin-top: 2px; margin-bottom: 2px;">
+    <div class="panel panel-default" id="printDailyWorkTime" style="margin-top: 2px; margin-bottom: 2px;">
         <div class="panel-heading">
             <span>Daily working time</span>(recently 10 days)
+            <span id="toExcel" class="label label-primary" style="cursor: pointer;"><i class="fa fa-file-excel-o"></i> to Excel</span>
+            <span id="printLabel" class="label label-primary" style="cursor: pointer;"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> Print</span>
             <input type="hidden" id="hiddenLastDate" runat="server" />
             <div class="input-group" style="float: right; margin-top: -7px;">
                 <div class="input-daterange input-group" style="float: left; margin-left: 2px;">
@@ -585,5 +591,6 @@
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="FooterContentPlaceHolder" runat="server">
     <script type="text/javascript" src="../js/CanvasJS/canvasjs.min.js"></script>
+    <script src="../js/html2canvas.min.js"></script>
     <script type="text/javascript" src="../scripts/main/equipment.work.js"></script>
 </asp:Content>

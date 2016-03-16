@@ -242,6 +242,8 @@
     <Content Include="js\CryptoJS.v3.1.2\rollups\tripledes.js" />
     <Content Include="js\CustomGoogleMapMarker.js" />
     <Content Include="js\google.map.api.js" />
+    <Content Include="js\html2canvas.js" />
+    <Content Include="js\html2canvas.min.js" />
     <Content Include="js\jquery-2.1.4.js" />
     <Content Include="js\jquery-2.1.4.min.js" />
     <Content Include="js\jquery.timer.js" />

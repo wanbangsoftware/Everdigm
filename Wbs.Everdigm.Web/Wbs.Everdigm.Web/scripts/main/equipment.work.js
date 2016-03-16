@@ -14,6 +14,28 @@ $(document).ready(function () {
     //$(".date-test").datepicker("update", $("[id$=\"hiddenLastDate\"]").val());
     $(".btn-success").click(function () { getWorktimes(); });
 
+    // 打印
+    $("#printLabel").click(function () {
+        showButton(false);
+        html2canvas($("#printDailyWorkTime"), {
+            onrendered: function (canvas) {
+                printCanvas(canvas);
+                //theCanvas = canvas;
+                //document.body.appendChild(canvas);
+
+                // Convert and download as image 
+                //Canvas2Image.saveAsPNG(canvas);
+                //$("#img-out").append(canvas);
+                // Clean up 
+                //document.body.removeChild(canvas);
+            }
+        });
+    });
+    // 导出到excel
+    $("#toExcel").click(function () {
+        showButton(false);
+        exportToExcel();
+    });
     // 初始化查询最近一个月的运转时间
     getWorktimes();
     // 查询指定时间内的最新运转时间
@@ -207,7 +229,7 @@ function showChart(data) {
 		    zoomEnabled: true,
 		    animationEnabled: true,
 		    title: {
-		        text: "Daily work time"
+		        text: "Daily work time: " + MacId
 		    }, axisX: {
 		        valueFormatString: "MMM DD"
 		    },
@@ -263,4 +285,36 @@ function showChart(data) {
 		});
 
     chart.render();
+}
+
+function showButton(shown) {
+    if (shown) {
+        $("#printLabel").show();
+        $("#toExcel").show();
+    } else {
+        $("#printLabel").hide();
+        $("#toExcel").hide();
+    }
+}
+function printCanvas(canvas) {
+    var dataUrl = canvas.toDataURL(); //attempt to save base64 string to server using this var  
+    var windowContent = '<!DOCTYPE html>';
+    windowContent += '<html>'
+    windowContent += '<head><title>Daily Work Time of ' + MacId + '</title></head>';
+    windowContent += '<body>'
+    windowContent += '<img src="' + dataUrl + '">';
+    windowContent += '</body>';
+    windowContent += '</html>';
+    var printWin = window.open('', '', 'width=853,height=373');
+    printWin.document.open();
+    printWin.document.write(windowContent);
+    printWin.document.close();
+    printWin.focus();
+    printWin.print();
+    printWin.close();
+    showButton(true);
+}
+
+function exportToExcel() {
+
 }
