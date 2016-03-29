@@ -373,7 +373,7 @@
     </Content>
     <Content Include="ajax\work.ashx" />
     <Content Include="ajax\print.ashx" />
-    <Content Include="files\Operation_report_TX500.xlsx" />
+    <Content Include="files\operation.report.xlsx" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

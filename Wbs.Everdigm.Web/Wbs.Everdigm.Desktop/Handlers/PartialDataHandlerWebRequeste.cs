@@ -12,6 +12,7 @@ namespace Wbs.Everdigm.Desktop
         /// excel文件所在的目录
         /// </summary>
         private static string EXCEL_PATH = ConfigurationManager.AppSettings["EXCEL_PATH"];
+        private static string EXCEL_FILE_TMS = ConfigurationManager.AppSettings["EXCEL_FILE_TMS"];
         /// <summary>
         /// web所在的根目录
         /// </summary>
@@ -31,14 +32,14 @@ namespace Wbs.Everdigm.Desktop
         {
             //var ret = "";
             var source = "";
-            Microsoft.Office.Interop.Excel.Application app = null;
+            Application app = null;
             Workbook book = null;
             Worksheet sheet = null;
             try
             {
                 var n = (int?)null;
-                app = new Microsoft.Office.Interop.Excel.Application();
-                book = app.Workbooks.Open(EXCEL_PATH);
+                app = new Application();
+                book = app.Workbooks.Open(EXCEL_PATH + EXCEL_FILE_TMS);
                 sheet = (Worksheet)book.ActiveSheet;
                 // 更改Shop order No.
                 var _int = obj.id;
