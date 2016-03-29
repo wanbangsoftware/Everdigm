@@ -117,6 +117,15 @@ namespace Wbs.Everdigm.Web.ajax
                 case "province":
                     ret = HandleEquipmentProvinceQuest();
                     break;
+                case "worktime2excel":
+                    ret = HandleQueryEquipmentWorkTime2Excel();
+                    break;
+                case "worktime2excelquery":
+                    ret = HandleQueryWorkTime2ExcelStatus();
+                    break;
+                default:
+                    ret = "{\"status\":-1,\"desc\":\"No function to handle your request.\"}";
+                    break;
             }
             ResponseJson(ret);
         }
@@ -239,7 +248,7 @@ namespace Wbs.Everdigm.Web.ajax
         /// 查询指定设备在指定日期范围内每日运转时间
         /// </summary>
         /// <returns></returns>
-        private string HandleEquipmentWorktime()
+        private string HandleEquipmentWorktime(bool averagable = true)
         {
             var ret = "{}";
             var id = ParseInt(Utility.Decrypt(data));
@@ -254,8 +263,8 @@ namespace Wbs.Everdigm.Web.ajax
                 // 循环每天一个节点
                 while (dt.Ticks < date1.Ticks)
                 {
-                    avg.Add(new WorktimeChart() { x = Utility.DateTimeToJavascriptDate(dt.Date), y = 0 });
-                    work.Add(new WorktimeChart() { x = Utility.DateTimeToJavascriptDate(dt.Date), y = 0 });
+                    avg.Add(new WorktimeChart() { x = Utility.DateTimeToJavascriptDate(dt.Date), y = 0, min = 0 });
+                    work.Add(new WorktimeChart() { x = Utility.DateTimeToJavascriptDate(dt.Date), y = 0, min = 0 });
                     dt = dt.AddDays(1);
                 }
                 var macid = EquipmentInstance.GetFullNumber(obj);
@@ -315,6 +324,10 @@ namespace Wbs.Everdigm.Web.ajax
                         if (null == temp) continue;
 
                         uint run = BitConverter.ToUInt32(temp, index);
+                        // 更新本日最初的运转时间
+                        var wk = work.First(f => f.x == today);
+                        if (wk.min == 0) { wk.min = run; }
+
                         if (first == 0)
                             first = run;
                         else
@@ -325,7 +338,7 @@ namespace Wbs.Everdigm.Web.ajax
                                 times = last - first;
                                 // 如果时间大于24小时则直接设定为0小时 2015/09/21 11:30
                                 if (times >= 24 * 60) times = 0;
-                                work.First(f => f.x == today).y = FormatTime(times);
+                                wk.y = FormatTime(times);
                             }
                         }
                     }
@@ -334,7 +347,10 @@ namespace Wbs.Everdigm.Web.ajax
                     foreach (var a in avg)
                     { a.y = avgg; }
                 }
-                ret = string.Format("{0}\"Average\":{1},\"Worktime\":{2}{3}", "{", JsonConverter.ToJson(avg), JsonConverter.ToJson(work), "}");
+                if (averagable)
+                    ret = string.Format("{0}\"Average\":{1},\"Worktime\":{2}{3}", "{", JsonConverter.ToJson(avg), JsonConverter.ToJson(work), "}");
+                else
+                    ret = JsonConverter.ToJson(work);
             }
             return ret;
         }
@@ -364,8 +380,18 @@ namespace Wbs.Everdigm.Web.ajax
     /// </summary>
     public class WorktimeChart : IEquatable<WorktimeChart>
     {
+        /// <summary>
+        /// Javascript格式的日期
+        /// </summary>
         public long x;
+        /// <summary>
+        /// 运转时间值，hh.mm格式
+        /// </summary>
         public double y;
+        /// <summary>
+        /// 当日最初运转时间
+        /// </summary>
+        public uint min;
 
         public override bool Equals(object obj)
         {

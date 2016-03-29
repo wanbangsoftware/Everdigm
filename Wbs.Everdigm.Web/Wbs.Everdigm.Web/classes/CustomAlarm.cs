@@ -25,7 +25,7 @@ namespace Wbs.Everdigm.Web
         public CustomAlarm(TB_Data_Alarm obj)
         {
             this.Time = (int?)null == obj.Position ? obj.AlarmTime.Value : obj.TB_Data_Position.ReceiveTime.Value;
-            this.Alarm = _0x2000.GetAlarm(obj.Code);
+            this.Alarm = _0x2000.GetAlarm(obj.Code, true);
         }
     }
 }

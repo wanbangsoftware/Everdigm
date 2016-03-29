@@ -39,7 +39,7 @@ namespace Wbs.Everdigm.BLL
         /// <returns></returns>
         public override string ToString(TB_Data_Alarm entity)
         {
-            return _0x2000.GetAlarm(entity.Code);
+            return _0x2000.GetAlarm(entity.Code, true);
         }
     }
 }
