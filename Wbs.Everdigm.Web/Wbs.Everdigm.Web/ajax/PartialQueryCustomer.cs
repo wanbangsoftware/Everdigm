@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Wbs.Everdigm.Common;
 
 namespace Wbs.Everdigm.Web.ajax
 {

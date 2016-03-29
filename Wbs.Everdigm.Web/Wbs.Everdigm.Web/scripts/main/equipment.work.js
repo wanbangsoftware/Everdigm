@@ -35,7 +35,7 @@ $(document).ready(function () {
     });
     // 导出到excel
     $("#toExcel").click(function () {
-        showButton(false);
+        //showButton(false);
         exportToExcel();
     });
     // 初始化查询最近一个月的运转时间
@@ -356,6 +356,8 @@ function getExportExcelStatus() {
     GetJsonData("../ajax/query.ashx", { "type": "equipment", "cmd": "worktime2excelquery", "data": excelId }, function (data) {
         if (data.status > 0) {
             // 下载excel文件
+            document.location = data.data;
+            showWarning(false, "", "", "hide");
         } else if (data.status < 0) {
             showWarning(true, "Operation fail", data.desc);
         } else {

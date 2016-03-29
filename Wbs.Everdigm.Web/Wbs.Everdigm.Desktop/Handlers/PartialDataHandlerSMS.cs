@@ -33,7 +33,7 @@ namespace Wbs.Everdigm.Desktop
                     data.Port = 0;
                     data.ReceiveTime = sms.SendTime.Value;
                     data.SocketHandle = 0;
-                    ShowUnhandledMessage(string.Format("{0}SMS data from {1}: {2}", Now, sms.Sender, CustomConvert.GetHex(data.Buffer)));
+                    ShowUnhandledMessage(format("{0}SMS data from {1}: {2}", Now, sms.Sender, CustomConvert.GetHex(data.Buffer)));
                     // 如果数据中的sim号码是000000000000则将sender直接放入其中   2015/09/02 15:18
                     if (data.Buffer[9] == 0 && data.Buffer[10] == 0)
                     {

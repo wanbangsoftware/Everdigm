@@ -152,7 +152,7 @@ namespace Wbs.Everdigm.Desktop
                 {
                     OnUnhandledMessage(this, new Sockets.UIEventArgs()
                     {
-                        Message = string.Format("{0} Satellite has no terminal, data will save as terminal number: \"{1}\".{2}",
+                        Message = format("{0} Satellite has no terminal, data will save as terminal number: \"{1}\".{2}",
                         Now, data.IMEI.Substring(4), Environment.NewLine)
                     });
                 }
@@ -208,7 +208,7 @@ namespace Wbs.Everdigm.Desktop
                 {
                     OnUnhandledMessage(this, new Sockets.UIEventArgs()
                     {
-                        Message = string.Format("{0}{1}{2}{3}", Now, e.Message, Environment.NewLine, e.StackTrace)
+                        Message = format("{0}{1}{2}{3}", Now, e.Message, Environment.NewLine, e.StackTrace)
                     });
                 }
                 // 更新卫星方式的命令状态(只处理命令回复的1000，其他的命令在普通命令过程中处理)

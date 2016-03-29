@@ -12,6 +12,7 @@ namespace Wbs.Everdigm.Desktop
         /// excel文件所在的目录
         /// </summary>
         private static string EXCEL_PATH = ConfigurationManager.AppSettings["EXCEL_PATH"];
+        private static string EXCEL_TMS = ConfigurationManager.AppSettings["EXCEL_TMS"];
         /// <summary>
         /// web所在的根目录
         /// </summary>
@@ -19,13 +20,24 @@ namespace Wbs.Everdigm.Desktop
         /// <summary>
         /// 处理web传过来的excel处理请求
         /// </summary>
-        public void HandleWebRequestExcel()
+        /// <returns>返回是否有处理过数据</returns>
+        public bool HandleWebRequestExcel2pdf()
         {
-            var excel = ExcelHandlerInstance.Find(f => f.Handled == false && f.Deleted == false);
-            if (null != excel)
+            try
             {
-                HandleWorkDetail(excel.id, excel.TB_WorkDetail);
+                // 这里只查询excel导出到pdf的记录
+                var excel = ExcelHandlerInstance.Find(f => f.Handled == false && f.Equipment == (int?)null && f.Deleted == false);
+                if (null != excel)
+                {
+                    HandleWorkDetail(excel.id, excel.TB_WorkDetail);
+                    return true;
+                }
             }
+            catch (Exception e)
+            {
+                ShowUnhandledMessage(format("{0}Excel to pdf handler error: {1}{2}{3}", Now, e.Message, Environment.NewLine, e.StackTrace));
+            }
+            return false;
         }
         private void HandleWorkDetail(int detail,TB_WorkDetail obj)
         {
@@ -37,8 +49,8 @@ namespace Wbs.Everdigm.Desktop
             try
             {
                 var n = (int?)null;
-                app = new Microsoft.Office.Interop.Excel.Application();
-                book = app.Workbooks.Open(EXCEL_PATH);
+                app = new Application();
+                book = app.Workbooks.Open(EXCEL_PATH + EXCEL_TMS);
                 sheet = (Worksheet)book.ActiveSheet;
                 // 更改Shop order No.
                 var _int = obj.id;
@@ -119,7 +131,7 @@ namespace Wbs.Everdigm.Desktop
             //return ret;
         }
 
-        private void ConvertToPdf(int detail,string source, string dir, string name)
+        private void ConvertToPdf(int detail, string source, string dir, string name)
         {
             // 转换成pdf
             var path = "files\\pdf\\" + dir;

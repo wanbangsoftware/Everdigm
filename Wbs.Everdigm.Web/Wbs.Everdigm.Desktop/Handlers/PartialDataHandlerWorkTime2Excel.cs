@@ -1,0 +1,148 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;
+using Wbs.Everdigm.Database;
+using Wbs.Everdigm.Common;
+using Wbs.Utilities;
+using System.Configuration;
+using Microsoft.Office.Interop.Excel;
+
+namespace Wbs.Everdigm.Desktop
+{
+    /// <summary>
+    /// 处理work time导出到excel的部分
+    /// </summary>
+    public partial class DataHandler
+    {
+        private static string EXCEL_WORKTIME = ConfigurationManager.AppSettings["EXCEL_WORKTIME"];
+        /// <summary>
+        /// 处理web传过来的导出工作时间的请求
+        /// </summary>
+        public void HandleWebRequestWorkTime2Excel()
+        {
+            try
+            {
+                var excel = ExcelHandlerInstance.Find(f => f.Handled == false && f.Work == (int?)null && f.Deleted == false);
+                if (null != excel)
+                {
+                    if (string.IsNullOrEmpty(excel.Data) || excel.Data.Equals("[]"))
+                    {
+                        ExcelHandlerInstance.Update(f => f.id == excel.id, act => { act.Handled = true; });
+                    }
+                    else
+                    {
+                        ExportWorkTimeToExcel(excel);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ShowUnhandledMessage(format("{0}Work time to Excel handler error: {1}{2}{3}", Now, e.Message, Environment.NewLine, e.StackTrace));
+            }
+        }
+        /// <summary>
+        /// 第一页开始行、结束行、页大小、页行数
+        /// </summary>
+        private static int lineStart = 13, pageSize = 80, pageRows = 40;
+
+        private void ExportWorkTimeToExcel(TB_ExcelHandler excel)
+        {
+            var source = "";
+            Application app = null;
+            Workbook book = null;
+            Worksheet sheet = null;
+            try
+            {
+                app = new Application();
+                book = app.Workbooks.Open(EXCEL_PATH + EXCEL_WORKTIME);
+                sheet = (Worksheet)book.ActiveSheet;
+                // 所属公司
+                sheet.Cells[3, 3] = excel.TB_Equipment.TB_Customer.Name;
+                // 设备型号
+                sheet.Cells[4, 3] = excel.TB_Equipment.TB_EquipmentModel.Name;
+                // 设备号码
+                sheet.Cells[5, 3] = excel.TB_Equipment.Number;
+                // 打印日期
+                sheet.Cells[6, 9] = excel.CreateDate.Value.ToString("yyyy/MM/dd");
+                // 查询开始日期
+                sheet.Cells[7, 3] = excel.StartDate;
+                sheet.Cells[8, 3] = excel.EndDate;
+
+                // 组织数据
+                List<WorktimeChart> works = JsonConverter.ToObject<List<WorktimeChart>>(excel.Data);
+                int row = 0, cell = 1, page = 0, len = works.Count, count = 0;
+                double total = 0.0;
+                for (int i = 0; i < len; i++)
+                {
+                    count++;
+                    page = i / (pageSize);
+                    var baseRow = page * pageRows;
+                    cell = (i / 40) % 2 == 0 ? 1 : 6;
+                    row = baseRow + i % 40;
+                    row += lineStart;
+                    sheet.Cells[row, cell] = count;
+                    sheet.Cells[row, cell + 1] = CustomConvert.JavascriptDateToDateTime(works[i].x).ToString("yyyy/MM/dd");
+                    sheet.Cells[row, cell + 2] = works[i].y;
+                    total += works[i].y;
+                    // 如果运转时间等于0时，将上一条运转时间复制过来
+                    if (works[i].min == 0 && i > 0)
+                    {
+                        works[i].min = works[i - 1].min;
+                    }
+                    sheet.Cells[row, cell + 3] = works[i].min / 60.0;
+                    if (count % pageRows == 0)
+                    {
+                        Range range = sheet.Range[sheet.Cells[row, cell], sheet.Cells[row, cell + 3]];
+                        range.Cells.Borders.Item[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
+                    }
+                }
+                // 总运转时间
+                sheet.Cells[9, 3] = total;
+
+                Range last = sheet.Range[sheet.Cells[row, cell], sheet.Cells[row, cell + 3]];
+                last.Cells.Borders.Item[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
+
+                // 另存为别的
+                var date = excel.CreateDate.Value.ToString("yyyyMMdd");
+                var path = Path.Combine(WEB_PATH, "files\\xls\\", date);
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                var equipment = excel.TB_Equipment.TB_EquipmentModel.Code + excel.TB_Equipment.Number;
+                source = path + "\\" + excel.CreateDate.Value.ToString("HHmmss_") + equipment + ".xlsx";
+                if (File.Exists(source))
+                {
+                    File.Delete(source);
+                }
+                book.SaveAs(source);
+            }
+            finally
+            {
+                // 关闭book
+                if (null != book)
+                {
+                    book.Close();
+                    book = null;
+                }
+                // 关闭application
+                if (null != app)
+                {
+                    app.Quit();
+                    app = null;
+                }
+                // 释放内存
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            }
+
+            var target = "../" + source.Replace(WEB_PATH, "").Replace("\\", "/");
+            ExcelHandlerInstance.Update(f => f.id == excel.id, act =>
+            {
+                act.Handled = true;
+                act.Target = target;
+            });
+        }
+    }
+}

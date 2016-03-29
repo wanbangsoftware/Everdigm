@@ -162,7 +162,8 @@ namespace Wbs.Everdigm.Desktop
                             ret = _server.Send(Port, IP, cc00);
                         if (1 != ret)
                         {
-                            ShowUnhandledMessage(Now + string.Format("Cannot send data to ip:{0}({1}): {2} [{3}]", IP, Port, CustomConvert.GetHex(cc00), data.PackageType));
+                            ShowUnhandledMessage(format("{0}Cannot send data to ip:{1}({2}): {3} [{4}]", 
+                                Now, IP, Port, CustomConvert.GetHex(cc00), data.PackageType));
                         }
                         cc00 = null;
                     }
@@ -182,7 +183,7 @@ namespace Wbs.Everdigm.Desktop
                             ret = _server.Send(Port, IP, resp.Content);
                         if (1 != ret)
                         {
-                            ShowUnhandledMessage(Now + string.Format("Cannot send data to {0}:{1}: {2} [{3}]",
+                            ShowUnhandledMessage(format("{0}Cannot send data to {1}:{2}: {3} [{4}]", Now,
                                 IP, Port, CustomConvert.GetHex(resp.Content), data.PackageType));
                         }
                     }
@@ -563,7 +564,7 @@ namespace Wbs.Everdigm.Desktop
             HandleEquipmentRuntime(equipment, x5000.WorkTime);
             if (null != equipment)
             {
-                string vol = string.Format("G{0}0", ((int)Math.Floor(x5000.GeneratorVoltage * 10)).ToString("000"));
+                string vol = format("G{0}0", ((int)Math.Floor(x5000.GeneratorVoltage * 10)).ToString("000"));
                 EquipmentInstance.Update(f => f.id == equipment.id, act =>
                 {
                     act.Voltage = vol;

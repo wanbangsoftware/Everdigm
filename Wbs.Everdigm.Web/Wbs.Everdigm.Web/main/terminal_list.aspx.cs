@@ -5,6 +5,7 @@ using System.Web.UI.WebControls;
 
 using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Database;
+using Wbs.Everdigm.Common;
 using System.Configuration;
 using Wbs.Utilities;
 using Wbs.Protocol;

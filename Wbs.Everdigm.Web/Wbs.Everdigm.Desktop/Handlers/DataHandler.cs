@@ -30,6 +30,16 @@ namespace Wbs.Everdigm.Desktop
         private string IP { get; set; }
         private int Port { get; set; }
         /// <summary>
+        /// 格式化字符串
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static string format(string format, params object[] args)
+        {
+            return string.Format(format, args) ;
+        }
+        /// <summary>
         /// 处理收到的数据
         /// </summary>
         /// <param name="data"></param>
@@ -113,9 +123,9 @@ namespace Wbs.Everdigm.Desktop
         /// <returns></returns>
         private byte[] SimToByte(string sim)
         {
-            if (sim[0] == '8' && sim[1] == '9' && sim.Length == 8) { sim = string.Format("0{0}000", sim); }
-            else if (sim[0] == '9' && sim.Length == 8) { sim = string.Format("0{0}000", sim); }
-            else if (sim.Length == 11) { sim = string.Format("0{0}", sim); }
+            if (sim[0] == '8' && sim[1] == '9' && sim.Length == 8) { sim = format("0{0}000", sim); }
+            else if (sim[0] == '9' && sim.Length == 8) { sim = format("0{0}000", sim); }
+            else if (sim.Length == 11) { sim = format("0{0}", sim); }
 
             return CustomConvert.GetBytes(sim);
         }
@@ -138,13 +148,21 @@ namespace Wbs.Everdigm.Desktop
         /// <summary>
         /// 处理接受且还未处理地址信息的定位记录
         /// </summary>
-        public void HandleGpsAddress() {
-            var pos = PositionInstance.Find(f => f.Updated < 2);
-            if (null != pos)
+        public void HandleGpsAddress()
+        {
+            try
             {
-                ShowUnhandledMessage("position: " + pos.id);
+                var pos = PositionInstance.Find(f => f.Updated < 2);
+                if (null != pos)
+                {
+                    ShowUnhandledMessage("position: " + pos.id);
+                }
+                ClearGpsAddressTimeout();
             }
-            ClearGpsAddressTimeout();
+            catch (Exception e)
+            {
+                ShowUnhandledMessage(format("{0}GPS address handler error: {1}{2}{3}", Now, e.Message, Environment.NewLine, e.StackTrace));
+            }
         }
         /// <summary>
         /// 清理获取GPS地址信息失败的记录

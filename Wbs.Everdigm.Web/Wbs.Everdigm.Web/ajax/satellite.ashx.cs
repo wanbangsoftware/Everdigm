@@ -6,7 +6,7 @@ using Wbs.Everdigm.Database;
 using Wbs.Protocol.TX300;
 using Wbs.Protocol.TX300.Analyse;
 using Wbs.Utilities;
-using Newtonsoft.Json;
+using Wbs.Everdigm.Common;
 
 namespace Wbs.Everdigm.Web.ajax
 {
@@ -88,7 +88,7 @@ namespace Wbs.Everdigm.Web.ajax
                     f.Status <= (byte)CommandStatus.WaitingForSMS &&
                     f.TB_Terminal.OnlineStyle == (byte)LinkType.SATELLITE);
                 var command = new Command(obj);
-                ret = JsonConvert.SerializeObject(command);
+                ret = JsonConverter.ToJson(command);
 
                 ResponseJson(ret);
             }

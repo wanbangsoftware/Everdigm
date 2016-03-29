@@ -166,9 +166,13 @@ namespace Wbs.Everdigm.Desktop
             {
                 if (!IsStop)
                 {
-                    HandleOnMessage(string.Format("{0} Listen_Callback error: {1}, Trace: {2}", Now, e.Message, e.StackTrace));
+                    HandleOnMessage(format("{0} Listen_Callback error: {1}, Trace: {2}", Now, e.Message, e.StackTrace));
                 }
             }
+        }
+        private string format(string format, params object[] args)
+        {
+            return DataHandler.format(format, args);
         }
         private void Read_Callback(IAsyncResult ar)
         {
@@ -185,7 +189,7 @@ namespace Wbs.Everdigm.Desktop
                 if (read > 0)
                 {
                     if (_showPackage)
-                        HandleOnMessage(string.Format("{0}Received data(length:{1}) from {2}:{3}", Now, read, so.point.Address.ToString(), so.point.Port));
+                        HandleOnMessage(format("{0}Received data(length:{1}) from {2}:{3}", Now, read, so.point.Address.ToString(), so.point.Port));
                     if (null == so.Received)
                     {
                         so.Received = new byte[read];
@@ -214,7 +218,7 @@ namespace Wbs.Everdigm.Desktop
                 else
                 {
                     if (_showPackage)
-                        HandleOnMessage(string.Format("{0}Iridium server {1}:{2} disconnected.", Now, so.point.Address.ToString(), so.point.Port));
+                        HandleOnMessage(format("{0}Iridium server {1}:{2} disconnected.", Now, so.point.Address.ToString(), so.point.Port));
                     //so.socket.Shutdown(SocketShutdown.Both);
                     //so.socket.Close();
                 }
@@ -222,7 +226,7 @@ namespace Wbs.Everdigm.Desktop
             catch (Exception e)
             {
                 if (e.Message.IndexOf("forcibly") < 0)
-                    HandleOnMessage(string.Format("{0} Read_Callback error: {1}, Trace: {2}",Now,e.Message,e.StackTrace));
+                    HandleOnMessage(format("{0} Read_Callback error: {1}, Trace: {2}",Now,e.Message,e.StackTrace));
             }
         }
         /// <summary>
@@ -411,7 +415,7 @@ namespace Wbs.Everdigm.Desktop
                                 }
                                 catch (Exception send)
                                 {
-                                    HandleOnMessage(string.Format("{0} Send iridiu package error: {1}, Trace: {2}", Now, send.Message, send.StackTrace));
+                                    HandleOnMessage(format("{0} Send iridiu package error: {1}, Trace: {2}", Now, send.Message, send.StackTrace));
                                 }
                                 AddQueue(iridum.PackageContent);
                                 //HandleOnMessage(Now + "MO confirmation: " + Wbs.Utilities.CustomConvert.GetHex(iridum.PackageContent));
@@ -421,7 +425,7 @@ namespace Wbs.Everdigm.Desktop
                     }
                     catch (Exception e)
                     {
-                        HandleOnMessage(string.Format("{0} HandleIridiumPackage error: {1}, Trace: {2}", Now, e.Message, e.StackTrace));
+                        HandleOnMessage(format("{0} HandleIridiumPackage error: {1}, Trace: {2}", Now, e.Message, e.StackTrace));
                     }
                     finally
                     {

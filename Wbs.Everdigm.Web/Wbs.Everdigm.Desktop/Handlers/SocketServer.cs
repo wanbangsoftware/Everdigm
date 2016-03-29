@@ -196,6 +196,10 @@ namespace Wbs.Everdigm.Desktop
                 OnIridiumSend(this, e);
             }
         }
+        private string format(string format, params object[] args)
+        {
+            return DataHandler.format(format, args);
+        }
         /// <summary>
         /// 线程的执行过程
         /// </summary>
@@ -231,13 +235,13 @@ namespace Wbs.Everdigm.Desktop
                         switch (obj.DataType)
                         {
                             case AsyncUserDataType.ClientConnected:
-                                message = string.Format("{0}client {1}:{2} connected. [{3}]", DateTime(obj.ReceiveTime), obj.IP, obj.Port, obj.PackageType);
+                                message = format("{0}client {1}:{2} connected. [{3}]", DateTime(obj.ReceiveTime), obj.IP, obj.Port, obj.PackageType);
                                 break;
                             case AsyncUserDataType.ClientDisconnected:
-                                message = string.Format("{0}client {1}:{2} disconnected. [{3}]", DateTime(obj.ReceiveTime), obj.IP, obj.Port, obj.PackageType);
+                                message = format("{0}client {1}:{2} disconnected. [{3}]", DateTime(obj.ReceiveTime), obj.IP, obj.Port, obj.PackageType);
                                 break;
                             case AsyncUserDataType.ReceivedData:
-                                message = string.Format("{0}received data(length: {1}): {2} [{3}]", DateTime(obj.ReceiveTime),
+                                message = format("{0}received data(length: {1}): {2} [{3}]", DateTime(obj.ReceiveTime),
                                     (null == obj.Buffer ? 0 : obj.Buffer.Length), CustomConvert.GetHex(obj.Buffer), obj.PackageType);
                                 break;
                         }
@@ -271,7 +275,7 @@ namespace Wbs.Everdigm.Desktop
                             }
                         }
                         catch (Exception sms)
-                        { HandleDisplayMessage(string.Format("{0} Cannot handle CheckSMSData: {1}, Trace: {2}", Now, sms.Message, sms.StackTrace)); }
+                        { HandleDisplayMessage(format("{0} Cannot handle CheckSMSData: {1}, Trace: {2}", Now, sms.Message, sms.StackTrace)); }
                     }
                 }
 
@@ -286,7 +290,9 @@ namespace Wbs.Everdigm.Desktop
                         _handler.HandleIridiumData(iridium);
                     }
                     catch (Exception iri)
-                    { HandleDisplayMessage(string.Format("{0} Cannot handle HandleIridiumData: {1}, Trace: {2}", Now, iri.Message, iri.StackTrace)); }
+                    {
+                        HandleDisplayMessage(format("{0} Cannot handle HandleIridiumData: {1}, Trace: {2}", Now, iri.Message, iri.StackTrace));
+                    }
                 }
                 // 只有第一个线程有权处理命令后面的数据
                 if (stat > 0)
@@ -306,7 +312,14 @@ namespace Wbs.Everdigm.Desktop
                         {
                             // 每5秒处理一次未处理的excel请求
                             if (gpsHandler % 5 == 0)
-                                _handler.HandleWebRequestExcel();
+                            {
+                                // 首先处理tms的work分配
+                                if (!_handler.HandleWebRequestExcel2pdf())
+                                {
+                                    // 处理导出work time到excel请求
+                                    _handler.HandleWebRequestWorkTime2Excel();
+                                }
+                            }
 
                             // 每2秒处理一次未发的命令
                             if (gpsHandler % 2 == 0)
@@ -318,7 +331,7 @@ namespace Wbs.Everdigm.Desktop
                                 }
                                 catch (Exception e)
                                 {
-                                    HandleDisplayMessage(string.Format("{0} Can not handle CheckTcpCommand/CheckIridiumCommand: {1}, Trace: {2}", Now, e.Message, e.StackTrace));
+                                    HandleDisplayMessage(format("{0} Can not handle CheckTcpCommand/CheckIridiumCommand: {1}, Trace: {2}", Now, e.Message, e.StackTrace));
                                 }
                             }
 
@@ -334,7 +347,7 @@ namespace Wbs.Everdigm.Desktop
                         }
                         catch(Exception e)
                         {
-                            HandleDisplayMessage(string.Format("{0} Cannot handle CheckCommand: {1}, Trace: {2}", Now, e.Message, e.StackTrace));
+                            HandleDisplayMessage(format("{0} Cannot handle CheckCommand: {1}, Trace: {2}", Now, e.Message, e.StackTrace));
                         }
                     }
                 }
@@ -351,7 +364,7 @@ namespace Wbs.Everdigm.Desktop
                                 _handler.HandleOlderClients();
                             }
                             catch(Exception e)
-                            { HandleDisplayMessage(string.Format("{0} Cannot handle OlderClients: {1}, Trace: {2}", Now, e.Message, e.StackTrace)); }
+                            { HandleDisplayMessage(format("{0} Cannot handle OlderClients: {1}, Trace: {2}", Now, e.Message, e.StackTrace)); }
                         }
                     }
                 }

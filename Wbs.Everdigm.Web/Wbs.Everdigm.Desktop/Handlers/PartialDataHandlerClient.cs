@@ -61,7 +61,7 @@ namespace Wbs.Everdigm.Desktop
                 if (arm2sleep > 0 || sleep2blind > 0 || sms2sleep > 0 || tcpudp2sms > 0 || satellite > 0 || terminals > 0)
                 {
                     ShowUnhandledMessage(
-                        string.Format("{0}HandleOlderClients(ret: {1}): ARM to Sleep: {2}, Sleep to Blind: {3}, SMS to Sleep: {4}, TCP/UDP to SMS: {5}",
+                        format("{0}HandleOlderClients(ret: {1}): ARM to Sleep: {2}, Sleep to Blind: {3}, SMS to Sleep: {4}, TCP/UDP to SMS: {5}",
                         Now, ret, arm2sleep, sleep2blind, sms2sleep, tcpudp2sms));
                 }
                 // 所有更新集合到一个事务中2015/08/14
@@ -110,7 +110,7 @@ namespace Wbs.Everdigm.Desktop
             }
             catch (Exception e)
             {
-                ShowUnhandledMessage(string.Format("{0}HandleOlderClients error: {1}{2}StackTrace: {3}", Now, e.Message, Environment.NewLine, e.StackTrace));
+                ShowUnhandledMessage(format("{0}HandleOlderClients error: {1}{2}StackTrace: {3}", Now, e.Message, Environment.NewLine, e.StackTrace));
             }
             // 更新终端连接状态
             //TerminalInstance.Update(f => f.OnlineStyle > (byte)LinkType.OFF && f.OnlineTime < DateTime.Now.AddMinutes(-75), act =>

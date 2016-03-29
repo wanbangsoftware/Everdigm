@@ -1,6 +1,7 @@
 ﻿using System;
 using Wbs.Everdigm.Database;
 using Wbs.Everdigm.BLL;
+using Wbs.Everdigm.Common;
 
 namespace Wbs.Everdigm.Web.main
 {

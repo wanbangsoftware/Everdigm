@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Database;
+using Wbs.Everdigm.Common;
 
 namespace Wbs.Everdigm.Web.ajax
 {

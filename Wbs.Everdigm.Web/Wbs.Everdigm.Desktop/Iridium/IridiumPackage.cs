@@ -355,7 +355,11 @@ namespace Wbs.Everdigm.Desktop
         }
         public override string ToString()
         {
-            return string.Format("IEI: {0}({1}), Length: {2}", CustomConvert.GetHex(IEI), GetIEI(), Length);
+            return format("IEI: {0}({1}), Length: {2}", CustomConvert.GetHex(IEI), GetIEI(), Length);
+        }
+        protected string format(string format, params object[] args)
+        {
+            return DataHandler.format(format, args);
         }
     }
     /// <summary>
@@ -429,7 +433,7 @@ namespace Wbs.Everdigm.Desktop
         }
         public override string ToString()
         {
-            return string.Format("{0}, CDR: {1}, IMEI: {2}, Status: {3}, MOMSN: {4}, MTMSN: {5}, TimeOfSession: {6}, Time: {7}",
+            return format("{0}, CDR: {1}, IMEI: {2}, Status: {3}, MOMSN: {4}, MTMSN: {5}, TimeOfSession: {6}, Time: {7}",
                 base.ToString(), CDR, IMEI, SessionStatus, MOMSN, MTMSN, TimeOfSession, Time.ToString("yyyy-MM-dd HH:mm:ss")); ;
         }
     }
@@ -455,7 +459,7 @@ namespace Wbs.Everdigm.Desktop
         }
         public override string ToString()
         {
-            return string.Format("{0}, Payload: {1}", base.ToString(), CustomConvert.GetHex(Payload));
+            return format("{0}, Payload: {1}", base.ToString(), CustomConvert.GetHex(Payload));
         }
     }
     /// <summary>
@@ -594,7 +598,7 @@ namespace Wbs.Everdigm.Desktop
         }
         public override string ToString()
         {
-            return string.Format("{0}, LatLng: {1}, Latitude: {2}, NSI: {3}, Longitude: {4}, EWI: {5}, CEPRadius: {6}",
+            return format("{0}, LatLng: {1}, Latitude: {2}, NSI: {3}, Longitude: {4}, EWI: {5}, CEPRadius: {6}",
                 base.ToString(), CustomConvert.GetHex(LatLng), Location.Latitude.ToString(CultureInfo.InvariantCulture.NumberFormat),
                 Location.NSI, Location.Longitude.ToString(CultureInfo.InvariantCulture.NumberFormat), Location.EWI, CEPRadius);
         }
@@ -633,7 +637,7 @@ namespace Wbs.Everdigm.Desktop
         }
         public override string ToString()
         {
-            return string.Format("{0}, Status: {1}", base.ToString(), Status);
+            return format("{0}, Status: {1}", base.ToString(), Status);
         }
     }
     /// <summary>
@@ -692,7 +696,7 @@ namespace Wbs.Everdigm.Desktop
         }
         public override string ToString()
         {
-            return string.Format("{0}, UniqueID: {1}, IMEI: {2}, DispositionFlags: {3}({4})", 
+            return format("{0}, UniqueID: {1}, IMEI: {2}, DispositionFlags: {3}({4})", 
                 base.ToString(), UniqueID, IMEI, DispositionFlags, CustomConvert.IntToDigit(DispositionFlags, CustomConvert.HEX, 4));
         }
     }
@@ -740,7 +744,7 @@ namespace Wbs.Everdigm.Desktop
         }
         public override string ToString()
         {
-            return string.Format("{0}, Payload: {1}", base.ToString(), CustomConvert.GetHex(Payload));
+            return format("{0}, Payload: {1}", base.ToString(), CustomConvert.GetHex(Payload));
         }
     }
     /// <summary>
@@ -778,7 +782,7 @@ namespace Wbs.Everdigm.Desktop
         }
         public override string ToString()
         {
-            return string.Format("{0}, UniqueID: {1}, IMEI: {2}, AutoID: {3}, Status: {4}({5})",
+            return format("{0}, UniqueID: {1}, IMEI: {2}, AutoID: {3}, Status: {4}({5})",
                 base.ToString(), UniqueID, IMEI, AutoID, Status, GetStatus());
         }
         public string GetStatus()
@@ -786,7 +790,7 @@ namespace Wbs.Everdigm.Desktop
         public string GetStatus(short status)
         {
             if (status > 0)
-                return string.Format("Successful, order of message in the MT message queue: {0}", status);
+                return format("Successful, order of message in the MT message queue: {0}", status);
             var ret="";
             switch (status)
             {

@@ -46,9 +46,6 @@
     <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>including\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Runtime.Serialization" />
@@ -640,7 +637,6 @@
     </Compile>
     <Compile Include="common\EquipmentFunctional.cs" />
     <Compile Include="common\ErrorChart.cs" />
-    <Compile Include="common\JsonConverter.cs" />
     <Compile Include="common\OfficeConvert.cs" />
     <Compile Include="common\PredicateExtensions.cs" />
     <Compile Include="common\TodayWorktimeChart.cs" />

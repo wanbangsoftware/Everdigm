@@ -94,6 +94,7 @@
     <Compile Include="Handlers\PartialDataHandlerSMS.cs" />
     <Compile Include="Handlers\PartialDataHandlerTracker.cs" />
     <Compile Include="Handlers\PartialDataHandlerWebRequeste.cs" />
+    <Compile Include="Handlers\PartialDataHandlerWorkTime2Excel.cs" />
     <Compile Include="Handlers\SocketServer.cs" />
     <Compile Include="Iridium\IridiumDataEvent.cs" />
     <Compile Include="Iridium\IridiumPackage.cs" />
@@ -113,7 +114,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -126,7 +126,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
