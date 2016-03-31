@@ -593,6 +593,7 @@
     </div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="FooterContentPlaceHolder" runat="server">
+    <script type="text/javascript" src="../js/es6-promise.min.js"></script>
     <script type="text/javascript" src="../js/CanvasJS/canvasjs.min.js"></script>
     <script src="../js/html2canvas.min.js"></script>
     <script type="text/javascript" src="../scripts/main/equipment.work.js"></script>
