@@ -86,7 +86,6 @@
     </Compile>
     <Compile Include="Handlers\DataHandler.cs" />
     <Compile Include="Handlers\OfficeConvert.cs" />
-    <Compile Include="Handlers\PartialDataHandlerBLLs.cs" />
     <Compile Include="Handlers\PartialDataHandlerClient.cs" />
     <Compile Include="Handlers\PartialDataHandlerCommand.cs" />
     <Compile Include="Handlers\PartialDataHandlerDataHandler.cs" />

@@ -26,15 +26,15 @@ namespace Wbs.Everdigm.Database
             {
                 try
                 {
-                    context.SubmitChanges(System.Data.Linq.ConflictMode.ContinueOnConflict);
+                    context.SubmitChanges(ConflictMode.ContinueOnConflict);
                 }
-                catch (System.Data.Linq.ChangeConflictException)
+                catch (ChangeConflictException)
                 {
-                    foreach (System.Data.Linq.ObjectChangeConflict occ in context.ChangeConflicts)
+                    foreach (ObjectChangeConflict occ in context.ChangeConflicts)
                     {
-                        occ.Resolve(System.Data.Linq.RefreshMode.OverwriteCurrentValues);
-                        occ.Resolve(System.Data.Linq.RefreshMode.KeepCurrentValues);
-                        occ.Resolve(System.Data.Linq.RefreshMode.KeepChanges);
+                        occ.Resolve(RefreshMode.OverwriteCurrentValues);
+                        occ.Resolve(RefreshMode.KeepCurrentValues);
+                        occ.Resolve(RefreshMode.KeepChanges);
                     }
                     context.SubmitChanges();
                 }

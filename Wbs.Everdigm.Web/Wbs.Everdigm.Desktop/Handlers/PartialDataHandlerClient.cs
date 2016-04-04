@@ -2,6 +2,7 @@
 using Wbs.Sockets;
 using Wbs.Utilities;
 using Wbs.Everdigm.Database;
+using Wbs.Everdigm.BLL;
 
 namespace Wbs.Everdigm.Desktop
 {
@@ -32,14 +33,14 @@ namespace Wbs.Everdigm.Desktop
         private void HandleClientDisconnect(int socket)
         {
             // 更新设备的在线状态
-            EquipmentInstance.Update(f => f.Socket == socket, act =>
+            new EquipmentBLL().Update(f => f.Socket == socket, act =>
             {
                 act.Socket = 0;
                 act.OnlineStyle = (byte)LinkType.SMS;
                 act.Voltage = "G0000";
             });
             // 更新终端的在线状态
-            TerminalInstance.Update(f => f.Socket == socket, act =>
+            new TerminalBLL().Update(f => f.Socket == socket, act =>
             {
                 act.Socket = 0;
                 act.OnlineStyle = (byte)LinkType.SMS;
@@ -142,7 +143,7 @@ namespace Wbs.Everdigm.Desktop
             //        act.OnlineStyle = (byte)LinkType.SMS;
             //    });
             // 清理TX10G的旧链接记录
-            TrackerInstance.Update(f => f.State > 0 && f.LastActionAt < DateTime.Now.AddMinutes(-15), act =>
+            new TrackerBLL().Update(f => f.State > 0 && f.LastActionAt < DateTime.Now.AddMinutes(-15), act =>
             {
                 // 删除socket
                 act.Socket = 0;
@@ -201,7 +202,7 @@ namespace Wbs.Everdigm.Desktop
         /// </summary>
         private void HandleOnline(string sim, ushort CommandID, AsyncUserDataBuffer data)
         {
-            EquipmentInstance.Update(f => f.TB_Terminal.Sim.Equals(sim), act =>
+            new EquipmentBLL().Update(f => f.TB_Terminal.Sim.Equals(sim), act =>
             {
                 act.IP = data.IP;
                 act.Port = data.Port;
@@ -220,7 +221,7 @@ namespace Wbs.Everdigm.Desktop
                 act.LastActionBy = GetOnlineStyle(data.PackageType);
                 act.LastActionTime = data.ReceiveTime;
             });
-            TerminalInstance.Update(f => f.Sim.Equals(sim), act =>
+            new TerminalBLL().Update(f => f.Sim.Equals(sim), act =>
             {
                 act.Socket = data.SocketHandle;
                 if (act.OnlineStyle == (byte)LinkType.OFF && CommandID == 0x2000)
@@ -236,7 +237,7 @@ namespace Wbs.Everdigm.Desktop
             // 查看是否为TX10G的命令
             if (CommandID >= 0x7000 && CommandID <= 0x7040)
             {
-                TrackerInstance.Update(f => f.SimCard.Equals(sim), act =>
+                new TrackerBLL().Update(f => f.SimCard.Equals(sim), act =>
                 {
                     // 标记为在线状态
                     act.State = 1;

@@ -2,6 +2,9 @@
 using System.Linq;
 using Wbs.Everdigm.Database;
 using Wbs.Utilities;
+using Wbs.Everdigm.BLL;
+using Wbs.Protocol;
+using Wbs.Protocol.TX300;
 
 namespace Wbs.Everdigm.Desktop
 {
@@ -35,7 +38,7 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="data"></param>
         private void HandleIridiumMTServerSendStatus(IridiumData data)
         {
-            CommandInstance.Update(f => f.TB_Terminal.TB_Satellite.CardNo.Equals(data.IMEI) &&
+            new CommandBLL().Update(f => f.TB_Terminal.TB_Satellite.CardNo.Equals(data.IMEI) &&
                 f.Status == (byte)CommandStatus.SatelliteHandled && f.ActualSendTime == (DateTime?)null, action =>
                 {
                     // 更新等待铱星处理的终端的命令为已发送状态
@@ -50,7 +53,7 @@ namespace Wbs.Everdigm.Desktop
         private void HandleIridiumCommandResponseed(IridiumData data)
         {
             // 更新之前发送到网关或终端已读取的命令为发送成功  2015/11/27 12:38
-            CommandInstance.Update(f => f.TB_Terminal.TB_Satellite.CardNo.Equals(data.IMEI) && f.Command == "0x1000" &&
+            new CommandBLL().Update(f => f.TB_Terminal.TB_Satellite.CardNo.Equals(data.IMEI) && f.Command == "0x1000" &&
             (f.Status == (byte)CommandStatus.SentToDestBySAT || f.Status == (byte)CommandStatus.SentBySAT) && 
             f.ActualSendTime > DateTime.Now.AddMinutes(-60), act =>
                 {
@@ -63,7 +66,7 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="data"></param>
         private void HandleIridiumMTModelReceiveStatus(IridiumData data)
         {
-            CommandInstance.Update(f => f.TB_Terminal.TB_Satellite.CardNo.Equals(data.IMEI) &&
+            new CommandBLL().Update(f => f.TB_Terminal.TB_Satellite.CardNo.Equals(data.IMEI) &&
                 f.IridiumMTMSN == data.MTMSN && f.Status == (byte)CommandStatus.SentBySAT, act =>
             {
                 act.Status = (byte)CommandStatus.SentToDestBySAT;
@@ -92,22 +95,24 @@ namespace Wbs.Everdigm.Desktop
                 location.Unpackate();
 
                 // 通过卫星的IMEI号码查找终端
-                var terminal = TerminalInstance.Find(f => f.TB_Satellite.CardNo.Equals(data.IMEI));
+                var tbll = new TerminalBLL();
+                var ebll = new EquipmentBLL();
+                var terminal = tbll.Find(f => f.TB_Satellite.CardNo.Equals(data.IMEI));
                 TB_Equipment equipment = null;
                 if (null != terminal)
                 {
-                    TerminalInstance.Update(f => f.id == terminal.id, act =>
+                    tbll.Update(f => f.id == terminal.id, act =>
                     {
                         act.OnlineStyle = (byte)LinkType.SATELLITE;
                         // 同时更新终端的最后链接时间
                         act.OnlineTime = data.Time;
                     });
-                    equipment = EquipmentInstance.Find(f => f.Terminal == terminal.id);
+                    equipment = ebll.Find(f => f.Terminal == terminal.id);
                     // 更新设备的总运转时间
                     HandleEquipmentRuntime(equipment, worktime);
                     if (null != equipment)
                     {
-                        EquipmentInstance.Update(f => f.id == equipment.id, act =>
+                        ebll.Update(f => f.id == equipment.id, act =>
                         {
                             act.OnlineStyle = (byte)LinkType.SATELLITE;
                             act.OnlineTime = data.Time;
@@ -157,24 +162,25 @@ namespace Wbs.Everdigm.Desktop
                     });
                 }
                 // 保存TX300历史记录
-                SaveTX300History(new Protocol.TX300.TX300()
+                SaveTX300History(new TX300()
                 {
                     CommandID = 0x1000,
                     MsgContent = data.Payload,
-                    ProtocolType = Wbs.Protocol.ProtocolTypes.SATELLITE,
+                    ProtocolType = ProtocolTypes.SATELLITE,
                     // 默认装载机终端类型 2015/09/22 09:40
-                    TerminalType = null == terminal ? Protocol.TerminalTypes.LD : terminal.Type.Value,
+                    TerminalType = null == terminal ? TerminalTypes.LD : terminal.Type.Value,
                     // 没有终端时，用IMEI号码的末尾11位数字表示终端号码 2015/09/22 09:40
                     TerminalID = null == terminal ? data.IMEI.Substring(4) : terminal.Sim,
                     TotalLength = (ushort)data.Payload.Length
-                }, data.Time, EquipmentInstance.GetFullNumber(equipment));
+                }, data.Time, ebll.GetFullNumber(equipment));
 
                 try
                 {
                     long? posId = (long?)null;
                     if (location.Available)
                     {
-                        var pos = PositionInstance.GetObject();
+                        var posbll = new PositionBLL();
+                        var pos = posbll.GetObject();
                         pos.Latitude = location.Latitude;
                         pos.Longitude = location.Longitude;
                         pos.NS = location.NSI;
@@ -185,14 +191,15 @@ namespace Wbs.Everdigm.Desktop
                         // 没有终端时，用IMEI号码的末尾11位数字表示终端号码 2015/09/22 09:40
                         pos.Terminal = null == terminal ? data.IMEI.Substring(4) : (terminal.Sim.Length < 11 ? (terminal.Sim + "000") : terminal.Sim);
                         pos.Type = location.Report + "(Eng " + location.EngFlag + ")(SAT)";
-                        PositionInstance.Add(pos);
+                        posbll.Add(pos);
                         posId = pos.id;
                     }
 
                     // 处理报警信息
                     if (alarms != ALARM)
                     {
-                        var arm = AlarmInstance.GetObject();
+                        var armbll= new AlarmBLL();
+                        var arm = armbll.GetObject();
                         arm.Code = alarms;
                         arm.AlarmTime = data.Time;
                         arm.Equipment = null == equipment ? (int?)null : equipment.id;
@@ -200,7 +207,7 @@ namespace Wbs.Everdigm.Desktop
                         arm.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
                         // 没有终端时，用IMEI号码的末尾11位数字表示终端号码 2015/09/22 09:40
                         arm.Terminal = null == terminal ? data.IMEI.Substring(4) : (terminal.Sim.Length < 11 ? (terminal.Sim + "000") : terminal.Sim);
-                        AlarmInstance.Add(arm);
+                        armbll.Add(arm);
                     }
 
                 }
@@ -227,16 +234,16 @@ namespace Wbs.Everdigm.Desktop
         private void HandleIridiumModelMOPayload(IridiumData data)
         {
             // 如果是正式的协议则以正常的方式处理
-            if (data.Length >= Wbs.Protocol.TX300.TX300Items.header_length)
+            if (data.Length >= TX300Items.header_length)
             {
                 // TX300通讯协议首字节必定大于等于17
                 // 卫星通讯协议首字节必定等于01
-                if (data.Payload[0] >= 17 && 
-                    Wbs.Protocol.ProtocolTypes.IsTX300(data.Payload[2]) &&
-                            Wbs.Protocol.TerminalTypes.IsTX300(data.Payload[3]))
+                if (data.Payload[0] >= 17 &&
+                    ProtocolTypes.IsTX300(data.Payload[2]) &&
+                            TerminalTypes.IsTX300(data.Payload[3]))
                 {
                     // 根据卫星号码查询终端的Sim卡号码并将其填入包头结构里
-                    var terminal = TerminalInstance.Find(f => f.TB_Satellite.CardNo.Equals(data.IMEI) && f.Delete == false);
+                    var terminal = new TerminalBLL().Find(f => f.TB_Satellite.CardNo.Equals(data.IMEI) && f.Delete == false);
                     if (null != terminal)
                     {
                         var sim = terminal.Sim;
@@ -272,23 +279,26 @@ namespace Wbs.Everdigm.Desktop
         /// 记录铱星的MO次数和长度
         /// </summary>
         /// <param name="data"></param>
-        private void HandleIridiumMOFlow(IridiumData data) {
-            var iridium = SatelliteInstance.Find(f => f.CardNo.Equals(data.IMEI));
+        private void HandleIridiumMOFlow(IridiumData data)
+        {
+            var bll = new SatelliteBLL();
+            var iridium = bll.Find(f => f.CardNo.Equals(data.IMEI));
             if (null != iridium)
             {
                 var monthly = int.Parse(DateTime.Now.ToString("yyyyMM"));
-                var flow = FlowInstance.Find(f => f.Iridium == iridium.id && f.Monthly == monthly);
+                var fbll= new IridiumFlowBLL();
+                var flow = fbll.Find(f => f.Iridium == iridium.id && f.Monthly == monthly);
                 if (null == flow)
                 {
-                    flow = FlowInstance.GetObject();
+                    flow = fbll.GetObject();
                     flow.Iridium = iridium.id;
                     flow.MOTimes = 1;
                     flow.MOPayload = data.Length;
-                    FlowInstance.Add(flow);
+                    fbll.Add(flow);
                 }
                 else
                 {
-                    FlowInstance.Update(f => f.id == flow.id, act =>
+                    fbll.Update(f => f.id == flow.id, act =>
                     {
                         act.MOTimes += 1;
                         act.MOPayload += data.Length;
@@ -302,18 +312,19 @@ namespace Wbs.Everdigm.Desktop
         private void HandleIridiumMTFlow(int iridium, int length)
         {
             var monthly = int.Parse(DateTime.Now.ToString("yyyyMM"));
-            var flow = FlowInstance.Find(f => f.Iridium == iridium && f.Monthly == monthly);
+            var bll = new IridiumFlowBLL();
+            var flow = bll.Find(f => f.Iridium == iridium && f.Monthly == monthly);
             if (null == flow)
             {
-                flow = FlowInstance.GetObject();
+                flow = bll.GetObject();
                 flow.Iridium = iridium;
                 flow.MTTimes = 1;
                 flow.MTPayload = length;
-                FlowInstance.Add(flow);
+                bll.Add(flow);
             }
             else
             {
-                FlowInstance.Update(f => f.id == flow.id, act =>
+                bll.Update(f => f.id == flow.id, act =>
                 {
                     act.MTTimes += 1;
                     act.MTPayload += length;
@@ -327,11 +338,12 @@ namespace Wbs.Everdigm.Desktop
         {
             if (null == _server) return;
 
-            var list = CommandInstance.FindList(f => f.ScheduleTime >= DateTime.Now.AddSeconds(-30) &&
+            var bll = new CommandBLL();
+            var list = bll.FindList(f => f.ScheduleTime >= DateTime.Now.AddSeconds(-30) &&
                 f.Status == (byte)CommandStatus.WaitingForSatellite && f.ActualSendTime == (DateTime?)null).ToList();
             if (null != list && list.Count > 0)
             {
-                HandleIridiumCommand(list.First());
+                HandleIridiumCommand(list.First(), bll);
             }
         }
         /// <summary>
@@ -342,27 +354,28 @@ namespace Wbs.Everdigm.Desktop
         {
             ushort num = 0;
             var now = DateTime.Now;
-            var obj = MtmsnInstance.Find(f => f.Year == (short)now.Year && f.Month == (byte)now.Month);
+            var bll = new IridiumMMSNBLL();
+            var obj = bll.Find(f => f.Year == (short)now.Year && f.Month == (byte)now.Month);
             if (null == obj)
             {
-                obj = MtmsnInstance.GetObject();
+                obj = bll.GetObject();
                 obj.Year = (short)now.Year;
                 obj.Month = (byte)now.Month;
                 obj.Number = 0;
-                MtmsnInstance.Add(obj);
+                bll.Add(obj);
                 num = IririumMTMSN.CalculateMTMSN(now, 0);
             }
             else
             {
                 num = IririumMTMSN.CalculateMTMSN(now, (ushort)obj.Number);
-                MtmsnInstance.Update(f => f.id == obj.id, act =>
+                bll.Update(f => f.id == obj.id, act =>
                 {
                     act.Number = (short)(act.Number + 1);
                 });
             }
             return num;
         }
-        private void HandleIridiumCommand(TB_Command obj)
+        private void HandleIridiumCommand(TB_Command obj, CommandBLL bll)
         {
             if (null != OnIridiumSend)
             {
@@ -376,7 +389,7 @@ namespace Wbs.Everdigm.Desktop
                 e.Data.Payload[2] = Protocol.ProtocolTypes.SATELLITE;
                 OnIridiumSend(this, e);
                 // 更新命令发送状态
-                CommandInstance.Update(f => f.id == obj.id, act =>
+                bll.Update(f => f.id == obj.id, act =>
                 {
                     act.Status = (byte)CommandStatus.SatelliteHandled;
                 });

@@ -3,6 +3,7 @@ using System.IO;
 using Wbs.Everdigm.Database;
 using Microsoft.Office.Interop.Excel;
 using System.Configuration;
+using Wbs.Everdigm.BLL;
 
 namespace Wbs.Everdigm.Desktop
 {
@@ -26,7 +27,7 @@ namespace Wbs.Everdigm.Desktop
             try
             {
                 // 这里只查询excel导出到pdf的记录
-                var excel = ExcelHandlerInstance.Find(f => f.Handled == false && f.Equipment == (int?)null && f.Deleted == false);
+                var excel = new ExcelHandlerBLL().Find(f => f.Handled == false && f.Equipment == (int?)null && f.Deleted == false);
                 if (null != excel)
                 {
                     HandleWorkDetail(excel.id, excel.TB_WorkDetail);
@@ -145,7 +146,7 @@ namespace Wbs.Everdigm.Desktop
             if (ok)
             {
                 var resp = ("~/" + path + "/" + name).Replace("~", "..").Replace("\\", "/");
-                ExcelHandlerInstance.Update(f => f.id == detail, act =>
+                new ExcelHandlerBLL().Update(f => f.id == detail, act =>
                 {
                     act.Handled = true;
                     act.Source = source;

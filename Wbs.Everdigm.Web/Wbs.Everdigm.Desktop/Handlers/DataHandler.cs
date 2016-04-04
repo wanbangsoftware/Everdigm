@@ -2,6 +2,7 @@
 
 using Wbs.Sockets;
 using Wbs.Utilities;
+using Wbs.Everdigm.BLL;
 
 namespace Wbs.Everdigm.Desktop
 {
@@ -140,10 +141,11 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="data"></param>
         private void HandleException(string trace, string data)
         {
-            var obj = ErrorInstance.GetObject();
+            var bll = new ErrorBLL();
+            var obj = bll.GetObject();
             obj.ErrorData = data;
             obj.ErrorMessage = trace;
-            ErrorInstance.Add(obj);
+            bll.Add(obj);
         }
         /// <summary>
         /// 处理接受且还未处理地址信息的定位记录
@@ -152,27 +154,22 @@ namespace Wbs.Everdigm.Desktop
         {
             try
             {
-                var pos = PositionInstance.Find(f => f.Updated < 2);
+                var bll = new PositionBLL();
+                var pos = bll.Find(f => f.Updated < 2);
                 if (null != pos)
                 {
                     ShowUnhandledMessage("position: " + pos.id);
                 }
-                ClearGpsAddressTimeout();
+                // 清理获取GPS地址信息失败的记录
+                bll.Update(f => f.Updated == 1 && f.ReceiveTime < DateTime.Now.AddMinutes(-10), act =>
+                {
+                    act.Updated = 0;
+                });
             }
             catch (Exception e)
             {
                 ShowUnhandledMessage(format("{0}GPS address handler error: {1}{2}{3}", Now, e.Message, Environment.NewLine, e.StackTrace));
             }
-        }
-        /// <summary>
-        /// 清理获取GPS地址信息失败的记录
-        /// </summary>
-        private void ClearGpsAddressTimeout()
-        {
-            PositionInstance.Update(f => f.Updated == 1 && f.ReceiveTime < DateTime.Now.AddMinutes(-10), act =>
-            {
-                act.Updated = 0;
-            });
         }
     }
 }

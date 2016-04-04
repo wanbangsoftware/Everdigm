@@ -7,6 +7,7 @@ using Wbs.Everdigm.Common;
 using Wbs.Utilities;
 using System.Configuration;
 using Microsoft.Office.Interop.Excel;
+using Wbs.Everdigm.BLL;
 
 namespace Wbs.Everdigm.Desktop
 {
@@ -23,12 +24,13 @@ namespace Wbs.Everdigm.Desktop
         {
             try
             {
-                var excel = ExcelHandlerInstance.Find(f => f.Handled == false && f.Work == (int?)null && f.Deleted == false);
+                var bll = new ExcelHandlerBLL();
+                var excel = bll.Find(f => f.Handled == false && f.Work == (int?)null && f.Deleted == false);
                 if (null != excel)
                 {
                     if (string.IsNullOrEmpty(excel.Data) || excel.Data.Equals("[]"))
                     {
-                        ExcelHandlerInstance.Update(f => f.id == excel.id, act => { act.Handled = true; });
+                        bll.Update(f => f.id == excel.id, act => { act.Handled = true; });
                     }
                     else
                     {
@@ -138,7 +140,7 @@ namespace Wbs.Everdigm.Desktop
             }
 
             var target = "../" + source.Replace(WEB_PATH, "").Replace("\\", "/");
-            ExcelHandlerInstance.Update(f => f.id == excel.id, act =>
+            new ExcelHandlerBLL().Update(f => f.id == excel.id, act =>
             {
                 act.Handled = true;
                 act.Target = target;

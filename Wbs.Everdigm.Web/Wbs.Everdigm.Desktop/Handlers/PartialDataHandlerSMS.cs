@@ -2,6 +2,7 @@
 
 using Wbs.Sockets;
 using Wbs.Utilities;
+using Wbs.Everdigm.BLL;
 
 namespace Wbs.Everdigm.Desktop
 {
@@ -21,7 +22,8 @@ namespace Wbs.Everdigm.Desktop
                 return;
             _lastCheckSMSData = DateTime.Now;
 
-            var sms = SmsInstance.Find(f => f.Handled == false);
+            var bll= new SmsBLL(); 
+            var sms = bll.Find(f => f.Handled == false);
             if (null != sms)
             {
                 using (var data = new AsyncUserDataBuffer())
@@ -43,12 +45,8 @@ namespace Wbs.Everdigm.Desktop
                     }
                     HandleData(data);
                 }
-                UpdateSMSDataHandled(sms.id);
+                bll.Update(f => f.id == sms.id, act => { act.Handled = true; });
             }
-        }
-        private void UpdateSMSDataHandled(long id)
-        {
-            SmsInstance.Update(f => f.id == id, act => { act.Handled = true; });
         }
     }
 }

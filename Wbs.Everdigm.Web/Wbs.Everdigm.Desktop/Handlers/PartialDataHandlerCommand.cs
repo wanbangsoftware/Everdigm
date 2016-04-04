@@ -5,6 +5,7 @@ using System.Configuration;
 
 using Wbs.Everdigm.Common;
 using Wbs.Everdigm.Database;
+using Wbs.Everdigm.BLL;
 using Wbs.Protocol.TX300;
 using Wbs.Utilities;
 using Wbs.Sockets;
@@ -31,8 +32,8 @@ namespace Wbs.Everdigm.Desktop
         public void CheckGSMCommand()
         {
             if (null == _server) return;
-
-            var list = CommandInstance.FindList(f => f.ScheduleTime >= DateTime.Now.AddSeconds(-30) &&
+            var bll = new CommandBLL();
+            var list = bll.FindList(f => f.ScheduleTime >= DateTime.Now.AddSeconds(-30) &&
                 GsmStatus.Take(2).Contains(f.Status.Value) &&
                 f.TB_Terminal.OnlineStyle != (byte)LinkType.SATELLITE).ToList();
             foreach (var cmd in list)
@@ -70,11 +71,11 @@ namespace Wbs.Everdigm.Desktop
                 {
                     SaveTerminalData((int?)null == cmd.Terminal ? -1 : cmd.Terminal.Value, sim, AsyncDataPackageType.TCP, cmd.Content.Length / 2, false, DateTime.Now);
                     ShowUnhandledMessage(Now + "Send command(" + (1 == ret ? CommandStatus.SentByTCP : CommandStatus.TCPNetworkError) + "): " + cmd.Content);
-                    UpdateGsmCommand(cmd, (1 == ret ? CommandStatus.SentByTCP : CommandStatus.TCPNetworkError));
+                    UpdateGsmCommand(cmd, (1 == ret ? CommandStatus.SentByTCP : CommandStatus.TCPNetworkError), bll);
                 }
             }
             // 待发送的命令发送完之后，清理超时的命令
-            ClearTimedoutCommands();
+            ClearTimedoutCommands(bll);
         }
         private List<byte> _iridiumStatus = null;
         /// <summary>
@@ -117,7 +118,7 @@ namespace Wbs.Everdigm.Desktop
         /// </summary>
         private void Handle0xBB0FStatus()
         {
-            CommandInstance.Update(f => f.ScheduleTime >= DateTime.Now.AddMinutes(-10) && 
+            new CommandBLL().Update(f => f.ScheduleTime >= DateTime.Now.AddMinutes(-10) && 
                 f.Status == (byte)CommandStatus.SentBySMS && f.Command == "0xBB0F", act =>
             {
                 act.Status = (byte)CommandStatus.Returned;
@@ -126,15 +127,15 @@ namespace Wbs.Everdigm.Desktop
         /// <summary>
         /// 清理超时的命令为发送失败状态
         /// </summary>
-        private void ClearTimedoutCommands()
+        private void ClearTimedoutCommands(CommandBLL bll)
         {
             // 更新GSM状态下的命令超时的记录
-            CommandInstance.Update(f => f.ScheduleTime <= DateTime.Now.AddMinutes(-5) && GsmStatus.Contains(f.Status.Value), act =>
+            bll.Update(f => f.ScheduleTime <= DateTime.Now.AddMinutes(-5) && GsmStatus.Contains(f.Status.Value), act =>
             {
                 act.Status = (byte)CommandStatus.Timedout;
             });
             // 更新卫星发送下的超时命令记录，超过80分钟没有回复的，当作超时
-            CommandInstance.Update(f => IridiumStatus.Skip(2).Contains(f.Status.Value) &&
+            bll.Update(f => IridiumStatus.Skip(2).Contains(f.Status.Value) &&
                 f.ScheduleTime <= DateTime.Now.AddMinutes(-IRIDIUM_MT_TIMEOUT), act =>
             {
                 act.Status = (byte)CommandStatus.Timedout;
@@ -144,9 +145,9 @@ namespace Wbs.Everdigm.Desktop
         /// 更新命令的发送状态
         /// </summary>
         /// <param name="obj"></param>
-        private void UpdateGsmCommand(TB_Command obj, CommandStatus status)
+        private void UpdateGsmCommand(TB_Command obj, CommandStatus status, CommandBLL bll)
         {
-            CommandInstance.Update(f => f.id == obj.id, act =>
+            bll.Update(f => f.id == obj.id, act =>
             {
                 act.Status = (byte)status;
                 if (status == CommandStatus.SentByTCP)
@@ -160,9 +161,9 @@ namespace Wbs.Everdigm.Desktop
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="status"></param>
-        private void UpdateIridiumCommand(TB_Command obj, CommandStatus status)
+        private void UpdateIridiumCommand(TB_Command obj, CommandStatus status,CommandBLL bll)
         {
-            CommandInstance.Update(f => f.id == obj.id, act =>
+            bll.Update(f => f.id == obj.id, act =>
             {
                 act.Status = (byte)status;
                 act.ActualSendTime = DateTime.Now;
@@ -174,20 +175,21 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="tx300"></param>
         private void HandleGsmCommandResponsed(TX300 tx300)
         {
+            var bll = new CommandBLL();
             // 查找定期时间内发送的相同命令记录，直取最后一条命令
-            var cmd = CommandInstance.FindList<TB_Command>(f => f.DestinationNo.Equals(tx300.TerminalID) &&
+            var cmd = bll.FindList<TB_Command>(f => f.DestinationNo.Equals(tx300.TerminalID) &&
                 f.Command.Equals("0x" + CustomConvert.IntToDigit(tx300.CommandID, CustomConvert.HEX, 4)) &&
                 f.ScheduleTime >= DateTime.Now.AddMinutes(tx300.ProtocolType == Protocol.ProtocolTypes.SATELLITE ? -60 : -3),
                 "ScheduleTime", true).FirstOrDefault();
 
             if (null != cmd)
             {
-                CommandInstance.Update(f => f.id == cmd.id, act =>
+                bll.Update(f => f.id == cmd.id, act =>
                 {
                     act.Status = (byte)CommandStatus.Returned;
                 });
             }
-            //CommandInstance.Update(f => f.DestinationNo == tx300.TerminalID &&
+            //bll.Update(f => f.DestinationNo == tx300.TerminalID &&
             //    f.Command == "0x" + CustomConvert.IntToDigit(tx300.CommandID, CustomConvert.HEX, 4) &&
             //    f.ScheduleTime >= DateTime.Now.AddMinutes(-3) //&&
             //    //GsmStatus.Skip(2).Contains(f.Status.Value),
