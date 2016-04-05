@@ -10,6 +10,7 @@ namespace Wbs.Everdigm.Common
     /// </summary>
     public class WorktimeChart : IEquatable<WorktimeChart>
     {
+        public string date;
         /// <summary>
         /// Javascript格式的日期
         /// </summary>
@@ -34,12 +35,12 @@ namespace Wbs.Everdigm.Common
         public bool Equals(WorktimeChart other)
         {
             if (null == other) return false;
-            return other.x == this.x;
+            return other.x == x;
         }
 
         public override int GetHashCode()
         {
-            return (int)this.x;
+            return (int)x;
         }
     }
 }

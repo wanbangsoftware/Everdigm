@@ -512,7 +512,7 @@ namespace Wbs.Everdigm.Web
         public static DateTime JavascriptDateToDateTime(long time)
         {
             var date = new DateTime(1970, 1, 1);
-            return date.AddMilliseconds(time);
+            return date.AddMilliseconds(time).ToLocalTime();
         }
     }
 }

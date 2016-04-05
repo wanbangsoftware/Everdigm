@@ -275,16 +275,13 @@ namespace Wbs.Everdigm.BLL
         {
             var ret = "";
             if ((int?)null == time || 0 == time)
-                ret = "0:00";
+                ret = "0";
             else
             {
-                //if (time.Value < 60) return "00:"+time.Value.ToString() + "min";
-                int hour = time.Value / 60, minute = time.Value % 60;
-                if (hour < 1000)
-                    ret = string.Format("{0:00}:{1:00}", hour, minute);
-                ret = string.Format("{0:0,0}:{1:00}", hour, minute);
+                double tm = time.Value / 60.0;
+                ret = string.Format("{0:0,00.00}", tm);
             }
-            return showHour ? (ret.Replace(":", " hr ") + " min") : ret;
+            return ret;
         }
     }
 }

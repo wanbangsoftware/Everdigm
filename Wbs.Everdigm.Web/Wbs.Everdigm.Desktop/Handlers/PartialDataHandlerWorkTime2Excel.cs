@@ -84,7 +84,7 @@ namespace Wbs.Everdigm.Desktop
                     row = baseRow + i % 39;
                     row += lineStart;
                     sheet.Cells[row, cell] = count;
-                    sheet.Cells[row, cell + 1] = CustomConvert.JavascriptDateToDateTime(works[i].x).ToString("yyyy/MM/dd");
+                    sheet.Cells[row, cell + 1] = works[i].date;
                     sheet.Cells[row, cell + 2] = works[i].y;
                     total += works[i].y;
                     pcount += works[i].y;

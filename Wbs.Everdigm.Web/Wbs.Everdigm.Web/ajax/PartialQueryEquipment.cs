@@ -258,6 +258,8 @@ namespace Wbs.Everdigm.Web.ajax
             if (null != obj)
             {
                 var date = DateTime.Parse(GetParamenter("date") + " 00:00:00");
+                // 如果不是求平均值则将日期往前推一天
+                //if (!averagable) { date = date.AddDays(-1); }
                 var date1 = DateTime.Parse(GetParamenter("date1") + " 23:59:59");
                 List<WorktimeChart> avg = new List<WorktimeChart>();
                 List<WorktimeChart> work = new List<WorktimeChart>();
@@ -265,12 +267,12 @@ namespace Wbs.Everdigm.Web.ajax
                 // 循环每天一个节点
                 while (dt.Ticks < date1.Ticks)
                 {
-                    avg.Add(new WorktimeChart() { x = Utility.DateTimeToJavascriptDate(dt.Date), y = 0, min = 0 });
-                    work.Add(new WorktimeChart() { x = Utility.DateTimeToJavascriptDate(dt.Date), y = 0, min = 0 });
+                    avg.Add(new WorktimeChart() { date = dt.ToString("yyyy/MM/dd"), x = Utility.DateTimeToJavascriptDate(dt.Date), y = 0, min = 0 });
+                    work.Add(new WorktimeChart() { date = dt.ToString("yyyy/MM/dd"), x = Utility.DateTimeToJavascriptDate(dt.Date), y = 0, min = 0 });
                     dt = dt.AddDays(1);
                 }
                 var macid = EquipmentInstance.GetFullNumber(obj);
-                var cmds = new String[] { "0x1000", "0x1001", "0x5000", "0x6004" };
+                var cmds = new string[] { "0x1000", "0x1001", "0x5000", "0x6004" };
                 var runtimes = DataInstance.FindList(f => f.mac_id.Equals(macid) && cmds.Contains(f.command_id) &&
                     f.receive_time >= date && f.receive_time <= date1).OrderBy(o => o.receive_time);
                 if (null != runtimes)
@@ -326,9 +328,10 @@ namespace Wbs.Everdigm.Web.ajax
                         if (null == temp) continue;
 
                         uint run = BitConverter.ToUInt32(temp, index);
-                        // 更新本日最初的运转时间
+                        // 更新本日最后的运转时间
                         var wk = work.First(f => f.x == today);
-                        if (wk.min == 0) { wk.min = run; }
+                        //if (wk.min == 0) { wk.min = run; }
+                        wk.min = run;
 
                         if (first == 0)
                             first = run;
