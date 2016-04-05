@@ -92,7 +92,7 @@ function getWorktimes() {
                     data.Average[i].x = new Date(data.Average[i].x);
                     data.Worktime[i].x = new Date(data.Worktime[i].x);
                     if (data.Worktime[i].y > 0) {
-                        data.Worktime[i].indexLabel = floatToHHMM(data.Worktime[i].y);
+                        data.Worktime[i].indexLabel = data.Worktime[i].y + "hrs";//floatToHHMM(data.Worktime[i].y);
                     }
                 }
                 showChart(data);

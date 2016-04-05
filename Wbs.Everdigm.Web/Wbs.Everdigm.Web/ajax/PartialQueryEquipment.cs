@@ -358,9 +358,10 @@ namespace Wbs.Everdigm.Web.ajax
         }
         private double FormatTime(uint time)
         {
-            uint hour = time / 60;
-            uint minute = time % 60;
-            return double.Parse(string.Format("{0}.{1}", hour, minute), System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+            //uint hour = time / 60;
+            //uint minute = time % 60;
+            double hour = (time * 1.0 / 60.0);
+            return double.Parse(hour.ToString("0.00"));
         }
         /// <summary>
         /// 查找定位地址属于某个省份的设备列表

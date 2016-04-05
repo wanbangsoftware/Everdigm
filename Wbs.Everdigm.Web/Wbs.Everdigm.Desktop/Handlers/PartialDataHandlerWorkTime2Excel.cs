@@ -46,7 +46,7 @@ namespace Wbs.Everdigm.Desktop
         /// <summary>
         /// 第一页开始行、结束行、页大小、页行数
         /// </summary>
-        private static int lineStart = 13, pageSize = 80, pageRows = 40;
+        private static int lineStart = 13, pageSize = 78, pageRows = 40;
 
         private void ExportWorkTimeToExcel(TB_ExcelHandler excel)
         {
@@ -74,35 +74,51 @@ namespace Wbs.Everdigm.Desktop
                 // 组织数据
                 List<WorktimeChart> works = JsonConverter.ToObject<List<WorktimeChart>>(excel.Data);
                 int row = 0, cell = 1, page = 0, len = works.Count, count = 0;
-                double total = 0.0;
+                double total = 0.0,pcount=0.0;
                 for (int i = 0; i < len; i++)
                 {
                     count++;
                     page = i / (pageSize);
                     var baseRow = page * pageRows;
-                    cell = (i / 40) % 2 == 0 ? 1 : 6;
-                    row = baseRow + i % 40;
+                    cell = (i / 39) % 2 == 0 ? 1 : 6;
+                    row = baseRow + i % 39;
                     row += lineStart;
                     sheet.Cells[row, cell] = count;
                     sheet.Cells[row, cell + 1] = CustomConvert.JavascriptDateToDateTime(works[i].x).ToString("yyyy/MM/dd");
                     sheet.Cells[row, cell + 2] = works[i].y;
                     total += works[i].y;
+                    pcount += works[i].y;
                     // 如果运转时间等于0时，将上一条运转时间复制过来
                     if (works[i].min == 0 && i > 0)
                     {
                         works[i].min = works[i - 1].min;
                     }
                     sheet.Cells[row, cell + 3] = works[i].min / 60.0;
-                    if (count % pageRows == 0)
+                    if (count % 39 == 0)
                     {
-                        Range range = sheet.Range[sheet.Cells[row, cell], sheet.Cells[row, cell + 3]];
+                        sheet.Cells[row + 1, cell + 1] = "subtotal";
+                        sheet.Cells[row + 1, cell + 2] = pcount;
+                        Range range = sheet.Range[sheet.Cells[row + 1, cell], sheet.Cells[row + 1, cell + 3]];
+                        range.Cells.Borders.Item[XlBordersIndex.xlEdgeTop].LineStyle = XlLineStyle.xlContinuous;
+                        range.Cells.Borders.Item[XlBordersIndex.xlEdgeTop].Color = XlRgbColor.rgbGray;
                         range.Cells.Borders.Item[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
+                        pcount = 0.0;
                     }
+                    //if (count % pageRows == 0)
+                    //{
+                    //    Range range = sheet.Range[sheet.Cells[row, cell], sheet.Cells[row, cell + 3]];
+                    //    range.Cells.Borders.Item[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
+                    //}
                 }
                 // 总运转时间
                 sheet.Cells[9, 3] = total;
 
-                Range last = sheet.Range[sheet.Cells[row, cell], sheet.Cells[row, cell + 3]];
+                // 最后一页中的统计
+                sheet.Cells[row + 1, cell + 1] = "subtotal";
+                sheet.Cells[row + 1, cell + 2] = pcount;
+                Range last = sheet.Range[sheet.Cells[row + 1, cell], sheet.Cells[row + 1, cell + 3]];
+                last.Cells.Borders.Item[XlBordersIndex.xlEdgeTop].LineStyle = XlLineStyle.xlContinuous;
+                last.Cells.Borders.Item[XlBordersIndex.xlEdgeTop].Color = XlRgbColor.rgbGray;
                 last.Cells.Borders.Item[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
 
                 // 另存为别的
