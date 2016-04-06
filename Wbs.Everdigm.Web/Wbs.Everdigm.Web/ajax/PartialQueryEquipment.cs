@@ -247,6 +247,19 @@ namespace Wbs.Everdigm.Web.ajax
             return ret;
         }
         /// <summary>
+        /// 每天的分钟数
+        /// </summary>
+        private static uint DAY_MINUTES = 24 * 60;
+        /// <summary>
+        /// 获取时间在当日的分钟计数
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        private uint GetPassedMinute(DateTime time)
+        {
+            return (uint)(time.Hour * 60 + time.Minute);
+        }
+        /// <summary>
         /// 查询指定设备在指定日期范围内每日运转时间
         /// </summary>
         /// <returns></returns>
@@ -272,14 +285,13 @@ namespace Wbs.Everdigm.Web.ajax
                     dt = dt.AddDays(1);
                 }
                 var macid = EquipmentInstance.GetFullNumber(obj);
-                var cmds = new string[] { "0x1000", "0x1001", "0x5000", "0x6004" };
+                var cmds = new string[] { "0x1000", "0x1001", "0x5000", "0x6004", "0x600B", "0xCC00" };
                 var runtimes = DataInstance.FindList(f => f.mac_id.Equals(macid) && cmds.Contains(f.command_id) &&
                     f.receive_time >= date && f.receive_time <= date1).OrderBy(o => o.receive_time);
                 var list = new List<WorkTime>();
                 if (null != runtimes)
                 {
                     long today = 0;
-                    uint total = 0;
                     foreach (var r in runtimes)
                     {
                         var t = Utility.DateTimeToJavascriptDate(r.receive_time.Value.Date);
@@ -290,9 +302,7 @@ namespace Wbs.Everdigm.Web.ajax
                         int index = 0;
                         if (r.command_id.Equals("0x1000"))
                         {
-                            if (r.protocol_type != ProtocolTypes.SATELLITE)
-                                continue;
-                            else
+                            if (r.protocol_type == ProtocolTypes.SATELLITE)
                             {
                                 temp = CustomConvert.GetBytes(r.message_content);
                                 index = 13;
@@ -311,7 +321,16 @@ namespace Wbs.Everdigm.Web.ajax
                                 temp = CustomConvert.GetBytes(r.message_content);
                                 index = 0;
                             }
-                            else continue;
+                        }
+                        else if (r.command_id.Equals("0x600B"))
+                        {
+                            temp = CustomConvert.GetBytes(r.message_content);
+                            index = 0;
+                        }
+                        else if (r.command_id.Equals("0xCC00"))
+                        {
+                            temp = CustomConvert.GetBytes(r.message_content);
+                            index = 12;
                         }
                         else
                         {
@@ -338,8 +357,16 @@ namespace Wbs.Everdigm.Web.ajax
                             {
                                 // 否则小计为差值
                                 wt.subtotal = wt.time - list[cnt - 1].time;
+                                // 每日凌晨1点之前，如果计算的时间差超过了当前时间的分钟数，则只计算分钟数
+                                if (r.receive_time.Value.Hour < 1 && wt.subtotal > r.receive_time.Value.Minute)
+                                    wt.subtotal = (uint)r.receive_time.Value.Minute;
+                                // 小于0时算作0
+                                if (wt.subtotal < 0) wt.subtotal = 0;
+                                // 如果与上一条日期的分钟数相差12个小时以上则记为0
+                                DateTime lst = DateTime.Parse(list[cnt - 1].date);
+                                if ((lst - r.receive_time.Value).Duration().TotalMinutes >= DAY_MINUTES / 2) wt.subtotal = 0;
                                 // 大于24小时算作0
-                                if (wt.subtotal >= 24 * 60) wt.subtotal = 0;
+                                if (wt.subtotal >= DAY_MINUTES) wt.subtotal = 0;
                             }
                         }
                         else
