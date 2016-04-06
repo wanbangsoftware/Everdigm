@@ -275,22 +275,17 @@ namespace Wbs.Everdigm.Web.ajax
                 var cmds = new string[] { "0x1000", "0x1001", "0x5000", "0x6004" };
                 var runtimes = DataInstance.FindList(f => f.mac_id.Equals(macid) && cmds.Contains(f.command_id) &&
                     f.receive_time >= date && f.receive_time <= date1).OrderBy(o => o.receive_time);
+                var list = new List<WorkTime>();
                 if (null != runtimes)
                 {
                     long today = 0;
-                    uint times = 0, first = 0, last = 0, total = 0;
+                    uint total = 0;
                     foreach (var r in runtimes)
                     {
                         var t = Utility.DateTimeToJavascriptDate(r.receive_time.Value.Date);
                         // 日期不同则重置日期和运转时间
-                        if (today != t)
-                        {
-                            total += times;
-                            today = t;
-                            times = 0;
-                            first = 0;
-                            last = 0;
-                        }
+                        if (today != t) { today = t; }
+
                         byte[] temp = null;
                         int index = 0;
                         if (r.command_id.Equals("0x1000"))
@@ -325,30 +320,49 @@ namespace Wbs.Everdigm.Web.ajax
                             byte tp = r.terminal_type.Value;
                             index = tp == TerminalTypes.DH ? 2 : (tp == TerminalTypes.DX ? 5 : 1);
                         }
-                        if (null == temp) continue;
 
-                        uint run = BitConverter.ToUInt32(temp, index);
+                        // 增加一个节点
+                        WorkTime wt = new WorkTime();
+                        wt.date = r.receive_time.Value.ToString("yyyy/MM/dd HH:mm:ss");
+                        wt.time = null == temp ? 0 : BitConverter.ToUInt32(temp, index);
+                        // 如果list已经有数据则计算与上一条数据之间的差值
+                        var cnt = list.Count;
+                        if (cnt > 0)
+                        {
+                            if (wt.time < list[cnt - 1].time)
+                            {
+                                // 当前运转时间小于前一条时，小计为0
+                                wt.subtotal = 0;
+                            }
+                            else
+                            {
+                                // 否则小计为差值
+                                wt.subtotal = wt.time - list[cnt - 1].time;
+                                // 大于24小时算作0
+                                if (wt.subtotal >= 24 * 60) wt.subtotal = 0;
+                            }
+                        }
+                        else
+                        {
+                            // 第一条数据小计为0
+                            wt.subtotal = 0;
+                        }
+                        list.Add(wt);
+
                         // 更新本日最后的运转时间
                         var wk = work.First(f => f.x == today);
                         //if (wk.min == 0) { wk.min = run; }
-                        wk.min = run;
+                        wk.min = wt.time;
+                    }// end of foreach
 
-                        if (first == 0)
-                            first = run;
-                        else
-                        {
-                            last = run;
-                            if (last > first)
-                            {
-                                times = last - first;
-                                // 如果时间大于24小时则直接设定为0小时 2015/09/21 11:30
-                                if (times >= 24 * 60) times = 0;
-                                wk.y = FormatTime(times);
-                            }
-                        }
+                    // 计算每日运转时间
+                    foreach (var f in work)
+                    {
+                        f.y = Math.Round(list.Where(w => w.date.Contains(f.date)).Sum(s => s.subtotal) / 60.0, 2);
                     }
+
                     // 计算平均值
-                    var avgg = FormatTime((uint)(total / work.Count));
+                    var avgg = Math.Round(work.Sum(s => s.y) * 1.0 / work.Count, 2);
                     foreach (var a in avg)
                     { a.y = avgg; }
                 }
@@ -379,6 +393,13 @@ namespace Wbs.Everdigm.Web.ajax
             }
             ret = JsonConverter.ToJson(objs);
             return ret;
+        }
+
+        private class WorkTime
+        {
+            public string date;
+            public uint time;
+            public uint subtotal;
         }
     }
 }
