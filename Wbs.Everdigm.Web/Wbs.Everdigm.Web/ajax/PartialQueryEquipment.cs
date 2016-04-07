@@ -287,7 +287,7 @@ namespace Wbs.Everdigm.Web.ajax
                 var macid = EquipmentInstance.GetFullNumber(obj);
                 var cmds = new string[] { "0x1000", "0x1001", "0x5000", "0x6004", "0x600B", "0xCC00" };
                 var runtimes = DataInstance.FindList(f => f.mac_id.Equals(macid) && cmds.Contains(f.command_id) &&
-                    f.receive_time >= date && f.receive_time <= date1).OrderBy(o => o.receive_time);
+                    f.receive_time >= date.AddDays(-1) && f.receive_time <= date1.AddDays(1)).OrderBy(o => o.receive_time);
                 var list = new List<WorkTime>();
                 if (null != runtimes)
                 {
@@ -359,7 +359,14 @@ namespace Wbs.Everdigm.Web.ajax
                                 wt.subtotal = wt.time - list[cnt - 1].time;
                                 // 每日凌晨1点之前，如果计算的时间差超过了当前时间的分钟数，则只计算分钟数
                                 if (r.receive_time.Value.Hour < 1 && wt.subtotal > r.receive_time.Value.Minute)
+                                {
+                                    // 每日1时之前计算的时间差大于已经过去了的分钟数则将差值算到前一天最后一条数据里
+                                    if (cnt > 0)
+                                    {
+                                        list[cnt - 1].subtotal += (uint)(wt.subtotal - r.receive_time.Value.Minute);
+                                    }
                                     wt.subtotal = (uint)r.receive_time.Value.Minute;
+                                }
                                 // 小于0时算作0
                                 if (wt.subtotal < 0) wt.subtotal = 0;
                                 // 如果与上一条日期的分钟数相差12个小时以上则记为0
@@ -377,9 +384,12 @@ namespace Wbs.Everdigm.Web.ajax
                         list.Add(wt);
 
                         // 更新本日最后的运转时间
-                        var wk = work.First(f => f.x == today);
-                        //if (wk.min == 0) { wk.min = run; }
-                        wk.min = wt.time;
+                        var wk = work.FirstOrDefault(f => f.x == today);
+                        if (null != wk)
+                        {
+                            //if (wk.min == 0) { wk.min = run; }
+                            wk.min = wt.time;
+                        }
                     }// end of foreach
 
                     // 计算每日运转时间
