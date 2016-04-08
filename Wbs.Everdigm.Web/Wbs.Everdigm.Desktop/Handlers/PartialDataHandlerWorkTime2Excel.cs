@@ -46,7 +46,7 @@ namespace Wbs.Everdigm.Desktop
         /// <summary>
         /// 第一页开始行、结束行、页大小、页行数
         /// </summary>
-        private static int lineStart = 13, pageSize = 78, pageRows = 40;
+        private static int lineStart = 13, pageSize = 78, pageRows = 41, pageCount = 40;
 
         private void ExportWorkTimeToExcel(TB_ExcelHandler excel)
         {
@@ -59,6 +59,8 @@ namespace Wbs.Everdigm.Desktop
                 app = new Application();
                 book = app.Workbooks.Open(EXCEL_PATH + EXCEL_WORKTIME);
                 sheet = (Worksheet)book.ActiveSheet;
+                var equipment = excel.TB_Equipment.TB_EquipmentModel.Code + excel.TB_Equipment.Number;
+                sheet.Name = equipment;
                 // 所属公司
                 sheet.Cells[3, 3] = excel.TB_Equipment.TB_Customer.Name;
                 // 设备型号
@@ -80,8 +82,8 @@ namespace Wbs.Everdigm.Desktop
                     count++;
                     page = i / (pageSize);
                     var baseRow = page * pageRows;
-                    cell = (i / 39) % 2 == 0 ? 1 : 6;
-                    row = baseRow + i % 39;
+                    cell = (i / pageCount) % 2 == 0 ? 1 : 6;
+                    row = baseRow + i % pageCount;
                     row += lineStart;
                     sheet.Cells[row, cell] = count;
                     sheet.Cells[row, cell + 1] = works[i].date;
@@ -94,7 +96,7 @@ namespace Wbs.Everdigm.Desktop
                         works[i].min = works[i - 1].min;
                     }
                     sheet.Cells[row, cell + 3] = works[i].min / 60.0;
-                    if (count % 39 == 0)
+                    if (count % pageCount == 0)
                     {
                         sheet.Cells[row + 1, cell + 1] = "subtotal";
                         sheet.Cells[row + 1, cell + 2] = pcount;
@@ -128,7 +130,6 @@ namespace Wbs.Everdigm.Desktop
                 {
                     Directory.CreateDirectory(path);
                 }
-                var equipment = excel.TB_Equipment.TB_EquipmentModel.Code + excel.TB_Equipment.Number;
                 source = path + "\\" + excel.CreateDate.Value.ToString("HHmmss_") + equipment + ".xlsx";
                 if (File.Exists(source))
                 {

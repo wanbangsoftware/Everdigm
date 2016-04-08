@@ -581,10 +581,10 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-lg-12" id="loadingContent">
-                            <img alt="" src="../images/loading.gif"/><span style="margin-left: 10px;">Loading data, please wait...</span>
+                            <img alt="" src="../images/loading.gif"/><span style="margin-left: 10px;" id="loadingContentText">Loading data, please wait...</span>
                         </div>
                         <div class="col-lg-12" id="warningContent">
-                            <span style="margin-left: 10px;" id="warningContentText">Loading data, please wait...</span>
+                            <span style="margin-left: 10px;" id="warningContentText"></span>
                         </div>
                     </div>
                 </div>

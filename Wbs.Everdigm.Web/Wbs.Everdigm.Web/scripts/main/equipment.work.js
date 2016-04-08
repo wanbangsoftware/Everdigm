@@ -81,7 +81,8 @@ function getWorktimes() {
     if ($("[id$=\"hiddenLastDate\"]").val() != queryTime) {
         $("[id$=\"hiddenLastDate\"]").val(queryTime);
 
-        $("#warningLoading").modal("show");
+        showWarning(false, "Loading...", "Loading data, please wait...", "show");
+        //$("#warningLoading").modal("show");
 
         GetJsonData("../ajax/query.ashx", {
             "type": "equipment", "cmd": "worktime", "data": $("[id$=\"hidKey\"]").val(),
@@ -96,7 +97,8 @@ function getWorktimes() {
                     }
                 }
                 showChart(data);
-                $("#warningLoading").modal("hide");
+                showWarning(false, "", "", "hide");
+                //$("#warningLoading").modal("hide");
             });
     }
 }
@@ -330,12 +332,13 @@ function showWarning(warning, title, content, shown) {
         $(".modal-header").removeClass("btn-warning").addClass("btn-primary");
         $("#loadingContent").show();
         $("#warningContent").hide();
+        $("#loadingContentText").text(content);
     }
     $("#warningLoading").modal(shown);
 }
 
 function exportToExcel() {
-    showWarning(false, "Prepare data...", "Prepare data & export into excel file...", "show");
+    showWarning(false, "Exporting...", "Prepare data & export into excel file, please wait...", "show");
 
     var key = $("[id$=\"hidKey\"]").val();
     var d1 = $(".form-control:eq(0)").val();
