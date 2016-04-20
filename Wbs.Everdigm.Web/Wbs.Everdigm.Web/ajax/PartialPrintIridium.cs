@@ -74,17 +74,25 @@ namespace Wbs.Everdigm.Web.ajax
             if (null != obj)
             {
                 obj = JsonConverter.ToObject<TB_Satellite>(data);
-                SatelliteInstance.Update(f => f.CardNo.Equals(obj.CardNo), act =>
+                var tmp = SatelliteInstance.Find(f => f.PcbNumber.Equals(obj.PcbNumber) && f.id != obj.id);
+                if (null != tmp)
                 {
-                    act.PcbNumber = obj.PcbNumber;
-                    act.FWVersion = obj.FWVersion;
-                    act.ManufactureDate = obj.ManufactureDate;
-                    act.Manufacturer = obj.Manufacturer;
-                    act.RatedVoltage = obj.RatedVoltage;
-                    // 设置成未打印状态
-                    act.LabelPrintStatus = (byte)Common.PrintStatus.Nothing;
-                });
-                ResponseData(0, "");
+                    ResponseData(-1, "Same PCB Number &quot;" + obj.PcbNumber + "&quot; exists.");
+                }
+                else
+                {
+                    SatelliteInstance.Update(f => f.CardNo.Equals(obj.CardNo), act =>
+                    {
+                        act.PcbNumber = obj.PcbNumber;
+                        act.FWVersion = obj.FWVersion;
+                        act.ManufactureDate = obj.ManufactureDate;
+                        act.Manufacturer = obj.Manufacturer;
+                        act.RatedVoltage = obj.RatedVoltage;
+                        // 设置成未打印状态
+                        act.LabelPrintStatus = (byte)Common.PrintStatus.Nothing;
+                    });
+                    ResponseData(0, "");
+                }
             }
         }
 

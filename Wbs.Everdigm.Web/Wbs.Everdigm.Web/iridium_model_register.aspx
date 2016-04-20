@@ -86,15 +86,6 @@
                                 </tr>
                             </tfoot>
                             <tbody id="tbodyBody" runat="server">
-                                <tr>
-                                    <td class="in-tab-txt-b">1</td>
-                                    <td class="in-tab-txt-b" style="text-align: left;">300234062919250</td>
-                                    <td class="in-tab-txt-b">2014-09-22</td>
-                                    <td class="in-tab-txt-b">NO</td>
-                                    <td class="in-tab-txt-b"></td>
-                                    <td class="in-tab-txt-b"></td>
-                                    <td class="in-tab-txt-b"></td>
-                                </tr>
                             </tbody>
                         </table>
                         <b>Explanation</b>:<br />

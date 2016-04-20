@@ -41,6 +41,7 @@ $(document).ready(function () {
         curIMEI = a.data("whatever");
         $("#spanImei").text(curIMEI);
 
+        $("#pcbNumber").val(a.parent().next().next().next().text());
         var manuDate = a.parent().next().next().next().next().text();
         if (manuDate.charAt(0) == '-') { manuDate = new Date().pattern("yyyy-MM-dd"); }
         $(".date-picker-picker").datepicker("update", manuDate);
@@ -81,7 +82,7 @@ function disableButtons(disable) {
 }
 
 function showWarningDialog(text) {
-    $("#spanWarning").text(text);
+    $("#spanWarning").html(text);
     $("#modalWarning").modal("show");
 }
 
@@ -123,9 +124,11 @@ function savePrintInformation() {
     GetJsonData("ajax/print.ashx", { "type": printType, "cmd": "save", "data": $.toJSON(obj), "timestamp": new Date().getTime() }, function (data) {
         if (data.State != 0) {
             showWarningDialog(data.Data);
+            disableButtons(false);
         } else {
             // 可以打印了
             disableButtons(false);
+            document.location = document.location;
         }
     });
 }
