@@ -2,6 +2,7 @@
 using System.Linq;
 using Wbs.Everdigm.Database;
 using Wbs.Protocol;
+using System.Configuration;
 
 namespace Wbs.Everdigm.Web.main
 {
@@ -39,6 +40,25 @@ namespace Wbs.Everdigm.Web.main
                 no += "01";
             }
             txtNumber.Value = no;
+            NewSimNo();
+        }
+
+        private void NewSimNo()
+        {
+            var auto = int.Parse(ConfigurationManager.AppSettings["AutoSimCardNumber"]);
+            if (auto > 0)
+            {
+                var tmp = TerminalInstance.FindList<TB_Terminal>(f => f.Sim.Contains("89000"), "Sim", true).FirstOrDefault();
+                if (null != tmp)
+                {
+                    var s = int.Parse(tmp.Sim);
+                    txtSimcard.Value = (s + 1).ToString();
+                }
+                else
+                {
+                    txtSimcard.Value = "89000001";
+                }
+            }
         }
         private void ShowEdit()
         {

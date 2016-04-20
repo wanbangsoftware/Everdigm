@@ -68,8 +68,26 @@ namespace Wbs.Everdigm.Web.ajax
                     // 查询终端的历史纪录
                     ret = QueryTerminalHistiry();
                     break;
+                case "sim":
+                    ret = QueryAutoDefinedSimNumber();
+                    break;
             }
             ResponseJson(ret);
+        }
+        /// <summary>
+        /// 查找自定义的sim卡号码
+        /// </summary>
+        /// <returns></returns>
+        private string QueryAutoDefinedSimNumber()
+        {
+            var ret = "{\"Sim\":\"89000000\"}";
+            var tmp = TerminalInstance.FindList<TB_Terminal>(f => f.Sim.Contains("89000"), "Sim", true).FirstOrDefault();
+            if (null != tmp)
+            {
+                var s = int.Parse(tmp.Sim);
+                ret = string.Format("{0}\"Sim\":\"{1}\"{2}", "{", s + 1, "}");
+            }
+            return ret;
         }
         /// <summary>
         /// 查询按终端号码的历史纪录
