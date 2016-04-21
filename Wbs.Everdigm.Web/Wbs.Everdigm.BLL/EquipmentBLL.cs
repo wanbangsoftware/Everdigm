@@ -189,7 +189,7 @@ namespace Wbs.Everdigm.BLL
         /// <returns></returns>
         public string GetEngStatus(TB_Equipment obj)
         {
-            if (obj.LockStatus == "40" || obj.LockStatus == "0F") return eng_lock;
+            if (obj.LockStatus == "40" || obj.LockStatus == "0F" || obj.LockStatus == "FF") return eng_lock;
             var voltage = obj.Voltage;
             if (null == voltage) return eng_off;
             if (voltage.IndexOf("G2") >= 0) return eng_on;
