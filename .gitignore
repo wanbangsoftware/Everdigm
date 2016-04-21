@@ -181,3 +181,4 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+/Wbs.Everdigm.Web/Wbs.Everdigm.Web/files/xls

@@ -46,7 +46,7 @@ namespace Wbs.Everdigm.Desktop
         /// <summary>
         /// 第一页开始行、结束行、页大小、页行数
         /// </summary>
-        private static int lineStart = 13, pageSize = 78, pageRows = 41, pageCount = 40;
+        private static int lineStart = 16, pageSize = 78, pageRows = 40, pageCount = 39;
 
         private void ExportWorkTimeToExcel(TB_ExcelHandler excel)
         {
@@ -67,11 +67,16 @@ namespace Wbs.Everdigm.Desktop
                 sheet.Cells[4, 3] = excel.TB_Equipment.TB_EquipmentModel.Name;
                 // 设备号码
                 sheet.Cells[5, 3] = excel.TB_Equipment.Number;
+                // 设备出库日期
+                sheet.Cells[6, 3] = excel.TB_Equipment.OutdoorTime.Value.ToString("yyyy/MM/dd");
                 // 打印日期
                 sheet.Cells[6, 9] = excel.CreateDate.Value.ToString("yyyy/MM/dd");
+                // 出库类型
+                sheet.Cells[7, 3] = excel.TB_Equipment.TB_EquipmentStatusName.Code;
+                sheet.Cells[8, 3] = excel.TB_Equipment.GpsAddress;
                 // 查询开始日期
-                sheet.Cells[7, 3] = excel.StartDate;
-                sheet.Cells[8, 3] = excel.EndDate;
+                sheet.Cells[10, 3] = excel.StartDate;
+                sheet.Cells[11, 3] = excel.EndDate;
 
                 // 组织数据
                 List<WorktimeChart> works = JsonConverter.ToObject<List<WorktimeChart>>(excel.Data);
@@ -106,14 +111,9 @@ namespace Wbs.Everdigm.Desktop
                         range.Cells.Borders.Item[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
                         pcount = 0.0;
                     }
-                    //if (count % pageRows == 0)
-                    //{
-                    //    Range range = sheet.Range[sheet.Cells[row, cell], sheet.Cells[row, cell + 3]];
-                    //    range.Cells.Borders.Item[XlBordersIndex.xlEdgeBottom].LineStyle = XlLineStyle.xlContinuous;
-                    //}
                 }
                 // 总运转时间
-                sheet.Cells[9, 3] = total;
+                sheet.Cells[12, 3] = total;
 
                 // 最后一页中的统计
                 sheet.Cells[row + 1, cell + 1] = "subtotal";
@@ -130,7 +130,7 @@ namespace Wbs.Everdigm.Desktop
                 {
                     Directory.CreateDirectory(path);
                 }
-                source = path + "\\" + excel.CreateDate.Value.ToString("HHmmss_") + equipment + ".xlsx";
+                source = path + "\\Equipment operation report_" + equipment + excel.CreateDate.Value.ToString("_HHmmss") + ".xlsx";
                 if (File.Exists(source))
                 {
                     File.Delete(source);
