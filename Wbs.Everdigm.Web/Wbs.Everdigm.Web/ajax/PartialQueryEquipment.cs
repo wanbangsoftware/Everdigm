@@ -164,12 +164,15 @@ namespace Wbs.Everdigm.Web.ajax
                 var start = DateTime.Parse(GetParamenter("start") + " 00:00:00");
                 var end = DateTime.Parse(GetParamenter("end") + " 23:59:59");
                 // 更改为直接查询报警时间  2015/09/18 08:30
-                var armList = AlarmInstance.FindList<TB_Data_Alarm>(f => f.Equipment == id &&
-                    f.AlarmTime >= start && f.AlarmTime <= end, "id", true);
+                var armList = AlarmInstance.FindList<TB_Data_Alarm>(f => f.Equipment == id && f.AlarmTime >= start && f.AlarmTime <= end, "id", true);
                 var list = new List<CustomAlarm>();
                 foreach (var arm in armList)
                 {
-                    list.Add(new CustomAlarm(arm));
+                    // 去掉 Sim 卡丢失报警  2016.04.26 10:26
+                    if (arm.Code[10] != '1')
+                    {
+                        list.Add(new CustomAlarm(arm));
+                    }
                 }
                 ret = JsonConverter.ToJson(list);
             }
