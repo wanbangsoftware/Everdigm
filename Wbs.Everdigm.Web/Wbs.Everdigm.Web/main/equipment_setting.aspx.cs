@@ -174,7 +174,7 @@ namespace Wbs.Everdigm.Web.main
                         }
                     });
                     // 保存更改设备信息的历史
-                    SaveHistory(new Database.TB_AccountHistory()
+                    SaveHistory(new TB_AccountHistory()
                     {
                         ActionId = ActionInstance.Find(f => f.Name.Equals("EditEquipmentInfo")).id,
                         ObjectA = msg
@@ -203,14 +203,14 @@ namespace Wbs.Everdigm.Web.main
                     TerminalInstance.Update(f => f.id == equipment.Terminal, act => { act.HasBound = false; });
                     EquipmentInstance.Update(f => f.id == equipment.id, act =>
                     {
-                        act.Terminal = (int?)null;
-                        act.OnlineStyle = (byte?)null;
-                        act.OnlineTime = (DateTime?)null;
+                        act.Terminal = null;
+                        act.OnlineStyle = null;
+                        act.OnlineTime = null;
                         act.Socket = 0;
                         act.IP = "";
                         act.LastAction = "";
                         act.LastActionBy = "";
-                        act.LastActionTime = (DateTime?)null;
+                        act.LastActionTime = null;
                         act.Latitude = 0.0;
                         act.Longitude = 0.0;
                         act.GpsAddress = "";
@@ -263,18 +263,18 @@ namespace Wbs.Everdigm.Web.main
                     act.IP = "";
                     act.LastAction = "";
                     act.LastActionBy = "";
-                    act.LastActionTime = (DateTime?)null;
+                    act.LastActionTime = null;
                     act.Latitude = 0.0;
                     act.Longitude = 0.0;
-                    act.OnlineStyle = (byte?)null;
-                    act.OnlineTime = (DateTime?)null;
+                    act.OnlineStyle = null;
+                    act.OnlineTime = null;
                     act.Port = 0;
                     act.Rpm = 0;
                     act.Runtime = 0;
                     act.ServerName = "";
                     act.Signal = 0;
                     act.Socket = 0;
-                    act.Terminal = (int?)null;
+                    act.Terminal = null;
                     act.Voltage = "G0000";
                 });
                 // 保存删除设备历史

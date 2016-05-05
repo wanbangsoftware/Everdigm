@@ -51,6 +51,16 @@
                         </ul>
                         <input type="hidden" id="hidQueryWarehouse" runat="server" value="0" />
                     </li>
+                    <li role="presentation" class="dropdown" id="ddTerminals">
+                        <a id="dropTerminals" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Terminal:</span><span class="caret"></span>
+                        </a>
+                        <ul id="menuTerminals" class="dropdown-menu" role="menu" aria-labelledby="dropTerminals">
+                            <li role="presentation"><a role="menuitem" tabindex="1" href="#">Ignore</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="2" href="#">Installed</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="3" href="#">None</a></li>
+                        </ul>
+                        <input type="hidden" id="hiddenTerminal" runat="server" value="2" />
+                    </li>
                     <li role="presentation" class="tablist-item-input">
                         <div class="input-group">
                             <input type="text" id="txtQueryNumber" runat="server" class="form-control" placeholder="number">

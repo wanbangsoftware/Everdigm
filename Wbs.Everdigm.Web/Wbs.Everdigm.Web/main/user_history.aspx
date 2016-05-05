@@ -40,6 +40,10 @@
                                         <input type="text" class="input-md form-control text-input click-input" runat="server" id="end" name="end" />
                                     </div>
                                 </td>
+                                <td class="table_header1" style="border-left: 0px; width: 50px; text-align: right;">Sammary:</td>
+                                <td class="table_header" style="border-left: 0px; width: 50px;">
+                                    <input type="text" id="txtSummary" class="text-input little-input" runat="server" />
+                                </td>
                                 <td class="table_header" style="border-left: 0px; width: 150px;">
                                     <input type="checkbox" runat="server" id="cbIgnoreLogin" checked="checked" /> Ignore login info
                                 </td>

@@ -48,8 +48,23 @@ namespace Wbs.Everdigm.Web.main
             if (house > 0) { expression = expression.And(a => a.Warehouse == house); }
             // 查询号码
             if (!string.IsNullOrEmpty(query)) { expression = expression.And(a => a.Number.Contains(query)); }
-            // 已绑定终端的
-            expression = expression.And(a => a.Deleted == false && a.Terminal != (int?)null);
+            // 终端绑定状态
+            var terminal = ParseInt(hiddenTerminal.Value.Trim());
+            switch (terminal)
+            {
+                case 2:
+                    // 绑定终端了
+                    expression = expression.And(a => a.Terminal != (int?)null);
+                    break;
+                case 3:
+                    // 未绑定终端
+                    expression = expression.And(a => a.Terminal == (int?)null);
+                    break;
+                default:
+                    // 忽略的话就是不查询终端的绑定状态
+                    break;
+            }
+            expression = expression.And(a => a.Deleted == false);
 
             var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords, expression, null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
