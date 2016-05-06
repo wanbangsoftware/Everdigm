@@ -54,7 +54,6 @@
         </tr>
     </tfoot>
     <tbody id="tbodyBody" runat="server">
-        
     </tbody>
 </asp:Content>
 <asp:Content ContentPlaceHolderID="ContentPlaceHolderDialog" runat="server">

@@ -63,12 +63,13 @@ namespace Wbs.Everdigm.BLL
             return new TB_EquipmentStockHistory()
             {
                 id = 0,
-                Equipment = (int?)null,
-                Status = (int?)null,
+                Equipment = null,
+                Status = null,
                 StockNumber = "",
+                Savetime = DateTime.Now,
                 Stocktime = DateTime.Now,
                 StoreTimes = 0,
-                Warehouse = (int?)null
+                Warehouse = null
             };
         }
         public override string ToString(TB_EquipmentStockHistory entity)

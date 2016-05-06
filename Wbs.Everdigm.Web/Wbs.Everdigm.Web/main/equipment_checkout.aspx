@@ -7,8 +7,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
     <link href="../bootstrap3/css/bootstrap.css" rel="stylesheet" />
+    <link href="../bootstrap3/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" />
     <link href="../bootstrap3/models/css/bootstrap-dialog.min.css" rel="stylesheet" />
     <link href="../bootstrap3/bootstrap-datepicker-1.3.0/css/datepicker3.css" rel="stylesheet" />
+    <link href="../mobile/css/style.css" rel="stylesheet" />
     <link href="../css/body_equipment.css" rel="stylesheet" />
     <link href="../css/pagging.css" rel="stylesheet" />
     <link href="../bootstrap3/css/bootstrap-select.min.css" rel="stylesheet" />
@@ -82,7 +84,7 @@
                     </li>
                     <li role="presentation" class="tablist-item-input">
                         <div class="input-group">
-                            <input type="text" id="txtQueryNumber" runat="server" class="form-control" placeholder="number">
+                            <input type="text" id="txtQueryNumber" runat="server" class="form-control" placeholder="number" />
                             <asp:Button ID="btQuery" CssClass="hidden" runat="server" Text="Query" Width="0" Height="0" OnClick="btQuery_Click" />
                             <span class="input-group-btn">
                                 <button class="btn btn-warning" type="button" id="query"><span class="glyphicon glyphicon-search"></span></button>
@@ -187,9 +189,9 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="popup-td">Name:</td>
-                                            <td class="popup-td"></td>
-                                            <td class="popup-td">Phone:</td>
+                                            <td class="popup-td" style="width: 10%;">Name:</td>
+                                            <td class="popup-td" style="width: 40%;"></td>
+                                            <td class="popup-td" style="width: 10%;">Phone:</td>
                                             <td class="popup-td"></td>
                                         </tr>
                                         <tr>
@@ -197,6 +199,12 @@
                                             <td class="popup-td"></td>
                                             <td class="popup-td"></td>
                                             <td class="popup-td"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="popup-td" style="vertical-align: middle;">Date:</td>
+                                            <td class="popup-td" colspan="3" style="text-align: left;">    
+                                                <input class="form-control" runat="server" style="z-index: 9999 !important; width: 120px; margin-top: 3px;" id="outTime" name="outTime" placeholder="outdoor date" />
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>

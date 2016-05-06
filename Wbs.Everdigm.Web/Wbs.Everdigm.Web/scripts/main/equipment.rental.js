@@ -12,6 +12,14 @@
         autoclose: true
     });
 
+    $("[id^=\"beginAt\"]").datepicker({
+        format: "yyyy/mm/dd",
+        weekStart: 0,
+        todayBtn: true,
+        todayHighlight: true,
+        autoclose: true
+    });
+
     $("#rentalConfirm").click(function () { confirmRental(); });
     $("#rentalEditor").click(function () { confirmEdit();});
 
@@ -81,6 +89,11 @@ function fetchCustomer(id) {
 
 function confirmRental() {
     $("#spanRentalConfirm").text("");
+    var begin = $("#beginAt").val();
+    if (isStringNull(begin)) {
+        $("#spanRentalConfirm").text("Please set the begin date.");
+        return;
+    }
     var deadLine = $("#deadLine").val();
     if (isStringNull(deadLine)) {
         $("#spanRentalConfirm").text("Please set the deadline value.");

@@ -1,6 +1,7 @@
 ﻿using System;
 using Wbs.Everdigm.Database;
 using Wbs.Everdigm.BLL;
+using System.Linq.Expressions;
 
 namespace Wbs.Everdigm.Web.main
 {
@@ -24,20 +25,32 @@ namespace Wbs.Everdigm.Web.main
         private void ShowEquipments()
         {
             var query = txtQueryNumber.Value.Trim();
-            // 模糊查询时页码置为空
-            if (!string.IsNullOrEmpty(query)) { hidPageIndex.Value = ""; }
-
             var totalRecords = 0;
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             pageIndex = (0 >= pageIndex ? 1 : pageIndex);
             var model = ParseInt(selectedModels.Value);
             var house = ParseInt(hidQueryWarehouse.Value);
+
+            // 表达式
+            Expression<Func<TB_Equipment, bool>> expression = PredicateExtensions.True<TB_Equipment>();
+            if (model > 0)
+            {
+                expression = expression.And(a => a.Model == model);
+            }
+            if (house > 0)
+            {
+                expression = expression.And(a => a.Warehouse == house);
+            }
+            if (!string.IsNullOrEmpty(query))
+            {
+                pageIndex = 1;
+                expression = expression.And(a => a.Number.Contains(query));
+            }
+            expression = expression.And(a => (a.TB_EquipmentStatusName.IsItInventory == true || a.TB_EquipmentStatusName.IsItRental == true)
+            && a.Deleted == false && a.Terminal != (int?)null);
+
             // 只查询库存或租赁出去了的设备列表
-            var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
-                f => (f.TB_EquipmentStatusName.IsItInventory == true || f.TB_EquipmentStatusName.IsItRental == true) && 
-                    (model <= 0 ? f.Model >= 0 : f.Model == model) && f.Deleted == false && f.Terminal != (int?)null &&
-                    (house <= 0 ? (f.Warehouse >= 0 || f.Warehouse == (int?)null) : f.Warehouse == house) &&
-                    f.Number.Contains(query), null);
+            var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords, expression, null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             hidTotalPages.Value = totalPages.ToString();
 
@@ -115,13 +128,17 @@ namespace Wbs.Everdigm.Web.main
                 }
                 else
                 {
+                    DateTime begin;
+                    try { begin = DateTime.Parse(beginAt.Value.Trim()); }
+                    catch { begin = DateTime.Now; }
+
                     EquipmentInstance.Update(f => f.id == equipment.id, act =>
                     {
                         act.Status = StatusInstance.Find(f => f.IsItRental == true).id;
                         act.Customer = int.Parse(hiddenCustomer.Value);
-                        act.OutdoorTime = DateTime.Today;
+                        act.OutdoorTime = begin;
                         act.OutdoorWorktime = equipment.Runtime;
-                        act.Warehouse = (int?)null;
+                        act.Warehouse = null;
                         act.ReclaimTime = DateTime.Parse(deadLine.Value + " 00:00:00");
                     });
 
@@ -130,7 +147,7 @@ namespace Wbs.Everdigm.Web.main
                     var history = StoreInstance.GetObject();
                     history.Equipment = equipment.id;
                     history.Status = equipment.Status;
-                    history.Stocktime = DateTime.Now;
+                    history.Stocktime = begin;
                     // 设备的出入库次数，入库时增1，出库时不变
                     history.StoreTimes = equipment.StoreTimes;
                     history.Warehouse = (int?)null;

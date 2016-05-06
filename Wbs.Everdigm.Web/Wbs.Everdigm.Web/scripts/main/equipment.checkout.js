@@ -5,7 +5,13 @@ $(document).ready(function () {
         $("#hidCheckEquipmentId").val($(this).prop("id").replace("a_", ""));
         $("#newCheckoutSave").removeClass("disabled").addClass("disabled");
     });
-
+    $("[id^=\"outTime\"]").datepicker({
+        format: "yyyy/mm/dd",
+        weekStart: 0,
+        todayBtn: true,
+        todayHighlight: true,
+        autoclose: true
+    });
     $("#number").typeahead({
         items: 5,
         minLength: 4,
@@ -40,9 +46,16 @@ $(document).ready(function () {
     });
 
     $("#newCheckoutSave").click(function () {
+        $("#spanWarningNewInstorage").text("");
         var type = $("#ddlOuttype").val();
         if (isStringNull(type)) {
-            alert("Please select the type.");
+            $("#spanWarningNewInstorage").text("Please confirm your checkout type.");
+            return;
+        }
+        var outdoor = $("#outTime").val();
+        if (isStringNull(outdoor)) {
+            $("#spanWarningNewInstorage").text("Please set checkout date.");
+            $("#outTime").focus();
             return;
         }
         $("#btCheckoutStorage").click();

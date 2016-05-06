@@ -7,8 +7,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
     <link href="../bootstrap3/css/bootstrap.css" rel="stylesheet" />
+    <link href="../bootstrap3/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" />
     <link href="../bootstrap3/models/css/bootstrap-dialog.min.css" rel="stylesheet" />
     <link href="../bootstrap3/bootstrap-datepicker-1.3.0/css/datepicker3.css" rel="stylesheet" />
+    <link href="../mobile/css/style.css" rel="stylesheet" />
     <link href="../css/body_equipment.css" rel="stylesheet" />
     <link href="../css/pagging.css" rel="stylesheet" />
     <style type="text/css">
@@ -183,9 +185,13 @@
                                                 <td class="popup-td" style="width: 35%;"></td>
                                             </tr>
                                             <tr>
+                                                <td class="popup-td" style="vertical-align: middle;">Begin:</td>
+                                                <td class="popup-td">
+                                                    <input class="form-control" runat="server" style="z-index: 9999 !important; width: 120px; margin-top: 3px;" id="beginAt" name="beginAt" placeholder="begin at" />
+                                                </td>
                                                 <td class="popup-td" style="vertical-align: middle;">Deadline:</td>
-                                                <td class="popup-td" colspan="3">
-                                                    <input class="form-control" runat="server" style="z-index: 9999 !important; width: 120px; margin-top: 3px;" id="deadLine" name="deadLine" placeholder="DeadLine">
+                                                <td class="popup-td">
+                                                    <input class="form-control" runat="server" style="z-index: 9999 !important; width: 120px; margin-top: 3px;" id="deadLine" name="deadLine" placeholder="deadline" />
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -220,11 +226,11 @@
                                 <div class="col-lg-12">
                                     <div class="btn-group" data-toggle="buttons">
                                         <label class="btn btn-success active">
-                                            <input type="radio" runat="server" name="options" id="optionExtend" autocomplete="off" checked>
+                                            <input type="radio" runat="server" name="options" id="optionExtend" autocomplete="off" checked="true" />
                                             Extend
                                         </label>
                                         <label class="btn btn-success">
-                                            <input type="radio" runat="server" name="options" id="optionReclaim" autocomplete="off">
+                                            <input type="radio" runat="server" name="options" id="optionReclaim" autocomplete="off" />
                                             Reclaim
                                         </label>
                                     </div>
@@ -234,7 +240,7 @@
                                         Extend to:
                                     </div>
                                     <div class="col-lg-9">
-                                        <input class="form-control" runat="server" style="z-index: 9999 !important; width: 150px; margin-top: 3px;" id="deadLineExtend" placeholder="new deadline">
+                                        <input class="form-control" runat="server" style="z-index: 9999 !important; width: 150px; margin-top: 3px;" id="deadLineExtend" placeholder="new deadline" />
                                     </div>
                                 </div>
                                 <div class="col-lg-12 hidden" id="divReclaim" style="padding-top: 10px;">
@@ -262,7 +268,7 @@
                                         <div class="col-lg-9">
                                             <div class="btn-group" data-toggle="buttons">
                                                 <label class="btn btn-success">
-                                                    <input type="checkbox" autocomplete="off" id="cbRepair" runat="server"><span class="glyphicon glyphicon-ban-circle"></span><span> do not need repairs</span>
+                                                    <input type="checkbox" autocomplete="off" id="cbRepair" runat="server" /><span class="glyphicon glyphicon-ban-circle"></span><span> do not need repairs</span>
                                                 </label>
                                             </div>
                                         </div>
