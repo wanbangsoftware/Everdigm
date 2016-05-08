@@ -4,7 +4,9 @@ namespace Wbs.Everdigm.Printer
 {
     public partial class FormPrinter
     {
+        private static string Host = ConfigurationManager.AppSettings["Host"];
         private static string HttpLocal = "http://localhost:33859";
+        private static string HttpWbs = "http://tms.wanbangsoftware.com";
         private static string HttpEverdigm = "http://tms.everdigm.com";
         private static string HttpBaseUrl = "/ajax/print.ashx?type=";
         /// <summary>
@@ -20,12 +22,22 @@ namespace Wbs.Everdigm.Printer
         private static string ParamDate = "&date=";
         private static string CmdQuery = "query";
         private static string CmdPrint = "print";
-        private bool bLocal = !ConfigurationManager.AppSettings["Host"].ToLower().Equals("everdigm");
 
+        private string GetHttpHeader()
+        {
+            string ret = "";
+            switch (Host.ToLower())
+            {
+                case "everdigm": ret = HttpEverdigm; break;
+                case "wbs": ret = HttpWbs; break;
+                default: ret = HttpLocal; break;
+            }
+            return ret;
+        }
         /// <summary>
         /// 基本的url组合，如http://xxx/ajax/print.ashx?type=
         /// </summary>
-        private string BaseUrl { get { return format("{0}{1}", (bLocal ? HttpLocal : HttpEverdigm), HttpBaseUrl); } }
+        private string BaseUrl { get { return format("{0}{1}", GetHttpHeader(), HttpBaseUrl); } }
         /// <summary>
         /// 要打印的标签类型
         /// </summary>
