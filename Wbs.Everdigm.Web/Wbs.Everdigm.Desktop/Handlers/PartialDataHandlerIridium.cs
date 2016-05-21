@@ -395,7 +395,7 @@ namespace Wbs.Everdigm.Desktop
                 });
                 if (obj.TB_Terminal.Satellite != (int?)null)
                 {
-                    HandleIridiumMTFlow(obj.TB_Terminal.Satellite.Value, (int)(obj.Content.Length / 2));
+                    HandleIridiumMTFlow(obj.TB_Terminal.Satellite.Value, obj.Content.Length / 2);
                 }
             }
         }

@@ -62,13 +62,31 @@ namespace Wbs.Everdigm.Desktop
                 var equipment = excel.TB_Equipment.TB_EquipmentModel.Code + excel.TB_Equipment.Number;
                 sheet.Name = equipment;
                 // 所属公司
-                sheet.Cells[3, 3] = excel.TB_Equipment.TB_Customer.Name;
+                string customer = "";
+                if (excel.TB_Equipment.Customer == (int?)null)
+                {
+                    customer = "invalid";
+                }
+                else
+                {
+                    customer = excel.TB_Equipment.TB_Customer.Name;
+                }
+                sheet.Cells[3, 3] = customer;
                 // 设备型号
                 sheet.Cells[4, 3] = excel.TB_Equipment.TB_EquipmentModel.Name;
                 // 设备号码
                 sheet.Cells[5, 3] = excel.TB_Equipment.Number;
                 // 设备出库日期
-                sheet.Cells[6, 3] = excel.TB_Equipment.OutdoorTime.Value.ToString("yyyy/MM/dd");
+                string outdoor = "";
+                if ((DateTime?)null == excel.TB_Equipment.OutdoorTime)
+                {
+                    outdoor = "invalid";
+                }
+                else
+                {
+                    outdoor = excel.TB_Equipment.OutdoorTime.Value.ToString("yyyy/MM/dd");
+                }
+                sheet.Cells[6, 3] = outdoor;
                 // 打印日期
                 sheet.Cells[6, 9] = excel.CreateDate.Value.ToString("yyyy/MM/dd");
                 // 出库类型

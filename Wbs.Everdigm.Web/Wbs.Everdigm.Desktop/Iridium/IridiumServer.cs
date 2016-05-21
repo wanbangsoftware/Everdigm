@@ -277,7 +277,7 @@ namespace Wbs.Everdigm.Desktop
                         NeedConfirmation = false;
                         momsn = 0;
 
-                        _history.Add(Now + "Iridium package(length: " + obj.length + "): " + Wbs.Utilities.CustomConvert.GetHex(obj.buffer));
+                        _history.Add(Now + "Iridium package(length: " + obj.length + "): " + Utilities.CustomConvert.GetHex(obj.buffer));
 
                         // 分析整包铱星数据
                         Iridium iridum = new Iridium();
@@ -388,10 +388,7 @@ namespace Wbs.Everdigm.Desktop
                             {
                                 if (null != data.Data)
                                 {
-                                    if (null != OnIridiumReceive)
-                                    {
-                                        OnIridiumReceive(this, data);
-                                    }
+                                    OnIridiumReceive?.Invoke(this, data);
                                 }
                                 else {
                                     data = null;
