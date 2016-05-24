@@ -36,14 +36,14 @@ function showStorageHistory(list) {
         var obj = list[i];
         cnt++;
         var date = new Date(obj.Stocktime.substr(0,obj.Stocktime.indexOf("T"))).pattern(_datepatternFMT);
-        var status = getStatusCode(obj.Status)[0];
-        var statusA = getStatusStatus(status.Status)[0];
+        //var status = getStatusCode(obj.Status)[0];
+        var statusA = getStatusStatus(obj.Status)[0];
         var house = getWarehouse(obj.Warehouse)[0];
         html += item.replace(/%cnt%/, cnt).replace(/%date%/, date).
             replace(/%times%/, obj.StoreTimes).replace(/%receipt%/, "-").
-            replace(/%code%/, (statusA.Code + status.Code)).
-            replace(/%status%/, (status.Name + "(" + statusA.Name + ")")).
-            replace(/%warehouse%/, house.Name);
+            replace(/%code%/, statusA.Code).
+            replace(/%status%/, statusA.Name).
+            replace(/%warehouse%/, (isStringNull(house) ? "-" : house.Name));
     }
     if (isStringNull(html)) {
         html = "<tr><td class=\"panel-body-td\" colspan=\"7\">no record(s).</td></tr>";

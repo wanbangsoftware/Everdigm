@@ -27,11 +27,9 @@ namespace Wbs.Everdigm.BLL
         public TB_EquipmentStockHistory GetStoreInfo(int equipment, int storeTimes, bool storeIn)
         {
             // 获取相同出入库次数中最先出入库的记录
-            var list = FindList<TB_EquipmentStockHistory>(f =>
-                f.Equipment == equipment && f.StoreTimes == storeTimes &&
-                (storeIn ?
-                (f.TB_EquipmentStatusName.IsItInventory == true || f.TB_EquipmentStatusName.IsItOverhaul == true) :
-                (f.TB_EquipmentStatusName.IsItOutstorage == true || f.TB_EquipmentStatusName.IsItRental == true)), "Stocktime");
+            var list = FindList<TB_EquipmentStockHistory>(f => f.Equipment == equipment && f.StoreTimes == storeTimes &&
+                (storeIn ? (f.TB_EquipmentStatusName.IsItInventory == true || f.TB_EquipmentStatusName.IsItOverhaul == true) :
+                (f.TB_EquipmentStatusName.IsItOutstorage == true || f.TB_EquipmentStatusName.IsItRental == true)), "Savetime", !storeIn);
             return list.FirstOrDefault();
         }
         /// <summary>

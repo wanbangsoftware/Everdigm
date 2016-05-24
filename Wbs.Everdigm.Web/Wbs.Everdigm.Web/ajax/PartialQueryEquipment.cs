@@ -242,7 +242,7 @@ namespace Wbs.Everdigm.Web.ajax
                 var start = DateTime.Parse(GetParamenter("start") + " 00:00:00");
                 var end = DateTime.Parse(GetParamenter("end") + " 23:59:59");
                 var list = StorageInstance.FindList(f => f.Equipment == id &&
-                    f.Stocktime >= start && f.Stocktime <= end).OrderBy(o => o.Stocktime).ToList();
+                    f.Stocktime >= start && f.Stocktime <= end).OrderBy(o => o.Savetime).ToList();
                 ret = JsonConverter.ToJson(list);
             }
             catch
