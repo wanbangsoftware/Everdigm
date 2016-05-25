@@ -102,24 +102,21 @@ namespace Wbs.Everdigm.Web.main
                 var exist = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
                 if (null != exist)
                 {
-                    // 保存之前的状态
-                    var history = StoreInstance.GetObject();
-                    history.Equipment = exist.id;
-                    history.Status = exist.Status;
-
+                    bool repaired = false;
                     EquipmentInstance.Update(f => f.id == exist.id && f.Deleted == false, act =>
                     {
                         // 保存仓库信息
                         act.Warehouse = int.Parse(hiddenOldWarehouse.Value);
                         // 清除出厂日期和出厂时运转时间
                         act.OutdoorWorktime = 0;
-                        act.OutdoorTime = (DateTime?)null;
+                        act.OutdoorTime = null;
                         // 客户信息清除
-                        act.Customer = (int?)null;
+                        act.Customer = null;
                         act.StoreTimes = exist.StoreTimes + 1;
                         // 需要维修
                         if (cbRepair.Checked)
                         {
+                            repaired = true;
                             act.Status = StatusInstance.Find(f => f.IsItOverhaul == true).id;
                         }
                         else
@@ -127,6 +124,10 @@ namespace Wbs.Everdigm.Web.main
                     });
                     // 重新查询设备信息
                     exist = EquipmentInstance.Find(f => f.id == exist.id && f.Deleted == false);
+                    var history = StoreInstance.GetObject();
+                    history.Equipment = exist.id;
+                    // 保存之前的状态
+                    history.Status = exist.Status;
                     // 保存入库信息
                     history.Stocktime = DateTime.Now;
                     // 入库次数加1
@@ -137,12 +138,11 @@ namespace Wbs.Everdigm.Web.main
                     // 保存入库操作历史记录
                     SaveHistory(new TB_AccountHistory()
                     {
-                        ActionId = ActionInstance.Find(f => f.Name.Equals("InStoreOld")).id,
+                        ActionId = ActionInstance.Find(f => f.Name.Equals("InStoreOld" + (repaired ? "Repair" : ""))).id,
                         ObjectA = EquipmentInstance.ToString(exist)
                     });
 
                     ShowNotification("./equipment_rental_fleet.aspx", "Equipment has been store in warehouse.");
-                    //ShowEquipments();
                 }
                 else
                 {

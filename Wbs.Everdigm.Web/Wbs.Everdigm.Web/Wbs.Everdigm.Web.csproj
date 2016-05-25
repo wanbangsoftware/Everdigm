@@ -257,6 +257,7 @@
     <Content Include="js\js.marker.clusterer\src\markerclusterer_packaged.js" />
     <Content Include="js\twbsPagination\jquery.twbsPagination.js" />
     <Content Include="js\twbsPagination\jquery.twbsPagination.min.js" />
+    <Content Include="main\account_actions.aspx" />
     <Content Include="main\astest.aspx" />
     <Content Include="main\as_tracker.aspx" />
     <Content Include="main\as_work_dispatch.aspx" />
@@ -673,6 +674,13 @@
     </Compile>
     <Compile Include="logout.aspx.designer.cs">
       <DependentUpon>logout.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="main\account_actions.aspx.cs">
+      <DependentUpon>account_actions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\account_actions.aspx.designer.cs">
+      <DependentUpon>account_actions.aspx</DependentUpon>
     </Compile>
     <Compile Include="main\account_add.aspx.cs">
       <DependentUpon>account_add.aspx</DependentUpon>

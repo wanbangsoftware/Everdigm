@@ -20,7 +20,7 @@ namespace Wbs.Everdigm.BLL
         {
             return new TB_Equipment()
             {
-                Customer = (int?)null,
+                Customer = null,
                 Deleted = false,
                 GpsAddress = "",
                 // 加入卫星功能确认 2015/09/18 14:00
@@ -31,19 +31,19 @@ namespace Wbs.Everdigm.BLL
                 IP = "",
                 LastAction = "",
                 LastActionBy = "",
-                LastActionTime = (DateTime?)null,
+                LastActionTime = null,
                 Latitude = 0.0,
                 StoreTimes = 0,
                 LockStatus = "00",
                 Longitude = 0.0,
                 Rpm = 0,
-                Model = (int?)null,
+                Model = null,
                 Number = "",
-                OutdoorTime = (DateTime?)null,
-                ReclaimTime = (DateTime?)null,
+                OutdoorTime = null,
+                ReclaimTime = null,
                 OutdoorWorktime = 0,
-                OnlineStyle = (byte?)null,
-                OnlineTime = (DateTime?)null,
+                OnlineStyle = null,
+                OnlineTime = null,
                 Port = 0,
                 RegisterTime = DateTime.Now,
                 Runtime = 0,
@@ -53,10 +53,10 @@ namespace Wbs.Everdigm.BLL
                 Signal = 0,
                 Socket = 0,
                 Alarm = "0000000000000000",
-                Status = (int?)null,
-                Terminal = (int?)null,
+                Status = null,
+                Terminal = null,
                 Voltage = "G0000",
-                Warehouse = (int?)null
+                Warehouse = null
             };
         }
         /// <summary>
@@ -69,8 +69,8 @@ namespace Wbs.Everdigm.BLL
             // 判断终端是否为空
             var n = (int?)null;
             var t = n == entity.Terminal;
-            return string.Format("{0}, Sim: {1}, Satellite: {2}", (entity.TB_EquipmentModel.Code + entity.Number),
-                (t ? "" : entity.TB_Terminal.Sim), 
+            return string.Format("{0}, Terminal: {1}, Satellite: {2}", GetFullNumber(entity),
+                (t ? "" : entity.TB_Terminal.Number), 
                 (t ? "" : (n == entity.TB_Terminal.Satellite ? "" : entity.TB_Terminal.TB_Satellite.CardNo)));
         }
         /// <summary>
@@ -124,7 +124,7 @@ namespace Wbs.Everdigm.BLL
         /// <returns></returns>
         public int GetOutdoorDays(TB_Equipment entity)
         {
-            if ((DateTime?)null == entity.OutdoorTime)
+            if (null == entity.OutdoorTime)
                 return 0;
 
             var ts1 = new TimeSpan(entity.OutdoorTime.Value.Ticks);
@@ -144,7 +144,7 @@ namespace Wbs.Everdigm.BLL
             var oldTime = (int?)null == entity.OutdoorWorktime ? 0 : entity.OutdoorWorktime;
             // 加上初始化的运转时间
             int times = (int)((newTime - oldTime + entity.InitializedRuntime) / days);
-            return GetRuntime((int?)times, true);
+            return GetRuntime(times, true);
         }
 
         /// <summary>

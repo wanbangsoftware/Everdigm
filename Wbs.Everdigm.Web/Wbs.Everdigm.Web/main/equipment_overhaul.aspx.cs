@@ -106,11 +106,6 @@ namespace Wbs.Everdigm.Web.main
                 }
                 else
                 {
-                    var history = StoreInstance.GetObject();
-                    history.Equipment = equipment.id;
-                    // 先保存维修状态
-                    history.Status = equipment.Status;
-
                     EquipmentInstance.Update(f => f.id == equipment.id && f.Deleted == false, act =>
                     {
                         act.Status = StatusInstance.Find(f => f.IsItInventory == true).id;
@@ -118,6 +113,10 @@ namespace Wbs.Everdigm.Web.main
                     //RepairOK
                     equipment = EquipmentInstance.Find(f => f.id == equipment.id && f.Deleted == false);
 
+                    var history = StoreInstance.GetObject();
+                    history.Equipment = equipment.id;
+                    // 先保存维修状态
+                    history.Status = equipment.Status;
                     // 保存维修完成信息
                     history.Stocktime = DateTime.Now;
                     // 入库次数不变
