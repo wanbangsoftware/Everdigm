@@ -33,7 +33,10 @@ namespace Wbs.Everdigm.Web
                 HasSessionLose = true;
             }
         }
-
+        /// <summary>
+        /// 设备历史记录查询
+        /// </summary>
+        protected DataBLL DataInstance { get { return new DataBLL(); } }
         /// <summary>
         /// 用户信息业务处理
         /// </summary>

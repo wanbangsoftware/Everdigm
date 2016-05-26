@@ -287,6 +287,7 @@
     <Content Include="main\terminals.aspx" />
     <Content Include="main\terminal_flow.aspx" />
     <Content Include="main\terminal_satellite.aspx" />
+    <Content Include="main\terminal_worktime.aspx" />
     <Content Include="mobile\css\account.css" />
     <Content Include="mobile\css\fonts\cell-custom.svg" />
     <Content Include="mobile\css\style.css" />
@@ -1122,6 +1123,13 @@
     </Compile>
     <Compile Include="main\terminal_testing_content.aspx.designer.cs">
       <DependentUpon>terminal_testing_content.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="main\terminal_worktime.aspx.cs">
+      <DependentUpon>terminal_worktime.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="main\terminal_worktime.aspx.designer.cs">
+      <DependentUpon>terminal_worktime.aspx</DependentUpon>
     </Compile>
     <Compile Include="main\top_frame.aspx.cs">
       <DependentUpon>top_frame.aspx</DependentUpon>

@@ -179,9 +179,9 @@ namespace Wbs.Everdigm.BLL
             return "<span class=\"glyphicon glyphicon-signal label label-primary\" aria-hidden=\"true\"></span>";
         }
 
-        private string eng_off = "<span class=\"text-custom-gray\" title=\"Eng. Off\"><span class=\"signal cell-engine\" style=\"font-size: 130%;\"></span></span>";
-        private string eng_on = "<span class=\"text-custom-success\" title=\"Eng. On\"><span class=\"signal cell-engine\" style=\"font-size: 130%;\"></span></span>";
-        private string eng_lock = "<span class=\"text-custom-warning\" title=\"Locked\"><span class=\"glyphicon glyphicon-lock\"></span></span>";
+        public static string eng_off = "<span class=\"text-custom-gray\" title=\"Eng. Off\"><span class=\"signal cell-engine\" style=\"font-size: 130%;\"></span></span>";
+        public static string eng_on = "<span class=\"text-custom-success\" title=\"Eng. On\"><span class=\"signal cell-engine\" style=\"font-size: 130%;\"></span></span>";
+        public static string eng_lock = "<span class=\"text-custom-warning\" title=\"Locked\"><span class=\"glyphicon glyphicon-lock\"></span></span>";
         /// <summary>
         /// 获取发动机的启动状态(开、关、锁定)
         /// </summary>
@@ -279,7 +279,12 @@ namespace Wbs.Everdigm.BLL
             else
             {
                 double tm = time.Value / 60.0;
-                ret = string.Format("{0:0,00.00}", tm);
+                if (tm < 1)
+                    ret = string.Format("{0:0.00}", tm);
+                else if (tm < 10)
+                    ret = string.Format("{0:00.00}", tm);
+                else
+                    ret = string.Format("{0:0,00.00}", tm);
             }
             return ret;
         }
