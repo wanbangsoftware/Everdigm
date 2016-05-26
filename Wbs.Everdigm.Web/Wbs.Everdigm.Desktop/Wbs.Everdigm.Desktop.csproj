@@ -60,6 +60,9 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GnatMQ.Net">
+      <HintPath>..\..\GnatMQ.Net\GnatMQ.Net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
@@ -83,6 +86,18 @@
     </Compile>
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMainHistoryHandler.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMainIridiumHandler.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMainMqttHandler.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMainSocketServerHandler.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Handlers\DataHandler.cs" />
     <Compile Include="Handlers\OfficeConvert.cs" />
