@@ -32,7 +32,7 @@ namespace Wbs.Everdigm.Web.main
             var list = DataInstance.FindList<TB_HISTORIES>(f => f.mac_id.Contains(query) && f.receive_time >= time1 && f.receive_time <= time2 && cmds.Contains(f.command_id), "receive_time").ToList<TB_HISTORIES>();
 
             var html = "";
-            uint totalTime = 0, totalWorktime = 0;
+            uint totalTime = 0, totalWorktime = 0, addWorktime = 0;
             if (null == list || list.Count() < 1)
             {
                 html = "<tr><td colspan=\"13\" class=\"in-tab-title-b\">No records, you can change condition and try again.</td></tr>";
@@ -62,6 +62,8 @@ namespace Wbs.Everdigm.Web.main
                             add = (seconds / 60) + (seconds % 60 > 30 ? 1 : 0);
                         }
                     }
+                    int add1 = interval >= 60 ? 2 : 0;
+                    addWorktime += (uint)add1;
                     totalTime += (uint)add;
                     totalWorktime += interval > 0 ? interval : 0;
 
@@ -73,7 +75,8 @@ namespace Wbs.Everdigm.Web.main
                         "<td class=\"in-tab-title-rb\" style=\"text-align: right;\">" + add + "</td>" +
                         "<td class=\"in-tab-title-b\" style=\"text-align: right;\">" + EquipmentBLL.GetRuntime((int?)worktime) + "</td>" +
                         "<td class=\"in-tab-title-b\" style=\"text-align: right;\">" + string.Format("{0:0,00}", worktime) + "</td>" +
-                        "<td class=\"in-tab-title-rb\" style=\"text-align: right;\">" + (interval > 60 ? ("<font color=\"#FF0000\">" + interval + "</font>") : interval.ToString()) + "</td>" +
+                        "<td class=\"in-tab-title-b\" style=\"text-align: right;\">" + (interval > 60 ? ("<font color=\"#FF0000\">" + interval + "</font>") : interval.ToString()) + "</td>" +
+                        "<td class=\"in-tab-title-rb\" style=\"text-align: right;\">" + add1 + "</td>" +
                         "<td class=\"in-tab-title-b\" style=\"text-align: left;\">" + obj.command_id + "</td>" +
                         "<td class=\"in-tab-title-rb\" style=\"text-align: left;\">" + obj.terminal_id + "</td>" +
                         "<td class=\"in-tab-title-b\" style=\"text-align: center;\">" + eng + "</td>" +
