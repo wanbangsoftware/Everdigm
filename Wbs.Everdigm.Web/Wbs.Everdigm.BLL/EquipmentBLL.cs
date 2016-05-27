@@ -279,9 +279,9 @@ namespace Wbs.Everdigm.BLL
             else
             {
                 double tm = time.Value / 60.0;
-                if (tm < 1)
+                if (tm < 10)
                     ret = string.Format("{0:0.00}", tm);
-                else if (tm < 10)
+                else if (tm < 100)
                     ret = string.Format("{0:00.00}", tm);
                 else
                     ret = string.Format("{0:0,00.00}", tm);

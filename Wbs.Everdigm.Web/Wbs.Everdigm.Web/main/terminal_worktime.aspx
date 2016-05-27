@@ -82,24 +82,22 @@
                             <thead>
                                 <tr>
                                     <th class="bg-primary" style="width: 30px;"></th>
-                                    <th colspan="4" class="in-tab-title-rb bg-primary">Server Time<span id="spanTotalServerTime" runat="server"></span></th>
-                                    <th colspan="4" class="in-tab-title-rb bg-primary">Work Time<span id="spanTotalWorkTime" runat="server"></span></th>
-                                    <th colspan="2" class="in-tab-title-rb bg-primary">Equipment</th>
-                                    <th colspan="2" class="in-tab-title-b bg-primary" style="text-align: left;">Content</th>
+                                    <th class="in-tab-title-rb bg-primary textoverflow" style="text-align: left;">Server Time</th>
+                                    <th colspan="3" class="in-tab-title-rb bg-primary">Work Time</th>
+                                    <th colspan="3" class="in-tab-title-rb bg-primary">Equipment</th>
+                                    <th colspan="3" class="in-tab-title-b bg-primary" style="text-align: left;">Content</th>
                                     <th class="in-tab-title-b bg-primary"></th>
                                 </tr>
                                 <tr>
                                     <th class="in-tab-title-b bg-warning" style="width: 50px;">#</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow" style="width: 50px; text-align: left;">服务器时间</th>
-                                    <th class="in-tab-title-b bg-warning" style="width: 50px; text-align: left;">间隔</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow" style="width: 50px; text-align: right;">小时差(秒)</th>
-                                    <th class="in-tab-title-rb bg-warning" style="width: 50px; text-align: right;">补(分)</th>
-                                    <th class="in-tab-title-b bg-warning" style="width: 60px; text-align: right;">SMH</th>
-                                    <th class="in-tab-title-b bg-warning" style="width: 60px; text-align: right;">SMM</th>
-                                    <th class="in-tab-title-b bg-warning" style="width: 50px; text-align: right;">差(分)</th>
-                                    <th class="in-tab-title-rb bg-warning" style="width: 50px; text-align: right;">补(分)</th>
-                                    <th class="in-tab-title-b bg-warning" style="width: 50px; text-align: left;">CMD</th>
-                                    <th class="in-tab-title-rb bg-warning" style="width: 50px; text-align: left;">终端</th>
+                                    <th class="in-tab-title-rb bg-warning textoverflow" style="width: 50px; text-align: left;">服务器时间</th>
+                                    <th class="in-tab-title-b bg-warning" style="width: 60px; text-align: right;">小时计</th>
+                                    <th class="in-tab-title-b bg-warning" style="width: 60px; text-align: right;">分钟计</th>
+                                    <th class="in-tab-title-rb bg-warning" style="width: 50px; text-align: right;">差(分)</th>
+                                    <th class="in-tab-title-b bg-warning" style="width: 50px; text-align: left;">命令</th>
+                                    <th class="in-tab-title-b bg-warning textoverflow" style="width: 50px; text-align: left;">终端号码</th>
+                                    <th class="in-tab-title-rb bg-warning textoverflow" style="width: 50px; text-align: left;">设备号码</th>
+                                    <th class="in-tab-title-b bg-warning" style="width: 30px; text-align: center;">State</th>
                                     <th class="in-tab-title-b bg-warning" style="width: 30px; text-align: center;">Eng</th>
                                     <th class="in-tab-title-b bg-warning textoverflow" style="width: 50px; text-align: left;">Full Data</th>
                                     <th class="in-tab-title-b bg-warning"></th>
@@ -108,17 +106,15 @@
                             <tbody id="tbodyBody" runat="server">
                                 <tr>
                                     <td class="in-tab-title-b">1</td>
-                                    <td class="in-tab-title-b textoverflow" style="text-align: left;">2016/06/26 13:00:02</td>
-                                    <td class="in-tab-title-b textoverflow" style="text-align: left;">01:01:09</td>
-                                    <td class="in-tab-title-b" style="text-align: right;">38</td>
-                                    <td class="in-tab-title-rb" style="text-align: right;">1</td>
+                                    <td class="in-tab-title-rb textoverflow" style="text-align: left;">2016/06/26 13:00:02</td>
                                     <td class="in-tab-title-b" style="text-align: right;">1560.13</td>
                                     <td class="in-tab-title-b" style="text-align: right;">169860</td>
-                                    <td class="in-tab-title-b" style="text-align: right;">30</td>
-                                    <td class="in-tab-title-rb" style="text-align: right;">1</td>
+                                    <td class="in-tab-title-rb" style="text-align: right;">30</td>
                                     <td class="in-tab-title-b" style="text-align: left;">0x1000</td>
-                                    <td class="in-tab-title-rb" style="text-align: left;">89007420</td>
+                                    <td class="in-tab-title-b" style="text-align: left;">89007420</td>
+                                    <td class="in-tab-title-rb" style="text-align: left;">DX500LCA-10038</td>
                                     <td class="in-tab-title-b" style="text-align: center;"><span class="text-custom-success" title="Eng. On"><span class="signal cell-engine" style="font-size: 130%;"></span></span></td>
+                                    <td class="in-tab-title-rb" style="text-align: center;">0</td>
                                     <td class="in-tab-title-b" style="text-align: left;">010000000330360F68C5130400A1970200</td>
                                     <td class="in-tab-title-b"></td>
                                 </tr>
@@ -181,7 +177,7 @@
                 if (isStringNull(number) || number.length < 4) {
                     $("#modalWarning").modal("show");
                 } else {
-                    $("#tbodyBody").html("<tr><td colspan=\"13\"><img src=\"../images/loading_orange.gif\" />Loading data, please wait...</td></tr>");
+                    $("#tbodyBody").html("<tr><td colspan=\"12\"><img src=\"../images/loading_orange.gif\" />Loading data, please wait...</td></tr>");
                     $("#btQuery").click();
                 }
             });
