@@ -25,6 +25,11 @@ namespace Wbs.Everdigm.Desktop
         private uint _timerCounter = 0;
 
         /// <summary>
+        /// 尝试保存历史纪录的定时器时间间隔
+        /// </summary>
+        private int SAVE_TIMER_PERIOD = 10000;
+
+        /// <summary>
         /// 获取当前时间
         /// </summary>
         private string Now { get { return DateTime.Now.ToString("[yyyy/MM/dd HH:mm:ss.fff] "); } }
@@ -69,9 +74,10 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="sender"></param>
         private void SaveHistory(object sender)
         {
+            if (null == mqtt) { StartMqttClient(); }
             _timerCounter++;
-            // 一小时保存一次
-            if (_timerCounter % 360 == 0)
+            // 10分钟保存一次
+            if (_timerCounter % 60 == 0)
             {
                 _timerCounter = 0;
                 SaveFile();

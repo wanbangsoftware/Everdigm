@@ -49,13 +49,13 @@ namespace Wbs.Everdigm.Desktop
                 // 启动mqtt broker
                 StartMqttBroker();
                 // 启动mqtt服务器端的订阅
-                StartMqttClient();
+                //StartMqttClient();
             }
             catch (SocketException e)
             {
                 if (e.SocketErrorCode == SocketError.AddressAlreadyInUse)
                 {
-                    MessageBox.Show("There was another instance of this program still running.\nIf that one is not created by you, please contact the administrator.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show("This program has another instance still running now.\nIf that one is not created by you, please contact the administrator.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     tsmiExit_Click(this, EventArgs.Empty);
                 }
             }
@@ -89,7 +89,7 @@ namespace Wbs.Everdigm.Desktop
             tstbIridiumServer.Text = ConfigurationManager.AppSettings["IRIDIUM_SERVER"];
             tscbIMEI.SelectedIndex = 0;
             StartService();
-            _timerSave = new System.Threading.Timer(new TimerCallback(SaveHistory), null, 0, 10000);
+            _timerSave = new System.Threading.Timer(new TimerCallback(SaveHistory), null, 0, SAVE_TIMER_PERIOD);
         }
         
         private void tsmiShowHistory_Click(object sender, EventArgs e)
@@ -103,6 +103,8 @@ namespace Wbs.Everdigm.Desktop
             {
                 StopService();
                 Win32.TimeDelay(2000);
+                // 停止timer
+                _timerSave.Change(Timeout.Infinite, Timeout.Infinite);
                 SaveFile();
                 Win32.TimeDelay(5000);
             }
