@@ -586,6 +586,7 @@
     <Compile Include="ajax\PartialPrintTerminalcs.cs" />
     <Compile Include="ajax\PartialQueryCustomer.cs" />
     <Compile Include="ajax\PartialQueryEquipmentExcel.cs" />
+    <Compile Include="ajax\PartialQueryEquipmentWorktime.cs" />
     <Compile Include="ajax\PartialQueryTracker.cs" />
     <Compile Include="ajax\print.ashx.cs">
       <DependentUpon>print.ashx</DependentUpon>

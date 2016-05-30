@@ -20,6 +20,10 @@ namespace Wbs.Everdigm.Common
         /// </summary>
         public double y;
         /// <summary>
+        /// 补偿的时间
+        /// </summary>
+        public double add;
+        /// <summary>
         /// 当日最初运转时间
         /// </summary>
         public uint min;

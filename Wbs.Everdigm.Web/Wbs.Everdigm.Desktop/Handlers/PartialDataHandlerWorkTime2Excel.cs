@@ -132,6 +132,7 @@ namespace Wbs.Everdigm.Desktop
                 }
                 // 总运转时间
                 sheet.Cells[12, 3] = total;
+                //sheet.Cells[12, 4] = works[0].add;
 
                 // 最后一页中的统计
                 sheet.Cells[row + 1, cell + 1] = "subtotal";

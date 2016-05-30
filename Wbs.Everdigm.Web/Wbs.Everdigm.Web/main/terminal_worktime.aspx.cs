@@ -32,6 +32,7 @@ namespace Wbs.Everdigm.Web.main
             var list = DataInstance.FindList<TB_HISTORIES>(f => f.mac_id.Contains(query) && f.receive_time >= time1 && f.receive_time <= time2 && cmds.Contains(f.command_id), "receive_time").ToList<TB_HISTORIES>();
 
             var html = "";
+            int TotalAddedMinutes = 0, TotalWorkedMinutes = 0, TotalUsedHour = 0;
             if (null == list || list.Count() < 1)
             {
                 html = "<tr><td colspan=\"13\" class=\"in-tab-title-b\">No records, you can change condition and try again.</td></tr>";
@@ -44,9 +45,10 @@ namespace Wbs.Everdigm.Web.main
                     var obj = list[i];
                     var data = CustomConvert.GetBytes(obj.message_content);
                     var worktime = BitConverter.ToUInt32(data, obj.command_id.Equals("0x1000") ? 13 : 0);
-                    var interval = i == 0 ? 0 : (worktime - lastworktime);
+                    int interval = (int)(i == 0 ? 0 : (worktime - lastworktime));
+                    TotalWorkedMinutes += obj.command_id.Equals("0x600B") ? 0 : (interval > 0 ? interval : 0);
                     var bin = obj.command_id.Equals("0x600B") ? "00000000" : CustomConvert.IntToDigit(data[4], CustomConvert.BIN, 8);
-                    string eng,engflag;
+                    string eng, engflag;
                     if (obj.command_id.Equals("0x600B"))
                     {
                         eng = EquipmentBLL.eng_off;
@@ -62,25 +64,48 @@ namespace Wbs.Everdigm.Web.main
                         eng = (bin[6] == '1' ? EquipmentBLL.eng_on : EquipmentBLL.eng_off);
                         engflag = (bin[6] == '1' ? "1" : "0");
                     }
-                    
+                    int added = (interval > 0 ? (obj.command_id.Equals("0x600B") ? 0 : (interval > 60 ? interval / 60 : 1)) : 0) + (engflag.Equals("1") ? 1 : 0);
+                    TotalAddedMinutes += added;
+                    TotalUsedHour += interval > 0 ? (obj.command_id.Equals("0x600B") ? 0 : (interval > 60 ? interval / 60 : 1)) : 0;
+
                     html += "<tr>" +
                         "<td class=\"in-tab-title-b\">" + (i + 1) + "</td>" +
                         "<td class=\"in-tab-title-rb textoverflow\" style=\"text-align: left; \">" + obj.receive_time.Value.ToString("yyyy/MM/dd HH:mm:ss") + "</td>" +
                         "<td class=\"in-tab-title-b\" style=\"text-align: right;\">" + EquipmentBLL.GetRuntime((int?)worktime) + "</td>" +
                         "<td class=\"in-tab-title-b\" style=\"text-align: right;\">" + string.Format("{0:0,00}", worktime) + "</td>" +
-                        "<td class=\"in-tab-title-rb\" style=\"text-align: right;\">" + (interval > 60 ? ("<font color=\"#FF0000\">" + interval + "</font>") : interval.ToString()) + "</td>" +
+                        "<td class=\"in-tab-title-b\" style=\"text-align: right;\">" + (interval > 60 ? ("<font color=\"#FF0000\">" + interval + "</font>") : interval.ToString()) + "</td>" +
+                        "<td class=\"in-tab-title-rb\" style=\"text-align: right;\">" + added + "</td>" +
                         "<td class=\"in-tab-title-b\" style=\"text-align: left;\">" + obj.command_id + "</td>" +
                         "<td class=\"in-tab-title-b\" style=\"text-align: left;\">" + obj.terminal_id + "</td>" +
                         "<td class=\"in-tab-title-rb textoverflow\" style=\"text-align: left;\">" + obj.mac_id + "</td>" +
                         "<td class=\"in-tab-title-b\" style=\"text-align: center; width: 30px;\">" + eng + "</td>" +
                         "<td class=\"in-tab-title-b\" style=\"text-align: center; width: 30px;\">" + engflag + "</td>" +
                         "<td class=\"in-tab-title-b\" style=\"text-align: left;\">" + obj.message_content + "</td>" +
-                        "<td></td>" +
+                        "<td class=\"in-tab-title-b\"></td>" +
                         "</tr>";
                     lastworktime = worktime;
+
+                    if (i == len - 1)
+                    {
+                        var compensate = (TotalWorkedMinutes / 60.0) / TotalUsedHour;
+                        var finalAdded = TotalAddedMinutes / 60.0 * compensate;
+                        var finalWork = worktime / 60.0 + finalAdded;
+                        string summary = "<tr>" +
+                                    "<td class=\"in-tab-title-rb textoverflow\">" + obj.mac_id + "</td>" +
+                                    "<td class=\"in-tab-title-rb\" style=\"text-align: right;\">" + EquipmentBLL.GetRuntime((int?)worktime) + "</td>" +
+                                    "<td class=\"in-tab-title-b\" style=\"text-align: right;\">" + EquipmentBLL.GetRuntime(TotalWorkedMinutes) + "</td>" +
+                                    "<td class=\"in-tab-title-b\" style=\"text-align: right;\">" + TotalUsedHour + "</td>" +
+                                    "<td class=\"in-tab-title-rb\" style=\"text-align: right;\">" + compensate + "</td>" +
+                                    "<td class=\"in-tab-title-b\" style=\"text-align: right;\">" + TotalAddedMinutes + "/" + EquipmentBLL.GetRuntime((int?)TotalAddedMinutes) + "</td>" +
+                                    "<td class=\"in-tab-title-b\" style=\"text-align: right;\">" + finalAdded + "</td>" +
+                                    "<td class=\"in-tab-title-rb\" style=\"text-align: right;\">" + finalWork + "</td>" +
+                                    "<td class=\"in-tab-title-b\"></td>" +
+                                "</tr>";
+                        tbodySummary.InnerHtml = summary;
+                    }
                 }
             }
-            tbodyBody.InnerHtml = html;
+            //tbodyBody.InnerHtml = html;
         }
     }
 }

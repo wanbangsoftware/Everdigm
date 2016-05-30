@@ -51,7 +51,7 @@
             <input type="hidden" runat="server" id="hidTotalPages" value="0" />
             <!-- Default panel contents -->
             <div class="panel-heading">
-                <strong>运转时间分析</strong>
+                <strong>Work time analyse</strong>
             </div>
             <div class="panel-body" style="padding-bottom: 0px !important;">
                 <!-- Nav tabs -->
@@ -76,6 +76,36 @@
 
                 <!-- Tab panes -->
                 <div class="tab-content">
+                    <div class="tab-content">
+                        <table class="table table-hover" style="margin-bottom: 5px !important;">
+                            <thead>
+                                <tr>
+                                    <th class="in-tab-title-rb bg-primary" style="width: 30px; text-align: left;">Equipment</th>
+                                    <th class="in-tab-title-rb bg-primary" style="width: 30px; text-align: right;">SMH</th>
+                                    <th class="in-tab-title-b bg-primary textoverflow" style="width: 30px; text-align: right;">Work(hr)</th>
+                                    <th class="in-tab-title-b bg-primary textoverflow" style="width: 30px; text-align: right;">Used(hr)</th>
+                                    <th class="in-tab-title-rb bg-primary" style="width: 30px; text-align: right;">AVG</th>
+                                    <th class="in-tab-title-b bg-primary textoverflow" style="width: 30px; text-align: right;">Add(min/hr)</th>
+                                    <th class="in-tab-title-b bg-primary textoverflow" style="width: 30px; text-align: right;">Compensate(hr)</th>
+                                    <th class="in-tab-title-rb bg-primary textoverflow" style="width: 30px; text-align: right;">Final SMH</th>
+                                    <th class="in-tab-title-b bg-primary"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodySummary" runat="server">
+                                <tr>
+                                    <td class="in-tab-title-rb textoverflow">DX500LCA-00000</td>
+                                    <td class="in-tab-title-rb" style="text-align: right;">0.00</td>
+                                    <td class="in-tab-title-b" style="text-align: right;">0.00</td>
+                                    <td class="in-tab-title-b" style="text-align: right;">0</td>
+                                    <td class="in-tab-title-rb" style="text-align: right;">0.00</td>
+                                    <td class="in-tab-title-b" style="text-align: right;">0.00</td>
+                                    <td class="in-tab-title-b" style="text-align: right;">0.00</td>
+                                    <td class="in-tab-title-rb" style="text-align: right;">0.00</td>
+                                    <td class="in-tab-title-b"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="tab-content" style="overflow: scroll !important; height: 500px; width: 100% !important;">
                         <!--Equipment list-->
                         <table class="table table-hover">
@@ -83,7 +113,7 @@
                                 <tr>
                                     <th class="bg-primary" style="width: 30px;"></th>
                                     <th class="in-tab-title-rb bg-primary textoverflow" style="text-align: left;">Server Time</th>
-                                    <th colspan="3" class="in-tab-title-rb bg-primary">Work Time</th>
+                                    <th colspan="4" class="in-tab-title-rb bg-primary">Work Time</th>
                                     <th colspan="3" class="in-tab-title-rb bg-primary">Equipment</th>
                                     <th colspan="3" class="in-tab-title-b bg-primary" style="text-align: left;">Content</th>
                                     <th class="in-tab-title-b bg-primary"></th>
@@ -91,12 +121,13 @@
                                 <tr>
                                     <th class="in-tab-title-b bg-warning" style="width: 50px;">#</th>
                                     <th class="in-tab-title-rb bg-warning textoverflow" style="width: 50px; text-align: left;">服务器时间</th>
-                                    <th class="in-tab-title-b bg-warning" style="width: 60px; text-align: right;">小时计</th>
-                                    <th class="in-tab-title-b bg-warning" style="width: 60px; text-align: right;">分钟计</th>
-                                    <th class="in-tab-title-rb bg-warning" style="width: 50px; text-align: right;">差(分)</th>
-                                    <th class="in-tab-title-b bg-warning" style="width: 50px; text-align: left;">命令</th>
-                                    <th class="in-tab-title-b bg-warning textoverflow" style="width: 50px; text-align: left;">终端号码</th>
-                                    <th class="in-tab-title-rb bg-warning textoverflow" style="width: 50px; text-align: left;">设备号码</th>
+                                    <th class="in-tab-title-b bg-warning" style="width: 60px; text-align: right;">SMH</th>
+                                    <th class="in-tab-title-b bg-warning" style="width: 60px; text-align: right;">SMM</th>
+                                    <th class="in-tab-title-b bg-warning" style="width: 50px; text-align: right;">Diff(min)</th>
+                                    <th class="in-tab-title-rb bg-warning" style="width: 50px; text-align: right;">Add(min)</th>
+                                    <th class="in-tab-title-b bg-warning" style="width: 50px; text-align: left;">CMD</th>
+                                    <th class="in-tab-title-b bg-warning textoverflow" style="width: 50px; text-align: left;">Terminal</th>
+                                    <th class="in-tab-title-rb bg-warning textoverflow" style="width: 50px; text-align: left;">Equipment</th>
                                     <th class="in-tab-title-b bg-warning" style="width: 30px; text-align: center;">State</th>
                                     <th class="in-tab-title-b bg-warning" style="width: 30px; text-align: center;">Eng</th>
                                     <th class="in-tab-title-b bg-warning textoverflow" style="width: 50px; text-align: left;">Full Data</th>
@@ -109,7 +140,8 @@
                                     <td class="in-tab-title-rb textoverflow" style="text-align: left;">2016/06/26 13:00:02</td>
                                     <td class="in-tab-title-b" style="text-align: right;">1560.13</td>
                                     <td class="in-tab-title-b" style="text-align: right;">169860</td>
-                                    <td class="in-tab-title-rb" style="text-align: right;">30</td>
+                                    <td class="in-tab-title-b" style="text-align: right;">30</td>
+                                    <td class="in-tab-title-rb" style="text-align: right;">1</td>
                                     <td class="in-tab-title-b" style="text-align: left;">0x1000</td>
                                     <td class="in-tab-title-b" style="text-align: left;">89007420</td>
                                     <td class="in-tab-title-rb" style="text-align: left;">DX500LCA-10038</td>
@@ -172,12 +204,22 @@
                 weekStart: 0,
                 autoclose: true
             });
+            var summary = "<td class=\"in-tab-title-rb textoverflow\">DX500LCA-00000</td>" +
+                                    "<td class=\"in-tab-title-rb\" style=\"text-align: right;\">0.00</td>" +
+                                    "<td class=\"in-tab-title-b\" style=\"text-align: right;\">0.00</td>" +
+                                    "<td class=\"in-tab-title-b\" style=\"text-align: right;\">0</td>" +
+                                    "<td class=\"in-tab-title-rb\" style=\"text-align: right;\">0.00</td>" +
+                                    "<td class=\"in-tab-title-b\" style=\"text-align: right;\">0.00</td>" +
+                                    "<td class=\"in-tab-title-b\" style=\"text-align: right;\">0.00</td>" +
+                                    "<td class=\"in-tab-title-rb\" style=\"text-align: right;\">0.00</td>" +
+                                    "<td class=\"in-tab-title-b\"></td>";
             $("#query").click(function () {
                 var number = $("#txtQuery").val();
                 if (isStringNull(number) || number.length < 4) {
                     $("#modalWarning").modal("show");
                 } else {
                     $("#tbodyBody").html("<tr><td colspan=\"12\"><img src=\"../images/loading_orange.gif\" />Loading data, please wait...</td></tr>");
+                    $("#tbodySummary").html(summary);
                     $("#btQuery").click();
                 }
             });

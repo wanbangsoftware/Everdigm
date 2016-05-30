@@ -54,7 +54,7 @@ namespace Wbs.Everdigm.Desktop
 
         private void StopMqttClient()
         {
-            if (null != mqtt)
+            if (null != mqtt && mqtt.IsConnected)
             {
                 mqtt.Unsubscribe(new string[] { ClientId });
                 mqtt.Disconnect();

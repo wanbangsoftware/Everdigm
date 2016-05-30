@@ -113,7 +113,7 @@ namespace Wbs.Everdigm.Web.ajax
                     ret = HandleEquipmentEposFaultHistory();
                     break;
                 case "worktime":
-                    ret = HandleEquipmentWorktime();
+                    ret = HandleQueryEquipmentWorktime();
                     break;
                 case "province":
                     ret = HandleEquipmentProvinceQuest();

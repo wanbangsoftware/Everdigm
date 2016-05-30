@@ -30,7 +30,7 @@ namespace Wbs.Everdigm.Web.ajax
         {
             var id = ParseInt(Utility.Decrypt(data));
             var obj = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
-            var json = HandleEquipmentWorktime(false);
+            var json = HandleQueryEquipmentWorktime(false);
             var date1 = GetParamenter("date");
             var date2 = GetParamenter("date1");
             var daily = DailyInstance.Find(f => f.Equipment == id && f.Work == (int?)null && f.Deleted == false && f.StartDate == date1 && f.EndDate == date2);
