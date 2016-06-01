@@ -17,6 +17,7 @@ namespace Wbs.Everdigm.Web.ajax
         private void HandleCheckUpdate()
         {
             var app = AppInstance.Find(f => f.Useable == true);
+            if (null == app) app = AppInstance.GetObject();
             ResponseData(0, JsonConverter.ToJson(app), true);
         }
     }

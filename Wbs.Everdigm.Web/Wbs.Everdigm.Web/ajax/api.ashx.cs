@@ -31,10 +31,6 @@ namespace Wbs.Everdigm.Web.ajax
         {
             ResponseJson(string.Format("{0}\"State\":{1},\"Data\":{2}{3}{4}{5}", "{", state, (json ? "" : "\""), data, (json ? "" : "\""), "}"));
         }
-        private string FormatJsonObject(string data)
-        {
-            return string.Format("{0}{1}{2}", "{", data, "}");
-        }
         /// <summary>
         /// 处理app的请求
         /// </summary>
@@ -48,6 +44,9 @@ namespace Wbs.Everdigm.Web.ajax
                     break;
                 case "CheckUpdate":
                     HandleCheckUpdate();
+                    break;
+                default:
+                    ResponseData(-1, string.Format("Can not handle your request command: {0}", cmd));
                     break;
             }
         }
