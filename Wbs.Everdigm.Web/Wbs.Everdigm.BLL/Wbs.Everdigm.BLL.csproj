@@ -45,6 +45,7 @@
     <Compile Include="AccountBLL.cs" />
     <Compile Include="ActionBLL.cs" />
     <Compile Include="AlarmBLL.cs" />
+    <Compile Include="AppBLL.cs" />
     <Compile Include="BaseService.cs" />
     <Compile Include="CommandBLL.cs" />
     <Compile Include="CustomerBLL.cs" />

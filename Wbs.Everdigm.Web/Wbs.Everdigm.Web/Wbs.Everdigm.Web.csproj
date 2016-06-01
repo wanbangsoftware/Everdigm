@@ -377,6 +377,7 @@
     <Content Include="files\equipment.daily.work.time.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="ajax\api.ashx" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -572,6 +573,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ajax\api.ashx.cs">
+      <DependentUpon>api.ashx</DependentUpon>
+    </Compile>
     <Compile Include="ajax\BaseHttpHandler.ashx.cs">
       <DependentUpon>BaseHttpHandler.ashx</DependentUpon>
     </Compile>
@@ -581,6 +585,8 @@
     <Compile Include="ajax\equipment_models.ashx.cs">
       <DependentUpon>equipment_models.ashx</DependentUpon>
     </Compile>
+    <Compile Include="ajax\PartialApiBLL.cs" />
+    <Compile Include="ajax\PartialApiUpdate.cs" />
     <Compile Include="ajax\PartialCommandBLLs.cs" />
     <Compile Include="ajax\PartialPrintIridium.cs" />
     <Compile Include="ajax\PartialPrintTerminalcs.cs" />

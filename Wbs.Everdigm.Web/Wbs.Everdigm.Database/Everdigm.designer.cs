@@ -127,6 +127,9 @@ namespace Wbs.Everdigm.Database
     partial void InsertTB_EquipmentStockHistory(TB_EquipmentStockHistory instance);
     partial void UpdateTB_EquipmentStockHistory(TB_EquipmentStockHistory instance);
     partial void DeleteTB_EquipmentStockHistory(TB_EquipmentStockHistory instance);
+    partial void InsertTB_Application(TB_Application instance);
+    partial void UpdateTB_Application(TB_Application instance);
+    partial void DeleteTB_Application(TB_Application instance);
     #endregion
 		
 		public EverdigmDataContext(string connection) : 
@@ -406,6 +409,14 @@ namespace Wbs.Everdigm.Database
 			get
 			{
 				return this.GetTable<TB_EquipmentStockHistory>();
+			}
+		}
+		
+		public System.Data.Linq.Table<TB_Application> TB_Application
+		{
+			get
+			{
+				return this.GetTable<TB_Application>();
 			}
 		}
 		
@@ -12783,6 +12794,257 @@ namespace Wbs.Everdigm.Database
 			this._TB_EquipmentStatusName = default(EntityRef<TB_EquipmentStatusName>);
 			this._TB_Equipment = default(EntityRef<TB_Equipment>);
 			this._TB_Warehouse = default(EntityRef<TB_Warehouse>);
+			OnCreated();
+		}
+		
+		[global::System.Runtime.Serialization.OnDeserializingAttribute()]
+		[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+		public void OnDeserializing(StreamingContext context)
+		{
+			this.Initialize();
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TB_Application")]
+	[global::System.Runtime.Serialization.DataContractAttribute()]
+	public partial class TB_Application : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private System.Nullable<bool> _Useable;
+		
+		private System.Nullable<int> _VersionCode;
+		
+		private System.Nullable<long> _InternalVersion;
+		
+		private System.Nullable<System.DateTime> _CreateTime;
+		
+		private string _VersionName;
+		
+		private string _Download;
+		
+		private string _Description;
+		
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnUseableChanging(System.Nullable<bool> value);
+    partial void OnUseableChanged();
+    partial void OnVersionCodeChanging(System.Nullable<int> value);
+    partial void OnVersionCodeChanged();
+    partial void OnInternalVersionChanging(System.Nullable<long> value);
+    partial void OnInternalVersionChanged();
+    partial void OnCreateTimeChanging(System.Nullable<System.DateTime> value);
+    partial void OnCreateTimeChanged();
+    partial void OnVersionNameChanging(string value);
+    partial void OnVersionNameChanged();
+    partial void OnDownloadChanging(string value);
+    partial void OnDownloadChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    #endregion
+		
+		public TB_Application()
+		{
+			this.Initialize();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Useable", DbType="Bit")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+		public System.Nullable<bool> Useable
+		{
+			get
+			{
+				return this._Useable;
+			}
+			set
+			{
+				if ((this._Useable != value))
+				{
+					this.OnUseableChanging(value);
+					this.SendPropertyChanging();
+					this._Useable = value;
+					this.SendPropertyChanged("Useable");
+					this.OnUseableChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VersionCode", DbType="Int")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+		public System.Nullable<int> VersionCode
+		{
+			get
+			{
+				return this._VersionCode;
+			}
+			set
+			{
+				if ((this._VersionCode != value))
+				{
+					this.OnVersionCodeChanging(value);
+					this.SendPropertyChanging();
+					this._VersionCode = value;
+					this.SendPropertyChanged("VersionCode");
+					this.OnVersionCodeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_InternalVersion", DbType="BigInt")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=4)]
+		public System.Nullable<long> InternalVersion
+		{
+			get
+			{
+				return this._InternalVersion;
+			}
+			set
+			{
+				if ((this._InternalVersion != value))
+				{
+					this.OnInternalVersionChanging(value);
+					this.SendPropertyChanging();
+					this._InternalVersion = value;
+					this.SendPropertyChanged("InternalVersion");
+					this.OnInternalVersionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreateTime", DbType="DateTime")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=5)]
+		public System.Nullable<System.DateTime> CreateTime
+		{
+			get
+			{
+				return this._CreateTime;
+			}
+			set
+			{
+				if ((this._CreateTime != value))
+				{
+					this.OnCreateTimeChanging(value);
+					this.SendPropertyChanging();
+					this._CreateTime = value;
+					this.SendPropertyChanged("CreateTime");
+					this.OnCreateTimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VersionName", DbType="VarChar(20)")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=6)]
+		public string VersionName
+		{
+			get
+			{
+				return this._VersionName;
+			}
+			set
+			{
+				if ((this._VersionName != value))
+				{
+					this.OnVersionNameChanging(value);
+					this.SendPropertyChanging();
+					this._VersionName = value;
+					this.SendPropertyChanged("VersionName");
+					this.OnVersionNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Download", DbType="VarChar(300)")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=7)]
+		public string Download
+		{
+			get
+			{
+				return this._Download;
+			}
+			set
+			{
+				if ((this._Download != value))
+				{
+					this.OnDownloadChanging(value);
+					this.SendPropertyChanging();
+					this._Download = value;
+					this.SendPropertyChanged("Download");
+					this.OnDownloadChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="NVarChar(500)")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=8)]
+		public string Description
+		{
+			get
+			{
+				return this._Description;
+			}
+			set
+			{
+				if ((this._Description != value))
+				{
+					this.OnDescriptionChanging(value);
+					this.SendPropertyChanging();
+					this._Description = value;
+					this.SendPropertyChanged("Description");
+					this.OnDescriptionChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void Initialize()
+		{
 			OnCreated();
 		}
 		

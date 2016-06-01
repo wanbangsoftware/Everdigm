@@ -516,6 +516,18 @@
       <Association Name="TB_Warehouse_TB_EquipmentStockHistory" Member="TB_Warehouse" ThisKey="Warehouse" OtherKey="id" Type="TB_Warehouse" IsForeignKey="true" />
     </Type>
   </Table>
+  <Table Name="dbo.TB_Application" Member="TB_Application">
+    <Type Name="TB_Application">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Useable" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="VersionCode" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="InternalVersion" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="CreateTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="VersionName" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Download" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.sp_ClearOldLinks" Method="sp_ClearOldLinks">
     <Parameter Name="datetime" Type="System.DateTime" DbType="DateTime" />
     <Parameter Name="arm2sleep" Type="System.Int32" DbType="Int" Direction="InOut" />
