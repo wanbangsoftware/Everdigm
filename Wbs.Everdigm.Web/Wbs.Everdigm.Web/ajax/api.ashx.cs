@@ -31,10 +31,6 @@ namespace Wbs.Everdigm.Web.ajax
         {
             ResponseJson(string.Format("{0}\"State\":{1},\"Data\":{2}{3}{4}{5}", "{", state, (json ? "" : "\""), data, (json ? "" : "\""), "}"));
         }
-        private string FormatJsonObject(string data)
-        {
-            return string.Format("{0}{1}{2}", "{", data, "}");
-        }
         /// <summary>
         /// 处理app的请求
         /// </summary>
@@ -47,12 +43,10 @@ namespace Wbs.Everdigm.Web.ajax
                     ResponseData(0, ConfigurationManager.AppSettings["MQTT_SERVICE_ADDRESS"]);
                     break;
                 case "CheckUpdate":
-                    // 检测应用更新升级
                     HandleCheckUpdate();
                     break;
-                case "BindAccount":
-                    // 绑定账号
-                    HandleAccountBinder();
+                default:
+                    ResponseData(-1, string.Format("Can not handle your request command: {0}", cmd));
                     break;
             }
         }
