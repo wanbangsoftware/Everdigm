@@ -45,7 +45,7 @@ namespace Wbs.Everdigm.Web
         {
             var md5 = Utility.MD5(password.Value).ToLower();
             var name = username.Value.Trim();
-            name = name.Length >= 20 ? name.Substring(0, 20) : name;
+            name = name.Length >= 30 ? name.Substring(0, 30) : name;
             var account = AccountInstance.Find(name, md5);
             if (null != account)
             {

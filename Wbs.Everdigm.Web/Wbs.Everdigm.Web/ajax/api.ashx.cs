@@ -45,6 +45,9 @@ namespace Wbs.Everdigm.Web.ajax
                 case "CheckUpdate":
                     HandleCheckUpdate();
                     break;
+                case "Account":
+                    HandleAccountBinder();
+                    break;
                 default:
                     ResponseData(-1, string.Format("Can not handle your request command: {0}", cmd));
                     break;

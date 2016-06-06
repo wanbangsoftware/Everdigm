@@ -18,17 +18,18 @@ namespace Wbs.Everdigm.BLL
             return new TB_Tracker()
             {
                 Address = "",
-                BatteryAlarm = (DateTime?)null,
+                BatteryAlarm = null,
                 CarNumber = "",
-                ChargingAlarm = (DateTime?)null,
+                ChargingAlarm = null,
                 Deleted = false,
                 Director = "",
+                DeviceId = "",
                 CSQ = 0,
                 id = 0,
-                LastActionAt = (DateTime?)null,
+                LastActionAt = null,
                 Latitude = 0.0,
                 Longitude = 0.0,
-                ParkingAlarm = (DateTime?)null,
+                ParkingAlarm = null,
                 SimCard = "",
                 Socket = 0,
                 State = 0

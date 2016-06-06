@@ -25,6 +25,7 @@ namespace Wbs.Everdigm.BLL
                 Locked = false,
                 Code = "",
                 LoginTimes = 0,
+                Tracker = 0,
                 Question = "",
                 Answer = "",
                 Department = 0,

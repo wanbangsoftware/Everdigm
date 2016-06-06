@@ -16,9 +16,16 @@ namespace Wbs.Everdigm.Web.ajax
         /// </summary>
         private void HandleCheckUpdate()
         {
-            var app = AppInstance.Find(f => f.Useable == true);
-            if (null == app) app = AppInstance.GetObject();
-            ResponseData(0, JsonConverter.ToJson(app), true);
+            try
+            {
+                var app = AppInstance.Find(f => f.Useable == true);
+                if (null == app) app = AppInstance.GetObject();
+                ResponseData(0, JsonConverter.ToJson(app), true);
+            }
+            catch (Exception e)
+            {
+                ResponseData(-1, string.Format("Can not handle your \\\"check update\\\" request: {0}", e.Message));
+            }
         }
     }
 }
