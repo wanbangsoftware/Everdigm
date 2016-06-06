@@ -47,7 +47,12 @@ namespace Wbs.Everdigm.Web.ajax
                     ResponseData(0, ConfigurationManager.AppSettings["MQTT_SERVICE_ADDRESS"]);
                     break;
                 case "CheckUpdate":
+                    // 检测应用更新升级
                     HandleCheckUpdate();
+                    break;
+                case "BindAccount":
+                    // 绑定账号
+                    HandleAccountBinder();
                     break;
             }
         }
