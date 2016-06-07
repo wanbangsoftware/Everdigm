@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Configuration;
 using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Database;
 
@@ -12,6 +13,8 @@ namespace Wbs.Everdigm.Web.ajax
     /// </summary>
     public partial class api
     {
+        private string TrackerNumberPrefix = "";
+
         private void HandleAccountBinder()
         {
             var name = GetParamenter("account");
@@ -96,9 +99,33 @@ namespace Wbs.Everdigm.Web.ajax
                     ResponseData(0, tracker.SimCard);
                 }
             }
-            else {
+            else
+            {
+                if (string.IsNullOrEmpty(TrackerNumberPrefix))
+                {
+                    TrackerNumberPrefix = ConfigurationManager.AppSettings["TRACKER_NUMBER_PREFIX"];
+                }
                 // 生成一个新的tracker并与当前账户绑定
-
+                tracker = TrackerInstance.Find(f => f.SimCard.StartsWith(TrackerNumberPrefix) && f.Deleted == false);
+                string number;
+                if (null == tracker) { number = TrackerNumberPrefix + "0000"; }
+                else
+                {
+                    var old = int.Parse(tracker.SimCard) + 1;
+                    number = old.ToString();
+                }
+                tracker = TrackerInstance.GetObject();
+                tracker.SimCard = number;
+                tracker.DeviceId = deviceId;
+                tracker = TrackerInstance.Add(tracker);
+                // 保存tracker绑定历史记录
+                SaveHistory(new TB_AccountHistory()
+                {
+                    Account = account.id,
+                    ActionId = ActionInstance.Find(f => f.Name.Equals("BindTrackerNew")).id,
+                    ObjectA = string.Format("tracker: {0}, device: {1}, account: {2}", tracker.SimCard, tracker.DeviceId, account.Code)
+                });
+                ResponseData(0, tracker.SimCard);
             }
         }
     }
