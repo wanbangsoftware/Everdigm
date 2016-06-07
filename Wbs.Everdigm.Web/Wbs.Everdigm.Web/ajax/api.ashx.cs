@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Web;
+using Wbs.Everdigm.Common;
 using System.Configuration;
 
 namespace Wbs.Everdigm.Web.ajax
@@ -36,21 +38,29 @@ namespace Wbs.Everdigm.Web.ajax
         /// </summary>
         private void HandleRequest()
         {
-            switch (cmd)
+            var apiObject = ParseJson<Api>(requestedContent);
+            if (null == apiObject)
             {
-                case "GetParameter":
-                    // app端获取mqtt服务地址
-                    ResponseData(0, ConfigurationManager.AppSettings["MQTT_SERVICE_ADDRESS"]);
-                    break;
-                case "CheckUpdate":
-                    HandleCheckUpdate();
-                    break;
-                case "Account":
-                    HandleAccountBinder();
-                    break;
-                default:
-                    ResponseData(-1, string.Format("Can not handle your request command: {0}", cmd));
-                    break;
+                ResponseData(-1, "Can not hander your request with error object.");
+            }
+            else
+            {
+                switch (apiObject.cmd)
+                {
+                    case "GetParameter":
+                        // app端获取mqtt服务地址
+                        ResponseData(0, ConfigurationManager.AppSettings["MQTT_SERVICE_ADDRESS"]);
+                        break;
+                    case "CheckUpdate":
+                        HandleCheckUpdate();
+                        break;
+                    case "BindAccount":
+                        HandleAccountBinder(apiObject);
+                        break;
+                    default:
+                        ResponseData(-1, string.Format("Can not handle your request command: {0}", cmd));
+                        break;
+                }
             }
         }
     }

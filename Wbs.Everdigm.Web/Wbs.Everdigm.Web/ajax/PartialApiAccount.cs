@@ -15,56 +15,60 @@ namespace Wbs.Everdigm.Web.ajax
     {
         private string TrackerNumberPrefix = "";
 
-        private void HandleAccountBinder()
+        private void HandleAccountBinder(Api obj)
         {
-            var name = GetParamenter("account");
-            if (name.Length >= 30)
-                name = name.Substring(0, 30);
-
-            var device = GetParamenter("device");
-            var pwd = GetParamenter("password").ToLower();
-            try
+            var acnt = ParseJson<Account>(obj.content);
+            if (null == acnt) { ResponseData(-1, "Can not bind your account with error object."); }
+            else
             {
-                var account = AccountInstance.Find(name, pwd);
-                if (null == account)
+                var name = acnt.name;
+                if (name.Length >= 30)
+                    name = name.Substring(0, 30);
+
+                var device = acnt.device;
+                var pwd = acnt.md5.ToLower();
+                try
                 {
-                    ResponseData(-1, "Your account is not exist");
-                }
-                else
-                {
-                    if (account.Locked == true)
+                    var account = AccountInstance.Find(name, pwd);
+                    if (null == account)
                     {
-                        ResponseData(-1, "Your account was locked.");
-                    }
-                    else if ((int?)null != account.Tracker)
-                    {
-                        if (account.TB_Tracker.DeviceId.Equals(device))
-                        {
-                            ResponseData(-1, "Your account is already bind with this device.");
-                        }
-                        else
-                        {
-                            ResponseData(-1, "Your account was bind with another device.");
-                        }
+                        ResponseData(-1, "Your account is not exist");
                     }
                     else
                     {
-                        // 创建一个新的tracker绑定关系
-                        BindAccountWithTracker(account);
+                        if (account.Locked == true)
+                        {
+                            ResponseData(-1, "Your account was locked.");
+                        }
+                        else if ((int?)null != account.Tracker)
+                        {
+                            if (account.TB_Tracker.DeviceId.Equals(device))
+                            {
+                                ResponseData(-1, "Your account is already bind with this device.");
+                            }
+                            else
+                            {
+                                ResponseData(-1, "Your account was bind with another device.");
+                            }
+                        }
+                        else
+                        {
+                            // 创建一个新的tracker绑定关系
+                            BindAccountWithTracker(account, device);
+                        }
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                ResponseData(-1, string.Format("Can not hander your \\\"bind account\\\" request: {0}", e.Message));
+                catch (Exception e)
+                {
+                    ResponseData(-1, string.Format("Can not hander your \\\"bind account\\\" request: {0}", e.Message));
+                }
             }
         }
 
-        private void BindAccountWithTracker(TB_Account account)
+        private void BindAccountWithTracker(TB_Account account, string device)
         {
-            var deviceId = GetParamenter("device");
             // 查找相同deviceid的tracker
-            var tracker = TrackerInstance.Find(f => f.Deleted == false && f.DeviceId.Equals(deviceId));
+            var tracker = TrackerInstance.Find(f => f.Deleted == false && f.DeviceId.Equals(device));
             if (null != tracker)
             {
                 // 查找这个设备是否已经绑定到别人账户上
@@ -116,7 +120,7 @@ namespace Wbs.Everdigm.Web.ajax
                 }
                 tracker = TrackerInstance.GetObject();
                 tracker.SimCard = number;
-                tracker.DeviceId = deviceId;
+                tracker.DeviceId = device;
                 tracker = TrackerInstance.Add(tracker);
                 // 保存tracker绑定历史记录
                 SaveHistory(new TB_AccountHistory()

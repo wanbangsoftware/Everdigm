@@ -1,4 +1,6 @@
-﻿using System.Web;
+﻿using System.IO;
+using System.Web;
+using Wbs.Everdigm.Common;
 using System.Web.SessionState;
 using Wbs.Everdigm.Database;
 
@@ -34,6 +36,10 @@ namespace Wbs.Everdigm.Web.ajax
         /// </summary>
         protected string data = "";
         /// <summary>
+        /// 客户端post过来的内容
+        /// </summary>
+        protected string requestedContent = "";
+        /// <summary>
         /// 处理客户端过来的请求
         /// </summary>
         /// <param name="context"></param>
@@ -43,8 +49,36 @@ namespace Wbs.Everdigm.Web.ajax
             context.Response.ContentType = "application/json;charset=utf-8";
             // 是否需要跨域访问？
             //context.Response.AddHeader("Access-Control-Allow-Origin", "*");
-
+            GotContextContent();
             HandlerParamenters();
+        }
+        /// <summary>
+        /// 获取post过来的内容
+        /// </summary>
+        private void GotContextContent()
+        {
+            using (var input = new StreamReader(ctx.Request.InputStream))
+            {
+                requestedContent = input.ReadToEnd();
+            }
+        }
+        /// <summary>
+        /// 尝试将json字符串转换成对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static T ParseJson<T>(string json)
+        {
+            json = json.Trim();
+            if ((json.StartsWith("{") && json.EndsWith("}")) || //For object
+            (json.StartsWith("[") && json.EndsWith("]"))) //For array
+            {
+                try {
+                    return JsonConverter.ToObject<T>(json);
+                } catch { return default(T); }
+            }
+            return default(T);
         }
         /// <summary>
         /// 处理参数列表

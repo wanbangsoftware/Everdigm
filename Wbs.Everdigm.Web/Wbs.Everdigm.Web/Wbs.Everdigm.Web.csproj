@@ -587,6 +587,7 @@
     </Compile>
     <Compile Include="ajax\PartialApiAccount.cs" />
     <Compile Include="ajax\PartialApiBLL.cs" />
+    <Compile Include="ajax\PartialApiClasses.cs" />
     <Compile Include="ajax\PartialApiUpdate.cs" />
     <Compile Include="ajax\PartialCommandBLLs.cs" />
     <Compile Include="ajax\PartialPrintIridium.cs" />

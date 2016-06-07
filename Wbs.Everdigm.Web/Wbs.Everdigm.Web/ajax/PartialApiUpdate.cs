@@ -24,7 +24,7 @@ namespace Wbs.Everdigm.Web.ajax
             }
             catch (Exception e)
             {
-                ResponseData(-1, string.Format("Can not handle your \\\"check update\\\" request: {0}", e.Message));
+                ResponseData(-1, string.Format("Can not handle your [update] request: {0}", e.Message));
             }
         }
     }
