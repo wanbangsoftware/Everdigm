@@ -52,7 +52,7 @@ namespace Wbs.Everdigm.Web.ajax
                         ResponseData(0, ConfigurationManager.AppSettings["MQTT_SERVICE_ADDRESS"]);
                         break;
                     case "CheckUpdate":
-                        HandleCheckUpdate();
+                        HandleCheckUpdate(apiObject);
                         break;
                     case "BindAccount":
                         HandleAccountBinder(apiObject);
