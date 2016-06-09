@@ -125,9 +125,10 @@ namespace Wbs.Everdigm.Desktop
                     }
                 });
             }
-            string type = alarm[0] == '1' ? "Battery OFF" :
-                (alarm[1] == '1' ? "Parking Timeout" :
-                (alarm[2] == '1' ? "Charge OFF" : (alarm[2] == '0' ? "Charge ON" : "Unknown")));
+            string type = ((TX10GAlarms)x7020.Alarm).ToString().Replace("TX10GAlarms", "");
+                //alarm[0] == '1' ? "Battery OFF" :
+                //(alarm[1] == '1' ? "Parking Timeout" :
+                //(alarm[2] == '1' ? "Charge OFF" : (alarm[2] == '0' ? "Charge ON" : "Unknown")));
             if (x7020.Position.Available)
             {
                 SaveTrackerPosition(obj.TerminalID, (null == tracker ? "" : tracker.CarNumber),

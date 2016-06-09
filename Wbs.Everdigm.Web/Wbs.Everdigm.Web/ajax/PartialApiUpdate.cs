@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Configuration;
 using System.Linq.Expressions;
 using Wbs.Everdigm.Common;
 using Wbs.Everdigm.Database;
@@ -13,6 +14,7 @@ namespace Wbs.Everdigm.Web.ajax
     /// </summary>
     public partial class api
     {
+        private static string MQTT_SERVER = ConfigurationManager.AppSettings["MQTT_SERVICE_ADDRESS"];
         /// <summary>
         /// 处理app端检查更新的请求
         /// </summary>
@@ -43,6 +45,51 @@ namespace Wbs.Everdigm.Web.ajax
             {
                 ResponseData(-1, string.Format("Can not handle your [update] request: {0}", e.Message));
             }
+        }
+
+        private void HandleGetParameter(Api obj)
+        {
+            try
+            {
+                var acnt = ParseJson<Account>(obj.content);
+                if (null != acnt)
+                {
+                    Account resp = new Account();
+                    resp.md5 = MQTT_SERVER;
+
+                    var device = acnt.device;
+                    var tracker = TrackerInstance.Find(f => f.DeviceId.Equals(device) && f.Deleted == false);
+                    if (null == tracker)
+                    {
+                        tracker = addTracker(acnt.device);
+                        resp.data = tracker.SimCard;
+                        // 新登记的tracker没有session
+                        resp.session = "";
+                    }
+                    else
+                    {
+                        // 查找绑定用户的登录session
+                        var user = tracker.TB_Account.FirstOrDefault();
+                        if (null == user)
+                        {
+                            // 没有绑定用户时session为空
+                            resp.session = "";
+                        }
+                        else
+                        {
+                            resp.name = user.Code;
+                            // 已绑定过的用户返回session
+                            resp.session = user.DeviceLoginId;
+                        }
+                        resp.data = tracker.SimCard;
+                    }
+
+                    // get parameter的时候只返回设备与sim卡之间的绑定关系，没有账户的信息
+                    ResponseData(0, JsonConverter.ToJson(resp), true);
+                }
+                else { ResponseData(-1, "Can not handle your get_parameter request with error data."); }
+            }
+            catch (Exception e) { ResponseData(-1, string.Format("Can not handle your get_parameter request: {0}", e.Message)); }
         }
     }
 }

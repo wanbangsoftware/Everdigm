@@ -27,6 +27,7 @@ namespace Wbs.Everdigm.BLL
                 LoginTimes = 0,
                 Tracker = 0,
                 Question = "",
+                DeviceLoginId = "",
                 Answer = "",
                 Department = 0,
                 Email = "",

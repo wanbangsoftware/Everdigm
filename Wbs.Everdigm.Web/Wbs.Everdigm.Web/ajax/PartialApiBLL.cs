@@ -27,6 +27,10 @@ namespace Wbs.Everdigm.Web.ajax
         private TrackerBLL TrackerInstance { get { return new TrackerBLL(); } }
         private ActionBLL ActionInstance { get { return new ActionBLL(); } }
         /// <summary>
+        /// 将tracker汇报的数据保存到sms表中待处理
+        /// </summary>
+        private SmsBLL SmsInstance { get { return new SmsBLL(); } }
+        /// <summary>
         /// 保存历史记录
         /// </summary>
         /// <param name="obj"></param>

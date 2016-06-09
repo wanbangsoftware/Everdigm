@@ -18,6 +18,7 @@ namespace Wbs.Everdigm.BLL
                 Data = "",
                 ReceiveTime = DateTime.Now,
                 Sender = "",
+                Type = 0,
                 Handled = false,
                 SendTime = DateTime.Now
             };

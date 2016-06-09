@@ -27,7 +27,8 @@ namespace Wbs.Everdigm.Web.ajax
         /// <summary>
         /// api 中所用到的简单的account类
         /// </summary>
-        private class Account {
+        private class Account
+        {
             /// <summary>
             /// 账户名
             /// </summary>
@@ -41,9 +42,22 @@ namespace Wbs.Everdigm.Web.ajax
             /// </summary>
             public string device { get; set; }
             /// <summary>
+            /// 用户登录的session id
+            /// </summary>
+            public string session { get; set; }
+            /// <summary>
             /// 其他需要一起上报的数据
             /// </summary>
             public string data { get; set; }
+
+            public Account()
+            {
+                name = "";
+                md5 = "";
+                device = "";
+                session = "";
+                data = "";
+            }
         }
     }
 }

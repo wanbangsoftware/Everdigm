@@ -49,7 +49,8 @@ namespace Wbs.Everdigm.Web.ajax
                 {
                     case "GetParameter":
                         // app端获取mqtt服务地址
-                        ResponseData(0, ConfigurationManager.AppSettings["MQTT_SERVICE_ADDRESS"]);
+                        HandleGetParameter(apiObject);
+                        //ResponseData(0, ConfigurationManager.AppSettings["MQTT_SERVICE_ADDRESS"]);
                         break;
                     case "CheckUpdate":
                         HandleCheckUpdate(apiObject);
@@ -57,8 +58,12 @@ namespace Wbs.Everdigm.Web.ajax
                     case "BindAccount":
                         HandleAccountBinder(apiObject);
                         break;
+                    case "Report":
+                        // 汇报数据
+                        HandleReportData(apiObject);
+                        break;
                     default:
-                        ResponseData(-1, string.Format("Can not handle your request command: {0}", cmd));
+                        ResponseData(-1, string.Format("Can not handle your request command: {0}", apiObject.cmd));
                         break;
                 }
             }

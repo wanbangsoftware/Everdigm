@@ -14,6 +14,14 @@ namespace Wbs.Everdigm.Common
     public class SMSUtility
     {
         /// <summary>
+        /// 终端GSM汇报回来的SMS消息
+        /// </summary>
+        public static byte SMS_TERMINAL = 0x00;
+        /// <summary>
+        /// 手机设备tracker汇报回来的数据，全部都存在sms表里
+        /// </summary>
+        public static byte SMS_TRACKER = 0x01;
+        /// <summary>
         /// SMS内容字符串
         /// </summary>
         private static string CONTENT = ConfigurationManager.AppSettings["SMSContent"];
