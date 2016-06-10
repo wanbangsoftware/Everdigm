@@ -185,8 +185,7 @@ namespace Wbs.Everdigm.Desktop
                             ret = _server.Send(Port, IP, resp.Content);
                         if (1 != ret)
                         {
-                            ShowUnhandledMessage(format("{0}Cannot send data to {1}:{2}: {3} [{4}]", Now,
-                                IP, Port, CustomConvert.GetHex(resp.Content), data.PackageType));
+                            ShowUnhandledMessage(format("{0}Cannot send data to {1}:{2}: {3} [{4}]", Now, IP, Port, CustomConvert.GetHex(resp.Content), data.PackageType));
                         }
                     }
                 }

@@ -34,7 +34,11 @@ namespace Wbs.Everdigm.Desktop
         {
             if (null != broker)
             {
-                broker.Stop();
+                try
+                {
+                    broker.Stop();
+                }
+                catch { }
             }
         }
         

@@ -1,10 +1,12 @@
 ﻿using System;
-
+using System.Configuration;
+using Wbs.Protocol;
 using Wbs.Protocol.TX300;
 using Wbs.Protocol.TX300.Analyse;
 using Wbs.Sockets;
 using Wbs.Everdigm.Database;
 using Wbs.Everdigm.BLL;
+using Wbs.Utilities;
 
 namespace Wbs.Everdigm.Desktop
 {
@@ -72,7 +74,7 @@ namespace Wbs.Everdigm.Desktop
         /// 保存Tracker的历史定位记录
         /// </summary>
         /// <param name="tracker"></param>
-        private void SaveTrackerPosition(string sim, string car, int tracker, TX10G_Position position, string type, DateTime time)
+        private void SaveTrackerPosition(string sim, string car, int tracker, string provider, TX10G_Position position, string type, DateTime time)
         {
             var bll = new TrackerPositionBLL();
             var pos = bll.GetObject();
@@ -81,6 +83,7 @@ namespace Wbs.Everdigm.Desktop
             pos.GPSTime = position.GPSTime;
             pos.Latitude = position.Latitude;
             pos.Longitude = position.Longitude;
+            pos.Provider = provider;
             pos.ReceiveTime = time;
             pos.SimCard = sim;
             pos.Tracker = 0 > tracker ? (int?)null : tracker;
@@ -90,12 +93,12 @@ namespace Wbs.Everdigm.Desktop
         /// 处理报警信息
         /// </summary>
         /// <param name="obj"></param>
-        private void Handle0x7020(TX300 obj, TB_Tracker tracker,TrackerBLL bll)
+        private void Handle0x7020(TX300 obj, TB_Tracker tracker, TrackerBLL bll)
         {
             _0x7020 x7020 = new _0x7020();
             x7020.Content = obj.MsgContent;
             x7020.Unpackage();
-            
+
             var alarm = x7020.AlarmBIN;
 
             if (null != tracker)
@@ -125,14 +128,29 @@ namespace Wbs.Everdigm.Desktop
                     }
                 });
             }
-            string type = ((TX10GAlarms)x7020.Alarm).ToString().Replace("TX10GAlarms", "");
-                //alarm[0] == '1' ? "Battery OFF" :
-                //(alarm[1] == '1' ? "Parking Timeout" :
-                //(alarm[2] == '1' ? "Charge OFF" : (alarm[2] == '0' ? "Charge ON" : "Unknown")));
+            string type = "";
+            if (obj.TerminalType == TerminalTypes.TX10GAPP)
+            {
+                // app 端报告的报警信息
+                type = ((TX10GAlarms)x7020.Alarm).ToString().Replace("TX10GAlarms", "");
+            }
+            else
+            {
+                // tx10g 报告的报警信息
+                type = alarm[0] == '1' ? "Battery OFF" :
+                (alarm[1] == '1' ? "Parking Timeout" :
+                (alarm[2] == '1' ? "Charge OFF" : (alarm[2] == '0' ? "Charge ON" : "Unknown")));
+            }
+            string provider = "gps";
+            if (obj.TerminalType == TerminalTypes.TX10GAPP) {
+                // tx10g app 的 packageid和packagelength两个字节可以当作provider来区分
+                string bin = CustomConvert.IntToDigit(obj.PackageID, CustomConvert.BIN, 8);
+                provider = bin[0] == '0' ? "gps" : "network";
+            }
             if (x7020.Position.Available)
             {
                 SaveTrackerPosition(obj.TerminalID, (null == tracker ? "" : tracker.CarNumber),
-                    (null == tracker ? -1 : tracker.id), x7020.Position, type, tracker.LastActionAt.Value);
+                    (null == tracker ? -1 : tracker.id), provider, x7020.Position, type, tracker.LastActionAt.Value);
             }
         }
 
@@ -141,14 +159,22 @@ namespace Wbs.Everdigm.Desktop
             _0x7030 x7030 = new _0x7030();
             x7030.Content = obj.MsgContent;
             x7030.Unpackage();
-            
+            string provider = "gps";
+            var bin = "0000000000000000";
+            if (obj.TerminalType == TerminalTypes.TX10GAPP) {
+                bin = CustomConvert.IntToDigit(obj.PackageID, CustomConvert.BIN, 8) + 
+                    CustomConvert.IntToDigit(obj.TotalPackage, CustomConvert.BIN, 8);
+            }
+            int cnt = 0;
             foreach (var pos in x7030.Positions)
             {
                 if (pos.Available)
                 {
+                    provider = bin[cnt] == '0' ? "gps" : "network";
                     SaveTrackerPosition(obj.TerminalID, (null == tracker ? "" : tracker.CarNumber),
-                      (null == tracker ? -1 : tracker.id), pos, "Tracking", tracker.LastActionAt.Value);
+                      (null == tracker ? -1 : tracker.id), provider, pos, "Tracking", tracker.LastActionAt.Value);
                 }
+                cnt++;
             }
         }
         private void Handle0x7040(TX300 obj, TB_Tracker tracker)
