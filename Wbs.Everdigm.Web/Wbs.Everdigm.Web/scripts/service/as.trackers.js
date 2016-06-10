@@ -29,17 +29,36 @@ function checkAddEdit() {
 }
 
 function lineClick(evt) {
-    if (evt.target.tagName.toLowerCase() != "a") {
-        var obj = evt.currentTarget;
-        // 显示编辑
-        var href = $(obj).children("td:eq(1)").children("a:eq(0)").attr("href");
-        href = href.substr(href.indexOf("=") + 1);
-        $("#hiddenId").val(href);
+    var name = evt.target.tagName.toLowerCase();
+    if (name != "a") {
+        var can = true;
+        if (name == "span") {
+            var span = $(evt.target).parent();
+            var clazz = span.attr("class");
+            if (!clazz.match("gray$")) {
+                can = false;
+                var a = span.parent();
+                var href = a.attr("href");
+                var start = href.substr(0, 6);
+                if (start == "#sett_") {
+                    // 打开设置对话框
+                } else {
+                    // 打开聊天对话框
+                }
+            }
+        }
+        if (can) {
+            var obj = evt.currentTarget;
+            // 显示编辑
+            var href = $(obj).children("td:eq(1)").children("a:eq(0)").attr("href");
+            href = href.substr(href.indexOf("=") + 1);
+            $("#hiddenId").val(href);
 
-        // 显示号码
-        $("#number").val($(obj).children("td:eq(1)").children("a:eq(0)").text()).attr("disabled", true);
-        $("#vehicle").val($(obj).children("td:eq(6)").text());
-        $("#director").val($(obj).children("td:eq(7)").text());
-        $("#modalNewTracker").modal("show");
+            // 显示号码
+            $("#number").val($(obj).children("td:eq(1)").children("a:eq(0)").text()).attr("disabled", true);
+            $("#vehicle").val($(obj).children("td:eq(6)").text());
+            $("#director").val($(obj).children("td:eq(7)").text());
+            $("#modalNewTracker").modal("show");
+        }
     }
 }

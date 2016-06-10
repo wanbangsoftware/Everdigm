@@ -107,7 +107,7 @@
     <script type="text/javascript" src="../js/javascript.date.pattern.js"></script>
     <script type="text/javascript" src="../js/common.js"></script>
     <script type="text/javascript" src="../js/jquery.timer.js"></script>
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyA3ZyjLQqMHZ7jtuVmCxbK11r86K2UuNLM&sensor=false"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyA3ZyjLQqMHZ7jtuVmCxbK11r86K2UuNLM"></script>
     <script type="text/javascript" src="../js/google.map.api.js"></script>
     <script type="text/javascript" src="../scripts/service/as.common.js"></script>
     <script type="text/javascript" src="../scripts/service/as.tracker.js"></script>

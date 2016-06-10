@@ -133,7 +133,7 @@
     <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="../bootstrap3/js/bootstrap.js"></script>
     <script src="../js/BootSiderMenu/js/BootSideMenu.js"></script>
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA3ZyjLQqMHZ7jtuVmCxbK11r86K2UuNLM&sensor=false"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA3ZyjLQqMHZ7jtuVmCxbK11r86K2UuNLM"></script>
     <script src="../js/CustomGoogleMapMarker.js"></script>
     <script src="../js/js.marker.clusterer/src/markerclusterer.js"></script>
     <script src="../js/common.js"></script>

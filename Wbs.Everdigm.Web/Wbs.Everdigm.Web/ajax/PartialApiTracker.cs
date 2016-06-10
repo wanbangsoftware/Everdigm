@@ -31,9 +31,12 @@ namespace Wbs.Everdigm.Web.ajax
                     TrackerNumberPrefix = ConfigurationManager.AppSettings["TRACKER_NUMBER_PREFIX"];
                 }
                 // 生成一个新的tracker并与当前账户绑定
-                tracker = TrackerInstance.Find(f => f.SimCard.StartsWith(TrackerNumberPrefix) && f.Deleted == false);
+                tracker = TrackerInstance.FindList<TB_Tracker>(f => f.SimCard.StartsWith(TrackerNumberPrefix) && f.Deleted == false, "SimCard", true).FirstOrDefault();
                 string number;
-                if (null == tracker) { number = TrackerNumberPrefix + "0000"; }
+                if (null == tracker)
+                {
+                    number = TrackerNumberPrefix + "0000";
+                }
                 else
                 {
                     var old = int.Parse(tracker.SimCard) + 1;

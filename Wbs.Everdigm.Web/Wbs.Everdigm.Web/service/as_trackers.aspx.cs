@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using Wbs.Everdigm.Database;
 
 namespace Wbs.Everdigm.Web.service
@@ -10,7 +12,7 @@ namespace Wbs.Everdigm.Web.service
             _cookie_name_ = "_as_trackers_list_page_";
             cookieName.Value = _cookie_name_;
             base.Page_Load(sender, e);
-            if (!HasSessionLose)
+            //if (!HasSessionLose)
             {
                 if (!IsPostBack)
                 {
@@ -28,36 +30,50 @@ namespace Wbs.Everdigm.Web.service
             var totalRecords = 0;
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             pageIndex = (0 >= pageIndex ? 1 : pageIndex);
-            var list = TrackerInstance.FindPageList<TB_Tracker>(pageIndex, PageSize, out totalRecords,
-                f => (f.SimCard.IndexOf(query) >= 0 || f.CarNumber.IndexOf(query) >= 0) && f.Deleted == false, "SimCard");
+            Expression<Func<TB_Tracker, bool>> expression = PredicateExtensions.True<TB_Tracker>();
+            if (!string.IsNullOrEmpty(query))
+            {
+                expression = expression.And(a => a.CarNumber.Contains(query));
+            }
+            expression = expression.And(a => a.Deleted == false);
+            var list = TrackerInstance.FindPageList<TB_Tracker>(pageIndex, PageSize, out totalRecords, expression, "SimCard");
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             hidTotalPages.Value = totalPages.ToString();
 
             string html = "";
             if (totalRecords < 1)
             {
-                html = "<tr><td colspan=\"10\">No records, Change condition to try again.</td></tr>";
+                html = "<tr><td colspan=\"12\">No records, Change condition to try again.</td></tr>";
             }
             else
             {
                 var cnt = (pageIndex - 1) * PageSize;
                 var d = (DateTime?)null;
                 var fmt = "yyyy/MM/dd HH:mm:ss";
+                var td = "<td class=\"in-tab-txt-b\" style=\"text-align: left;\">";
                 foreach (var obj in list)
                 {
                     cnt++;
                     var id = Utility.UrlEncode(Utility.Encrypt(obj.id.ToString()));
-
+                    bool notchatable = null == obj.LastActionAt || obj.LastActionAt <= DateTime.Now.AddDays(-10);
+                    var chat = notchatable ? "gray" : "attention";
+                    var chattitle = notchatable ? "" : "notify this guy";
+                    var chatLink = notchatable ? "#" : "#chat_" + id;
+                    var setting = notchatable ? "warning" : "success";
+                    var settingTitle = "Change the report period" + (notchatable ? "(maybe cannot take effect)" : "");
+                    var user = obj.TB_Account.Count > 0 ? obj.TB_Account.FirstOrDefault(f => f.Tracker == obj.id) : null;
                     html += "<tr>" +
                         "<td class=\"in-tab-txt-b\">" + cnt + "</td>" +
-                        "<td class=\"in-tab-txt-b\" style=\"text-align: left;\"><a href=\"./as_tracker.aspx?key=" + id + "\">" + obj.SimCard + "</a></td>" +
-                        "<td class=\"in-tab-txt-b\">" + (d == obj.LastActionAt ? "-" : obj.LastActionAt.Value.ToString(fmt)) + "</td>" +
-                        "<td class=\"in-tab-txt-b\">" + (d == obj.ChargingAlarm ? "-" : obj.ChargingAlarm.Value.ToString(fmt)) + "</td>" +
-                        "<td class=\"in-tab-txt-b\">" + (d == obj.BatteryAlarm ? "-" : obj.BatteryAlarm.Value.ToString(fmt)) + "</td>" +
-                        "<td class=\"in-tab-txt-b\">" + (d == obj.ParkingAlarm ? "-" : obj.ParkingAlarm.Value.ToString(fmt)) + "</td>" +
-                        "<td class=\"in-tab-txt-b\">" + obj.CarNumber + "</td>" +
-                        "<td class=\"in-tab-txt-b\">" + obj.Director + "</td>" +
-                        "<td class=\"in-tab-txt-b\" style=\"text-align: left;\">" + obj.Address + "</td>" +
+                        td + "<a href=\"./as_tracker.aspx?key=" + id + "\">" + obj.SimCard + "</a></td>" +
+                        td + "<a href=\"#sett_" + id + "\"><span class=\"text-custom-" + setting + "\" title=\"" + settingTitle + "\"><span class=\"fa fa-cog\" style=\"font-size:130%;\" aria-hidden=\"true\"></span></span></a></td>" +
+                        td + "<a href=\"" + chatLink + "\"><span class=\"text-custom-" + chat + "\" title=\"" + chattitle + "\"><span class=\"fa fa-comments\" style=\"font-size: 130%;\" aria-hidden=\"true\"></span></span></a></td>" +
+                        td + (d == obj.LastActionAt ? "-" : obj.LastActionAt.Value.ToString(fmt)) + "</td>" +
+                        td + (d == obj.ChargingAlarm ? "-" : obj.ChargingAlarm.Value.ToString(fmt)) + "</td>" +
+                        td + (d == obj.BatteryAlarm ? "-" : obj.BatteryAlarm.Value.ToString(fmt)) + "</td>" +
+                        td + (d == obj.ParkingAlarm ? "-" : obj.ParkingAlarm.Value.ToString(fmt)) + "</td>" +
+                        td + obj.CarNumber + "</td>" +
+                        "<td class=\"in-tab-txt-b textoverflow\" style=\"text-align: left;\">" + (null == user ? "-" : user.Name) + "</td>" +
+                        td + obj.Address + "</td>" +
                         "<td class=\"in-tab-txt-b\"></td>" +
                         "</tr>";
                 }

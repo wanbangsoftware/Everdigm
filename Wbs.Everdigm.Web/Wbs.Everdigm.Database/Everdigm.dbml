@@ -1,4 +1,49 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="GPSSYSTEM" Class="EverdigmDataContext" Serialization="Unidirectional" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Table Name="dbo.TB_Account" Member="TB_Account">
+    <Type Name="TB_Account">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Locked" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Role" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Department" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="LoginTimes" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Tracker" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="RegisterTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="LastLoginTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="LastLoginIp" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Code" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="LandlineNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Phone" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="DeviceLoginId" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Password" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Question" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Answer" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="TB_Account_TB_AccountHistory" Member="TB_AccountHistory" ThisKey="id" OtherKey="Account" Type="TB_AccountHistory" />
+      <Association Name="TB_Account_TB_Command" Member="TB_Command" ThisKey="id" OtherKey="SendUser" Type="TB_Command" />
+      <Association Name="TB_Account_TB_TrackerChat" Member="TB_TrackerChat" ThisKey="id" OtherKey="Deliver" Type="TB_TrackerChat" />
+      <Association Name="TB_Department_TB_Account" Member="TB_Department" ThisKey="Department" OtherKey="id" Type="TB_Department" IsForeignKey="true" DeleteRule="SET DEFAULT" />
+      <Association Name="TB_Role_TB_Account" Member="TB_Role" ThisKey="Role" OtherKey="id" Type="TB_Role" IsForeignKey="true" DeleteRule="SET DEFAULT" />
+      <Association Name="TB_Tracker_TB_Account" Member="TB_Tracker" ThisKey="Tracker" OtherKey="id" Type="TB_Tracker" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_WorkDetail" Member="TB_WorkDetail">
+    <Type Name="TB_WorkDetail">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Deleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Priority" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="Type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="[Work]" Member="Work" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Equipment" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="BookedTerminal" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Details" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Association Name="TB_WorkDetail_TB_ExcelHandler" Member="TB_ExcelHandler" ThisKey="id" OtherKey="Work" Type="TB_ExcelHandler" />
+      <Association Name="TB_Equipment_TB_WorkDetail" Member="TB_Equipment" ThisKey="Equipment" OtherKey="id" Type="TB_Equipment" IsForeignKey="true" DeleteRule="SET NULL" />
+      <Association Name="TB_Terminal_TB_WorkDetail" Member="TB_Terminal" ThisKey="BookedTerminal" OtherKey="id" Type="TB_Terminal" IsForeignKey="true" DeleteRule="SET NULL" />
+      <Association Name="TB_Work_TB_WorkDetail" Member="TB_Work" ThisKey="Work" OtherKey="id" Type="TB_Work" IsForeignKey="true" DeleteRule="SET NULL" />
+    </Type>
+  </Table>
   <Table Name="dbo.TB_AccountAction" Member="TB_AccountAction">
     <Type Name="TB_AccountAction">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -17,8 +62,39 @@
       <Column Name="ObjectA" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
       <Column Name="ObjectB" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
       <Column Name="ObjectC" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
-      <Association Name="TB_AccountAction_TB_AccountHistory" Member="TB_AccountAction" ThisKey="ActionId" OtherKey="id" Type="TB_AccountAction" IsForeignKey="true" DeleteRule="SET DEFAULT" />
       <Association Name="TB_Account_TB_AccountHistory" Member="TB_Account" ThisKey="Account" OtherKey="id" Type="TB_Account" IsForeignKey="true" DeleteRule="SET DEFAULT" />
+      <Association Name="TB_AccountAction_TB_AccountHistory" Member="TB_AccountAction" ThisKey="ActionId" OtherKey="id" Type="TB_AccountAction" IsForeignKey="true" DeleteRule="SET DEFAULT" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_Application" Member="TB_Application">
+    <Type Name="TB_Application">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Useable" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="VersionCode" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="InternalVersion" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="CreateTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="VersionName" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Download" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_Command" Member="TB_Command">
+    <Type Name="TB_Command">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DataType" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="Status" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="SendUser" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Terminal" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IridiumMTMSN" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TimeUsed" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="ScheduleTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ActualSendTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Command" Type="System.String" DbType="Char(6)" CanBeNull="true" />
+      <Column Name="DestinationNo" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Column Name="Content" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Association Name="TB_Command_TB_CommandHistory" Member="TB_CommandHistory" ThisKey="id" OtherKey="Command" Type="TB_CommandHistory" />
+      <Association Name="TB_Account_TB_Command" Member="TB_Account" ThisKey="SendUser" OtherKey="id" Type="TB_Account" IsForeignKey="true" />
+      <Association Name="TB_Terminal_TB_Command" Member="TB_Terminal" ThisKey="Terminal" OtherKey="id" Type="TB_Terminal" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.TB_CommandHistory" Member="TB_CommandHistory">
@@ -28,6 +104,42 @@
       <Column Name="Status" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
       <Column Name="StatueTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Association Name="TB_Command_TB_CommandHistory" Member="TB_Command" ThisKey="Command" OtherKey="id" Type="TB_Command" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_Customer" Member="TB_Customer">
+    <Type Name="TB_Customer">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="RegisterDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="SignInTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="SignInIP" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="SignInDevice" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Fax" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Password" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
+      <Column Name="Answer" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
+      <Column Name="RegisterID" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Code" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Phone" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Director" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="IdCard" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Question" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="SiteAddress" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Address" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Association Name="TB_Customer_TB_Equipment" Member="TB_Equipment" ThisKey="id" OtherKey="Customer" Type="TB_Equipment" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_Data_Alarm" Member="TB_Data_Alarm">
+    <Type Name="TB_Data_Alarm">
+      <Column Name="id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Equipment" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="StoreTimes" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Position" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="AlarmTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Code" Type="System.String" DbType="Char(16)" CanBeNull="true" />
+      <Column Name="Terminal" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Association Name="TB_Data_Position_TB_Data_Alarm" Member="TB_Data_Position" ThisKey="Position" OtherKey="id" Type="TB_Data_Position" IsForeignKey="true" />
+      <Association Name="TB_Equipment_TB_Data_Alarm" Member="TB_Equipment" ThisKey="Equipment" OtherKey="id" Type="TB_Equipment" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.TB_Data_EposFault" Member="TB_Data_EposFault">
@@ -65,7 +177,7 @@
       <Column Name="StationCode" Type="System.String" DbType="Char(4)" CanBeNull="true" />
       <Column Name="SectorCode" Type="System.String" DbType="Char(4)" CanBeNull="true" />
       <Column Name="Terminal" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
-      <Column Name="Type" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Address" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
       <Association Name="TB_Data_Position_TB_Data_Alarm" Member="TB_Data_Alarm" ThisKey="id" OtherKey="Position" Type="TB_Data_Alarm" />
       <Association Name="TB_Equipment_TB_Data_Position" Member="TB_Equipment" ThisKey="Equipment" OtherKey="id" Type="TB_Equipment" IsForeignKey="true" DeleteRule="SET NULL" />
@@ -84,255 +196,6 @@
       <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Address" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
       <Association Name="TB_Department_TB_Account" Member="TB_Account" ThisKey="id" OtherKey="Department" Type="TB_Account" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_EquipmentModel" Member="TB_EquipmentModel">
-    <Type Name="TB_EquipmentModel">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Type" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Code" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Name" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Association Name="TB_EquipmentModel_TB_Equipment" Member="TB_Equipment" ThisKey="id" OtherKey="Model" Type="TB_Equipment" />
-      <Association Name="TB_EquipmentType_TB_EquipmentModel" Member="TB_EquipmentType" ThisKey="Type" OtherKey="id" Type="TB_EquipmentType" IsForeignKey="true" DeleteRule="SET DEFAULT" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_Error" Member="TB_Error">
-    <Type Name="TB_Error">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="ErrorTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="ErrorData" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="ErrorMessage" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_HISTORIES" Member="TB_HISTORIES">
-    <Type Name="TB_HISTORIES">
-      <Column Name="id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="receive_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="server_port" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
-      <Column Name="total_length" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
-      <Column Name="protocol_type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="terminal_type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="message_type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="protocol_version" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="package_id" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="total_package" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="sequence_id" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
-      <Column Name="command_id" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="terminal_id" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="mac_id" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="message_content" Type="System.String" DbType="VarChar(3000)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_Permission" Member="TB_Permission">
-    <Type Name="TB_Permission">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsDefault" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Parent" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="DisplayOrder" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="AddTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Url" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Image" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_Role" Member="TB_Role">
-    <Type Name="TB_Role">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsDefault" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsAdministrator" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="AddTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
-      <Column Name="Permission" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
-      <Association Name="TB_Role_TB_Account" Member="TB_Account" ThisKey="id" OtherKey="Role" Type="TB_Account" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_Setting" Member="TB_Setting">
-    <Type Name="TB_Setting">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="AddTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="ColumnName" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="ColumnValue" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_Warehouse" Member="TB_Warehouse">
-    <Type Name="TB_Warehouse">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Code" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
-      <Column Name="Address" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
-      <Association Name="TB_Warehouse_TB_Equipment" Member="TB_Equipment" ThisKey="id" OtherKey="Warehouse" Type="TB_Equipment" />
-      <Association Name="TB_Warehouse_TB_EquipmentStockHistory" Member="TB_EquipmentStockHistory" ThisKey="id" OtherKey="Warehouse" Type="TB_EquipmentStockHistory" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_Customer" Member="TB_Customer">
-    <Type Name="TB_Customer">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="RegisterDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="SignInTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="SignInIP" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="SignInDevice" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Fax" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="RegisterID" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Password" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
-      <Column Name="Answer" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
-      <Column Name="Code" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Phone" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Director" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="IdCard" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Question" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="SiteAddress" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Address" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
-      <Association Name="TB_Customer_TB_Equipment" Member="TB_Equipment" ThisKey="id" OtherKey="Customer" Type="TB_Equipment" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_EquipmentType" Member="TB_EquipmentType">
-    <Type Name="TB_EquipmentType">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Code" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
-      <Column Name="Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Image" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Association Name="TB_EquipmentType_TB_EquipmentModel" Member="TB_EquipmentModel" ThisKey="id" OtherKey="Type" Type="TB_EquipmentModel" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_IridiumFlow" Member="TB_IridiumFlow">
-    <Type Name="TB_IridiumFlow">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Iridium" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Monthly" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="MTPayload" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="MOPayload" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="MTTimes" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="MOTimes" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="TB_Satellite_TB_IridiumFlow" Member="TB_Satellite" ThisKey="Iridium" OtherKey="id" Type="TB_Satellite" IsForeignKey="true" DeleteRule="SET NULL" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_IridiumMTMSN" Member="TB_IridiumMTMSN">
-    <Type Name="TB_IridiumMTMSN">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Year" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
-      <Column Name="Month" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="Day" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="Number" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_Work" Member="TB_Work">
-    <Type Name="TB_Work">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Deleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Tracker" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="RegisterTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="ScheduleStart" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="ScheduleEnd" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="RealStart" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="RealEnd" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Title" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
-      <Column Name="Director" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Association Name="TB_Work_TB_WorkDetail" Member="TB_WorkDetail" ThisKey="id" OtherKey="Work" Type="TB_WorkDetail" />
-      <Association Name="TB_Tracker_TB_Work" Member="TB_Tracker" ThisKey="Tracker" OtherKey="id" Type="TB_Tracker" IsForeignKey="true" DeleteRule="SET NULL" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_WorkDetail" Member="TB_WorkDetail">
-    <Type Name="TB_WorkDetail">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Deleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Priority" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="Type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="[Work]" Member="Work" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Equipment" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="BookedTerminal" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Details" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
-      <Association Name="TB_WorkDetail_TB_ExcelHandler" Member="TB_ExcelHandler" ThisKey="id" OtherKey="Work" Type="TB_ExcelHandler" />
-      <Association Name="TB_Work_TB_WorkDetail" Member="TB_Work" ThisKey="Work" OtherKey="id" Type="TB_Work" IsForeignKey="true" DeleteRule="SET NULL" />
-      <Association Name="TB_Equipment_TB_WorkDetail" Member="TB_Equipment" ThisKey="Equipment" OtherKey="id" Type="TB_Equipment" IsForeignKey="true" DeleteRule="SET NULL" />
-      <Association Name="TB_Terminal_TB_WorkDetail" Member="TB_Terminal" ThisKey="BookedTerminal" OtherKey="id" Type="TB_Terminal" IsForeignKey="true" DeleteRule="SET NULL" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_TerminalFlow" Member="TB_TerminalFlow">
-    <Type Name="TB_TerminalFlow">
-      <Column Name="id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Terminal" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Monthly" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="GPRSReceive" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="GPRSDeliver" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="SMSReceive" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="SMSDeliver" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Sim" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Association Name="TB_Terminal_TB_TerminalFlow" Member="TB_Terminal" ThisKey="Terminal" OtherKey="id" Type="TB_Terminal" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_Data_Alarm" Member="TB_Data_Alarm">
-    <Type Name="TB_Data_Alarm">
-      <Column Name="id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Equipment" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="StoreTimes" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Position" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="AlarmTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Code" Type="System.String" DbType="Char(16)" CanBeNull="true" />
-      <Column Name="Terminal" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
-      <Association Name="TB_Data_Position_TB_Data_Alarm" Member="TB_Data_Position" ThisKey="Position" OtherKey="id" Type="TB_Data_Position" IsForeignKey="true" />
-      <Association Name="TB_Equipment_TB_Data_Alarm" Member="TB_Equipment" ThisKey="Equipment" OtherKey="id" Type="TB_Equipment" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_EquipmentStatusName" Member="TB_EquipmentStatusName">
-    <Type Name="TB_EquipmentStatusName">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="IsItWaiting" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsItInventory" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsItOutstorage" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsItOverhaul" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsItRental" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsItTesting" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Code" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
-      <Association Name="TB_EquipmentStatusName_TB_Equipment" Member="TB_Equipment" ThisKey="id" OtherKey="Status" Type="TB_Equipment" />
-      <Association Name="TB_EquipmentStatusName_TB_EquipmentStockHistory" Member="TB_EquipmentStockHistory" ThisKey="id" OtherKey="Status" Type="TB_EquipmentStockHistory" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_Command" Member="TB_Command">
-    <Type Name="TB_Command">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="DataType" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="Status" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="SendUser" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Terminal" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="IridiumMTMSN" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="TimeUsed" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="ScheduleTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="ActualSendTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Command" Type="System.String" DbType="Char(6)" CanBeNull="true" />
-      <Column Name="DestinationNo" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
-      <Column Name="Content" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Association Name="TB_Command_TB_CommandHistory" Member="TB_CommandHistory" ThisKey="id" OtherKey="Command" Type="TB_CommandHistory" />
-      <Association Name="TB_Terminal_TB_Command" Member="TB_Terminal" ThisKey="Terminal" OtherKey="id" Type="TB_Terminal" IsForeignKey="true" />
-      <Association Name="TB_Account_TB_Command" Member="TB_Account" ThisKey="SendUser" OtherKey="id" Type="TB_Account" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_Satellite" Member="TB_Satellite">
-    <Type Name="TB_Satellite">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Bound" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="LabelPrinted" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="LabelPrintStatus" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="LabelPrintSchedule" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="RegisterDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="ManufactureDate" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="CardNo" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="PcbNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="FWVersion" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="RatedVoltage" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Manufacturer" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Association Name="TB_Satellite_TB_IridiumFlow" Member="TB_IridiumFlow" ThisKey="id" OtherKey="Iridium" Type="TB_IridiumFlow" />
-      <Association Name="TB_Satellite_TB_Terminal" Member="TB_Terminal" ThisKey="id" OtherKey="Satellite" Type="TB_Terminal" />
     </Type>
   </Table>
   <Table Name="dbo.TB_Equipment" Member="TB_Equipment">
@@ -373,44 +236,86 @@
       <Column Name="ServerName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="IP" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Column Name="GpsAddress" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
-      <Association Name="TB_Equipment_TB_Data_EposFault" Member="TB_Data_EposFault" ThisKey="id" OtherKey="Equipment" Type="TB_Data_EposFault" />
-      <Association Name="TB_Equipment_TB_Data_Position" Member="TB_Data_Position" ThisKey="id" OtherKey="Equipment" Type="TB_Data_Position" />
       <Association Name="TB_Equipment_TB_WorkDetail" Member="TB_WorkDetail" ThisKey="id" OtherKey="Equipment" Type="TB_WorkDetail" />
       <Association Name="TB_Equipment_TB_Data_Alarm" Member="TB_Data_Alarm" ThisKey="id" OtherKey="Equipment" Type="TB_Data_Alarm" />
-      <Association Name="TB_Equipment_TB_ExcelHandler" Member="TB_ExcelHandler" ThisKey="id" OtherKey="Equipment" Type="TB_ExcelHandler" />
+      <Association Name="TB_Equipment_TB_Data_EposFault" Member="TB_Data_EposFault" ThisKey="id" OtherKey="Equipment" Type="TB_Data_EposFault" />
+      <Association Name="TB_Equipment_TB_Data_Position" Member="TB_Data_Position" ThisKey="id" OtherKey="Equipment" Type="TB_Data_Position" />
       <Association Name="TB_Equipment_TB_EquipmentStockHistory" Member="TB_EquipmentStockHistory" ThisKey="id" OtherKey="Equipment" Type="TB_EquipmentStockHistory" />
+      <Association Name="TB_Equipment_TB_ExcelHandler" Member="TB_ExcelHandler" ThisKey="id" OtherKey="Equipment" Type="TB_ExcelHandler" />
       <Association Name="TB_Customer_TB_Equipment" Member="TB_Customer" ThisKey="Customer" OtherKey="id" Type="TB_Customer" IsForeignKey="true" DeleteRule="SET DEFAULT" />
       <Association Name="TB_EquipmentModel_TB_Equipment" Member="TB_EquipmentModel" ThisKey="Model" OtherKey="id" Type="TB_EquipmentModel" IsForeignKey="true" DeleteRule="SET DEFAULT" />
       <Association Name="TB_EquipmentStatusName_TB_Equipment" Member="TB_EquipmentStatusName" ThisKey="Status" OtherKey="id" Type="TB_EquipmentStatusName" IsForeignKey="true" DeleteRule="SET NULL" />
-      <Association Name="TB_Warehouse_TB_Equipment" Member="TB_Warehouse" ThisKey="Warehouse" OtherKey="id" Type="TB_Warehouse" IsForeignKey="true" DeleteRule="SET DEFAULT" />
       <Association Name="TB_Terminal_TB_Equipment" Member="TB_Terminal" ThisKey="Terminal" OtherKey="id" Type="TB_Terminal" IsForeignKey="true" DeleteRule="SET DEFAULT" />
+      <Association Name="TB_Warehouse_TB_Equipment" Member="TB_Warehouse" ThisKey="Warehouse" OtherKey="id" Type="TB_Warehouse" IsForeignKey="true" DeleteRule="SET DEFAULT" />
     </Type>
   </Table>
-  <Table Name="dbo.TB_Terminal" Member="TB_Terminal">
-    <Type Name="TB_Terminal">
+  <Table Name="dbo.TB_EquipmentModel" Member="TB_EquipmentModel">
+    <Type Name="TB_EquipmentModel">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="HasBound" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Booked" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="SatelliteStatus" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Revision" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="OnlineStyle" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="Type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="LabelPrintStatus" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="Satellite" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Socket" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="LabelPrinted" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="LabelPrintSchedule" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="ProductionDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="OnlineTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Firmware" Type="System.String" DbType="VarChar(7)" CanBeNull="true" />
-      <Column Name="Number" Type="System.String" DbType="Char(10)" CanBeNull="true" />
-      <Column Name="Sim" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
-      <Association Name="TB_Terminal_TB_WorkDetail" Member="TB_WorkDetail" ThisKey="id" OtherKey="BookedTerminal" Type="TB_WorkDetail" />
-      <Association Name="TB_Terminal_TB_TerminalFlow" Member="TB_TerminalFlow" ThisKey="id" OtherKey="Terminal" Type="TB_TerminalFlow" />
-      <Association Name="TB_Terminal_TB_Command" Member="TB_Command" ThisKey="id" OtherKey="Terminal" Type="TB_Command" />
-      <Association Name="TB_Terminal_TB_Equipment" Member="TB_Equipment" ThisKey="id" OtherKey="Terminal" Type="TB_Equipment" />
-      <Association Name="TB_Satellite_TB_Terminal" Member="TB_Satellite" ThisKey="Satellite" OtherKey="id" Type="TB_Satellite" IsForeignKey="true" />
+      <Column Name="Type" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Code" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Association Name="TB_EquipmentModel_TB_Equipment" Member="TB_Equipment" ThisKey="id" OtherKey="Model" Type="TB_Equipment" />
+      <Association Name="TB_EquipmentType_TB_EquipmentModel" Member="TB_EquipmentType" ThisKey="Type" OtherKey="id" Type="TB_EquipmentType" IsForeignKey="true" DeleteRule="SET DEFAULT" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_EquipmentStatusCode" Member="TB_EquipmentStatusCode">
+    <Type Name="TB_EquipmentStatusCode">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Status" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Code" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="TB_EquipmentStatusName_TB_EquipmentStatusCode" Member="TB_EquipmentStatusName" ThisKey="Status" OtherKey="id" Type="TB_EquipmentStatusName" IsForeignKey="true" DeleteRule="SET DEFAULT" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_EquipmentStatusName" Member="TB_EquipmentStatusName">
+    <Type Name="TB_EquipmentStatusName">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IsItWaiting" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsItInventory" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsItOutstorage" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsItOverhaul" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsItRental" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsItTesting" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Code" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
+      <Association Name="TB_EquipmentStatusName_TB_Equipment" Member="TB_Equipment" ThisKey="id" OtherKey="Status" Type="TB_Equipment" />
+      <Association Name="TB_EquipmentStatusName_TB_EquipmentStatusCode" Member="TB_EquipmentStatusCode" ThisKey="id" OtherKey="Status" Type="TB_EquipmentStatusCode" />
+      <Association Name="TB_EquipmentStatusName_TB_EquipmentStockHistory" Member="TB_EquipmentStockHistory" ThisKey="id" OtherKey="Status" Type="TB_EquipmentStockHistory" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_EquipmentStockHistory" Member="TB_EquipmentStockHistory">
+    <Type Name="TB_EquipmentStockHistory">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Equipment" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Status" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="StoreTimes" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Warehouse" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Stocktime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Savetime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="StockNumber" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="TB_EquipmentStatusName_TB_EquipmentStockHistory" Member="TB_EquipmentStatusName" ThisKey="Status" OtherKey="id" Type="TB_EquipmentStatusName" IsForeignKey="true" DeleteRule="SET NULL" />
+      <Association Name="TB_Equipment_TB_EquipmentStockHistory" Member="TB_Equipment" ThisKey="Equipment" OtherKey="id" Type="TB_Equipment" IsForeignKey="true" />
+      <Association Name="TB_Warehouse_TB_EquipmentStockHistory" Member="TB_Warehouse" ThisKey="Warehouse" OtherKey="id" Type="TB_Warehouse" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_EquipmentType" Member="TB_EquipmentType">
+    <Type Name="TB_EquipmentType">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Code" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Image" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="TB_EquipmentType_TB_EquipmentModel" Member="TB_EquipmentModel" ThisKey="id" OtherKey="Type" Type="TB_EquipmentModel" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_Error" Member="TB_Error">
+    <Type Name="TB_Error">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ErrorTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ErrorData" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="ErrorMessage" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.TB_ExcelHandler" Member="TB_ExcelHandler">
@@ -430,31 +335,150 @@
       <Association Name="TB_WorkDetail_TB_ExcelHandler" Member="TB_WorkDetail" ThisKey="Work" OtherKey="id" Type="TB_WorkDetail" IsForeignKey="true" DeleteRule="SET NULL" />
     </Type>
   </Table>
-  <Table Name="dbo.TB_EquipmentStockHistory" Member="TB_EquipmentStockHistory">
-    <Type Name="TB_EquipmentStockHistory">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Equipment" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Status" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="StoreTimes" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Warehouse" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Savetime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Stocktime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="StockNumber" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Association Name="TB_EquipmentStatusName_TB_EquipmentStockHistory" Member="TB_EquipmentStatusName" ThisKey="Status" OtherKey="id" Type="TB_EquipmentStatusName" IsForeignKey="true" DeleteRule="SET NULL" />
-      <Association Name="TB_Equipment_TB_EquipmentStockHistory" Member="TB_Equipment" ThisKey="Equipment" OtherKey="id" Type="TB_Equipment" IsForeignKey="true" />
-      <Association Name="TB_Warehouse_TB_EquipmentStockHistory" Member="TB_Warehouse" ThisKey="Warehouse" OtherKey="id" Type="TB_Warehouse" IsForeignKey="true" />
+  <Table Name="dbo.TB_HISTORIES" Member="TB_HISTORIES">
+    <Type Name="TB_HISTORIES">
+      <Column Name="id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="receive_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="server_port" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="total_length" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="protocol_type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="terminal_type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="message_type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="protocol_version" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="package_id" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="total_package" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="sequence_id" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
+      <Column Name="command_id" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="terminal_id" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="mac_id" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="message_content" Type="System.String" DbType="VarChar(3000)" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.TB_Application" Member="TB_Application">
-    <Type Name="TB_Application">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Useable" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="VersionCode" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="InternalVersion" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="CreateTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="VersionName" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Download" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+  <Table Name="dbo.TB_IridiumFlow" Member="TB_IridiumFlow">
+    <Type Name="TB_IridiumFlow">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Iridium" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Monthly" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MTPayload" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MOPayload" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MTTimes" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MOTimes" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MTFull" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MOFull" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="TB_Satellite_TB_IridiumFlow" Member="TB_Satellite" ThisKey="Iridium" OtherKey="id" Type="TB_Satellite" IsForeignKey="true" DeleteRule="SET NULL" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_IridiumMTMSN" Member="TB_IridiumMTMSN">
+    <Type Name="TB_IridiumMTMSN">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Year" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="Month" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="Day" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="Number" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_Permission" Member="TB_Permission">
+    <Type Name="TB_Permission">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsDefault" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Parent" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DisplayOrder" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AddTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Url" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Image" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_Role" Member="TB_Role">
+    <Type Name="TB_Role">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsDefault" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsAdministrator" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AddTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Permission" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
+      <Association Name="TB_Role_TB_Account" Member="TB_Account" ThisKey="id" OtherKey="Role" Type="TB_Account" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_Satellite" Member="TB_Satellite">
+    <Type Name="TB_Satellite">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Bound" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="LabelPrinted" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="LabelPrintStatus" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="LabelPrintSchedule" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="RegisterDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ManufactureDate" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="CardNo" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="PcbNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="FWVersion" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="RatedVoltage" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Manufacturer" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Association Name="TB_Satellite_TB_IridiumFlow" Member="TB_IridiumFlow" ThisKey="id" OtherKey="Iridium" Type="TB_IridiumFlow" />
+      <Association Name="TB_Satellite_TB_Terminal" Member="TB_Terminal" ThisKey="id" OtherKey="Satellite" Type="TB_Terminal" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_Setting" Member="TB_Setting">
+    <Type Name="TB_Setting">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AddTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ColumnName" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="ColumnValue" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_SMS" Member="TB_SMS">
+    <Type Name="TB_SMS">
+      <Column Name="id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Handled" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="ReceiveTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="SendTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Sender" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Data" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_Terminal" Member="TB_Terminal">
+    <Type Name="TB_Terminal">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="HasBound" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Booked" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="SatelliteStatus" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Revision" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="OnlineStyle" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="Type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="LabelPrintStatus" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="LabelPrinted" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Satellite" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Socket" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="LabelPrintSchedule" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ProductionDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="OnlineTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Firmware" Type="System.String" DbType="VarChar(7)" CanBeNull="true" />
+      <Column Name="Number" Type="System.String" DbType="Char(10)" CanBeNull="true" />
+      <Column Name="Sim" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
+      <Association Name="TB_Terminal_TB_WorkDetail" Member="TB_WorkDetail" ThisKey="id" OtherKey="BookedTerminal" Type="TB_WorkDetail" />
+      <Association Name="TB_Terminal_TB_Command" Member="TB_Command" ThisKey="id" OtherKey="Terminal" Type="TB_Command" />
+      <Association Name="TB_Terminal_TB_Equipment" Member="TB_Equipment" ThisKey="id" OtherKey="Terminal" Type="TB_Equipment" />
+      <Association Name="TB_Terminal_TB_TerminalFlow" Member="TB_TerminalFlow" ThisKey="id" OtherKey="Terminal" Type="TB_TerminalFlow" />
+      <Association Name="TB_Satellite_TB_Terminal" Member="TB_Satellite" ThisKey="Satellite" OtherKey="id" Type="TB_Satellite" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_TerminalFlow" Member="TB_TerminalFlow">
+    <Type Name="TB_TerminalFlow">
+      <Column Name="id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Terminal" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Monthly" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GPRSReceive" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GPRSDeliver" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SMSReceive" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SMSDeliver" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Sim" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Association Name="TB_Terminal_TB_TerminalFlow" Member="TB_Terminal" ThisKey="Terminal" OtherKey="id" Type="TB_Terminal" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.TB_Tracker" Member="TB_Tracker">
@@ -475,50 +499,10 @@
       <Column Name="CarNumber" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Director" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Address" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
-      <Association Name="TB_Tracker_TB_Work" Member="TB_Work" ThisKey="id" OtherKey="Tracker" Type="TB_Work" />
       <Association Name="TB_Tracker_TB_Account" Member="TB_Account" ThisKey="id" OtherKey="Tracker" Type="TB_Account" />
       <Association Name="TB_Tracker_TB_Tracker_Position" Member="TB_Tracker_Position" ThisKey="id" OtherKey="Tracker" Type="TB_Tracker_Position" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_Account" Member="TB_Account">
-    <Type Name="TB_Account">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Locked" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Role" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Department" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="LoginTimes" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Tracker" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="RegisterTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="LastLoginTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="LastLoginIp" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Code" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="LandlineNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Phone" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="DeviceLoginId" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Password" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Question" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Answer" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Association Name="TB_Account_TB_AccountHistory" Member="TB_AccountHistory" ThisKey="id" OtherKey="Account" Type="TB_AccountHistory" />
-      <Association Name="TB_Account_TB_Command" Member="TB_Command" ThisKey="id" OtherKey="SendUser" Type="TB_Command" />
-      <Association Name="TB_Account_TB_TrackerChat" Member="TB_TrackerChat" ThisKey="id" OtherKey="Deliver" Type="TB_TrackerChat" />
-      <Association Name="TB_Account_TB_TrackerChat1" Member="TB_TrackerChat1" ThisKey="id" OtherKey="Receiver" Type="TB_TrackerChat" />
-      <Association Name="TB_Department_TB_Account" Member="TB_Department" ThisKey="Department" OtherKey="id" Type="TB_Department" IsForeignKey="true" DeleteRule="SET DEFAULT" />
-      <Association Name="TB_Role_TB_Account" Member="TB_Role" ThisKey="Role" OtherKey="id" Type="TB_Role" IsForeignKey="true" DeleteRule="SET DEFAULT" />
-      <Association Name="TB_Tracker_TB_Account" Member="TB_Tracker" ThisKey="Tracker" OtherKey="id" Type="TB_Tracker" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_SMS" Member="TB_SMS">
-    <Type Name="TB_SMS">
-      <Column Name="id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Handled" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="ReceiveTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="SendTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="Sender" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Data" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Association Name="TB_Tracker_TB_TrackerChat" Member="TB_TrackerChat" ThisKey="id" OtherKey="Receiver" Type="TB_TrackerChat" />
+      <Association Name="TB_Tracker_TB_Work" Member="TB_Work" ThisKey="id" OtherKey="Tracker" Type="TB_Work" />
     </Type>
   </Table>
   <Table Name="dbo.TB_Tracker_Position" Member="TB_Tracker_Position">
@@ -548,7 +532,35 @@
       <Column Name="MqttTag" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
       <Column Name="Content" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
       <Association Name="TB_Account_TB_TrackerChat" Member="TB_Account" ThisKey="Deliver" OtherKey="id" Type="TB_Account" IsForeignKey="true" />
-      <Association Name="TB_Account_TB_TrackerChat1" Member="TB_Account1" ThisKey="Receiver" OtherKey="id" Type="TB_Account" IsForeignKey="true" />
+      <Association Name="TB_Tracker_TB_TrackerChat" Member="TB_Tracker" ThisKey="Receiver" OtherKey="id" Type="TB_Tracker" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_Warehouse" Member="TB_Warehouse">
+    <Type Name="TB_Warehouse">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Code" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Address" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Association Name="TB_Warehouse_TB_Equipment" Member="TB_Equipment" ThisKey="id" OtherKey="Warehouse" Type="TB_Equipment" />
+      <Association Name="TB_Warehouse_TB_EquipmentStockHistory" Member="TB_EquipmentStockHistory" ThisKey="id" OtherKey="Warehouse" Type="TB_EquipmentStockHistory" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_Work" Member="TB_Work">
+    <Type Name="TB_Work">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Deleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Tracker" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="RegisterTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ScheduleStart" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ScheduleEnd" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="RealStart" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="RealEnd" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Director" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Title" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="TB_Work_TB_WorkDetail" Member="TB_WorkDetail" ThisKey="id" OtherKey="Work" Type="TB_WorkDetail" />
+      <Association Name="TB_Tracker_TB_Work" Member="TB_Tracker" ThisKey="Tracker" OtherKey="id" Type="TB_Tracker" IsForeignKey="true" DeleteRule="SET NULL" />
     </Type>
   </Table>
   <Function Name="dbo.sp_ClearOldLinks" Method="sp_ClearOldLinks">

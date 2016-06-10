@@ -7,8 +7,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
     <link href="../bootstrap3/css/bootstrap.css" rel="stylesheet" />
+    <link href="../bootstrap3/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" />
     <link href="../bootstrap3/models/css/bootstrap-dialog.min.css" rel="stylesheet" />
     <link href="../bootstrap3/bootstrap-datepicker-1.3.0/css/datepicker3.css" rel="stylesheet" />
+    <link href="../mobile/css/style.css" rel="stylesheet" />
     <link href="../css/body_equipment.css" rel="stylesheet" />
     <link href="../css/pagging.css" rel="stylesheet" />
     <style type="text/css">
@@ -38,7 +40,7 @@
                     <li role="presentation" class="active"><a href="#" role="tab" data-toggle="tab">Trackers</a></li>
                     <li role="presentation" class="tablist-item-input">
                         <div class="input-group">
-                            <input type="text" id="txtQueryNumber" runat="server" class="form-control" placeholder="license plate" maxlength="15">
+                            <input type="text" id="txtQueryNumber" runat="server" class="form-control" placeholder="license plate" maxlength="15" />
                             <asp:Button ID="btQuery" CssClass="hidden" runat="server" Text="Query" OnClick="btQuery_Click" />
                             <span class="input-group-btn">
                                 <button class="btn btn-warning" type="button" id="query"><span class="glyphicon glyphicon-search"></span></button>
@@ -65,19 +67,21 @@
                                 <tr>
                                     <th class="in-tab-title-b bg-primary" style="width: 50px;">#</th>
                                     <th class="in-tab-title-b bg-primary" style="width: 80px; text-align: left;">Number</th>
-                                    <th class="in-tab-title-b bg-primary" style="width: 130px;">Last Receive</th>
-                                    <th class="in-tab-title-b bg-primary" style="width: 130px;">Charging lose</th>
-                                    <th class="in-tab-title-b bg-primary" style="width: 130px;">Battery use up</th>
-                                    <th class="in-tab-title-b bg-primary" style="width: 130px;">Parking timeout</th>
-                                    <th class="in-tab-title-b bg-primary" style="width: 100px;">Vehicle</th>
-                                    <th class="in-tab-title-b bg-primary" style="width: 60px;">Director</th>
+                                    <th class="in-tab-title-b bg-primary" style="width: 30px; text-align: left;"></th>
+                                    <th class="in-tab-title-b bg-primary" style="width: 30px; text-align: left;"></th>
+                                    <th class="in-tab-title-b bg-primary" style="width: 130px; text-align: left;">Last Receive</th>
+                                    <th class="in-tab-title-b bg-primary" style="width: 130px; text-align: left;">Charging lose</th>
+                                    <th class="in-tab-title-b bg-primary" style="width: 130px; text-align: left;">Battery use up</th>
+                                    <th class="in-tab-title-b bg-primary" style="width: 130px; text-align: left;">Parking timeout</th>
+                                    <th class="in-tab-title-b bg-primary" style="width: 100px; text-align: left;">Vehicle</th>
+                                    <th class="in-tab-title-b bg-primary" style="width: 60px; text-align: left;">Director</th>
                                     <th class="in-tab-title-b bg-primary" style="text-align: left;">Address</th>
                                     <th class="in-tab-title-b bg-primary"></th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="10">
+                                    <td colspan="12">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>
@@ -88,6 +92,8 @@
                                 <tr>
                                     <td class="in-tab-txt-b">1</td>
                                     <td class="in-tab-txt-b" style="text-align: left;">95471420</td>
+                                    <td class="in-tab-txt-b"><span class="text-custom-success" title="Eng. On"><span class="signal cell-engine" style="font-size: 130%;"></span></span></td>
+                                    <td class="in-tab-txt-b"><span class="text-custom-success" title="Eng. On"><span class="signal cell-engine" style="font-size: 130%;"></span></span></td>
                                     <td class="in-tab-txt-b">2015/06/11 19:53:12</td>
                                     <td class="in-tab-txt-b">2015/06/11 19:53:12</td>
                                     <td class="in-tab-txt-b">2015/06/11 19:53:12</td>
@@ -120,17 +126,17 @@
                                             <tr>
                                                 <td class="popup-td" style="vertical-align: middle;">Number:</td>
                                                 <td class="popup-td">
-                                                    <input type="text" class="form-control" style="width: 150px;" runat="server" id="number" placeholder="number" maxlength="10">
+                                                    <input type="text" class="form-control" style="width: 150px;" runat="server" id="number" placeholder="number" maxlength="10" />
                                                 </td>
                                                 <td class="popup-td" style="vertical-align: middle;">Vehicle:</td>
                                                 <td class="popup-td">
-                                                    <input type="text" class="form-control" style="width: 150px;" runat="server" id="vehicle" placeholder="vehicle" maxlength="10">
+                                                    <input type="text" class="form-control" style="width: 150px;" runat="server" id="vehicle" placeholder="vehicle" maxlength="10" />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="popup-td" style="vertical-align: middle;">Director:</td>
                                                 <td class="popup-td">
-                                                    <input type="text" class="form-control" style="width: 150px;" runat="server" id="director" placeholder="director" maxlength="10">
+                                                    <input type="text" class="form-control" style="width: 150px;" runat="server" id="director" placeholder="director" maxlength="10" />
                                                 </td>
                                                 <td class="popup-td"></td>
                                                 <td class="popup-td"></td>
