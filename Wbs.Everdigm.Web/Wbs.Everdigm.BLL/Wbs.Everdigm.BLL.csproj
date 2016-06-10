@@ -73,6 +73,7 @@
     <Compile Include="TerminalBLL.cs" />
     <Compile Include="TerminalFlowBLL.cs" />
     <Compile Include="TrackerBLL.cs" />
+    <Compile Include="TrackerChatBLL.cs" />
     <Compile Include="TrackerPositionBLL.cs" />
     <Compile Include="WarehouseBLL.cs" />
     <Compile Include="WorkBLL.cs" />

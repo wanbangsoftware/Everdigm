@@ -130,6 +130,9 @@ namespace Wbs.Everdigm.Database
     partial void InsertTB_Tracker_Position(TB_Tracker_Position instance);
     partial void UpdateTB_Tracker_Position(TB_Tracker_Position instance);
     partial void DeleteTB_Tracker_Position(TB_Tracker_Position instance);
+    partial void InsertTB_TrackerChat(TB_TrackerChat instance);
+    partial void UpdateTB_TrackerChat(TB_TrackerChat instance);
+    partial void DeleteTB_TrackerChat(TB_TrackerChat instance);
     #endregion
 		
 		public EverdigmDataContext(string connection) : 
@@ -417,6 +420,14 @@ namespace Wbs.Everdigm.Database
 			get
 			{
 				return this.GetTable<TB_Tracker_Position>();
+			}
+		}
+		
+		public System.Data.Linq.Table<TB_TrackerChat> TB_TrackerChat
+		{
+			get
+			{
+				return this.GetTable<TB_TrackerChat>();
 			}
 		}
 		
@@ -11979,6 +11990,10 @@ namespace Wbs.Everdigm.Database
 		
 		private EntitySet<TB_Command> _TB_Command;
 		
+		private EntitySet<TB_TrackerChat> _TB_TrackerChat;
+		
+		private EntitySet<TB_TrackerChat> _TB_TrackerChat1;
+		
 		private EntityRef<TB_Department> _TB_Department;
 		
 		private EntityRef<TB_Role> _TB_Role;
@@ -12485,6 +12500,44 @@ namespace Wbs.Everdigm.Database
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Account_TB_TrackerChat", Storage="_TB_TrackerChat", ThisKey="id", OtherKey="Deliver")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=22, EmitDefaultValue=false)]
+		public EntitySet<TB_TrackerChat> TB_TrackerChat
+		{
+			get
+			{
+				if ((this.serializing 
+							&& (this._TB_TrackerChat.HasLoadedOrAssignedValues == false)))
+				{
+					return null;
+				}
+				return this._TB_TrackerChat;
+			}
+			set
+			{
+				this._TB_TrackerChat.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Account_TB_TrackerChat1", Storage="_TB_TrackerChat1", ThisKey="id", OtherKey="Receiver")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=23, EmitDefaultValue=false)]
+		public EntitySet<TB_TrackerChat> TB_TrackerChat1
+		{
+			get
+			{
+				if ((this.serializing 
+							&& (this._TB_TrackerChat1.HasLoadedOrAssignedValues == false)))
+				{
+					return null;
+				}
+				return this._TB_TrackerChat1;
+			}
+			set
+			{
+				this._TB_TrackerChat1.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Department_TB_Account", Storage="_TB_Department", ThisKey="Department", OtherKey="id", IsForeignKey=true, DeleteRule="SET DEFAULT")]
 		public TB_Department TB_Department
 		{
@@ -12631,10 +12684,36 @@ namespace Wbs.Everdigm.Database
 			entity.TB_Account = null;
 		}
 		
+		private void attach_TB_TrackerChat(TB_TrackerChat entity)
+		{
+			this.SendPropertyChanging();
+			entity.TB_Account = this;
+		}
+		
+		private void detach_TB_TrackerChat(TB_TrackerChat entity)
+		{
+			this.SendPropertyChanging();
+			entity.TB_Account = null;
+		}
+		
+		private void attach_TB_TrackerChat1(TB_TrackerChat entity)
+		{
+			this.SendPropertyChanging();
+			entity.TB_Account1 = this;
+		}
+		
+		private void detach_TB_TrackerChat1(TB_TrackerChat entity)
+		{
+			this.SendPropertyChanging();
+			entity.TB_Account1 = null;
+		}
+		
 		private void Initialize()
 		{
 			this._TB_AccountHistory = new EntitySet<TB_AccountHistory>(new Action<TB_AccountHistory>(this.attach_TB_AccountHistory), new Action<TB_AccountHistory>(this.detach_TB_AccountHistory));
 			this._TB_Command = new EntitySet<TB_Command>(new Action<TB_Command>(this.attach_TB_Command), new Action<TB_Command>(this.detach_TB_Command));
+			this._TB_TrackerChat = new EntitySet<TB_TrackerChat>(new Action<TB_TrackerChat>(this.attach_TB_TrackerChat), new Action<TB_TrackerChat>(this.detach_TB_TrackerChat));
+			this._TB_TrackerChat1 = new EntitySet<TB_TrackerChat>(new Action<TB_TrackerChat>(this.attach_TB_TrackerChat1), new Action<TB_TrackerChat>(this.detach_TB_TrackerChat1));
 			this._TB_Department = default(EntityRef<TB_Department>);
 			this._TB_Role = default(EntityRef<TB_Role>);
 			this._TB_Tracker = default(EntityRef<TB_Tracker>);
@@ -13245,6 +13324,339 @@ namespace Wbs.Everdigm.Database
 		private void Initialize()
 		{
 			this._TB_Tracker = default(EntityRef<TB_Tracker>);
+			OnCreated();
+		}
+		
+		[global::System.Runtime.Serialization.OnDeserializingAttribute()]
+		[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+		public void OnDeserializing(StreamingContext context)
+		{
+			this.Initialize();
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TB_TrackerChat")]
+	[global::System.Runtime.Serialization.DataContractAttribute()]
+	public partial class TB_TrackerChat : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private System.Nullable<System.DateTime> _CreateTime;
+		
+		private System.Nullable<int> _Deliver;
+		
+		private System.Nullable<int> _Receiver;
+		
+		private System.Nullable<byte> _Status;
+		
+		private System.Nullable<byte> _Type;
+		
+		private string _MqttTag;
+		
+		private string _Content;
+		
+		private EntityRef<TB_Account> _TB_Account;
+		
+		private EntityRef<TB_Account> _TB_Account1;
+		
+    #region 可扩展性方法定义
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnCreateTimeChanging(System.Nullable<System.DateTime> value);
+    partial void OnCreateTimeChanged();
+    partial void OnDeliverChanging(System.Nullable<int> value);
+    partial void OnDeliverChanged();
+    partial void OnReceiverChanging(System.Nullable<int> value);
+    partial void OnReceiverChanged();
+    partial void OnStatusChanging(System.Nullable<byte> value);
+    partial void OnStatusChanged();
+    partial void OnTypeChanging(System.Nullable<byte> value);
+    partial void OnTypeChanged();
+    partial void OnMqttTagChanging(string value);
+    partial void OnMqttTagChanged();
+    partial void OnContentChanging(string value);
+    partial void OnContentChanged();
+    #endregion
+		
+		public TB_TrackerChat()
+		{
+			this.Initialize();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreateTime", DbType="DateTime")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+		public System.Nullable<System.DateTime> CreateTime
+		{
+			get
+			{
+				return this._CreateTime;
+			}
+			set
+			{
+				if ((this._CreateTime != value))
+				{
+					this.OnCreateTimeChanging(value);
+					this.SendPropertyChanging();
+					this._CreateTime = value;
+					this.SendPropertyChanged("CreateTime");
+					this.OnCreateTimeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Deliver", DbType="Int")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+		public System.Nullable<int> Deliver
+		{
+			get
+			{
+				return this._Deliver;
+			}
+			set
+			{
+				if ((this._Deliver != value))
+				{
+					if (this._TB_Account.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnDeliverChanging(value);
+					this.SendPropertyChanging();
+					this._Deliver = value;
+					this.SendPropertyChanged("Deliver");
+					this.OnDeliverChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Receiver", DbType="Int")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=4)]
+		public System.Nullable<int> Receiver
+		{
+			get
+			{
+				return this._Receiver;
+			}
+			set
+			{
+				if ((this._Receiver != value))
+				{
+					if (this._TB_Account1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnReceiverChanging(value);
+					this.SendPropertyChanging();
+					this._Receiver = value;
+					this.SendPropertyChanged("Receiver");
+					this.OnReceiverChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="TinyInt")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=5)]
+		public System.Nullable<byte> Status
+		{
+			get
+			{
+				return this._Status;
+			}
+			set
+			{
+				if ((this._Status != value))
+				{
+					this.OnStatusChanging(value);
+					this.SendPropertyChanging();
+					this._Status = value;
+					this.SendPropertyChanged("Status");
+					this.OnStatusChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Type", DbType="TinyInt")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=6)]
+		public System.Nullable<byte> Type
+		{
+			get
+			{
+				return this._Type;
+			}
+			set
+			{
+				if ((this._Type != value))
+				{
+					this.OnTypeChanging(value);
+					this.SendPropertyChanging();
+					this._Type = value;
+					this.SendPropertyChanged("Type");
+					this.OnTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MqttTag", DbType="VarChar(5)")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=7)]
+		public string MqttTag
+		{
+			get
+			{
+				return this._MqttTag;
+			}
+			set
+			{
+				if ((this._MqttTag != value))
+				{
+					this.OnMqttTagChanging(value);
+					this.SendPropertyChanging();
+					this._MqttTag = value;
+					this.SendPropertyChanged("MqttTag");
+					this.OnMqttTagChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Content", DbType="NVarChar(MAX)")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=8)]
+		public string Content
+		{
+			get
+			{
+				return this._Content;
+			}
+			set
+			{
+				if ((this._Content != value))
+				{
+					this.OnContentChanging(value);
+					this.SendPropertyChanging();
+					this._Content = value;
+					this.SendPropertyChanged("Content");
+					this.OnContentChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Account_TB_TrackerChat", Storage="_TB_Account", ThisKey="Deliver", OtherKey="id", IsForeignKey=true)]
+		public TB_Account TB_Account
+		{
+			get
+			{
+				return this._TB_Account.Entity;
+			}
+			set
+			{
+				TB_Account previousValue = this._TB_Account.Entity;
+				if (((previousValue != value) 
+							|| (this._TB_Account.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._TB_Account.Entity = null;
+						previousValue.TB_TrackerChat.Remove(this);
+					}
+					this._TB_Account.Entity = value;
+					if ((value != null))
+					{
+						value.TB_TrackerChat.Add(this);
+						this._Deliver = value.id;
+					}
+					else
+					{
+						this._Deliver = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("TB_Account");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TB_Account_TB_TrackerChat1", Storage="_TB_Account1", ThisKey="Receiver", OtherKey="id", IsForeignKey=true)]
+		public TB_Account TB_Account1
+		{
+			get
+			{
+				return this._TB_Account1.Entity;
+			}
+			set
+			{
+				TB_Account previousValue = this._TB_Account1.Entity;
+				if (((previousValue != value) 
+							|| (this._TB_Account1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._TB_Account1.Entity = null;
+						previousValue.TB_TrackerChat1.Remove(this);
+					}
+					this._TB_Account1.Entity = value;
+					if ((value != null))
+					{
+						value.TB_TrackerChat1.Add(this);
+						this._Receiver = value.id;
+					}
+					else
+					{
+						this._Receiver = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("TB_Account1");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void Initialize()
+		{
+			this._TB_Account = default(EntityRef<TB_Account>);
+			this._TB_Account1 = default(EntityRef<TB_Account>);
 			OnCreated();
 		}
 		

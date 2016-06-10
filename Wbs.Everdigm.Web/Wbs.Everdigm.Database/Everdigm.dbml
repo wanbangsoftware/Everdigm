@@ -503,6 +503,8 @@
       <Column Name="Answer" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Association Name="TB_Account_TB_AccountHistory" Member="TB_AccountHistory" ThisKey="id" OtherKey="Account" Type="TB_AccountHistory" />
       <Association Name="TB_Account_TB_Command" Member="TB_Command" ThisKey="id" OtherKey="SendUser" Type="TB_Command" />
+      <Association Name="TB_Account_TB_TrackerChat" Member="TB_TrackerChat" ThisKey="id" OtherKey="Deliver" Type="TB_TrackerChat" />
+      <Association Name="TB_Account_TB_TrackerChat1" Member="TB_TrackerChat1" ThisKey="id" OtherKey="Receiver" Type="TB_TrackerChat" />
       <Association Name="TB_Department_TB_Account" Member="TB_Department" ThisKey="Department" OtherKey="id" Type="TB_Department" IsForeignKey="true" DeleteRule="SET DEFAULT" />
       <Association Name="TB_Role_TB_Account" Member="TB_Role" ThisKey="Role" OtherKey="id" Type="TB_Role" IsForeignKey="true" DeleteRule="SET DEFAULT" />
       <Association Name="TB_Tracker_TB_Account" Member="TB_Tracker" ThisKey="Tracker" OtherKey="id" Type="TB_Tracker" IsForeignKey="true" />
@@ -533,6 +535,20 @@
       <Column Name="CarNumber" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Address" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
       <Association Name="TB_Tracker_TB_Tracker_Position" Member="TB_Tracker" ThisKey="Tracker" OtherKey="id" Type="TB_Tracker" IsForeignKey="true" DeleteRule="SET NULL" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_TrackerChat" Member="TB_TrackerChat">
+    <Type Name="TB_TrackerChat">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CreateTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Deliver" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Receiver" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Status" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="Type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="MqttTag" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
+      <Column Name="Content" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="TB_Account_TB_TrackerChat" Member="TB_Account" ThisKey="Deliver" OtherKey="id" Type="TB_Account" IsForeignKey="true" />
+      <Association Name="TB_Account_TB_TrackerChat1" Member="TB_Account1" ThisKey="Receiver" OtherKey="id" Type="TB_Account" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.sp_ClearOldLinks" Method="sp_ClearOldLinks">
