@@ -9,7 +9,7 @@
         $(".modal-title").text(isStringNull(v) ? "Add new tracker: " : "Edit tracker info: ");
     });
 
-    $(".btn-success").click(function () {
+    $(".btn-success:eq(0)").click(function () {
         checkAddEdit();
     });
 
@@ -41,7 +41,18 @@ function lineClick(evt) {
                 var href = a.attr("href");
                 var start = href.substr(0, 6);
                 if (start == "#sett_") {
+                    var warning = clazz.match("warning$");
+                    // 根据在线状态不同显示不同的warning
+                    var modalClass = warning ? "btn-warning" : "btn-primary";
+                    $("#alertModalLabelTrackerSetting").parent().removeClass(warning ? "btn-primary" : "btn-warning").addClass(modalClass);
+                    if (warning) {
+                        $("#divWarning").show();
+                    }
+                    else {
+                        $("#divWarning").hide();
+                    }
                     // 打开设置对话框
+                    $("#alertTrackerSetting").modal("show");
                 } else {
                     // 打开聊天对话框
                 }
@@ -56,8 +67,8 @@ function lineClick(evt) {
 
             // 显示号码
             $("#number").val($(obj).children("td:eq(1)").children("a:eq(0)").text()).attr("disabled", true);
-            $("#vehicle").val($(obj).children("td:eq(6)").text());
-            $("#director").val($(obj).children("td:eq(7)").text());
+            $("#vehicle").val($(obj).children("td:eq(8)").text());
+            $("#director").val($(obj).children("td:eq(9)").text());
             $("#modalNewTracker").modal("show");
         }
     }

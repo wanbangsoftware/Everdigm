@@ -156,6 +156,48 @@
                 </div>
             </div>
         </div>
+        <!--小模态框 更改tracker的汇报时间间隔-->
+        <div class="modal fade" id="alertTrackerSetting" tabindex="-1" role="dialog" aria-labelledby="alertModalLabelWork" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header custom-modal-header btn-primary">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="alertModalLabelTrackerSetting">Modify the tracker's period report time</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-8" style="margin-bottom: 5px;">
+                                <span class="col-lg-5">Attempt to modify: </span><span id="spanTarget">89001234</span>
+                            </div>
+                            <div class="col-lg-8" style="margin-bottom: 5px;">
+                                <span class="col-lg-5">Current interval: </span><span id="spanPeriod">10 min</span>
+                            </div>
+                            <div class="col-lg-8" style="margin-top: 5px;">
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon2" style="width: 90px;">Change to:</span>
+                                    <input type="text" id="txtMinute" class="form-control" placeholder="minute" aria-describedby="basic-addon2" />
+                                </div>
+                            </div>
+                            <div class="col-lg-8" id="divWarning" style="margin-top: 5px; margin-bottom: 5px;">
+                                <span class="label label-default">This tracker has long time no action yet, maybe it cannot take effect immediately.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row col-lg-12">
+                            <div class="col-lg-8" style="text-align: left !important;">
+                                <img src="../images/loading_orange.gif" id="imgLoading" />
+                                <span>Notificat...</span>
+                            </div>
+                            <div class="col-lg-4" style="text-align: right !important;">
+                                <button type="button" class="btn btn-success" id="initializeWorktime"><span class="glyphicon glyphicon-refresh"></span>Send</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
     <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="../js/jquery.json-2.4.js"></script>
