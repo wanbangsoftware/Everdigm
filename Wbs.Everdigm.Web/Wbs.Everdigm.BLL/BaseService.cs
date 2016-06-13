@@ -10,7 +10,7 @@ namespace Wbs.Everdigm.BLL
     /// 业务层实现基类
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class BaseService<T> : InterfaceBaseService<T> where T : class
+    public abstract class BaseService<T> : IDisposable, InterfaceBaseService<T> where T : class
     {
         protected BaseRepository<T> CurrentRepository { get; set; }
 
@@ -105,5 +105,14 @@ namespace Wbs.Everdigm.BLL
         /// <param name="entity"></param>
         /// <returns></returns>
         public abstract string ToString(T entity);
+
+        public void Dispose()
+        {
+            if (null != CurrentRepository) { CurrentRepository.Close(); }
+        }
+        /// <summary>
+        /// 关闭数据库连接
+        /// </summary>
+        public void Close() { Dispose(); }
     }
 }

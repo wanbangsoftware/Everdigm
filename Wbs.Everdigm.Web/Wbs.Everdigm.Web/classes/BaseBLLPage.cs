@@ -33,10 +33,7 @@ namespace Wbs.Everdigm.Web
                 HasSessionLose = true;
             }
         }
-        /// <summary>
-        /// 设备历史记录查询
-        /// </summary>
-        protected DataBLL DataInstance { get { return new DataBLL(); } }
+
         /// <summary>
         /// 用户信息业务处理
         /// </summary>
@@ -55,11 +52,16 @@ namespace Wbs.Everdigm.Web
         /// <param name="obj"></param>
         protected void SaveHistory(TB_AccountHistory obj)
         {
-            obj.ActionTime = DateTime.Now;
-            if (obj.Account <= 0 || (int?)null == obj.Account)
-                obj.Account = Account.id;
-            obj.Ip = Utility.GetClientIP(this.Context);
-            HistoryInstance.Add(obj);
+            using (var bll = new HistoryBLL())
+            {
+                obj.ActionTime = DateTime.Now;
+                if (obj.Account <= 0 || (int?)null == obj.Account)
+                {
+                    obj.Account = Account.id;
+                }
+                obj.Ip = Utility.GetClientIP(this.Context);
+                bll.Add(obj);
+            }
         }
     }
 }

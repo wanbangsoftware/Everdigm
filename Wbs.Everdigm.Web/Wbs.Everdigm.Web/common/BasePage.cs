@@ -100,11 +100,11 @@ namespace Wbs.Everdigm.Web
         /// <param name="topest">跳转url时是整个窗口页面跳转还是只当前页面跳转</param>
         protected void ShowNotification(string url, string text, bool success = true, bool topest = false)
         {
-            Wbs.Everdigm.Web.main.notification.IsSuccess = success;
-            Wbs.Everdigm.Web.main.notification.ErrorString = text;
-            Wbs.Everdigm.Web.main.notification.RedirectUrl = url;
-            Wbs.Everdigm.Web.main.notification.TopestRedirect = topest ? "1" : "0";
-            Wbs.Everdigm.Web.main.notification._maxTimes = string.IsNullOrEmpty(url) ? -1 : (success ? 1 : 1);
+            main.notification.IsSuccess = success;
+            main.notification.ErrorString = text;
+            main.notification.RedirectUrl = url;
+            main.notification.TopestRedirect = topest ? "1" : "0";
+            main.notification._maxTimes = string.IsNullOrEmpty(url) ? -1 : (success ? 1 : 1);
             Response.Write("<script type=\"text/javascript\">location.href=\"/main/notification.aspx\";</script>");
         }
 

@@ -42,7 +42,7 @@
                                                         <asp:Button ID="submit" runat="server" CssClass="btn" Text="Login" OnClick="submit_Click" />
                                                     </td>
                                                     <td align="right">
-                                                        <a href="apks/">Download app</a>
+                                                        <a id="download" runat="server">Download app</a>
                                                     </td>
                                                 </tr>
                                             </table>

@@ -10,7 +10,7 @@ namespace Wbs.Everdigm.Database
     /// <remarks>创建：2014.11.15</remarks>
     /// <para>增加多线程时解决冲突的方法（自定义SubmitChange方法）2015-10-21</para>
     /// </summary>
-    public class BaseRepository<T> : InterfaceBaseRepository<T> where T : class
+    public class BaseRepository<T> : IDisposable, InterfaceBaseRepository<T> where T : class
     {
         protected EverdigmDataContext context = new EverdigmDataContext();
 
@@ -92,7 +92,8 @@ namespace Wbs.Everdigm.Database
         /// 删除指定条件的所有记录
         /// </summary>
         /// <param name="anyLambda"></param>
-        public void Delete(Expression<Func<T, bool>> anyLambda) {
+        public void Delete(Expression<Func<T, bool>> anyLambda)
+        {
             context.GetTable<T>().DeleteAllOnSubmit(FindList<T>(anyLambda));
             SubmitChanges();
         }
@@ -160,8 +161,8 @@ namespace Wbs.Everdigm.Database
         public IQueryable<T> FindPageList<S>(int pageIndex, int pageSize, out int totalRecord,
             Expression<Func<T, bool>> whereLamdba, string orderNames, bool descending = false)
         {
-            var _list = (null == whereLamdba ? 
-                context.GetTable<T>() : 
+            var _list = (null == whereLamdba ?
+                context.GetTable<T>() :
                 context.GetTable<T>().Where<T>(whereLamdba));
 
             totalRecord = _list.Count();
@@ -206,19 +207,28 @@ namespace Wbs.Everdigm.Database
         /// <returns>排序后的IQueryable<T></returns>
         private IQueryable<T> OrderBy(IQueryable<T> source, string propertyName, bool isAsc)
         {
-            if (source == null) 
+            if (source == null)
                 throw new ArgumentNullException("source", "不能为空");
-            if (string.IsNullOrEmpty(propertyName)) 
+            if (string.IsNullOrEmpty(propertyName))
                 return source;
             var _parameter = Expression.Parameter(source.ElementType);
             var _property = Expression.Property(_parameter, propertyName);
-            if (_property == null) 
+            if (_property == null)
                 throw new ArgumentNullException("propertyName", "属性\"" + propertyName + "\"不存在");
             var _lambda = Expression.Lambda(_property, _parameter);
             var _methodName = isAsc ? "OrderBy" : "OrderByDescending";
-            var _resultExpression = Expression.Call(typeof(Queryable), _methodName, 
+            var _resultExpression = Expression.Call(typeof(Queryable), _methodName,
                 new Type[] { source.ElementType, _property.Type }, source.Expression, Expression.Quote(_lambda));
             return source.Provider.CreateQuery<T>(_resultExpression);
         }
+
+        public void Dispose()
+        {
+            if (null != context) { context.Dispose(); }
+        }
+        /// <summary>
+        /// 关闭当前数据库连接
+        /// </summary>
+        public void Close() { Dispose(); }
     }
 }

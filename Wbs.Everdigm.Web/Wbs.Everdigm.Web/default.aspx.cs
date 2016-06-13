@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Database;
 
 namespace Wbs.Everdigm.Web
@@ -31,6 +33,7 @@ namespace Wbs.Everdigm.Web
                         Session.Clear();
                         Request.Cookies.Clear();
                         Response.Cookies.Clear();
+                        fetchingLastVersionOfApp();
                     }
                 }
             }
@@ -40,39 +43,60 @@ namespace Wbs.Everdigm.Web
                 Response.Redirect("./mobile/default.aspx");
             }
         }
+        /// <summary>
+        /// 查找最新的app下载
+        /// </summary>
+        private void fetchingLastVersionOfApp()
+        {
+            using (var apps = new AppBLL())
+            {
+                var app = apps.FindList<TB_Application>(f => f.Useable == true, "CreateTime", true).FirstOrDefault();
+                if (null != app)
+                {
+                    download.HRef = app.Download;
+                    download.Title = app.Description;
+                }
+            }
+        }
 
         protected void submit_Click(object sender, EventArgs e)
         {
             var md5 = Utility.MD5(password.Value).ToLower();
             var name = username.Value.Trim();
             name = name.Length >= 30 ? name.Substring(0, 30) : name;
-            var account = AccountInstance.Find(name, md5);
-            if (null != account)
+            using (var bll = new AccountBLL())
             {
-                if (account.Locked == true)
+                var account = bll.Find(name, md5);
+                if (null != account)
                 {
-                    SaveHistory(new TB_AccountHistory()
+                    using (var action = new ActionBLL())
                     {
-                        Account = account.id,
-                        ActionId = ActionInstance.Find(f => f.Name.Equals("Login")).id,
-                        ObjectA = Utility.GetClientBrowser(Request) + ", login blocked: account has locked"
-                    });
-                    ShowNotification("../default.aspx", "You cannot login: your account has been locked.", false);
+                        if (account.Locked == true)
+                        {
+                            SaveHistory(new TB_AccountHistory()
+                            {
+                                Account = account.id,
+                                ActionId = action.Find(f => f.Name.Equals("Login")).id,
+                                ObjectA = Utility.GetClientBrowser(Request) + ", login blocked: account has locked"
+                            });
+                            ShowNotification("../default.aspx", "You cannot login: your account has been locked.", false);
+                        }
+                        else
+                        {
+                            SaveHistory(new TB_AccountHistory()
+                            {
+                                Account = account.id,
+                                ActionId = action.Find(f => f.Name.Equals("Login")).id,
+                                ObjectA = Utility.GetClientBrowser(Request)
+                            });
+                            updateAccount(account);
+                        }
+                    }
                 }
                 else
                 {
-                    SaveHistory(new TB_AccountHistory()
-                    {
-                        Account = account.id,
-                        ActionId = ActionInstance.Find(f => f.Name.Equals("Login")).id,
-                        ObjectA = Utility.GetClientBrowser(Request)
-                    });
-                    updateAccount(account);
+                    ShowNotification("../default.aspx", "Login fail: Maybe your password is not correct?", false);
                 }
-            }
-            else
-            {
-                ShowNotification("../default.aspx", "Login fail: Maybe your password is not correct?", false);
             }
         }
         /// <summary>
@@ -81,12 +105,15 @@ namespace Wbs.Everdigm.Web
         /// <param name="account"></param>
         private void updateAccount(TB_Account account)
         {
-            AccountInstance.Update(f => f.id == account.id, a =>
+            using (var bll = new AccountBLL())
             {
-                a.LastLoginTime = DateTime.Now;
-                a.LoginTimes++;
-                a.LastLoginIp = Utility.GetClientIP(this.Context);
-            });
+                bll.Update(f => f.id == account.id, act =>
+                {
+                    act.LastLoginTime = DateTime.Now;
+                    act.LoginTimes++;
+                    act.LastLoginIp = Utility.GetClientIP(this.Context);
+                });
+            }
             Session[Utility.SessionName] = account;
 
             ShowNotification("../main/main.aspx", "Welcome <a>" + account.Name + "</a>, You have login successfully.");
