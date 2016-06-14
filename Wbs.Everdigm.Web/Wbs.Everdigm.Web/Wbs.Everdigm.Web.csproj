@@ -586,12 +586,10 @@
       <DependentUpon>equipment_models.ashx</DependentUpon>
     </Compile>
     <Compile Include="ajax\PartialApiAccount.cs" />
-    <Compile Include="ajax\PartialApiBLL.cs" />
     <Compile Include="ajax\PartialApiClasses.cs" />
     <Compile Include="ajax\PartialApiReport.cs" />
     <Compile Include="ajax\PartialApiTracker.cs" />
     <Compile Include="ajax\PartialApiUpdate.cs" />
-    <Compile Include="ajax\PartialCommandBLLs.cs" />
     <Compile Include="ajax\PartialPrintIridium.cs" />
     <Compile Include="ajax\PartialPrintTerminalcs.cs" />
     <Compile Include="ajax\PartialQueryCustomer.cs" />

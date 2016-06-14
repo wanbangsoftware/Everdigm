@@ -5,6 +5,7 @@ using System.Web;
 using System.Configuration;
 using System.Linq.Expressions;
 using Wbs.Everdigm.Common;
+using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Database;
 
 namespace Wbs.Everdigm.Web.ajax
@@ -25,18 +26,21 @@ namespace Wbs.Everdigm.Web.ajax
                 var obj = JsonConverter.ToObject<TB_Application>(apiObj.content);
                 if (null != obj)
                 {
-                    Expression<Func<TB_Application, bool>> exp = PredicateExtensions.True<TB_Application>();
-                    exp = exp.And(a => a.Useable == true);
-                    exp.And(a => a.VersionCode > obj.VersionCode || a.VersionName.CompareTo(obj.VersionName) > 0 || 
-                        a.InternalVersion > obj.InternalVersion);
-                    var app = AppInstance.Find(exp);
-                    if (null == app)
+                    using (var bll = new AppBLL())
                     {
-                        ResponseData(-2, "No new version exist.");
-                    }
-                    else
-                    {
-                        ResponseData(0, JsonConverter.ToJson(app), true);
+                        Expression<Func<TB_Application, bool>> exp = PredicateExtensions.True<TB_Application>();
+                        exp = exp.And(a => a.Useable == true);
+                        exp.And(a => a.VersionCode > obj.VersionCode || a.VersionName.CompareTo(obj.VersionName) > 0 ||
+                            a.InternalVersion > obj.InternalVersion);
+                        var app = bll.Find(exp);
+                        if (null == app)
+                        {
+                            ResponseData(-2, "No new version exist.");
+                        }
+                        else
+                        {
+                            ResponseData(0, JsonConverter.ToJson(app), true);
+                        }
                     }
                 }
                 else { ResponseData(-1, "Can not hander your [update] request with error object."); }
@@ -58,34 +62,37 @@ namespace Wbs.Everdigm.Web.ajax
                     resp.md5 = MQTT_SERVER;
 
                     var device = acnt.device;
-                    var tracker = TrackerInstance.Find(f => f.DeviceId.Equals(device) && f.Deleted == false);
-                    if (null == tracker)
+                    using (var bll = new TrackerBLL())
                     {
-                        tracker = addTracker(acnt.device);
-                        resp.data = tracker.SimCard;
-                        // 新登记的tracker没有session
-                        resp.session = "";
-                    }
-                    else
-                    {
-                        // 查找绑定用户的登录session
-                        var user = tracker.TB_Account.FirstOrDefault();
-                        if (null == user)
+                        var tracker = bll.Find(f => f.DeviceId.Equals(device) && f.Deleted == false);
+                        if (null == tracker)
                         {
-                            // 没有绑定用户时session为空
+                            tracker = addTracker(acnt.device, bll);
+                            resp.data = tracker.SimCard;
+                            // 新登记的tracker没有session
                             resp.session = "";
                         }
                         else
                         {
-                            resp.name = user.Code;
-                            // 已绑定过的用户返回session
-                            resp.session = user.DeviceLoginId;
+                            // 查找绑定用户的登录session
+                            var user = tracker.TB_Account.FirstOrDefault();
+                            if (null == user)
+                            {
+                                // 没有绑定用户时session为空
+                                resp.session = "";
+                            }
+                            else
+                            {
+                                resp.name = user.Code;
+                                // 已绑定过的用户返回session
+                                resp.session = user.DeviceLoginId;
+                            }
+                            resp.data = tracker.SimCard;
                         }
-                        resp.data = tracker.SimCard;
-                    }
 
-                    // get parameter的时候只返回设备与sim卡之间的绑定关系，没有账户的信息
-                    ResponseData(0, JsonConverter.ToJson(resp), true);
+                        // get parameter的时候只返回设备与sim卡之间的绑定关系，没有账户的信息
+                        ResponseData(0, JsonConverter.ToJson(resp), true);
+                    }
                 }
                 else { ResponseData(-1, "Can not handle your get_parameter request with error data."); }
             }

@@ -161,18 +161,20 @@ namespace Wbs.Everdigm.Common
             //}
             //else
             //{
-                var CommandInstance = new CommandBLL();
-                var command = CommandInstance.GetObject();
+            using (var bll = new CommandBLL())
+            {
+                var command = bll.GetObject();
                 command.DestinationNo = sim;
-            // 终端是卫星方式连接则使用卫星方式发送命令
-            command.Status = (terminal.OnlineStyle == (byte)LinkType.SATELLITE ?
-                (byte)CommandStatus.WaitingForSatellite : 
-                // SMS发送时值为 re-sending
-                (byte)(sms ? CommandStatus.WaitingForSMS : CommandStatus.Waiting));
+                // 终端是卫星方式连接则使用卫星方式发送命令
+                command.Status = (terminal.OnlineStyle == (byte)LinkType.SATELLITE ?
+                    (byte)CommandStatus.WaitingForSatellite :
+                    // SMS发送时值为 re-sending
+                    (byte)(sms ? CommandStatus.WaitingForSMS : CommandStatus.Waiting));
                 command.Content = content;
                 command.SendUser = (0 == sender ? (int?)null : sender);
                 command.Terminal = terminal.id;
-                return CommandInstance.Add(command).id;
+                return bll.Add(command).id;
+            }
             //}
         }
         /// <summary>
@@ -188,24 +190,26 @@ namespace Wbs.Everdigm.Common
             // 判断Unitel的卡号，前面两位是89，且长度是8位数字
             simno = simno[0] == '8' && simno[1] == '9' ? simno.Substring(0, 8) : simno;
             string ret = SMSUtility.SendSMS(simno, Content);
-            var CommandInstance = new CommandBLL();
-            // 查看发送成功与否的状态
-            CommandStatus cs = ret.Equals("SUCCESS") ? CommandStatus.SentBySMS : CommandStatus.SentFail;
+            using (var bll = new CommandBLL())
+            {
+                // 查看发送成功与否的状态
+                CommandStatus cs = ret.Equals("SUCCESS") ? CommandStatus.SentBySMS : CommandStatus.SentFail;
 
-            // 新建一个命令发送类实体
-            TB_Command ct = CommandInstance.GetObject();
-            simno = (simno[0] == '8' && simno[1] == '9' && simno.Length < 11) ? (simno + "000") : simno;
-            ct.DestinationNo = simno;
-            ct.Status = (byte)cs;
-            ct.Content = Content;
-            ct.ActualSendTime = DateTime.Now;
-            ct.Terminal = terminal.id;
-            ct.SendUser = (0 == sender ? (int?)null : sender);
+                // 新建一个命令发送类实体
+                TB_Command ct = bll.GetObject();
+                simno = (simno[0] == '8' && simno[1] == '9' && simno.Length < 11) ? (simno + "000") : simno;
+                ct.DestinationNo = simno;
+                ct.Status = (byte)cs;
+                ct.Content = Content;
+                ct.ActualSendTime = DateTime.Now;
+                ct.Terminal = terminal.id;
+                ct.SendUser = (0 == sender ? (int?)null : sender);
 
-            var id= CommandInstance.Add(ct).id;
-            // 保存终端的命令发送条数
+                var id = bll.Add(ct).id;
+                // 保存终端的命令发送条数
 
-            return id;
+                return id;
+            }
         }
         /// <summary>
         /// 直接发送SMS命令
@@ -218,10 +222,10 @@ namespace Wbs.Everdigm.Common
             // 判断Unitel的卡号，前面两位是89，且长度是8位数字
             simno = simno[0] == '8' && simno[1] == '9' ? simno.Substring(0, 8) : simno;
             string ret = SMSUtility.SendSMS(simno, cmd.Content);
-            var CommandInstance = new CommandBLL();
             // 查看发送成功与否的状态
             CommandStatus cs = ret.Equals("SUCCESS") ? CommandStatus.SentBySMS : CommandStatus.SentFail;
-            CommandInstance.Update(f => f.id == cmd.id, act =>
+
+            new CommandBLL().Update(f => f.id == cmd.id, act =>
             {
                 act.Status = (byte)cs;
                 act.ActualSendTime = DateTime.Now;

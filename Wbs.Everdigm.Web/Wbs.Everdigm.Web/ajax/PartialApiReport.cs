@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Wbs.Everdigm.Common;
+using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Database;
 
 namespace Wbs.Everdigm.Web.ajax
@@ -18,12 +19,15 @@ namespace Wbs.Everdigm.Web.ajax
             if (null != tmp && !string.IsNullOrEmpty(tmp.data))
             {
                 string base64 = HttpUtility.UrlDecode(tmp.data);
-                TB_SMS sms = SmsInstance.GetObject();
-                sms.Data = base64;
-                sms.Sender = tmp.name;
-                sms.Type = SMSUtility.SMS_TRACKER;
-                SmsInstance.Add(sms);
-                ResponseData(0, "Data saved");
+                using (var bll = new SmsBLL())
+                {
+                    TB_SMS sms = bll.GetObject();
+                    sms.Data = base64;
+                    sms.Sender = tmp.name;
+                    sms.Type = SMSUtility.SMS_TRACKER;
+                    bll.Add(sms);
+                    ResponseData(0, "Data saved");
+                }
             }
             else
             {

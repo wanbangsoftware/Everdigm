@@ -25,32 +25,40 @@ namespace Wbs.Everdigm.Web.ajax
         private void HandleRequest()
         {
             var ret = "";
-            if (null == User)
+            try
             {
-                ret = GetFormatedJson(-1, "Your session has expired, Please try to login again.");
-            }
-            else
-            {
-                switch (cmd)
+                if (null == User)
                 {
-                    case "detail":
-                        // 生成工作项的文档
-                        var id = int.Parse(Utility.Decrypt(data));
-                        var detail = WorkDetailInstance.Find(f => f.id == id && f.Deleted == false);
-                        if (null == detail)
-                        {
-                            ret = GetFormatedJson(-1, "Work is not exist.");
-                        }
-                        else
-                        {
-                            // 读取工作项，并保存到excel中
-                            ret = SaveWorkHandlerRequest(id);//HandleWorkDetail(detail);
-                        }
-                        break;
-                    case "excel":
-                        ret = HandleWorkHandlerStatus();
-                        break;
+                    ret = GetFormatedJson(-1, "Your session has expired, Please try to login again.");
                 }
+                else
+                {
+                    switch (cmd)
+                    {
+                        case "detail":
+                            // 生成工作项的文档
+                            var id = int.Parse(Utility.Decrypt(data));
+                            var detail = WorkDetailInstance.Find(f => f.id == id && f.Deleted == false);
+                            if (null == detail)
+                            {
+                                ret = GetFormatedJson(-1, "Work is not exist.");
+                            }
+                            else
+                            {
+                                // 读取工作项，并保存到excel中
+                                ret = SaveWorkHandlerRequest(id);//HandleWorkDetail(detail);
+                            }
+                            break;
+                        case "excel":
+                            ret = HandleWorkHandlerStatus();
+                            break;
+                    }
+                }
+            }
+            finally
+            {
+                WorkDetailInstance.Close();
+                ExcelHandlerInstance.Close();
             }
             ResponseJson(ret);
         }

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
 using System.Web;
-using Wbs.Everdigm.Common;
-using System.Configuration;
+using Wbs.Everdigm.BLL;
+using Wbs.Everdigm.Database;
 
 namespace Wbs.Everdigm.Web.ajax
 {
@@ -32,6 +29,16 @@ namespace Wbs.Everdigm.Web.ajax
         private void ResponseData(int state, string data, bool json = false)
         {
             ResponseJson(string.Format("{0}\"State\":{1},\"Data\":{2}{3}{4}{5}", "{", state, (json ? "" : "\""), data, (json ? "" : "\""), "}"));
+        }
+        /// <summary>
+        /// 保存历史记录
+        /// </summary>
+        /// <param name="obj"></param>
+        private void SaveHistory(TB_AccountHistory obj)
+        {
+            obj.ActionTime = DateTime.Now;
+            obj.Ip = Utility.GetClientIP(ctx);
+            new HistoryBLL().Add(obj);
         }
         /// <summary>
         /// 处理app的请求

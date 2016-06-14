@@ -106,38 +106,44 @@ namespace Wbs.Everdigm.Web.ajax
         private string HandleQueryCommandStatusRequest()
         {
             string ret = "";
-            var cmd = CommandInstance.Find(f => f.id == ParseInt(data));
-            if (null == cmd)
+            using (var bll = new CommandBLL())
             {
-                ret = ResponseMessage(-1, "No such command record exists.");
-            }
-            else
-            {
-                byte status = cmd.Status.Value;
-                CommandStatus state = (CommandStatus)status;
-                if (state == CommandStatus.Returned)
+                var cmd = bll.Find(f => f.id == ParseInt(data));
+                if (null == cmd)
                 {
-                    var list = DataInstance.FindList<TB_HISTORIES>(f =>
-                        f.command_id.Equals(cmd.Command) && f.terminal_id.Equals(cmd.DestinationNo) &&
-                        f.receive_time > cmd.ActualSendTime, "receive_time", true);
-                    var data = list.FirstOrDefault<TB_HISTORIES>();
-                    var desc = CommandUtility.GetCommandStatus(state);
-                    if (null != data)
-                    {
-                        desc += GetCommandData(data);
-                    }
-                    ret = ResponseMessage(status, desc);
+                    ret = ResponseMessage(-1, "No such command record exists.");
                 }
                 else
                 {
-                    ret = ResponseMessage(status, CommandUtility.GetCommandStatus(state));
-                    if (cmd.Command == "0x4000" && (state == CommandStatus.SentBySMS || state == CommandStatus.SentByTCP))
+                    byte status = cmd.Status.Value;
+                    CommandStatus state = (CommandStatus)status;
+                    if (state == CommandStatus.Returned)
                     {
-                        // 将重置终端连接的命令状态改成不需要回复的状态
-                        CommandInstance.Update(f => f.id == cmd.id, act =>
+                        using (var dbll = new DataBLL())
                         {
-                            act.Status = (byte)CommandStatus.NotNeedReturn;
-                        });
+                            var list = dbll.FindList<TB_HISTORIES>(f =>
+                                f.command_id.Equals(cmd.Command) && f.terminal_id.Equals(cmd.DestinationNo) &&
+                                f.receive_time > cmd.ActualSendTime, "receive_time", true);
+                            var data = list.FirstOrDefault();
+                            var desc = CommandUtility.GetCommandStatus(state);
+                            if (null != data)
+                            {
+                                desc += GetCommandData(data);
+                            }
+                            ret = ResponseMessage(status, desc);
+                        }
+                    }
+                    else
+                    {
+                        ret = ResponseMessage(status, CommandUtility.GetCommandStatus(state));
+                        if (cmd.Command == "0x4000" && (state == CommandStatus.SentBySMS || state == CommandStatus.SentByTCP))
+                        {
+                            // 将重置终端连接的命令状态改成不需要回复的状态
+                            bll.Update(f => f.id == cmd.id, act =>
+                            {
+                                act.Status = (byte)CommandStatus.NotNeedReturn;
+                            });
+                        }
                     }
                 }
             }
@@ -152,14 +158,17 @@ namespace Wbs.Everdigm.Web.ajax
             string ret = "{}";
             try
             {
-                var t = TerminalInstance.Find(f => f.Number.Equals(data));
-                if (null == t)
+                using (var bll = new TerminalBLL())
                 {
-                    ret = ResponseMessage(-1, "No terminal like \\\"" + data + "\\\" exists");
-                }
-                else
-                {
-                    ret = HandleTerminalCommandRequest(t);
+                    var t = bll.Find(f => f.Number.Equals(data));
+                    if (null == t)
+                    {
+                        ret = ResponseMessage(-1, "No terminal like \\\"" + data + "\\\" exists");
+                    }
+                    else
+                    {
+                        ret = HandleTerminalCommandRequest(t);
+                    }
                 }
             }
             catch (Exception e)
@@ -341,27 +350,30 @@ namespace Wbs.Everdigm.Web.ajax
             try
             {
                 var id = ParseInt(Utility.Decrypt(data));
-                var obj = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
-                if (null != obj)
+                using (var bll = new EquipmentBLL())
                 {
-                    if ((int?)null != obj.Terminal)
+                    var obj = bll.Find(f => f.id == id && f.Deleted == false);
+                    if (null != obj)
                     {
-                        ret = "";
-                        // 查看是否发送的保安命令
-                        var command = CommandUtility.GetCommand(cmd);
-                        if (command.Security && command.Code.Equals("6007"))
+                        if ((int?)null != obj.Terminal)
                         {
-                            ret = HandleSecurityStatus(obj.LockStatus, command.Param);
+                            ret = "";
+                            // 查看是否发送的保安命令
+                            var command = CommandUtility.GetCommand(cmd);
+                            if (command.Security && command.Code.Equals("6007"))
+                            {
+                                ret = HandleSecurityStatus(obj.LockStatus, command.Param);
+                            }
+                            if (string.IsNullOrEmpty(ret))
+                            {
+                                // 查看当前设备的链接状态然后确定命令的发送方式
+                                ret = HandleTerminalCommandRequest(obj.TB_Terminal);
+                            }
                         }
-                        if (string.IsNullOrEmpty(ret))
-                        {
-                            // 查看当前设备的链接状态然后确定命令的发送方式
-                            ret = HandleTerminalCommandRequest(obj.TB_Terminal);
-                        }
+                        else { ret = ResponseMessage(-1, "No terminal bond with this equipment."); }
                     }
-                    else { ret = ResponseMessage(-1, "No terminal bond with this equipment."); }
+                    else { ret = ResponseMessage(-1, "Equipment is not exist."); }
                 }
-                else { ret = ResponseMessage(-1, "Equipment is not exist."); }
             }
             catch (Exception e) { ret = ResponseMessage(-1, "Handle Security command error:" + e.Message); }
             return ret;
@@ -376,17 +388,20 @@ namespace Wbs.Everdigm.Web.ajax
             try
             {
                 var id = ParseInt(Utility.Decrypt(data));
-                var obj = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
-                if (null != obj)
+                using (var bll = new EquipmentBLL())
                 {
-                    if ((int?)null != obj.Terminal)
+                    var obj = bll.Find(f => f.id == id && f.Deleted == false);
+                    if (null != obj)
                     {
-                        // 查看当前设备的链接状态然后确定命令的发送方式
-                        ret = HandleTerminalCommandRequest(obj.TB_Terminal);
+                        if ((int?)null != obj.Terminal)
+                        {
+                            // 查看当前设备的链接状态然后确定命令的发送方式
+                            ret = HandleTerminalCommandRequest(obj.TB_Terminal);
+                        }
+                        else { ret = ResponseMessage(-1, "No terminal bond with this equipment."); }
                     }
-                    else { ret = ResponseMessage(-1, "No terminal bond with this equipment."); }
+                    else { ret = ResponseMessage(-1, "Equipment is not exist."); }
                 }
-                else { ret = ResponseMessage(-1, "Equipment is not exist."); }
             }
             catch (Exception e)
             { ret = ResponseMessage(-1, "Handle Equipment command error:" + e.Message); }
@@ -403,84 +418,90 @@ namespace Wbs.Everdigm.Web.ajax
             try
             {
                 var id = ParseInt(Utility.Decrypt(data));
-                var obj = EquipmentInstance.Find(f => f.id == id && f.Deleted == false);
-                if (null != obj)
+                using (var ebll = new EquipmentBLL())
                 {
-                    // 终端不为空时才查询
-                    if ((int?)null != obj.Terminal)
+                    var obj = ebll.Find(f => f.id == id && f.Deleted == false);
+                    if (null != obj)
                     {
-                        var start = DateTime.Parse(GetParamenter("start") + " 00:00:00");
-                        var end = DateTime.Parse(GetParamenter("end") + " 23:59:59");
-                        var sim = obj.TB_Terminal.Sim;
-                        if (sim[0] == '8' && sim[1] == '9' && sim.Length < 11)
+                        // 终端不为空时才查询
+                        if ((int?)null != obj.Terminal)
                         {
-                            sim += "000";
-                        }
-                        // 查询的命令
-                        //string _command = "";
-                        Command command = null;
-                        if (!string.IsNullOrEmpty(cmd))
-                        {
-                            command = CommandUtility.GetCommand(cmd);
-                            //_command = command.Code;
-                        }
-                        var list = CommandInstance.FindList<TB_Command>(f => f.DestinationNo.Equals(sim) &&
-                            f.ScheduleTime >= start && f.ScheduleTime <= end && f.Command != "0xBB0F", "ScheduleTime", true);
-                        if (security)
-                        {
-                            list = list.Where(w => w.Command == "0x6007" || w.Command == "0x4000" || w.Command == "0x3000" || w.Command == "0xDD02");
-                        }
-                        else
-                        {
-                            list = list.Where(w => w.Command != "0x6007" && w.Command != "0x4000" && w.Command != "0x3000" && w.Command != "0xDD02");
-                        }
-                        //&&
-                        //    (string.IsNullOrEmpty(_command) ? f.u_sms_command.IndexOf("0x") >= 0 : f.u_sms_command.IndexOf(_command) >= 0),
-                        //    "u_sms_schedule_time", true);
-                        if (null != command)
-                        {
-                            list = list.Where(w => w.Command.IndexOf(command.Code) >= 0);
-                            if (security && command.Code.Equals("6007"))
+                            var start = DateTime.Parse(GetParamenter("start") + " 00:00:00");
+                            var end = DateTime.Parse(GetParamenter("end") + " 23:59:59");
+                            var sim = obj.TB_Terminal.Sim;
+                            if (sim[0] == '8' && sim[1] == '9' && sim.Length < 11)
                             {
-                                list = list.Where(w => w.Content.Substring(w.Content.Length - 2) == command.Param);
+                                sim += "000";
                             }
-                            else if (security && command.Code.Equals("3000"))
+                            // 查询的命令
+                            //string _command = "";
+                            Command command = null;
+                            if (!string.IsNullOrEmpty(cmd))
                             {
-                                list = list.Where(w => w.Content.Substring(w.Content.Length - 4, 2) == command.Param);
+                                command = CommandUtility.GetCommand(cmd);
+                                //_command = command.Code;
                             }
-                            else if (security && command.Code.Equals("4000"))
+                            using (var bll = new CommandBLL())
                             {
-                                list = list.Where(w => w.Content.Substring(w.Content.Length - 4, 2) == command.Param);
+                                var list = bll.FindList<TB_Command>(f => f.DestinationNo.Equals(sim) &&
+                                    f.ScheduleTime >= start && f.ScheduleTime <= end && f.Command != "0xBB0F", "ScheduleTime", true);
+                                if (security)
+                                {
+                                    list = list.Where(w => w.Command == "0x6007" || w.Command == "0x4000" || w.Command == "0x3000" || w.Command == "0xDD02");
+                                }
+                                else
+                                {
+                                    list = list.Where(w => w.Command != "0x6007" && w.Command != "0x4000" && w.Command != "0x3000" && w.Command != "0xDD02");
+                                }
+                                //&&
+                                //    (string.IsNullOrEmpty(_command) ? f.u_sms_command.IndexOf("0x") >= 0 : f.u_sms_command.IndexOf(_command) >= 0),
+                                //    "u_sms_schedule_time", true);
+                                if (null != command)
+                                {
+                                    list = list.Where(w => w.Command.IndexOf(command.Code) >= 0);
+                                    if (security && command.Code.Equals("6007"))
+                                    {
+                                        list = list.Where(w => w.Content.Substring(w.Content.Length - 2) == command.Param);
+                                    }
+                                    else if (security && command.Code.Equals("3000"))
+                                    {
+                                        list = list.Where(w => w.Content.Substring(w.Content.Length - 4, 2) == command.Param);
+                                    }
+                                    else if (security && command.Code.Equals("4000"))
+                                    {
+                                        list = list.Where(w => w.Content.Substring(w.Content.Length - 4, 2) == command.Param);
+                                    }
+                                }
+                                if (list.Count() > 0)
+                                {
+                                    // 将command_id替换
+                                    //List<Command> commands = CommandUtility.GetCommand();
+                                    foreach (var record in list)
+                                    {
+                                        string param = "";
+                                        if (record.Command == "0x6007")
+                                            param = record.Content.Substring(record.Content.Length - 2);
+                                        if (record.Command == "0x3000")
+                                            param = record.Content.Substring(record.Content.Length - 4, 2);
+                                        if (record.Command == "0x4000")
+                                            param = record.Content.Substring(record.Content.Length - 4, 2);
+                                        if (record.Command == "0xDD02")
+                                            param = record.Content.Substring(record.Content.Length - 8, 2);
+                                        Command _cmd = CommandUtility.GetCommand(record.Command.Replace("0x", ""), param);
+                                        var func = (EquipmentFunctional)obj.Functional;
+                                        var called = (func == EquipmentFunctional.Mechanical || func == EquipmentFunctional.Electric) ? "Equipment" : "Loader";
+                                        record.Command = (null == _cmd ? "" : _cmd.Title.Replace("Equipment", called).Replace("Loader", called));
+                                        // 加入命令发送者  2015/09/18 10:36
+                                        record.Content = (int?)null == record.SendUser ? "Server" : record.TB_Account.Name;
+                                    }
+                                }
+                                ret = JsonConverter.ToJson(list);
                             }
                         }
-                        if (list.Count() > 0)
-                        {
-                            // 将command_id替换
-                            //List<Command> commands = CommandUtility.GetCommand();
-                            foreach (var record in list)
-                            {
-                                string param = "";
-                                if (record.Command == "0x6007")
-                                    param = record.Content.Substring(record.Content.Length - 2);
-                                if (record.Command == "0x3000")
-                                    param = record.Content.Substring(record.Content.Length - 4, 2);
-                                if (record.Command == "0x4000")
-                                    param = record.Content.Substring(record.Content.Length - 4, 2);
-                                if (record.Command == "0xDD02")
-                                    param = record.Content.Substring(record.Content.Length - 8, 2);
-                                Command _cmd = CommandUtility.GetCommand(record.Command.Replace("0x", ""), param);
-                                var func = (EquipmentFunctional)obj.Functional;
-                                var called = (func == EquipmentFunctional.Mechanical || func == EquipmentFunctional.Electric) ? "Equipment" : "Loader";
-                                record.Command = (null == _cmd ? "" : _cmd.Title.Replace("Equipment", called).Replace("Loader", called));
-                                // 加入命令发送者  2015/09/18 10:36
-                                record.Content = (int?)null == record.SendUser ? "Server" : record.TB_Account.Name;
-                            }
-                        }
-                        ret = JsonConverter.ToJson(list);
+                        else { ret = ResponseMessage(-1, "No terminal bond with this equipment."); }
                     }
-                    else { ret = ResponseMessage(-1, "No terminal bond with this equipment."); }
+                    else { ret = ResponseMessage(-1, "Equipment is not exist."); }
                 }
-                else { ret = ResponseMessage(-1, "Equipment is not exist."); }
             }
             catch(Exception e)
             { ret = ResponseMessage(-1, "Handle History request error:" + e.Message); }

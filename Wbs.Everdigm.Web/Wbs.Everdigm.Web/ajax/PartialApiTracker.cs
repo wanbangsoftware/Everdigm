@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Configuration;
+using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Database;
 
 namespace Wbs.Everdigm.Web.ajax
@@ -19,11 +20,11 @@ namespace Wbs.Everdigm.Web.ajax
         /// </summary>
         /// <param name="device"></param>
         /// <returns>返回具有相同device id的tracker或新建一个tracker</returns>
-        private TB_Tracker addTracker(string device)
+        private TB_Tracker addTracker(string device, TrackerBLL bll)
         {
             if (string.IsNullOrEmpty(device)) return null;
 
-            var tracker = TrackerInstance.Find(f => f.DeviceId.Equals(device) && f.Deleted == false);
+            var tracker = bll.Find(f => f.DeviceId.Equals(device) && f.Deleted == false);
             if (null == tracker)
             {
                 if (string.IsNullOrEmpty(TrackerNumberPrefix))
@@ -31,7 +32,7 @@ namespace Wbs.Everdigm.Web.ajax
                     TrackerNumberPrefix = ConfigurationManager.AppSettings["TRACKER_NUMBER_PREFIX"];
                 }
                 // 生成一个新的tracker并与当前账户绑定
-                tracker = TrackerInstance.FindList<TB_Tracker>(f => f.SimCard.StartsWith(TrackerNumberPrefix) && f.Deleted == false, "SimCard", true).FirstOrDefault();
+                tracker = bll.FindList<TB_Tracker>(f => f.SimCard.StartsWith(TrackerNumberPrefix) && f.Deleted == false, "SimCard", true).FirstOrDefault();
                 string number;
                 if (null == tracker)
                 {
@@ -42,15 +43,15 @@ namespace Wbs.Everdigm.Web.ajax
                     var old = int.Parse(tracker.SimCard) + 1;
                     number = old.ToString();
                 }
-                tracker = TrackerInstance.GetObject();
+                tracker = bll.GetObject();
                 tracker.SimCard = number;
                 tracker.DeviceId = device;
-                tracker = TrackerInstance.Add(tracker);
+                tracker = bll.Add(tracker);
                 // 保存tracker绑定历史记录
                 SaveHistory(new TB_AccountHistory()
                 {
                     Account = null,
-                    ActionId = ActionInstance.Find(f => f.Name.Equals("AddNewTracker")).id,
+                    ActionId = new ActionBLL().Find(f => f.Name.Equals("AddNewTracker")).id,
                     ObjectA = string.Format("tracker: {0}, device: {1}", tracker.SimCard, tracker.DeviceId)
                 });
                 return tracker;

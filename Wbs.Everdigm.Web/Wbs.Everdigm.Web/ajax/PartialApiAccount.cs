@@ -27,42 +27,49 @@ namespace Wbs.Everdigm.Web.ajax
                 var pwd = acnt.md5.ToLower();
                 try
                 {
-                    var account = AccountInstance.Find(name, pwd);
-                    if (null == account)
+                    using (var bll = new AccountBLL())
                     {
-                        ResponseData(-1, "Your account is not exist");
-                    }
-                    else
-                    {
-                        if (account.Locked == true)
+                        var account = bll.Find(f => f.Code.Equals(name) && f.Delete == false);
+                        if (null == account)
                         {
-                            ResponseData(-1, "Your account was locked.");
-                        }
-                        else if ((int?)null != account.Tracker)
-                        {
-                            if (account.TB_Tracker.DeviceId.Equals(acnt.device))
-                            {
-                                string uuid = Guid.NewGuid().ToString();
-                                // 每次绑定账户都生成一个新的session id
-                                AccountInstance.Update(u => u.id == account.id, act => { act.DeviceLoginId = uuid; });
-                                // 返回当前已经登录过的用户信息
-                                ResponseData(0, JsonConverter.ToJson(new Account()
-                                {
-                                    name = acnt.name,
-                                    data = account.TB_Tracker.SimCard,
-                                    // 新的session id
-                                    session = uuid
-                                }), true);
-                            }
-                            else
-                            {
-                                ResponseData(-1, "Your account was bind with another device.");
-                            }
+                            ResponseData(-1, "Your account is not exist");
                         }
                         else
                         {
-                            // 创建一个新的tracker绑定关系
-                            BindAccountWithTracker(account, acnt.device);
+                            if (!pwd.Equals(account.Password.ToLower()))
+                            {
+                                ResponseData(-1, "Your password is not correct.");
+                            }
+                            else if (account.Locked == true)
+                            {
+                                ResponseData(-1, "Your account was locked.");
+                            }
+                            else if ((int?)null != account.Tracker)
+                            {
+                                if (account.TB_Tracker.DeviceId.Equals(acnt.device))
+                                {
+                                    string uuid = Guid.NewGuid().ToString();
+                                    // 每次绑定账户都生成一个新的session id
+                                    bll.Update(u => u.id == account.id, act => { act.DeviceLoginId = uuid; });
+                                    // 返回当前已经登录过的用户信息
+                                    ResponseData(0, JsonConverter.ToJson(new Account()
+                                    {
+                                        name = acnt.name,
+                                        data = account.TB_Tracker.SimCard,
+                                        // 新的session id
+                                        session = uuid
+                                    }), true);
+                                }
+                                else
+                                {
+                                    ResponseData(-1, "Your account was bind with another device.");
+                                }
+                            }
+                            else
+                            {
+                                // 创建一个新的tracker绑定关系
+                                BindAccountWithTracker(account, acnt.device, bll);
+                            }
                         }
                     }
                 }
@@ -73,7 +80,7 @@ namespace Wbs.Everdigm.Web.ajax
             }
         }
 
-        private void BindAccountWithTracker(TB_Account account, string device)
+        private void BindAccountWithTracker(TB_Account account, string device, AccountBLL abll)
         {
             if (string.IsNullOrEmpty(device))
             {
@@ -81,50 +88,66 @@ namespace Wbs.Everdigm.Web.ajax
                 return;
             }
 
-            // 查找相同deviceid的tracker
-            var tracker = TrackerInstance.Find(f => f.Deleted == false && f.DeviceId.Equals(device));
-            if (null != tracker)
+            using (var bll = new TrackerBLL())
             {
-                string uuid = Guid.NewGuid().ToString();
-                // 查找这个设备是否已经绑定到别人账户上
-                var cnt = tracker.TB_Account.Count;
-                if (cnt > 0)
+                // 查找相同deviceid的tracker
+                var tracker = bll.Find(f => f.Deleted == false && f.DeviceId.Equals(device));
+                if (null != tracker)
                 {
-                    Account exist = new Account()
+                    string uuid = Guid.NewGuid().ToString();
+                    // 查找这个设备是否已经绑定到别人账户上
+                    var cnt = tracker.TB_Account.Count;
+                    if (cnt > 0)
                     {
-                        name = account.Code,
-                        data = account.TB_Tracker.SimCard,
-                        // 每次绑定账户都生成新的session id
-                        session = uuid
-                    };
-                    var user = tracker.TB_Account.FirstOrDefault(f => f.id == account.id);
-                    if (null != user)
-                    {
-                        AccountInstance.Update(u => u.id == user.id, act => { act.DeviceLoginId = uuid; });
-                        // 返回当前已经登录过的用户信息
-                        ResponseData(0, JsonConverter.ToJson(exist), true);
+                        Account exist = new Account()
+                        {
+                            name = account.Code,
+                            data = account.TB_Tracker.SimCard,
+                            // 每次绑定账户都生成新的session id
+                            session = uuid
+                        };
+                        var user = tracker.TB_Account.FirstOrDefault(f => f.id == account.id);
+                        if (null != user)
+                        {
+                            abll.Update(u => u.id == user.id, act => { act.DeviceLoginId = uuid; });
+                            // 返回当前已经登录过的用户信息
+                            ResponseData(0, JsonConverter.ToJson(exist), true);
+                        }
+                        else
+                        {
+                            ResponseData(-1, "Your device is already bound with another tms account.");
+                        }
                     }
                     else
                     {
-                        ResponseData(-1, "Your device is already bound with another tms account.");
+                        // 该设备还未绑定任何人员
+                        // 更改account的tracker信息
+                        abll.Update(f => f.id == account.id, act =>
+                        {
+                            act.Tracker = tracker.id;
+                            act.DeviceLoginId = uuid;
+                        });
+                        // 保存tracker绑定历史记录
+                        SaveHistory(new TB_AccountHistory()
+                        {
+                            Account = account.id,
+                            ActionId = new ActionBLL().Find(f => f.Name.Equals("BindTracker")).id,
+                            ObjectA = string.Format("tracker: {0}, device: {1}, account: {2}", tracker.SimCard, tracker.DeviceId, account.Code)
+                        });
+                        ResponseData(0, JsonConverter.ToJson(new Account()
+                        {
+                            name = account.Code,
+                            data = tracker.SimCard,
+                            // 每次绑定账户都生成新的session id
+                            session = uuid
+                        }), true);
                     }
                 }
                 else
                 {
-                    // 该设备还未绑定任何人员
-                    // 更改account的tracker信息
-                    AccountInstance.Update(f => f.id == account.id, act =>
-                    {
-                        act.Tracker = tracker.id;
-                        act.DeviceLoginId = uuid;
-                    });
-                    // 保存tracker绑定历史记录
-                    SaveHistory(new TB_AccountHistory()
-                    {
-                        Account = account.id,
-                        ActionId = ActionInstance.Find(f => f.Name.Equals("BindTracker")).id,
-                        ObjectA = string.Format("tracker: {0}, device: {1}, account: {2}", tracker.SimCard, tracker.DeviceId, account.Code)
-                    });
+                    tracker = addTracker(device, bll);
+                    string uuid = Guid.NewGuid().ToString();
+                    abll.Update(u => u.id == account.id, act => { act.DeviceLoginId = uuid; });
                     ResponseData(0, JsonConverter.ToJson(new Account()
                     {
                         name = account.Code,
@@ -133,19 +156,6 @@ namespace Wbs.Everdigm.Web.ajax
                         session = uuid
                     }), true);
                 }
-            }
-            else
-            {
-                tracker = addTracker(device);
-                string uuid = Guid.NewGuid().ToString();
-                AccountInstance.Update(u => u.id == account.id, act => { act.DeviceLoginId = uuid; });
-                ResponseData(0, JsonConverter.ToJson(new Account()
-                {
-                    name = account.Code,
-                    data = tracker.SimCard,
-                    // 每次绑定账户都生成新的session id
-                    session = uuid
-                }), true);
             }
         }
     }

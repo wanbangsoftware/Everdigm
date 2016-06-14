@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Web;
-using Wbs.Everdigm.BLL;
-using Wbs.Everdigm.Database;
 
 namespace Wbs.Everdigm.Web.ajax
 {
@@ -108,6 +106,8 @@ namespace Wbs.Everdigm.Web.ajax
         /// <param name="json"></param>
         private void ResponseData(int status, string text, bool json = false)
         {
+            SatelliteInstance.Close();
+            TerminalInstance.Close();
             ResponseJson(string.Format("{0}\"State\":{1},\"Type\":\"{2}\",\"Data\":{3}{4}{5}{6}",
                 "{", status, type, (json ? "" : "\""), text, (json ? "" : "\""), "}"));
         }
