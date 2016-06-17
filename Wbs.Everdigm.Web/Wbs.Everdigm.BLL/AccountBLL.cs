@@ -31,6 +31,7 @@ namespace Wbs.Everdigm.BLL
                 Answer = "",
                 Department = 0,
                 Email = "",
+                Belong = "MNG",
                 LandlineNumber = "",
                 LastLoginIp = "",
                 LastLoginTime = null,

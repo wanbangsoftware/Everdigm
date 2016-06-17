@@ -1,4 +1,6 @@
 ﻿using System;
+using Wbs.Everdigm.BLL;
+using Wbs.Everdigm.Database;
 
 namespace Wbs.Everdigm.Web.main
 {
@@ -19,7 +21,8 @@ namespace Wbs.Everdigm.Web.main
         {
             name.InnerText = Account.Name;
             tvSystemMenu.Nodes.Clear();
-            ShowPermissionsInTreeView(tvSystemMenu, 0, -1, GetIdList(Account.TB_Role.Permission));
+            var role = new RoleBLL().Find(f => f.id == Account.Role);
+            ShowPermissionsInTreeView(tvSystemMenu, 0, -1, GetIdList(role.Permission));
         }
     }
 }

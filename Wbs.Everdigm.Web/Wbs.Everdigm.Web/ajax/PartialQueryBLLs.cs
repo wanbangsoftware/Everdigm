@@ -31,7 +31,7 @@ namespace Wbs.Everdigm.Web.ajax
         /// <summary>
         /// 终端业务逻辑
         /// </summary>
-        private TerminalBLL TerminalInstance { get { return new TerminalBLL(); } }
+        //private TerminalBLL TerminalInstance { get { return new TerminalBLL(); } }
         /// <summary>
         /// 设备相关业务处理逻辑
         /// </summary>
@@ -46,5 +46,20 @@ namespace Wbs.Everdigm.Web.ajax
         /// Tracker历史记录BLL
         /// </summary>
         private TrackerPositionBLL TrackerPositionInstance { get { return new TrackerPositionBLL(); } }
+        /// <summary>
+        /// 关闭已打开的bll instances
+        /// </summary>
+        private void CloseBlls()
+        {
+            TrackerPositionInstance.Close();
+            StorageInstance.Close();
+            PositionInstance.Close();
+            EquipmentInstance.Close();
+            EposInstance.Close();
+            DataInstance.Close();
+            DailyInstance.Close();
+            CustomerInstance.Close();
+            AlarmInstance.Close();
+        }
     }
 }

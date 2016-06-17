@@ -37,18 +37,29 @@ namespace Wbs.Everdigm.Web.ajax
         /// </summary>
         private void HandleRequest()
         {
-            switch (type)
-            { 
-                case "data":
-                    HandleDataRequest();
-                    break;
-                case "command":
-                    // 查找卫星方式连接的终端的命令
-                    HandleCommandRequest();
-                    break;
+            try
+            {
+                switch (type)
+                {
+                    case "data":
+                        HandleDataRequest();
+                        break;
+                    case "command":
+                        // 查找卫星方式连接的终端的命令
+                        HandleCommandRequest();
+                        break;
+                }
             }
+            finally { CloseBlls(); }
         }
-
+        /// <summary>
+        /// 关闭bll
+        /// </summary>
+        private void CloseBlls()
+        {
+            EquipmentInstance.Close();
+            TerminalInstance.Close();
+        }
         class Command
         {
             public Command(TB_Command obj)
@@ -80,26 +91,28 @@ namespace Wbs.Everdigm.Web.ajax
         /// </summary>
         private void HandleCommandRequest()
         {
-            var CommandInstance = new CommandBLL();
-            if (string.IsNullOrEmpty(cmd))
+            using (var bll = new CommandBLL())
             {
-                var ret = "[]";
-                var obj = CommandInstance.Find(f => f.ScheduleTime >= DateTime.Now.AddSeconds(-60) &&
-                    f.Status <= (byte)CommandStatus.WaitingForSMS &&
-                    f.TB_Terminal.OnlineStyle == (byte)LinkType.SATELLITE);
-                var command = new Command(obj);
-                ret = JsonConverter.ToJson(command);
-
-                ResponseJson(ret);
-            }
-            else
-            { 
-                // 更新命令发送状态
-                CommandInstance.Update(f => f.id == int.Parse(cmd), act =>
+                if (string.IsNullOrEmpty(cmd))
                 {
-                    act.Status = (byte)CommandStatus.SentBySAT;
-                    act.ActualSendTime = DateTime.Now;
-                });
+                    var ret = "[]";
+                    var obj = bll.Find(f => f.ScheduleTime >= DateTime.Now.AddSeconds(-60) &&
+                        f.Status <= (byte)CommandStatus.WaitingForSMS &&
+                        f.TB_Terminal.OnlineStyle == (byte)LinkType.SATELLITE);
+                    var command = new Command(obj);
+                    ret = JsonConverter.ToJson(command);
+
+                    ResponseJson(ret);
+                }
+                else
+                {
+                    // 更新命令发送状态
+                    bll.Update(f => f.id == int.Parse(cmd), act =>
+                    {
+                        act.Status = (byte)CommandStatus.SentBySAT;
+                        act.ActualSendTime = DateTime.Now;
+                    });
+                }
             }
         }
         /// <summary>

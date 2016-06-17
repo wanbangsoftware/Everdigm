@@ -13,7 +13,7 @@ namespace Wbs.Everdigm.Web
             base.Page_Load(sender, e);
             if (HasSessionLose)
             {
-                //ShowNotification("../default.aspx", "Your session has expired, please login again.", false, true);
+                ShowNotification("../default.aspx", "Your session has expired, please login again.", false, true);
             }
         }
         /// <summary>

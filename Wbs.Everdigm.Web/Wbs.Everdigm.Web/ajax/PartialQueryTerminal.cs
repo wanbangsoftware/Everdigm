@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
-
+using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Database;
 using Wbs.Everdigm.Common;
 
@@ -32,47 +32,101 @@ namespace Wbs.Everdigm.Web.ajax
         private void HandleTerminalQuery()
         {
             var ret = "[]";
-            switch (cmd)
+            try
             {
-                case "normal":
-                    // 普通查询 2015/11/27 08:17
-                    var normal = TerminalInstance.FindList(f => f.Delete == false && 
-                    (f.Number.IndexOf(data) >= 0 || f.Sim.IndexOf(data) >= 0)).Take(10).ToList();
-                    ret = JsonConverter.ToJson(normal);
-                    break;
-                case "bound":
-                case "notbound":
-                    // 查询是否绑定设备的终端列表
-                    var bound = TerminalInstance.FindList(f =>
-                        f.Delete == false && (f.HasBound == ("bound" == cmd ? true : false)) &&
-                        (f.Number.IndexOf(data) >= 0 || f.Sim.IndexOf(data) >= 0)).Take(10).ToList();
-                    ret = JsonConverter.ToJson(bound);
-                    break;
-                case "book":
-                    var book = TerminalInstance.FindList(f => f.Delete == false && 
-                        f.HasBound == false && f.Booked == false && 
-                        (f.Number.IndexOf(data) >= 0 || f.Sim.IndexOf(data) >= 0)).Take(10).ToList();
-                    var tmp = new List<TempTerminal>();
-                    foreach (var t in book)
-                    {
-                        tmp.Add(new TempTerminal(t));
-                    }
-                    ret = JsonConverter.ToJson(tmp);
-                    break;
-                case "single":
-                    // 查询单个终端
-                    var single = TerminalInstance.FindList(f => f.Number.Equals(data) && f.Delete == false).ToList();
-                    ret = JsonConverter.ToJson(single);
-                    break;
-                case "history":
-                    // 查询终端的历史纪录
-                    ret = QueryTerminalHistiry();
-                    break;
-                case "sim":
-                    ret = QueryAutoDefinedSimNumber();
-                    break;
+                switch (cmd)
+                {
+                    case "normal":
+                        // 普通查询 2015/11/27 08:17
+                        ret = QueryNormal();
+                        break;
+                    case "bound":
+                    case "notbound":
+                        // 查询是否绑定设备的终端列表
+                        ret = QueryBound();
+                        break;
+                    case "book":
+                        ret = QueryBook();
+                        break;
+                    case "single":
+                        // 查询单个终端
+                        ret = QuerySingle();
+                        break;
+                    case "history":
+                        // 查询终端的历史纪录
+                        ret = QueryTerminalHistiry();
+                        break;
+                    case "sim":
+                        ret = QueryAutoDefinedSimNumber();
+                        break;
+                }
             }
+            finally { CloseTerminalBlls(); }
             ResponseJson(ret);
+        }
+        private TerminalBLL TerminalInstance { get { return new TerminalBLL(); } }
+        private void CloseTerminalBlls() {
+            TerminalInstance.Close();
+        }
+        /// <summary>
+        /// 查询单个终端
+        /// </summary>
+        /// <returns></returns>
+        private string QuerySingle()
+        {
+            var single = TerminalInstance.FindList(f => f.Number.Equals(data) && f.Delete == false).ToList();
+            return JsonConverter.ToJson(single);
+        }
+        /// <summary>
+        /// 查询是否预定安装
+        /// </summary>
+        /// <returns></returns>
+        private string QueryBook()
+        {
+            var exp = PredicateExtensions.True<TB_Terminal>();
+            if (!string.IsNullOrEmpty(data))
+            {
+                exp = exp.And(a => a.Number.Contains(data) || a.Sim.Contains(data));
+            }
+            exp = exp.And(a => a.Delete == false && a.HasBound == false && a.Booked == false);
+            var book = TerminalInstance.FindList(exp).Take(10).ToList();
+            var tmp = new List<TempTerminal>();
+            foreach (var t in book)
+            {
+                tmp.Add(new TempTerminal(t));
+            }
+            return JsonConverter.ToJson(tmp);
+        }
+        /// <summary>
+        /// 查询绑定状态
+        /// </summary>
+        /// <returns></returns>
+        private string QueryBound()
+        {
+            var exp = PredicateExtensions.True<TB_Terminal>();
+            exp = exp.And(a => a.HasBound == ("bound" == cmd ? true : false));
+            if (!string.IsNullOrEmpty(data))
+            {
+                exp = exp.And(a => a.Number.Contains(data) || a.Sim.Contains(data));
+            }
+            exp = exp.And(a => a.Delete == false);
+            var bound = TerminalInstance.FindList(exp).Take(10).ToList();
+            return JsonConverter.ToJson(bound);
+        }
+        /// <summary>
+        /// 普通查询终端
+        /// </summary>
+        /// <returns></returns>
+        private string QueryNormal()
+        {
+            var exp = PredicateExtensions.True<TB_Terminal>();
+            if (!string.IsNullOrEmpty(data))
+            {
+                exp = exp.And(a => a.Number.Contains(data) || a.Sim.Contains(data));
+            }
+            exp = exp.And(a => a.Delete == false);
+            var normal = TerminalInstance.FindList(exp).Take(10).ToList();
+            return JsonConverter.ToJson(normal);
         }
         /// <summary>
         /// 查找自定义的sim卡号码

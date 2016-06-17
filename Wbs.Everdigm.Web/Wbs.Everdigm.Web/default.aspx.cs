@@ -54,7 +54,7 @@ namespace Wbs.Everdigm.Web
                 if (null != app)
                 {
                     download.HRef = app.Download;
-                    download.Title = app.Description;
+                    download.Title = app.Description_en;
                 }
             }
         }

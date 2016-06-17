@@ -12,7 +12,7 @@ namespace Wbs.Everdigm.Web.service
             _cookie_name_ = "_as_trackers_list_page_";
             cookieName.Value = _cookie_name_;
             base.Page_Load(sender, e);
-            //if (!HasSessionLose)
+            if (!HasSessionLose)
             {
                 if (!IsPostBack)
                 {

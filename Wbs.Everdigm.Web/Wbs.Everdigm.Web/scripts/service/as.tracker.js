@@ -21,13 +21,14 @@ $(document).ready(function () {
         box.click();
     });
 
-    $(".input-daterange").each(function () {
-        var inputs = $(this).children(".input-md");
-        var now = new Date();
-        var then = now.dateAfter(-5, 1);
-        $(inputs[0]).val(then.pattern(_datepatternFMT));
-        $(inputs[1]).val(now.pattern(_datepatternFMT));
-    });
+    updateDatePicker((new Date()).dateAfter(-5, 1), new Date());
+    //$(".input-daterange").each(function () {
+    //    var inputs = $(this).children(".input-md");
+    //    var now = new Date();
+    //    var then = now.dateAfter(-5, 1);
+    //    $(inputs[0]).val(then.pattern(_datepatternFMT));
+    //    $(inputs[1]).val(now.pattern(_datepatternFMT));
+    //});
 
     $("#tbodyBody").on("change", "input[type=\"checkbox\"]", function () {
         checkboxChange($(this));
@@ -47,7 +48,10 @@ $(document).ready(function () {
         }
     });
 
-    $(".btn-success").click(function () { getTrackerHistory(); });
+    $(".btn-success").click(function () {
+        $("#tbodyBody").html("<tr data-latlng=\"\"><td class=\"panel-body-td\" colspan=\"3\">Loading data...</td></tr>");
+        getTrackerHistory();
+    });
     getTrackerHistory();
 });
 
@@ -114,6 +118,9 @@ function getTrackerHistory() {
         "type": "tracker", "cmd": "position", "data": id, "start": start, "end": end
     }, function (data) {
         datas = data;
+        if (null != polyline) {
+            polyline.setMap(null);
+        }
         showPositionHistory(datas);
     });
 }
