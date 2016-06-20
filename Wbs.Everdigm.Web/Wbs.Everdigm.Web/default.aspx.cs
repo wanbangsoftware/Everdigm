@@ -66,12 +66,22 @@ namespace Wbs.Everdigm.Web
             name = name.Length >= 30 ? name.Substring(0, 30) : name;
             using (var bll = new AccountBLL())
             {
-                var account = bll.Find(name, md5);
+                var account = bll.Find(f=>f.Code.Equals(name));
                 if (null != account)
                 {
                     using (var action = new ActionBLL())
                     {
-                        if (account.Locked == true)
+                        if (!account.Password.ToLower().Equals(md5))
+                        {
+                            SaveHistory(new TB_AccountHistory()
+                            {
+                                Account = account.id,
+                                ActionId = action.Find(f => f.Name.Equals("Login")).id,
+                                ObjectA = Utility.GetClientBrowser(Request) + ", login fail: password error"
+                            });
+                            ShowNotification("../default.aspx", "Login fail: password is not correct.", false);
+                        }
+                        else if (account.Locked == true)
                         {
                             SaveHistory(new TB_AccountHistory()
                             {
@@ -95,7 +105,7 @@ namespace Wbs.Everdigm.Web
                 }
                 else
                 {
-                    ShowNotification("../default.aspx", "Login fail: Maybe your password is not correct?", false);
+                    ShowNotification("../default.aspx", "Login fail: no account exist like your input.", false);
                 }
             }
         }

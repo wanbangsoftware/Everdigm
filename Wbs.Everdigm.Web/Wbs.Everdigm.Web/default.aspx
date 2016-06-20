@@ -26,12 +26,12 @@
                                     <tr>
                                         <td width="160" height="30" align="right" style="padding-right: 5px;">User Name</td>
                                         <td width="140" align="right">
-                                            <input type="text" size="20" maxlength="10" runat="server" id="username" /></td>
+                                            <input type="text" size="20" maxlength="50" runat="server" id="username" /></td>
                                     </tr>
                                     <tr>
                                         <td height="30" align="right" style="padding-right: 5px;">Password</td>
                                         <td align="right">
-                                            <input type="password" size="20" maxlength="10" runat="server" id="password" /></td>
+                                            <input type="password" size="20" maxlength="50" runat="server" id="password" /></td>
                                     </tr>
                                     <tr>
                                         <td height="30" align="right"></td>

@@ -25,7 +25,8 @@ namespace Wbs.Everdigm.Web.main
                 {
                     hidPageIndex.Value = null == Request.Cookies[_cookie_name_] ? "" : Request.Cookies[_cookie_name_].Value;
                     InitializeEquipmentTypes();
-                    bt_Delete.Visible = Account.TB_Role.IsAdministrator.Value;
+                    var role = new RoleBLL().Find(f => f.id == Account.Role);
+                    bt_Delete.Visible = role.IsAdministrator.Value;
                     ShowQuery();
                 }
             }
