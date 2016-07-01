@@ -121,78 +121,94 @@ namespace Wbs.Everdigm.Desktop
                                 act.OnlineTime = data.Time;
                             });
                             equipment = ebll.Find(f => f.Terminal == terminal.id);
-                            // 旧的运转时间
-                            var oldRuntime = equipment.Runtime;
-                            var interval = 0 == oldRuntime ? 0 : (thisWorkTime - oldRuntime);
-                            // 粗略增加的小时数，启动时加2小时
-                            var addMin = interval > 60 ? interval / 60 : 1 + (location.EngFlag.Equals("On") ? 1 : 0);
-                            int addHour = (int)(interval > 60 ? interval / 60 : 1);
-                            // 更新设备的总运转时间
-                            HandleEquipmentRuntime(equipment, thisWorkTime);
                             if (null != equipment)
                             {
-                                string calculated = "";
-                                ebll.Update(f => f.id == equipment.id, act =>
+                                // 旧的运转时间
+                                var oldRuntime = equipment.Runtime;
+                                var interval = 0 == oldRuntime ? 0 : (thisWorkTime - oldRuntime);
+                                // 粗略增加的小时数，启动时加2小时
+                                var addMin = interval > 60 ? interval / 60 : 1 + (location.EngFlag.Equals("On") ? 1 : 0);
+                                int addHour = (int)(interval > 60 ? interval / 60 : 1);// 显示历史记录
+                                string oldCompensated = format("WorkHours {0}, UsedHours {1}, Efficiency {2}, AddHours {3}, Compensated {4}", equipment.WorkHours, equipment.UsedHours, equipment.HourWorkEfficiency, equipment.AddedHours, equipment.CompensatedHours);
+                                string newCompensated = "";
+                                // 更新设备的总运转时间
+                                HandleEquipmentRuntime(equipment, thisWorkTime);
+                                if (null != equipment)
                                 {
-                                    act.OnlineStyle = (byte)LinkType.SATELLITE;
-                                    act.OnlineTime = data.Time;
-                                    // 更新设备的报警状态 2015/09/10 14:04
-                                    act.Alarm = alarms;
-
-                                    act.LastAction = "0x1000";
-                                    act.LastActionBy = "SAT";
-                                    act.LastActionTime = data.Time;
-                                    // 更新定位信息 2015/09/09 23:29
-                                    if (location.Available)
+                                    string calculated = "";
+                                    ebll.Update(f => f.id == equipment.id, act =>
                                     {
-                                        act.Latitude = location.Latitude;
-                                        act.Longitude = location.Longitude;
-                                    }
-                                    // 更新启动与否状态 2015/08/31
-                                    act.Voltage = location.EngFlag == "On" ? "G2400" : "G0000";
+                                        act.OnlineStyle = (byte)LinkType.SATELLITE;
+                                        act.OnlineTime = data.Time;
+                                        // 更新设备的报警状态 2015/09/10 14:04
+                                        act.Alarm = alarms;
 
-                                    // 更新总运转时间
-                                    act.Runtime = equipment.Runtime;
-                                    act.AccumulativeRuntime = equipment.AccumulativeRuntime;
-                                    // 更新 version 终端为1的版本的运转时间的补偿
+                                        act.LastAction = "0x1000";
+                                        act.LastActionBy = "SAT";
+                                        act.LastActionTime = data.Time;
+                                        // 更新定位信息 2015/09/09 23:29
+                                        if (location.Available)
+                                        {
+                                            act.Latitude = location.Latitude;
+                                            act.Longitude = location.Longitude;
+                                        }
+                                        // 更新启动与否状态 2015/08/31
+                                        act.Voltage = location.EngFlag == "On" ? "G2400" : "G0000";
+
+                                        // 更新总运转时间
+                                        act.Runtime = equipment.Runtime;
+                                        act.AccumulativeRuntime = equipment.AccumulativeRuntime;
+                                        // 更新 version 终端为1的版本的运转时间的补偿
+                                        if (compensated && interval > 0)
+                                        {
+                                            // 实际工作小时数
+                                            act.WorkHours += interval / 60.0;
+                                            // 实际所用小时数
+                                            act.UsedHours += addHour;
+                                            // 重新计算每小时工作效率
+                                            act.HourWorkEfficiency = act.WorkHours / act.UsedHours;
+                                            // 补偿的小时数
+                                            act.AddedHours += addMin / 60.0;
+                                            // 实际补偿的小时数
+                                            act.CompensatedHours = act.AddedHours * act.HourWorkEfficiency;
+
+                                        }
+                                        // 如果回来的运转时间比当前时间大则更新成为On状态  暂时  2015/09/02
+                                        //if (worktime > act.Runtime)
+                                        //{
+                                        //    // act.Voltage = "G2400";
+                                        //    act.Runtime = (int)worktime;
+                                        //}
+                                        //else
+                                        //{
+                                        //    if (worktime > 0)
+                                        //    {
+                                        //        // 运转时间不为零的话，更新运转时间
+                                        //        act.Runtime = (int)worktime;
+                                        //    }
+                                        //}
+                                        // 锁车状态 2015/08/14
+                                        if (act.LockStatus != locks) { act.LockStatus = locks; }
+                                    });
                                     if (compensated && interval > 0)
                                     {
-                                        // 实际工作小时数
-                                        act.WorkHours += interval / 60.0;
-                                        // 实际所用小时数
-                                        act.UsedHours += addHour;
-                                        // 重新计算每小时工作效率
-                                        act.HourWorkEfficiency = act.WorkHours / act.UsedHours;
-                                        // 补偿的小时数
-                                        act.AddedHours += addMin / 60.0;
-                                        // 实际补偿的小时数
-                                        act.CompensatedHours = act.AddedHours * act.HourWorkEfficiency;
-                                        //calculated = format("");
+                                        equipment = ebll.Find(f => f.id == equipment.id);
+                                        newCompensated = format("WorkHours {0}, UsedHours {1}, Efficiency {2}, AddHours {3}, Compensated {4}", equipment.WorkHours, equipment.UsedHours, equipment.HourWorkEfficiency, equipment.AddedHours, equipment.CompensatedHours);
+
+                                        calculated = format("Compensate changed(interval: {0}){1} from {2}{3} to {4}", interval, Environment.NewLine, oldCompensated, Environment.NewLine, newCompensated);
                                     }
-                                    // 如果回来的运转时间比当前时间大则更新成为On状态  暂时  2015/09/02
-                                    //if (worktime > act.Runtime)
-                                    //{
-                                    //    // act.Voltage = "G2400";
-                                    //    act.Runtime = (int)worktime;
-                                    //}
-                                    //else
-                                    //{
-                                    //    if (worktime > 0)
-                                    //    {
-                                    //        // 运转时间不为零的话，更新运转时间
-                                    //        act.Runtime = (int)worktime;
-                                    //    }
-                                    //}
-                                    // 锁车状态 2015/08/14
-                                    if (act.LockStatus != locks) { act.LockStatus = locks; }
-                                });
-                                if (!string.IsNullOrEmpty(calculated))
-                                {
-                                    OnUnhandledMessage(this, new Sockets.UIEventArgs()
+                                    if (!string.IsNullOrEmpty(calculated))
                                     {
-                                        Message = format("{0} {1}{2}", Now, calculated, Environment.NewLine)
-                                    });
+                                        OnUnhandledMessage(this, new Sockets.UIEventArgs()
+                                        {
+                                            Message = format("{0}{1}{2}", Now, calculated, Environment.NewLine)
+                                        });
+                                    }
                                 }
+                            }
+                            else
+                            {
+                                OnUnhandledMessage(this, new Sockets.UIEventArgs() { Message = format("{0} Iridium has not bind with any equipment.", Now, Environment.NewLine) });
                             }
                         }
                         else
@@ -320,7 +336,10 @@ namespace Wbs.Everdigm.Desktop
                         }
                     }
                 }
-                else { HandleIridiumNewProtocolPackage(data); }
+                else
+                {
+                    HandleIridiumNewProtocolPackage(data);
+                }
                 // 统计铱星的接收数据次数和数据长度
                 HandleIridiumMOFlow(data);
             }

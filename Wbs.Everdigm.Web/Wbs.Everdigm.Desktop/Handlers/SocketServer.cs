@@ -285,7 +285,7 @@ namespace Wbs.Everdigm.Desktop
                     }
                     catch (Exception iri)
                     {
-                        HandleDisplayMessage(format("{0} Cannot handle HandleIridiumData: {1}, Trace: {2}", Now, iri.Message, iri.StackTrace));
+                        HandleDisplayMessage(format("{0}Cannot handle HandleIridiumData: {1} Trace: {2}{3}{4}", Now, iri.Message, Environment.NewLine, iri.StackTrace, Environment.NewLine));
                     }
                 }
                 // 只有第一个线程有权处理命令后面的数据
