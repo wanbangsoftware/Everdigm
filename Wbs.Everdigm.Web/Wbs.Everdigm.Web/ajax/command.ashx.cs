@@ -80,7 +80,7 @@ namespace Wbs.Everdigm.Web.ajax
                     ret = string.Format("Signal: {0}({1})", buffer[8], Utility.ASU2DBM(buffer[8]));
                     break;
                 case "0x1000":
-                    ret = "Please going to page <code>Map</code> to check out the data."; 
+                    ret = "Please going to page <code>Map</code> to check out the data.";
                     break;
                 case "0x6000":
                     ret = string.Format("RPM: {0}, Fuel: {1}", BitConverter.ToUInt16(buffer, 5),
@@ -88,14 +88,14 @@ namespace Wbs.Everdigm.Web.ajax
                     break;
                 case "0x6004":
                     start = data.terminal_type == Wbs.Protocol.TerminalTypes.DX ? 5 : 1;
-                    ret = string.Format("Worktime: {0}", EquipmentBLL.GetRuntime((int?)BitConverter.ToUInt32(buffer, start), true));
+                    ret = string.Format("Worktime: {0}", EquipmentBLL.GetRuntime((int?)BitConverter.ToUInt32(buffer, start), 0.0, true));
                     break;
                 case "0x600B":
-                    ret = string.Format("Worktime: {0}", EquipmentBLL.GetRuntime((int?)BitConverter.ToUInt32(buffer, 0), true));
+                    ret = string.Format("Worktime: {0}", EquipmentBLL.GetRuntime((int?)BitConverter.ToUInt32(buffer, 0), 0.0, true));
                     break;
                 case "0x6007": ret = string.Format("Security: {0}", _0x6007.GetSecurity(buffer[1])); break;
                 case "0x3000": ret = string.Format("Security: {0}", _0x3000.GetFlag(buffer[0])); break;
-                case "0xDD02": ret = string.Format("Satellite: {0}",_0xDD02.GetStatus(buffer[0])); break;
+                case "0xDD02": ret = string.Format("Satellite: {0}", _0xDD02.GetStatus(buffer[0])); break;
             }
             return ret;
         }

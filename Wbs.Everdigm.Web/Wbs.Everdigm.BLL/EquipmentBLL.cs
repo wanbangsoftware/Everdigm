@@ -44,6 +44,11 @@ namespace Wbs.Everdigm.BLL
                 OutdoorWorktime = 0,
                 OnlineStyle = null,
                 OnlineTime = null,
+                AddedHours = 0.0,
+                CompensatedHours = 0.0,
+                HourWorkEfficiency = 0.0,
+                UsedHours = 0,
+                WorkHours = 0.0,
                 Port = 0,
                 RegisterTime = DateTime.Now,
                 Runtime = 0,
@@ -144,7 +149,7 @@ namespace Wbs.Everdigm.BLL
             var oldTime = (int?)null == entity.OutdoorWorktime ? 0 : entity.OutdoorWorktime;
             // 加上初始化的运转时间
             int times = (int)((newTime - oldTime + entity.InitializedRuntime) / days);
-            return GetRuntime(times, true);
+            return GetRuntime(times, entity.CompensatedHours.Value, true);
         }
 
         /// <summary>
@@ -271,14 +276,14 @@ namespace Wbs.Everdigm.BLL
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
-        public static string GetRuntime(int? time, bool showHour = false)
+        public static string GetRuntime(int? time, double compensate = 0.0, bool showHour = false)
         {
             var ret = "";
             if ((int?)null == time || 0 == time)
                 ret = "0";
             else
             {
-                double tm = time.Value / 60.0;
+                double tm = time.Value / 60.0 + compensate;
                 if (tm < 10)
                     ret = string.Format("{0:0.00}", tm);
                 else if (tm < 100)

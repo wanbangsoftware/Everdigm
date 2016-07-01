@@ -72,10 +72,16 @@
                             </span>
                         </div>
                     </li>
+                    <li role="presentation" class="tablist-item-input">
+                        <div style="margin-top: -3px; margin-bottom: 2px; margin-left: 2px;">
+                            <asp:Button ID="buttonRefreshAll" CssClass="hidden" runat="server" Text="" OnClick="buttonRefreshAll_Click" />
+                            <button class="btn btn-danger" runat="server" type="button" id="refreshAll"><span class="glyphicon glyphicon-repeat"></span> Calculate all</button>
+                        </div>
+                    </li>
                 </ul>
 
                 <!-- Tab panes -->
-                <div class="tab-content">
+                <div class="tab-content" style="overflow: auto !important; height: 500px; width: 100% !important;">
                     <div class="tab-content">
                         <table class="table table-hover" style="margin-bottom: 5px !important;">
                             <thead>
@@ -106,7 +112,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="tab-content" style="overflow: scroll !important; height: 500px; width: 100% !important;">
+                    <div class="tab-content">
                         <!--Equipment list-->
                         <table class="table table-hover">
                             <thead>
@@ -174,6 +180,23 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="modalRefreshing" tabindex="-1" role="dialog" aria-labelledby="NewStorageIn" data-backdrop="static" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header custom-modal-header btn-danger">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title"><strong>Warning</strong></h4>
+                    </div>
+                    <div class="modal-body">
+                        Calculating work time for all equipment, this may take a long time, please be patient...<br />
+                        正在计算所有设备的工作时间，这可能需要很长时间，请耐心等待不要关闭。
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
     <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="../js/jquery.json-2.4.js"></script>
@@ -213,15 +236,21 @@
                                     "<td class=\"in-tab-title-b\" style=\"text-align: right;\">0.00</td>" +
                                     "<td class=\"in-tab-title-rb\" style=\"text-align: right;\">0.00</td>" +
                                     "<td class=\"in-tab-title-b\"></td>";
+            var loading = "<tr><td class=\"in-tab-title-rb\" style=\"text-align: left;\" colspan=\"12\"><img src=\"../images/loading_orange.gif\" />Loading data, please be patient...</td></tr>";
             $("#query").click(function () {
                 var number = $("#txtQuery").val();
                 if (isStringNull(number) || number.length < 4) {
                     $("#modalWarning").modal("show");
                 } else {
-                    $("#tbodyBody").html("<tr><td colspan=\"12\"><img src=\"../images/loading_orange.gif\" />Loading data, please wait...</td></tr>");
+                    $("#tbodyBody").html(loading);
                     $("#tbodySummary").html(summary);
                     $("#btQuery").click();
                 }
+            });
+            $("#refreshAll").click(function () {
+                $("#tbodySummary").html(loading);
+                $("#buttonRefreshAll").click();
+                $("#modalRefreshing").modal("show");
             });
         });
     </script>

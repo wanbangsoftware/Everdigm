@@ -20,27 +20,84 @@ namespace Wbs.Everdigm.Web.main
             {
                 tbodyBody.InnerHtml = "<tr><td colspan=\"13\">Input your equipment number to query.</td></tr>";
             }
+            refreshAll.Visible = null != Account && Account.Code.ToLower().Equals("leekwok");
         }
 
         protected void btQuery_Click(object sender, EventArgs e)
         {
-            var cmds = new List<string>();
-            cmds.Add("0x1000");
-            cmds.Add("0x600B");
+            tbodySummary.InnerHtml = "";
             var time1 = DateTime.Parse(start.Value.Trim() + " 00:00:00");
             var time2 = DateTime.Parse(end.Value.Trim() + " 23:59:59");
             var query = txtQuery.Value.Trim();
+            Query(new Work() { Id = 0, MacId = query, Time1 = time1, Time2 = time2 });
+        }
+        private class Work
+        {
+            /// <summary>
+            /// 设备的id，如果为0则说明是模糊查询
+            /// </summary>
+            public int Id;
+            /// <summary>
+            /// 设备的号码
+            /// </summary>
+            public string MacId;
+            /// <summary>
+            /// 查询开始时间
+            /// </summary>
+            public DateTime Time1;
+            /// <summary>
+            /// 查询结束时间
+            /// </summary>
+            public DateTime Time2;
+        }
+        protected void buttonRefreshAll_Click(object sender, EventArgs e)
+        {
+            tbodySummary.InnerHtml = "";
+            List<Work> macs = new List<Work>();
+            using (var bll = new EquipmentBLL())
+            {
+                var list = bll.FindList(f => f.Deleted == false && f.TB_Terminal.Version == 1);
+                if (null != list && list.Count() > 0)
+                {
+                    foreach (var obj in list)
+                    {
+                        macs.Add(new Work()
+                        {
+                            Id = obj.id,
+                            MacId = bll.GetFullNumber(obj),
+                            Time1 = obj.RegisterTime.Value,
+                            Time2 = DateTime.Now
+                        });
+                    }
+                }
+            }
+            // 循环统计每一个设备的计算时间
+            foreach (var mac in macs)
+            {
+                Query(mac);
+            }
+        }
+        /// <summary>
+        /// 查询指定条件
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="time1"></param>
+        /// <param name="time2"></param>
+        private void Query(Work query) {
+            var cmds = new List<string>();
+            cmds.Add("0x1000");
+            cmds.Add("0x600B");
             using (var bll = new DataBLL())
             {
                 Expression<Func<TB_HISTORIES, bool>> expression = PredicateExtensions.True<TB_HISTORIES>();
-                if (!string.IsNullOrEmpty(query))
+                if (!string.IsNullOrEmpty(query.MacId))
                 {
-                    expression = expression.And(a => a.mac_id.Contains(query));
+                    expression = expression.And(a => a.mac_id.Contains(query.MacId));
                 }
                 expression = expression.And(a => cmds.Contains(a.command_id));
-                expression = expression.And(a => a.receive_time >= time1 && a.receive_time <= time2);
+                expression = expression.And(a => a.receive_time >= query.Time1 && a.receive_time <= query.Time2);
 
-                var list = bll.FindList<TB_HISTORIES>(expression , "receive_time").ToList<TB_HISTORIES>();
+                var list = bll.FindList<TB_HISTORIES>(expression, "receive_time").ToList<TB_HISTORIES>();
 
                 var html = "";
                 int TotalAddedMinutes = 0, TotalWorkedMinutes = 0, TotalUsedHour = 0;
@@ -112,11 +169,28 @@ namespace Wbs.Everdigm.Web.main
                                         "<td class=\"in-tab-title-rb\" style=\"text-align: right;\">" + finalWork + "</td>" +
                                         "<td class=\"in-tab-title-b\"></td>" +
                                     "</tr>";
-                            tbodySummary.InnerHtml = summary;
+                            tbodySummary.InnerHtml += summary;
+                            if (query.Id > 0)
+                            {
+                                new EquipmentBLL().Update(f => f.id == query.Id, act =>
+                                {
+                                    // 实际工作小时数
+                                    act.WorkHours = TotalWorkedMinutes / 60.0;
+                                    // 粗略计算工作小时数
+                                    act.UsedHours = TotalUsedHour;
+                                    // 工作效率
+                                    act.HourWorkEfficiency = compensate;
+                                    // 补偿的小时数
+                                    act.AddedHours = TotalAddedMinutes / 60.0;
+                                    // 实际补偿的小时数
+                                    act.CompensatedHours = finalAdded;
+                                    
+                                });
+                            }
                         }
                     }
                 }
-                tbodyBody.InnerHtml = html;
+                //tbodyBody.InnerHtml = html;
             }
         }
     }

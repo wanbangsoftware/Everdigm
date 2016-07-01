@@ -47,7 +47,7 @@ namespace Wbs.Everdigm.Web.mobile
                     "            </dt>" +
                     "            <dd>" +
                     "                <span class=\"text-" + (eng.Equals("ON") ? "success" : "danger") + "\"><span class=\"signal cell-engine\"></span> Engine " + eng + "</span>" +
-                    "                <em class=\"status\"><span class=\"glyphicon glyphicon-time\"></span> " + EquipmentBLL.GetRuntime(item.Runtime + item.InitializedRuntime) + "</em>" +
+                    "                <em class=\"status\"><span class=\"glyphicon glyphicon-time\"></span> " + EquipmentBLL.GetRuntime(item.Runtime + item.InitializedRuntime, item.CompensatedHours.Value) + "</em>" +
                     "            </dd>" +
                     "            <dd>" +
                     "                <span class=\"text-info\"><span class=\"signal cell-signal-" + Utility.ASU2Signal(item.Signal.Value) + "\"></span> Signal: " + Utility.ASU2DBM(item.Signal.Value) + "dBm(ASU: " + item.Signal + ")</span>" +

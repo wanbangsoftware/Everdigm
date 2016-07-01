@@ -32,6 +32,8 @@ namespace Wbs.Everdigm.BLL
                 Booked = false,
                 Firmware = "",
                 Number = "",
+                // 终端的版本
+                Version = 0,
                 ProductionDate = DateTime.Now,
                 Revision = 1,
                 Satellite = (int?)null,
