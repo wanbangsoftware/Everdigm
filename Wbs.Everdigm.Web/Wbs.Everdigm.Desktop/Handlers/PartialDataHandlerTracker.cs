@@ -22,22 +22,24 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="data"></param>
         private void HandleTX10G(TX300 tx300, AsyncUserDataBuffer data)
         {
-            var bll = new TrackerBLL();
-            // 更新或新建Tracker信息
-            UpdateTrackerInfo(tx300, data, bll);
-            var sim = GetSimFromData(tx300);
-            var tracker = bll.Find(f => f.SimCard.Equals(sim));
-
-            switch (tx300.CommandID)
+            using (var bll = new TrackerBLL())
             {
-                case 0x7020:
-                    // 报警
-                    Handle0x7020(tx300, tracker, bll);
-                    break;
-                case 0x7030:
-                    // 位置信息
-                    Handle0x7030(tx300, tracker);
-                    break;
+                // 更新或新建Tracker信息
+                UpdateTrackerInfo(tx300, data, bll);
+                var sim = GetSimFromData(tx300);
+                var tracker = bll.Find(f => f.SimCard.Equals(sim));
+
+                switch (tx300.CommandID)
+                {
+                    case 0x7020:
+                        // 报警
+                        Handle0x7020(tx300, tracker, bll);
+                        break;
+                    case 0x7030:
+                        // 位置信息
+                        Handle0x7030(tx300, tracker);
+                        break;
+                }
             }
         }
         /// <summary>
@@ -76,18 +78,20 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="tracker"></param>
         private void SaveTrackerPosition(string sim, string car, int tracker, string provider, TX10G_Position position, string type, DateTime time)
         {
-            var bll = new TrackerPositionBLL();
-            var pos = bll.GetObject();
-            pos.Type = type;
-            pos.CarNumber = car;
-            pos.GPSTime = position.GPSTime;
-            pos.Latitude = position.Latitude;
-            pos.Longitude = position.Longitude;
-            pos.Provider = provider;
-            pos.ReceiveTime = time;
-            pos.SimCard = sim;
-            pos.Tracker = 0 > tracker ? (int?)null : tracker;
-            bll.Add(pos);
+            using (var bll = new TrackerPositionBLL())
+            {
+                var pos = bll.GetObject();
+                pos.Type = type;
+                pos.CarNumber = car;
+                pos.GPSTime = position.GPSTime;
+                pos.Latitude = position.Latitude;
+                pos.Longitude = position.Longitude;
+                pos.Provider = provider;
+                pos.ReceiveTime = time;
+                pos.SimCard = sim;
+                pos.Tracker = 0 > tracker ? (int?)null : tracker;
+                bll.Add(pos);
+            }
         }
         /// <summary>
         /// 处理报警信息

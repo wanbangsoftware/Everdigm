@@ -22,30 +22,32 @@ namespace Wbs.Everdigm.Desktop
                 return;
             _lastCheckSMSData = DateTime.Now;
 
-            var bll= new SmsBLL(); 
-            var sms = bll.Find(f => f.Handled == false);
-            if (null != sms)
+            using (var bll = new SmsBLL())
             {
-                using (var data = new AsyncUserDataBuffer())
+                var sms = bll.Find(f => f.Handled == false);
+                if (null != sms)
                 {
-                    data.Buffer = Convert.FromBase64String(sms.Data);
-                    data.DataType = AsyncUserDataType.ReceivedData;
-                    data.IP = "";
-                    data.PackageType = AsyncDataPackageType.SMS;
-                    data.Port = 0;
-                    data.ReceiveTime = sms.SendTime.Value;
-                    data.SocketHandle = 0;
-                    ShowUnhandledMessage(format("{0}SMS data from {1}: {2}", Now, sms.Sender, CustomConvert.GetHex(data.Buffer)));
-                    // 如果数据中的sim号码是000000000000则将sender直接放入其中   2015/09/02 15:18
-                    if (data.Buffer[9] == 0 && data.Buffer[10] == 0)
+                    using (var data = new AsyncUserDataBuffer())
                     {
-                        byte[] t = SimToByte(sms.Sender);
-                        Buffer.BlockCopy(t, 0, data.Buffer, 9, 6);
-                        t = null;
+                        data.Buffer = Convert.FromBase64String(sms.Data);
+                        data.DataType = AsyncUserDataType.ReceivedData;
+                        data.IP = "";
+                        data.PackageType = AsyncDataPackageType.SMS;
+                        data.Port = 0;
+                        data.ReceiveTime = sms.SendTime.Value;
+                        data.SocketHandle = 0;
+                        ShowUnhandledMessage(format("{0}SMS data from {1}: {2}", Now, sms.Sender, CustomConvert.GetHex(data.Buffer)));
+                        // 如果数据中的sim号码是000000000000则将sender直接放入其中   2015/09/02 15:18
+                        if (data.Buffer[9] == 0 && data.Buffer[10] == 0)
+                        {
+                            byte[] t = SimToByte(sms.Sender);
+                            Buffer.BlockCopy(t, 0, data.Buffer, 9, 6);
+                            t = null;
+                        }
+                        HandleData(data);
                     }
-                    HandleData(data);
+                    bll.Update(f => f.id == sms.id, act => { act.Handled = true; });
                 }
-                bll.Update(f => f.id == sms.id, act => { act.Handled = true; });
             }
         }
     }

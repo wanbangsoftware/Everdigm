@@ -27,11 +27,14 @@ namespace Wbs.Everdigm.Desktop
             try
             {
                 // 这里只查询excel导出到pdf的记录
-                var excel = new ExcelHandlerBLL().Find(f => f.Handled == false && f.Equipment == (int?)null && f.Deleted == false);
-                if (null != excel)
+                using (var bll = new ExcelHandlerBLL())
                 {
-                    HandleWorkDetail(excel.id, excel.TB_WorkDetail);
-                    return true;
+                    var excel = bll.Find(f => f.Handled == false && f.Equipment == (int?)null && f.Deleted == false);
+                    if (null != excel)
+                    {
+                        HandleWorkDetail(excel.id, excel.TB_WorkDetail);
+                        return true;
+                    }
                 }
             }
             catch (Exception e)
@@ -40,7 +43,7 @@ namespace Wbs.Everdigm.Desktop
             }
             return false;
         }
-        private void HandleWorkDetail(int detail,TB_WorkDetail obj)
+        private void HandleWorkDetail(int detail, TB_WorkDetail obj)
         {
             //var ret = "";
             var source = "";
@@ -146,12 +149,15 @@ namespace Wbs.Everdigm.Desktop
             if (ok)
             {
                 var resp = ("~/" + path + "/" + name).Replace("~", "..").Replace("\\", "/");
-                new ExcelHandlerBLL().Update(f => f.id == detail, act =>
+                using (var bll = new ExcelHandlerBLL())
                 {
-                    act.Handled = true;
-                    act.Source = source;
-                    act.Target = resp;
-                });
+                    bll.Update(f => f.id == detail, act =>
+                    {
+                        act.Handled = true;
+                        act.Source = source;
+                        act.Target = resp;
+                    });
+                }
                 //return GetFormatedJson(0, "Success", resp);
             }
             //return GetFormatedJson(-1, "Cannot convert file to PDF.");

@@ -184,17 +184,11 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="message"></param>
         private void HandleDisplayMessage(string message)
         {
-            if (null != OnMessage)
-            {
-                OnMessage(this, new UIEventArgs() { Message = message });
-            }
+            OnMessage?.Invoke(this, new UIEventArgs() { Message = message });
         }
         private void DataHandler_OnIridiumSend(object sender, IridiumDataEvent e)
         {
-            if (null != OnIridiumSend)
-            {
-                OnIridiumSend(this, e);
-            }
+            OnIridiumSend?.Invoke(this, e);
         }
         private string format(string format, params object[] args)
         {

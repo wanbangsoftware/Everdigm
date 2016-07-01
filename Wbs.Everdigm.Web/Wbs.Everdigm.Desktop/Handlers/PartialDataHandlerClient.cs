@@ -56,14 +56,16 @@ namespace Wbs.Everdigm.Desktop
             try
             {
                 // 清理旧链接的方式改为用存储过程 2015/10/01 22:30
-                EverdigmDataContext edc = new EverdigmDataContext();
-                int? arm2sleep = 0, sleep2blind = 0, sms2sleep = 0, tcpudp2sms = 0, satellite = 0, terminals = 0;
-                var ret = edc.sp_ClearOldLinks(DateTime.Now, ref arm2sleep, ref sleep2blind, ref sms2sleep, ref tcpudp2sms, ref satellite, ref terminals);
-                if (arm2sleep > 0 || sleep2blind > 0 || sms2sleep > 0 || tcpudp2sms > 0 || satellite > 0 || terminals > 0)
+                using (var edc = new EverdigmDataContext())
                 {
-                    ShowUnhandledMessage(
-                        format("{0}HandleOlderClients(ret: {1}): ARM to Sleep: {2}, Sleep to Blind: {3}, SMS to Sleep: {4}, TCP/UDP to SMS: {5}",
-                        Now, ret, arm2sleep, sleep2blind, sms2sleep, tcpudp2sms));
+                    int? arm2sleep = 0, sleep2blind = 0, sms2sleep = 0, tcpudp2sms = 0, satellite = 0, terminals = 0;
+                    var ret = edc.sp_ClearOldLinks(DateTime.Now, ref arm2sleep, ref sleep2blind, ref sms2sleep, ref tcpudp2sms, ref satellite, ref terminals);
+                    if (arm2sleep > 0 || sleep2blind > 0 || sms2sleep > 0 || tcpudp2sms > 0 || satellite > 0 || terminals > 0)
+                    {
+                        ShowUnhandledMessage(
+                            format("{0}HandleOlderClients(ret: {1}): ARM to Sleep: {2}, Sleep to Blind: {3}, SMS to Sleep: {4}, TCP/UDP to SMS: {5}",
+                            Now, ret, arm2sleep, sleep2blind, sms2sleep, tcpudp2sms));
+                    }
                 }
                 // 所有更新集合到一个事务中2015/08/14
                 // 更新设备状态的同时也更新终端的状态 2015/09/22 09:30
@@ -143,13 +145,16 @@ namespace Wbs.Everdigm.Desktop
             //        act.OnlineStyle = (byte)LinkType.SMS;
             //    });
             // 清理TX10G的旧链接记录
-            new TrackerBLL().Update(f => f.State > 0 && f.LastActionAt < DateTime.Now.AddMinutes(-15), act =>
+            using (var bll = new TrackerBLL())
             {
-                // 删除socket
-                act.Socket = 0;
-                // 状态标记为offline状态
-                act.State = 0;
-            });
+                bll.Update(f => f.State > 0 && f.LastActionAt < DateTime.Now.AddMinutes(-15), act =>
+                {
+                    // 删除socket
+                    act.Socket = 0;
+                    // 状态标记为offline状态
+                    act.State = 0;
+                });
+            }
             // 处理旧的SMS连接为SLEEP状态(SMS链接超过12小时的)
             //EquipmentInstance.Update(f => f.OnlineStyle > (byte)LinkType.OFF && f.OnlineStyle < (byte)LinkType.SLEEP &&
             //    f.OnlineTime < DateTime.Now.AddMinutes(-720), act =>
@@ -202,48 +207,57 @@ namespace Wbs.Everdigm.Desktop
         /// </summary>
         private void HandleOnline(string sim, ushort CommandID, AsyncUserDataBuffer data)
         {
-            new EquipmentBLL().Update(f => f.TB_Terminal.Sim.Equals(sim), act =>
+            using (var bll = new EquipmentBLL())
             {
-                act.IP = data.IP;
-                act.Port = data.Port;
-                act.Socket = data.SocketHandle;
-                act.OnlineTime = data.ReceiveTime;
-                // 处理当发送报警信息时设备已经是OFF状态的情况：不处理
-                if (act.OnlineStyle == (byte)LinkType.OFF && CommandID == 0x2000)
+                bll.Update(f => f.TB_Terminal.Sim.Equals(sim), act =>
                 {
-                    // 收到报警时不处理已经是OFF状态
-                }
-                else
-                {
-                    act.OnlineStyle = GetOnlineStyleByPackage(data.PackageType);
-                }
-                act.LastAction = "0x" + CustomConvert.IntToDigit(CommandID, CustomConvert.HEX, 4);
-                act.LastActionBy = GetOnlineStyle(data.PackageType);
-                act.LastActionTime = data.ReceiveTime;
-            });
-            new TerminalBLL().Update(f => f.Sim.Equals(sim), act =>
+                    act.IP = data.IP;
+                    act.Port = data.Port;
+                    act.Socket = data.SocketHandle;
+                    act.OnlineTime = data.ReceiveTime;
+                    // 处理当发送报警信息时设备已经是OFF状态的情况：不处理
+                    if (act.OnlineStyle == (byte)LinkType.OFF && CommandID == 0x2000)
+                    {
+                        // 收到报警时不处理已经是OFF状态
+                    }
+                    else
+                    {
+                        act.OnlineStyle = GetOnlineStyleByPackage(data.PackageType);
+                    }
+                    act.LastAction = "0x" + CustomConvert.IntToDigit(CommandID, CustomConvert.HEX, 4);
+                    act.LastActionBy = GetOnlineStyle(data.PackageType);
+                    act.LastActionTime = data.ReceiveTime;
+                });
+            }
+            using (var bll = new TerminalBLL())
             {
-                act.Socket = data.SocketHandle;
-                if (act.OnlineStyle == (byte)LinkType.OFF && CommandID == 0x2000)
+                bll.Update(f => f.Sim.Equals(sim), act =>
                 {
-                    // 收到报警但此时已经是OFF状态时，不更新在线状态
-                }
-                else
-                {
-                    act.OnlineStyle = GetOnlineStyleByPackage(data.PackageType);
-                }
-                act.OnlineTime = data.ReceiveTime;
-            });
+                    act.Socket = data.SocketHandle;
+                    if (act.OnlineStyle == (byte)LinkType.OFF && CommandID == 0x2000)
+                    {
+                        // 收到报警但此时已经是OFF状态时，不更新在线状态
+                    }
+                    else
+                    {
+                        act.OnlineStyle = GetOnlineStyleByPackage(data.PackageType);
+                    }
+                    act.OnlineTime = data.ReceiveTime;
+                });
+            }
             // 查看是否为TX10G的命令
             if (CommandID >= 0x7000 && CommandID <= 0x7040)
             {
-                new TrackerBLL().Update(f => f.SimCard.Equals(sim), act =>
+                using (var bll = new TrackerBLL())
                 {
-                    // 标记为在线状态
-                    act.State = 1;
-                    act.LastActionAt = DateTime.Now;
-                    act.Socket = data.SocketHandle;
-                });
+                    bll.Update(f => f.SimCard.Equals(sim), act =>
+                    {
+                        // 标记为在线状态
+                        act.State = 1;
+                        act.LastActionAt = DateTime.Now;
+                        act.Socket = data.SocketHandle;
+                    });
+                }
             }
         }
     }

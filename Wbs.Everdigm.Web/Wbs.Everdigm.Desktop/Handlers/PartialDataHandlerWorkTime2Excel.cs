@@ -24,17 +24,19 @@ namespace Wbs.Everdigm.Desktop
         {
             try
             {
-                var bll = new ExcelHandlerBLL();
-                var excel = bll.Find(f => f.Handled == false && f.Work == (int?)null && f.Deleted == false);
-                if (null != excel)
+                using (var bll = new ExcelHandlerBLL())
                 {
-                    if (string.IsNullOrEmpty(excel.Data) || excel.Data.Equals("[]"))
+                    var excel = bll.Find(f => f.Handled == false && f.Work == (int?)null && f.Deleted == false);
+                    if (null != excel)
                     {
-                        bll.Update(f => f.id == excel.id, act => { act.Handled = true; });
-                    }
-                    else
-                    {
-                        ExportWorkTimeToExcel(excel);
+                        if (string.IsNullOrEmpty(excel.Data) || excel.Data.Equals("[]"))
+                        {
+                            bll.Update(f => f.id == excel.id, act => { act.Handled = true; });
+                        }
+                        else
+                        {
+                            ExportWorkTimeToExcel(excel, bll);
+                        }
                     }
                 }
             }
@@ -48,7 +50,7 @@ namespace Wbs.Everdigm.Desktop
         /// </summary>
         private static int lineStart = 16, pageSize = 78, pageRows = 40, pageCount = 39;
 
-        private void ExportWorkTimeToExcel(TB_ExcelHandler excel)
+        private void ExportWorkTimeToExcel(TB_ExcelHandler excel, ExcelHandlerBLL bll)
         {
             var source = "";
             Application app = null;
@@ -78,7 +80,7 @@ namespace Wbs.Everdigm.Desktop
                 sheet.Cells[5, 3] = excel.TB_Equipment.Number;
                 // 设备出库日期
                 string outdoor = "";
-                if ((DateTime?)null == excel.TB_Equipment.OutdoorTime)
+                if (null == excel.TB_Equipment.OutdoorTime)
                 {
                     outdoor = "invalid";
                 }
@@ -176,7 +178,7 @@ namespace Wbs.Everdigm.Desktop
             }
 
             var target = "../" + source.Replace(WEB_PATH, "").Replace("\\", "/");
-            new ExcelHandlerBLL().Update(f => f.id == excel.id, act =>
+            bll.Update(f => f.id == excel.id, act =>
             {
                 act.Handled = true;
                 act.Target = target;

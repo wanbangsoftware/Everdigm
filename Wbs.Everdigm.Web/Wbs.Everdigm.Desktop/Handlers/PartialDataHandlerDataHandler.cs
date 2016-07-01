@@ -47,36 +47,61 @@ namespace Wbs.Everdigm.Desktop
         {
             var n = (int?)null;
             var monthly = int.Parse(time.ToString("yyyyMM"));
-            var bll = new TerminalFlowBLL();
-            var flow = bll.Find(f => f.Sim.Equals(sim) && f.Monthly == monthly);
-            if (null == flow)
+            using (var bll = new TerminalFlowBLL())
             {
-                flow = bll.GetObject();
-                flow.Terminal = terminal < 0 ? n : terminal;
-                flow.Monthly = monthly;
-                flow.Sim = sim;
-                if (protocol == AsyncDataPackageType.TCP || protocol == AsyncDataPackageType.UDP)
+                var flow = bll.Find(f => f.Sim.Equals(sim) && f.Monthly == monthly);
+                if (null == flow)
                 {
-                    if (receive)
-                        flow.GPRSReceive = len;
-                    else
-                        flow.GPRSDeliver = len;
+                    flow = bll.GetObject();
+                    flow.Terminal = terminal < 0 ? n : terminal;
+                    flow.Monthly = monthly;
+                    flow.Sim = sim;
+                    if (protocol == AsyncDataPackageType.TCP || protocol == AsyncDataPackageType.UDP)
+                    {
+                        if (receive)
+                            flow.GPRSReceive = len;
+                        else
+                            flow.GPRSDeliver = len;
+                    }
+                    else if (protocol == AsyncDataPackageType.SMS)
+                    {
+                        if (receive)
+                            flow.SMSReceive = 1;
+                        else
+                            flow.SMSDeliver = 1;
+                    }
+                    bll.Add(flow);
                 }
-                else if (protocol == AsyncDataPackageType.SMS)
+                else
                 {
-                    if (receive)
-                        flow.SMSReceive = 1;
+                    // 如果终端不存在则更新sim卡号码的流量
+                    if (flow.Terminal == n)
+                    {
+                        bll.Update(f => f.Sim.Equals(sim) && f.Monthly == monthly, act =>
+                            {
+                                if (n == act.Terminal && 0 < terminal)
+                                {
+                                    act.Terminal = terminal;
+                                }
+                                if (protocol == AsyncDataPackageType.TCP || protocol == AsyncDataPackageType.UDP)
+                                {
+                                    if (receive)
+                                        act.GPRSReceive += len;
+                                    else
+                                        act.GPRSDeliver += len;
+                                }
+                                else if (protocol == AsyncDataPackageType.SMS)
+                                {
+                                    if (receive)
+                                        act.SMSReceive += 1;
+                                    else
+                                        act.SMSDeliver += 1;
+                                }
+                            });
+                    }
                     else
-                        flow.SMSDeliver = 1;
-                }
-                bll.Add(flow);
-            }
-            else
-            {
-                // 如果终端不存在则更新sim卡号码的流量
-                if (flow.Terminal == n)
-                {
-                    bll.Update(f => f.Sim.Equals(sim) && f.Monthly == monthly, act =>
+                    {
+                        bll.Update(f => f.id == flow.id, act =>
                         {
                             if (n == act.Terminal && 0 < terminal)
                             {
@@ -97,30 +122,7 @@ namespace Wbs.Everdigm.Desktop
                                     act.SMSDeliver += 1;
                             }
                         });
-                }
-                else
-                {
-                    bll.Update(f => f.id == flow.id, act =>
-                    {
-                        if (n == act.Terminal && 0 < terminal)
-                        {
-                            act.Terminal = terminal;
-                        }
-                        if (protocol == AsyncDataPackageType.TCP || protocol == AsyncDataPackageType.UDP)
-                        {
-                            if (receive)
-                                act.GPRSReceive += len;
-                            else
-                                act.GPRSDeliver += len;
-                        }
-                        else if (protocol == AsyncDataPackageType.SMS)
-                        {
-                            if (receive)
-                                act.SMSReceive += 1;
-                            else
-                                act.SMSDeliver += 1;
-                        }
-                    });
+                    }
                 }
             }
         }
@@ -199,24 +201,26 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="tx300"></param>
         private void SaveTX300History(TX300 tx300, DateTime receiveTime, string mac_id)
         {
-            var bll = new DataBLL();
-            TB_HISTORIES obj = bll.GetObject();
-            obj.command_id = "0x" + CustomConvert.IntToDigit(tx300.CommandID, CustomConvert.HEX, 4);
-            obj.mac_id = mac_id;
-            obj.message_content = CustomConvert.GetHex(tx300.MsgContent);
-            obj.message_type = 1;
-            obj.package_id = tx300.PackageID;
-            obj.protocol_type = tx300.ProtocolType;
-            obj.protocol_version = tx300.ProtocolVersion;
-            obj.receive_time = receiveTime;
-            obj.sequence_id = tx300.SequenceID.ToString();
-            obj.server_port = (short)(tx300.ProtocolType == Protocol.ProtocolTypes.SATELLITE ? 10800 : 
-                tx300.ProtocolType == Protocol.ProtocolTypes.SMS ? 0 : 31875);
-            obj.terminal_id = tx300.TerminalID;
-            obj.terminal_type = tx300.TerminalType;
-            obj.total_length = (short)tx300.TotalLength;
-            obj.total_package = tx300.TotalPackage;
-            bll.Add(obj);
+            using (var bll = new DataBLL())
+            {
+                TB_HISTORIES obj = bll.GetObject();
+                obj.command_id = "0x" + CustomConvert.IntToDigit(tx300.CommandID, CustomConvert.HEX, 4);
+                obj.mac_id = mac_id;
+                obj.message_content = CustomConvert.GetHex(tx300.MsgContent);
+                obj.message_type = 1;
+                obj.package_id = tx300.PackageID;
+                obj.protocol_type = tx300.ProtocolType;
+                obj.protocol_version = tx300.ProtocolVersion;
+                obj.receive_time = receiveTime;
+                obj.sequence_id = tx300.SequenceID.ToString();
+                obj.server_port = (short)(tx300.ProtocolType == Protocol.ProtocolTypes.SATELLITE ? 10800 :
+                    tx300.ProtocolType == Protocol.ProtocolTypes.SMS ? 0 : 31875);
+                obj.terminal_id = tx300.TerminalID;
+                obj.terminal_type = tx300.TerminalType;
+                obj.total_length = (short)tx300.TotalLength;
+                obj.total_package = tx300.TotalPackage;
+                bll.Add(obj);
+            }
         }
         /// <summary>
         /// 从协议中获取Sim卡号码
@@ -239,32 +243,34 @@ namespace Wbs.Everdigm.Desktop
         private void HandleTX300Status(TX300 tx300, AsyncUserDataBuffer data)
         {
             var sim = GetSimFromData(tx300);
-            var ebll = new EquipmentBLL();
-            var equipment = ebll.Find(f => f.TB_Terminal.Sim.Equals(sim));
-            var terminal = new TerminalBLL().Find(f => f.Sim.Equals(sim));
-            SaveTerminalData(null == terminal ? -1 : terminal.id, sim, data.PackageType, tx300.TotalLength, true, data.ReceiveTime);
-            // 终端不存在的话，不用再继续处理数据了
-            if (!IsTracker(tx300.CommandID))
+            using (var ebll = new EquipmentBLL())
             {
-                if (null == terminal) return;
-            }
-
-            HandleOnline(sim, tx300.CommandID, data);
-
-            if (tx300.CommandID != 0xAA00)
-            {
-
-                // TX10G的数据
-                if (tx300.CommandID >= 0x7000 && tx300.CommandID <= 0x7040)
+                var equipment = ebll.Find(f => f.TB_Terminal.Sim.Equals(sim));
+                var terminal = new TerminalBLL().Find(f => f.Sim.Equals(sim));
+                SaveTerminalData(null == terminal ? -1 : terminal.id, sim, data.PackageType, tx300.TotalLength, true, data.ReceiveTime);
+                // 终端不存在的话，不用再继续处理数据了
+                if (!IsTracker(tx300.CommandID))
                 {
-                    HandleTX10G(tx300, data);
+                    if (null == terminal) return;
                 }
-                else
-                {
-                    SaveTX300History(tx300, data.ReceiveTime, (null == equipment ? "" : ebll.GetFullNumber(equipment)));
 
-                    // 根据命令的不同处理各个命令详情
-                    HandleCommand(tx300, equipment, terminal);
+                HandleOnline(sim, tx300.CommandID, data);
+
+                if (tx300.CommandID != 0xAA00)
+                {
+
+                    // TX10G的数据
+                    if (tx300.CommandID >= 0x7000 && tx300.CommandID <= 0x7040)
+                    {
+                        HandleTX10G(tx300, data);
+                    }
+                    else
+                    {
+                        SaveTX300History(tx300, data.ReceiveTime, (null == equipment ? "" : ebll.GetFullNumber(equipment)));
+
+                        // 根据命令的不同处理各个命令详情
+                        HandleCommand(tx300, equipment, terminal);
+                    }
                 }
             }
         }
@@ -351,22 +357,25 @@ namespace Wbs.Everdigm.Desktop
             {
                 Buffer.BlockCopy(obj.MsgContent, 0, version, 0, 7);
             }
-            string ver = ASCIIEncoding.ASCII.GetString(version);
+            string ver = Encoding.ASCII.GetString(version);
             version = null;
             if (obj.CommandID == 0xBB00)
             {
                 // revision
-                string s = ASCIIEncoding.ASCII.GetString(obj.MsgContent, 7, 2);
+                string s = Encoding.ASCII.GetString(obj.MsgContent, 7, 2);
                 rev = byte.Parse(s);
             }
-            new TerminalBLL().Update(f => f.id == terminal.id, act =>
+            using (var bll = new TerminalBLL())
             {
-                act.Firmware = ver;
-                if (rev > 0)
+                bll.Update(f => f.id == terminal.id, act =>
                 {
-                    act.Revision = rev;
-                }
-            });
+                    act.Firmware = ver;
+                    if (rev > 0)
+                    {
+                        act.Revision = rev;
+                    }
+                });
+            }
         }
         
         private string GetPackageType(byte packageType) {
@@ -387,12 +396,15 @@ namespace Wbs.Everdigm.Desktop
             {
                 if (x1000.GPSInfo.Available)
                 {
-                    new EquipmentBLL().Update(f => f.id == equipment.id, act =>
+                    using (var bll = new EquipmentBLL())
                     {
-                        act.Latitude = x1000.GPSInfo.Latitude;
-                        act.Longitude = x1000.GPSInfo.Longitude;
-                        act.GpsUpdated = false;
-                    });
+                        bll.Update(f => f.id == equipment.id, act =>
+                        {
+                            act.Latitude = x1000.GPSInfo.Latitude;
+                            act.Longitude = x1000.GPSInfo.Longitude;
+                            act.GpsUpdated = false;
+                        });
+                    }
                 }
             }
             if (x1000.GPSInfo.Available)
@@ -430,49 +442,54 @@ namespace Wbs.Everdigm.Desktop
             HandleEquipmentRuntime(equipment, x1001.WorkTime);
             if (null != equipment)
             {
-                new EquipmentBLL().Update(f => f.id == equipment.id, act =>
+                using (var bll = new EquipmentBLL())
                 {
-                    act.Signal = (x1001.CSQ_1 > 0 && x1001.CSQ_1 <= 31) ? x1001.CSQ_1 :
+                    bll.Update(f => f.id == equipment.id, act =>
+                    {
+                        act.Signal = (x1001.CSQ_1 > 0 && x1001.CSQ_1 <= 31) ? x1001.CSQ_1 :
                         ((x1001.CSQ_2 > 0 && x1001.CSQ_2 <= 31) ? x1001.CSQ_2 : byte.MinValue);
-                    // 去掉 0x1001 里面的运转时间更新
-                    //if (x1001.WorkTime > 0)
-                    //{
-                    act.AccumulativeRuntime = equipment.AccumulativeRuntime;
-                    act.Runtime = equipment.Runtime;
-                    //}
-                    // 更新0x1001里的定位信息  2015/09/09 23:29
-                    if (x1001.Available_2)
-                    {
-                        act.Latitude = x1001.Latitude_2;
-                        act.Longitude = x1001.Longitude_2;
-                    }
-                    else if (x1001.Available_1)
-                    {
-                        act.Latitude = x1001.Latitude_1;
-                        act.Longitude = x1001.Longitude_1;
-                    }
-                });
+                        // 去掉 0x1001 里面的运转时间更新
+                        //if (x1001.WorkTime > 0)
+                        //{
+                        act.AccumulativeRuntime = equipment.AccumulativeRuntime;
+                        act.Runtime = equipment.Runtime;
+                        //}
+                        // 更新0x1001里的定位信息  2015/09/09 23:29
+                        if (x1001.Available_2)
+                        {
+                            act.Latitude = x1001.Latitude_2;
+                            act.Longitude = x1001.Longitude_2;
+                        }
+                        else if (x1001.Available_1)
+                        {
+                            act.Latitude = x1001.Latitude_1;
+                            act.Longitude = x1001.Longitude_1;
+                        }
+                    });
+                }
             }
 
-            var posbll = new PositionBLL();
-            var pos = GetGpsinfoFrom1001(x1001, true);
-            if ((pos.Longitude > 0 && pos.Longitude < 180) && (pos.Latitude > 0 && pos.Latitude < 90))
+            using (var posbll = new PositionBLL())
             {
-                pos.Equipment = null == equipment ? (int?)null : equipment.id;
-                pos.Terminal = obj.TerminalID;
-                pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
-                pos.Type = "Period report" + GetPackageType(obj.ProtocolType);
-                posbll.Add(pos);
-            }
+                var pos = GetGpsinfoFrom1001(x1001, true);
+                if ((pos.Longitude > 0 && pos.Longitude < 180) && (pos.Latitude > 0 && pos.Latitude < 90))
+                {
+                    pos.Equipment = null == equipment ? (int?)null : equipment.id;
+                    pos.Terminal = obj.TerminalID;
+                    pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
+                    pos.Type = "Period report" + GetPackageType(obj.ProtocolType);
+                    posbll.Add(pos);
+                }
 
-            pos = GetGpsinfoFrom1001(x1001, false);
-            if ((pos.Longitude > 0 && pos.Longitude < 180) && (pos.Latitude > 0 && pos.Latitude < 90))
-            {
-                pos.Equipment = null == equipment ? (int?)null : equipment.id;
-                pos.Terminal = obj.TerminalID;
-                pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
-                pos.Type = "Period report" + GetPackageType(obj.ProtocolType);
-                posbll.Add(pos);
+                pos = GetGpsinfoFrom1001(x1001, false);
+                if ((pos.Longitude > 0 && pos.Longitude < 180) && (pos.Latitude > 0 && pos.Latitude < 90))
+                {
+                    pos.Equipment = null == equipment ? (int?)null : equipment.id;
+                    pos.Terminal = obj.TerminalID;
+                    pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
+                    pos.Type = "Period report" + GetPackageType(obj.ProtocolType);
+                    posbll.Add(pos);
+                }
             }
         }
         /// <summary>
@@ -487,24 +504,27 @@ namespace Wbs.Everdigm.Desktop
             x2000.Unpackage();
             if (null != equipment)
             {
-                new EquipmentBLL().Update(f => f.id == equipment.id, act =>
+                using (var bll = new EquipmentBLL())
                 {
-                    if (x2000.AlarmBIN[0] == '1')
+                    bll.Update(f => f.id == equipment.id, act =>
                     {
-                        // Main Power Disconnect
-                        act.Voltage = "G0000";
-                        // 主电断报警之后进入睡眠状态
-                        act.OnlineStyle = (byte)LinkType.SLEEP;
-                    }
-                    // 同时更新设备的报警状态  2015/09/10 14:02
-                    act.Alarm = x2000.AlarmBIN;
-                    if (x2000.GPSInfo.Available)
-                    {
-                        act.Latitude = x2000.GPSInfo.Latitude;
-                        act.Longitude = x2000.GPSInfo.Longitude;
-                        act.GpsUpdated = false;
-                    }
-                });
+                        if (x2000.AlarmBIN[0] == '1')
+                        {
+                            // Main Power Disconnect
+                            act.Voltage = "G0000";
+                            // 主电断报警之后进入睡眠状态
+                            act.OnlineStyle = (byte)LinkType.SLEEP;
+                        }
+                        // 同时更新设备的报警状态  2015/09/10 14:02
+                        act.Alarm = x2000.AlarmBIN;
+                        if (x2000.GPSInfo.Available)
+                        {
+                            act.Latitude = x2000.GPSInfo.Latitude;
+                            act.Longitude = x2000.GPSInfo.Longitude;
+                            act.GpsUpdated = false;
+                        }
+                    });
+                }
             }
             long gps = -1;
             if (x2000.GPSInfo.Available)
@@ -521,14 +541,16 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="alarm"></param>
         private void SaveAlarm(TB_Equipment equipment, string terminal_id, long posId, string alarm)
         {
-            var bll = new AlarmBLL();
-            var obj = bll.GetObject();
-            obj.Code = alarm;
-            obj.Equipment = null == equipment ? (int?)null : equipment.id;
-            obj.Position = (0 >= posId ? (long?)null : posId);
-            obj.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
-            obj.Terminal = terminal_id;
-            bll.Add(obj);
+            using (var bll = new AlarmBLL())
+            {
+                var obj = bll.GetObject();
+                obj.Code = alarm;
+                obj.Equipment = null == equipment ? (int?)null : equipment.id;
+                obj.Position = (0 >= posId ? (long?)null : posId);
+                obj.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
+                obj.Terminal = terminal_id;
+                bll.Add(obj);
+            }
         }
         private void Handle0x3000(TX300 obj, TB_Equipment equipment, TB_Terminal terminal)
         {
@@ -537,16 +559,19 @@ namespace Wbs.Everdigm.Desktop
             x3000.Unpackage();
             if (null != equipment)
             {
-                new EquipmentBLL().Update(f => f.id == equipment.id, act => 
+                using (var bll = new EquipmentBLL())
                 {
-                    act.LockStatus = CustomConvert.GetHex(x3000.Type);
-                    if (x3000.GPSInfo.Available)
+                    bll.Update(f => f.id == equipment.id, act =>
                     {
-                        act.Latitude = x3000.GPSInfo.Latitude;
-                        act.Longitude = x3000.GPSInfo.Longitude;
-                        act.GpsUpdated = false;
-                    }
-                });
+                        act.LockStatus = CustomConvert.GetHex(x3000.Type);
+                        if (x3000.GPSInfo.Available)
+                        {
+                            act.Latitude = x3000.GPSInfo.Latitude;
+                            act.Longitude = x3000.GPSInfo.Longitude;
+                            act.GpsUpdated = false;
+                        }
+                    });
+                }
             }
             if (x3000.GPSInfo.Available)
             {
@@ -570,35 +595,38 @@ namespace Wbs.Everdigm.Desktop
             if (null != equipment)
             {
                 string vol = format("G{0}0", ((int)Math.Floor(x5000.GeneratorVoltage * 10)).ToString("000"));
-                new EquipmentBLL().Update(f => f.id == equipment.id, act =>
+                using (var bll = new EquipmentBLL())
                 {
-                    act.Voltage = vol;
-                    if (x5000.GeneratorVoltage > 20.0)
+                    bll.Update(f => f.id == equipment.id, act =>
                     {
-                        // 开机的时候清空报警信息  2015/09/24 08:00
-                        act.Alarm = ALARM;
-                    }
+                        act.Voltage = vol;
+                        if (x5000.GeneratorVoltage > 20.0)
+                        {
+                            // 开机的时候清空报警信息  2015/09/24 08:00
+                            act.Alarm = ALARM;
+                        }
 
-                    if (x5000.GeneratorVoltage < 20)
-                    { act.Rpm = 0; }
+                        if (x5000.GeneratorVoltage < 20)
+                        { act.Rpm = 0; }
 
-                    act.Runtime = equipment.Runtime;
-                    act.AccumulativeRuntime = equipment.AccumulativeRuntime;
-                    //if (x5000.WorkTime > 0)
-                    //{
-                    //    // 如果总运转时间大于等于当前服务器中保存的时间则更新，否则不更新
-                    //    if (x5000.WorkTime >= act.Runtime)
-                    //    {
-                    //        act.Runtime = (int)x5000.WorkTime;
-                    //    }
-                    //}
-                    if (x5000.GPSInfo.Available)
-                    {
-                        act.Latitude = x5000.GPSInfo.Latitude;
-                        act.Longitude = x5000.GPSInfo.Longitude;
-                        act.GpsUpdated = false;
-                    }
-                });
+                        act.Runtime = equipment.Runtime;
+                        act.AccumulativeRuntime = equipment.AccumulativeRuntime;
+                        //if (x5000.WorkTime > 0)
+                        //{
+                        //    // 如果总运转时间大于等于当前服务器中保存的时间则更新，否则不更新
+                        //    if (x5000.WorkTime >= act.Runtime)
+                        //    {
+                        //        act.Runtime = (int)x5000.WorkTime;
+                        //    }
+                        //}
+                        if (x5000.GPSInfo.Available)
+                        {
+                            act.Latitude = x5000.GPSInfo.Latitude;
+                            act.Longitude = x5000.GPSInfo.Longitude;
+                            act.GpsUpdated = false;
+                        }
+                    });
+                }
             }
             if (x5000.GPSInfo.Available)
                 SaveGpsInfo(x5000.GPSInfo, equipment, obj.TerminalID, "Eng.: " + x5000.State + GetPackageType(obj.ProtocolType));
@@ -616,12 +644,15 @@ namespace Wbs.Everdigm.Desktop
             x6000.Unpackage();
             if (null != equipment)
             {
-                new EquipmentBLL().Update(f => f.id == equipment.id, act =>
+                using (var bll = new EquipmentBLL())
                 {
-                    act.Rpm = (short)x6000.RPM;
-                    // EPOS命令时清空报警  2015/09/24 08:00
-                    act.Alarm = ALARM;
-                });
+                    bll.Update(f => f.id == equipment.id, act =>
+                    {
+                        act.Rpm = (short)x6000.RPM;
+                        // EPOS命令时清空报警  2015/09/24 08:00
+                        act.Alarm = ALARM;
+                    });
+                }
             }
         }
         /// <summary>
@@ -639,16 +670,19 @@ namespace Wbs.Everdigm.Desktop
             HandleEquipmentRuntime(equipment, x6004.TotalWorkTime);
             if (null != equipment)
             {
-                new EquipmentBLL().Update(f => f.id == equipment.id, act =>
+                using (var bll = new EquipmentBLL())
                 {
-                    act.Runtime = equipment.Runtime;
-                    act.AccumulativeRuntime = equipment.AccumulativeRuntime;
-                    if (obj.TerminalType == Protocol.TerminalTypes.DH || obj.TerminalType == Protocol.TerminalTypes.DX)
+                    bll.Update(f => f.id == equipment.id, act =>
                     {
-                        // EPOS命令时清空报警  2015/09/24 08:00
-                        act.Alarm = ALARM;
-                    }
-                });
+                        act.Runtime = equipment.Runtime;
+                        act.AccumulativeRuntime = equipment.AccumulativeRuntime;
+                        if (obj.TerminalType == Protocol.TerminalTypes.DH || obj.TerminalType == Protocol.TerminalTypes.DX)
+                        {
+                            // EPOS命令时清空报警  2015/09/24 08:00
+                            act.Alarm = ALARM;
+                        }
+                    });
+                }
             }
         }
         /// <summary>
@@ -664,15 +698,18 @@ namespace Wbs.Everdigm.Desktop
             x6007.Unpackage();
             if (null != equipment)
             {
-                new EquipmentBLL().Update(f => f.id == equipment.id, act =>
+                using (var bll = new EquipmentBLL())
                 {
-                    act.LockStatus = CustomConvert.GetHex(x6007.Code);
-                    if (obj.TerminalType == Protocol.TerminalTypes.DH || obj.TerminalType == Protocol.TerminalTypes.DX)
+                    bll.Update(f => f.id == equipment.id, act =>
                     {
-                        // EPOS命令时清空报警  2015/09/24 08:00
-                        act.Alarm = ALARM;
-                    }
-                });
+                        act.LockStatus = CustomConvert.GetHex(x6007.Code);
+                        if (obj.TerminalType == Protocol.TerminalTypes.DH || obj.TerminalType == Protocol.TerminalTypes.DX)
+                        {
+                            // EPOS命令时清空报警  2015/09/24 08:00
+                            act.Alarm = ALARM;
+                        }
+                    });
+                }
             }
         }
         /// <summary>
@@ -688,15 +725,18 @@ namespace Wbs.Everdigm.Desktop
             x600B.Unpackage();
             if (null != equipment)
             {
-                new EquipmentBLL().Update(f => f.id == equipment.id, act =>
+                using (var bll = new EquipmentBLL())
                 {
-                    // 600B时直接重置所有的运转时间
-                    act.Runtime = (int)x600B.Worktime;
-                    act.AccumulativeRuntime = (int)x600B.Worktime;
-                    // 装载机的总运转时间初始化时，将其特定的初始化时间设为0
-                    if (act.InitializedRuntime > 0)
-                        act.InitializedRuntime = 0;
-                });
+                    bll.Update(f => f.id == equipment.id, act =>
+                    {
+                        // 600B时直接重置所有的运转时间
+                        act.Runtime = (int)x600B.Worktime;
+                        act.AccumulativeRuntime = (int)x600B.Worktime;
+                        // 装载机的总运转时间初始化时，将其特定的初始化时间设为0
+                        if (act.InitializedRuntime > 0)
+                            act.InitializedRuntime = 0;
+                    });
+                }
             }
         }
         /// <summary>
@@ -748,15 +788,18 @@ namespace Wbs.Everdigm.Desktop
             HandleEquipmentRuntime(equipment, cc00.WorkTime);
             if (null != equipment)
             {
-                new EquipmentBLL().Update(f => f.id == equipment.id, act =>
+                using (var bll = new EquipmentBLL())
                 {
-                    act.Runtime = equipment.Runtime;
-                    act.AccumulativeRuntime = equipment.AccumulativeRuntime;
-                    if ((int?)null != act.Terminal)
+                    bll.Update(f => f.id == equipment.id, act =>
                     {
-                        act.TB_Terminal.Firmware = cc00.Firmware;
-                    }
-                });
+                        act.Runtime = equipment.Runtime;
+                        act.AccumulativeRuntime = equipment.AccumulativeRuntime;
+                        if ((int?)null != act.Terminal)
+                        {
+                            act.TB_Terminal.Firmware = cc00.Firmware;
+                        }
+                    });
+                }
             }
             // 更新最近发送的0xBB0F命令为成功状态
             Handle0xBB0FStatus();
@@ -787,7 +830,10 @@ namespace Wbs.Everdigm.Desktop
             xdd00.Unpackage();
             if (null != equipment)
             {
-                new EquipmentBLL().Update(f => f.id == equipment.id, act => { act.Signal = xdd00.CSQ; });
+                using (var bll = new EquipmentBLL())
+                {
+                    bll.Update(f => f.id == equipment.id, act => { act.Signal = xdd00.CSQ; });
+                }
             }
             //if (null != terminal)
             //{
@@ -806,9 +852,19 @@ namespace Wbs.Everdigm.Desktop
             xdd02.Content = obj.MsgContent;
             xdd02.Unpackage();
             if (null != equipment)
-            { new EquipmentBLL().Update(f => f.id == equipment.id, act => { act.SatelliteStatus = xdd02.Status; }); }
+            {
+                using (var bll = new EquipmentBLL())
+                {
+                    bll.Update(f => f.id == equipment.id, act => { act.SatelliteStatus = xdd02.Status; });
+                }
+            }
             if (null != terminal)
-            { new TerminalBLL().Update(f => f.id == terminal.id, act => { act.SatelliteStatus = xdd02.Status; }); }
+            {
+                using (var bll = new TerminalBLL())
+                {
+                    bll.Update(f => f.id == terminal.id, act => { act.SatelliteStatus = xdd02.Status; });
+                }
+            }
         }
         /// <summary>
         /// 处理EE00命令
@@ -825,33 +881,39 @@ namespace Wbs.Everdigm.Desktop
             if (null != equipment && xee00.ErrorCommand.Equals("0x6007"))
             {
                 // 更新锁车状态
-                new EquipmentBLL().Update(f => f.id == equipment.id, act =>
+                using (var bll = new EquipmentBLL())
                 {
-                    act.LockStatus = xee00.ErrorParamenter;
-                });
+                    bll.Update(f => f.id == equipment.id, act =>
+                    {
+                        act.LockStatus = xee00.ErrorParamenter;
+                    });
+                }
             }
             // 更新命令的发送状态
-            new CommandBLL().Update(f => f.DestinationNo == obj.TerminalID &&
-                     f.Command == xee00.ErrorCommand &&
-                     f.ScheduleTime >= DateTime.Now.AddMinutes(-3) &&
-                     f.Status >= (byte)CommandStatus.SentByTCP && f.Status <= (byte)CommandStatus.SentToDest,
-                     act =>
-                     {
-                         byte b = 0x10;
-                         switch (xee00.Error)
-                         {
-                             case 0x20:
-                                 b = (byte)CommandStatus.EposFail;
-                                 break;
-                             case 0x30:
-                                 b = (byte)CommandStatus.EngNotStart;
-                                 break;
-                             default:
-                                 b = (byte)CommandStatus.NoFunction;
-                                 break;
-                         }
-                         act.Status = b;
-                     });
+            using (var bll = new CommandBLL())
+            {
+                bll.Update(f => f.DestinationNo == obj.TerminalID && 
+                f.Command == xee00.ErrorCommand && 
+                f.ScheduleTime >= DateTime.Now.AddMinutes(-3) && 
+                f.Status >= (byte)CommandStatus.SentByTCP && 
+                f.Status <= (byte)CommandStatus.SentToDest, act =>
+                {
+                    byte b = 0x10;
+                    switch (xee00.Error)
+                    {
+                        case 0x20:
+                            b = (byte)CommandStatus.EposFail;
+                            break;
+                        case 0x30:
+                            b = (byte)CommandStatus.EngNotStart;
+                            break;
+                        default:
+                            b = (byte)CommandStatus.NoFunction;
+                            break;
+                    }
+                    act.Status = b;
+                });
+            }
         }
         /// <summary>
         /// 处理终端OFF的信息
@@ -867,17 +929,20 @@ namespace Wbs.Everdigm.Desktop
             xff00.Unpackage();
             if (null != equipment)
             {
-                new EquipmentBLL().Update(f => f.id == equipment.id, act =>
+                using (var bll = new EquipmentBLL())
                 {
-                    act.Voltage = "G0000";
-                    act.OnlineStyle = (byte)LinkType.OFF;
-                    if (xff00.GPSInfo.Available)
+                    bll.Update(f => f.id == equipment.id, act =>
                     {
-                        act.Latitude = xff00.GPSInfo.Latitude;
-                        act.Longitude = xff00.GPSInfo.Longitude;
-                        act.GpsUpdated = false;
-                    }
-                });
+                        act.Voltage = "G0000";
+                        act.OnlineStyle = (byte)LinkType.OFF;
+                        if (xff00.GPSInfo.Available)
+                        {
+                            act.Latitude = xff00.GPSInfo.Latitude;
+                            act.Longitude = xff00.GPSInfo.Longitude;
+                            act.GpsUpdated = false;
+                        }
+                    });
+                }
             }
             if (xff00.GPSInfo.Available)
                 SaveGpsInfo(xff00.GPSInfo, equipment, obj.TerminalID, "Battery OFF" + GetPackageType(obj.ProtocolType));
@@ -889,25 +954,27 @@ namespace Wbs.Everdigm.Desktop
         private long SaveGpsInfo(GPSInfo obj, TB_Equipment equipment, string terminal, string type)
         {
             //if (!obj.Available) return -1;
-            var bll = new PositionBLL();
-            TB_Data_Position pos = bll.GetObject();
-            pos.Altitude = obj.Altitude;
-            pos.Direction = obj.Direction;
-            pos.Equipment = null == equipment ? (int?)null : equipment.id;
-            pos.EW = obj.EW[0];
-            pos.GpsTime = obj.GPSTime;
-            pos.Latitude = obj.Latitude;
-            pos.Longitude = obj.Longitude;
-            pos.NS = obj.NS[0];
-            pos.ReceiveTime = DateTime.Now;
-            pos.Speed = obj.Speed;
-            pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
-            pos.Terminal = terminal;
-            pos.Type = type;
-            pos = bll.Add(pos);
-            // 更新定位信息
-            ShowUnhandledMessage("position: " + pos.id);
-            return pos.id;
+            using (var bll = new PositionBLL())
+            {
+                TB_Data_Position pos = bll.GetObject();
+                pos.Altitude = obj.Altitude;
+                pos.Direction = obj.Direction;
+                pos.Equipment = null == equipment ? (int?)null : equipment.id;
+                pos.EW = obj.EW[0];
+                pos.GpsTime = obj.GPSTime;
+                pos.Latitude = obj.Latitude;
+                pos.Longitude = obj.Longitude;
+                pos.NS = obj.NS[0];
+                pos.ReceiveTime = DateTime.Now;
+                pos.Speed = obj.Speed;
+                pos.StoreTimes = null == equipment ? 0 : equipment.StoreTimes;
+                pos.Terminal = terminal;
+                pos.Type = type;
+                pos = bll.Add(pos);
+                // 更新定位信息
+                ShowUnhandledMessage("position: " + pos.id);
+                return pos.id;
+            }
             //HandleGpsAddress(pos);
         }
         //private void HandleGpsAddress(TB_Data_Position pos)

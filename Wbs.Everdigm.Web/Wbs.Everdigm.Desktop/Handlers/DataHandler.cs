@@ -112,10 +112,7 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="message"></param>
         private void ShowUnhandledMessage(string message)
         {
-            if (null != OnUnhandledMessage)
-            {
-                OnUnhandledMessage(this, new UIEventArgs() { Message = message });
-            }
+            OnUnhandledMessage?.Invoke(this, new UIEventArgs() { Message = message });
         }
         /// <summary>
         /// 将Sim号码组成TX协议中的字节串

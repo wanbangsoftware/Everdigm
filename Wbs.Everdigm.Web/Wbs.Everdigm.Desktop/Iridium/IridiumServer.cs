@@ -91,10 +91,7 @@ namespace Wbs.Everdigm.Desktop
         {
             //if (_showPackage)
             {
-                if (null != OnMessage)
-                {
-                    OnMessage(this, new UIEventArgs() { Message = message });
-                }
+                OnMessage?.Invoke(this, new UIEventArgs() { Message = message });
             }
         }
         /// <summary>
@@ -198,7 +195,7 @@ namespace Wbs.Everdigm.Desktop
                     else
                     {
                         so.length += read;
-                        so.Received = Wbs.Utilities.CustomConvert.expand(so.Received, so.length);
+                        so.Received = Utilities.CustomConvert.expand(so.Received, so.length);
                     }
                     Buffer.BlockCopy(so.buffer, 0, so.Received, so.length - read, read);
                     s.BeginReceive(so.buffer, 0, StateObject.BUFFER_SIZE, SocketFlags.None, new AsyncCallback(Read_Callback), so);
@@ -408,7 +405,7 @@ namespace Wbs.Everdigm.Desktop
                                 try
                                 {
                                     obj.socket.Send(iridum.PackageContent);
-                                    _history.Add(Now + "Send MO Confirmation: " + Wbs.Utilities.CustomConvert.GetHex(iridum.PackageContent));
+                                    _history.Add(Now + "Send MO Confirmation: " + Utilities.CustomConvert.GetHex(iridum.PackageContent));
                                 }
                                 catch (Exception send)
                                 {

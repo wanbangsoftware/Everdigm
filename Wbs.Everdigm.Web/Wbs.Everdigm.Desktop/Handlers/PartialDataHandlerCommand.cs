@@ -33,49 +33,53 @@ namespace Wbs.Everdigm.Desktop
         {
             if (null == _server) return;
             var bll = new CommandBLL();
-            var list = bll.FindList(f => f.ScheduleTime >= DateTime.Now.AddSeconds(-30) &&
-                GsmStatus.Take(2).Contains(f.Status.Value) &&
-                f.TB_Terminal.OnlineStyle != (byte)LinkType.SATELLITE).ToList();
-            foreach (var cmd in list)
+            try
             {
-                var sim = cmd.DestinationNo;
-                if (sim[0] == '8' || sim[0] == '9') sim = sim.Substring(0, 8);
-                // 0==链接不存在1=发送成功2=网络处理错误3=强制SMS发送
-                byte ret = 0;
-                CommandStatus cs = (CommandStatus)cmd.Status;
-                // 所有GSM命令都强制SMS方式发送
-                if (cs == CommandStatus.WaitingForSMS || cs == CommandStatus.Waiting)
+                var list = bll.FindList(f => f.ScheduleTime >= DateTime.Now.AddSeconds(-30) &&
+                    GsmStatus.Take(2).Contains(f.Status.Value) &&
+                    f.TB_Terminal.OnlineStyle != (byte)LinkType.SATELLITE).ToList();
+                foreach (var cmd in list)
                 {
-                    // 强制SMS发送的
-                    ret = 3;
-                }
-                else
-                {
-                    if (cmd.TB_Terminal.OnlineStyle == (byte)LinkType.TCP)
+                    var sim = cmd.DestinationNo;
+                    if (sim[0] == '8' || sim[0] == '9') sim = sim.Substring(0, 8);
+                    // 0==链接不存在1=发送成功2=网络处理错误3=强制SMS发送
+                    byte ret = 0;
+                    CommandStatus cs = (CommandStatus)cmd.Status;
+                    // 所有GSM命令都强制SMS方式发送
+                    if (cs == CommandStatus.WaitingForSMS || cs == CommandStatus.Waiting)
                     {
-                        // 0==链接不存在1=发送成功2=网络处理错误
-                        ret = _server.Send(cmd.TB_Terminal.Socket.Value, Wbs.Utilities.CustomConvert.GetBytes(cmd.Content));
+                        // 强制SMS发送的
+                        ret = 3;
+                    }
+                    else
+                    {
+                        if (cmd.TB_Terminal.OnlineStyle == (byte)LinkType.TCP)
+                        {
+                            // 0==链接不存在1=发送成功2=网络处理错误
+                            ret = _server.Send(cmd.TB_Terminal.Socket.Value, Wbs.Utilities.CustomConvert.GetBytes(cmd.Content));
+                        }
+                    }
+                    if (ret != 1)
+                    {
+                        // TCP链接丢失，重新用SMS方式发送
+                        bool b = CommandUtility.SendSMSCommand(cmd);
+                        if (b)
+                        {
+                            SaveTerminalData((int?)null == cmd.Terminal ? -1 : cmd.Terminal.Value, sim, AsyncDataPackageType.SMS, 1, false, DateTime.Now);
+                        }
+                        ShowUnhandledMessage(Now + "Send Command(SMS: " + (b ? "Success" : "Fail") + "): " + cmd.Content);
+                    }
+                    else
+                    {
+                        SaveTerminalData((int?)null == cmd.Terminal ? -1 : cmd.Terminal.Value, sim, AsyncDataPackageType.TCP, cmd.Content.Length / 2, false, DateTime.Now);
+                        ShowUnhandledMessage(Now + "Send command(" + (1 == ret ? CommandStatus.SentByTCP : CommandStatus.TCPNetworkError) + "): " + cmd.Content);
+                        UpdateGsmCommand(cmd, (1 == ret ? CommandStatus.SentByTCP : CommandStatus.TCPNetworkError), bll);
                     }
                 }
-                if (ret != 1)
-                {
-                    // TCP链接丢失，重新用SMS方式发送
-                    bool b = CommandUtility.SendSMSCommand(cmd);
-                    if (b)
-                    {
-                        SaveTerminalData((int?)null == cmd.Terminal ? -1 : cmd.Terminal.Value, sim, AsyncDataPackageType.SMS, 1, false, DateTime.Now);
-                    }
-                    ShowUnhandledMessage(Now + "Send Command(SMS: " + (b ? "Success" : "Fail") + "): " + cmd.Content);
-                }
-                else
-                {
-                    SaveTerminalData((int?)null == cmd.Terminal ? -1 : cmd.Terminal.Value, sim, AsyncDataPackageType.TCP, cmd.Content.Length / 2, false, DateTime.Now);
-                    ShowUnhandledMessage(Now + "Send command(" + (1 == ret ? CommandStatus.SentByTCP : CommandStatus.TCPNetworkError) + "): " + cmd.Content);
-                    UpdateGsmCommand(cmd, (1 == ret ? CommandStatus.SentByTCP : CommandStatus.TCPNetworkError), bll);
-                }
+                // 待发送的命令发送完之后，清理超时的命令
+                ClearTimedoutCommands(bll);
             }
-            // 待发送的命令发送完之后，清理超时的命令
-            ClearTimedoutCommands(bll);
+            finally { bll.Close(); }
         }
         private List<byte> _iridiumStatus = null;
         /// <summary>
@@ -118,11 +122,14 @@ namespace Wbs.Everdigm.Desktop
         /// </summary>
         private void Handle0xBB0FStatus()
         {
-            new CommandBLL().Update(f => f.ScheduleTime >= DateTime.Now.AddMinutes(-10) && 
-                f.Status == (byte)CommandStatus.SentBySMS && f.Command == "0xBB0F", act =>
+            using (var bll = new CommandBLL())
             {
-                act.Status = (byte)CommandStatus.Returned;
-            });
+                bll.Update(f => f.ScheduleTime >= DateTime.Now.AddMinutes(-10) && 
+                f.Status == (byte)CommandStatus.SentBySMS && f.Command == "0xBB0F", act =>
+                {
+                    act.Status = (byte)CommandStatus.Returned;
+                });
+            }
         }
         /// <summary>
         /// 清理超时的命令为发送失败状态
@@ -175,25 +182,27 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="tx300"></param>
         private void HandleGsmCommandResponsed(TX300 tx300)
         {
-            var bll = new CommandBLL();
-            // 查找定期时间内发送的相同命令记录，直取最后一条命令
-            var cmd = bll.FindList<TB_Command>(f => f.DestinationNo.Equals(tx300.TerminalID) &&
-                f.Command.Equals("0x" + CustomConvert.IntToDigit(tx300.CommandID, CustomConvert.HEX, 4)) &&
-                f.ScheduleTime >= DateTime.Now.AddMinutes(tx300.ProtocolType == Protocol.ProtocolTypes.SATELLITE ? -60 : -3),
-                "ScheduleTime", true).FirstOrDefault();
-
-            if (null != cmd)
+            using (var bll = new CommandBLL())
             {
-                bll.Update(f => f.id == cmd.id, act =>
+                // 查找定期时间内发送的相同命令记录，直取最后一条命令
+                var cmd = bll.FindList<TB_Command>(f => f.DestinationNo.Equals(tx300.TerminalID) &&
+                    f.Command.Equals("0x" + CustomConvert.IntToDigit(tx300.CommandID, CustomConvert.HEX, 4)) &&
+                    f.ScheduleTime >= DateTime.Now.AddMinutes(tx300.ProtocolType == Protocol.ProtocolTypes.SATELLITE ? -60 : -3),
+                    "ScheduleTime", true).FirstOrDefault();
+
+                if (null != cmd)
                 {
-                    act.Status = (byte)CommandStatus.Returned;
-                });
+                    bll.Update(f => f.id == cmd.id, act =>
+                    {
+                        act.Status = (byte)CommandStatus.Returned;
+                    });
+                }
+                //bll.Update(f => f.DestinationNo == tx300.TerminalID &&
+                //    f.Command == "0x" + CustomConvert.IntToDigit(tx300.CommandID, CustomConvert.HEX, 4) &&
+                //    f.ScheduleTime >= DateTime.Now.AddMinutes(-3) //&&
+                //    //GsmStatus.Skip(2).Contains(f.Status.Value),
+                //    , act => { act.Status = (byte)CommandStatus.Returned; });
             }
-            //bll.Update(f => f.DestinationNo == tx300.TerminalID &&
-            //    f.Command == "0x" + CustomConvert.IntToDigit(tx300.CommandID, CustomConvert.HEX, 4) &&
-            //    f.ScheduleTime >= DateTime.Now.AddMinutes(-3) //&&
-            //    //GsmStatus.Skip(2).Contains(f.Status.Value),
-            //    , act => { act.Status = (byte)CommandStatus.Returned; });
         }
     }
 }
