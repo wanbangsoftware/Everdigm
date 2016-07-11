@@ -67,6 +67,10 @@
   <ItemGroup>
     <Content Include="bootstrap3\bootstrap-datepicker-1.3.0\css\datepicker3.css" />
     <Content Include="bootstrap3\bootstrap-datepicker-1.3.0\js\bootstrap-datepicker.js" />
+    <Content Include="bootstrap3\bootstrap3-dialog\css\bootstrap-dialog.css" />
+    <Content Include="bootstrap3\bootstrap3-dialog\css\bootstrap-dialog.min.css" />
+    <Content Include="bootstrap3\bootstrap3-dialog\js\bootstrap-dialog.js" />
+    <Content Include="bootstrap3\bootstrap3-dialog\js\bootstrap-dialog.min.js" />
     <Content Include="bootstrap3\css\bootstrap-select.min.css" />
     <Content Include="bootstrap3\css\bootstrap-theme.css.map" />
     <Content Include="bootstrap3\css\bootstrap.css.map" />
@@ -87,6 +91,7 @@
     <Content Include="css\links.css" />
     <Content Include="css\pagging.css" />
     <Content Include="css\style_font.css" />
+    <Content Include="error.aspx" />
     <Content Include="google_map.aspx" />
     <Content Include="images\equipments\icon_hex.png" />
     <Content Include="images\equipments\icon_adt.png" />
@@ -661,6 +666,13 @@
     <Compile Include="default.aspx.designer.cs">
       <DependentUpon>default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="error.aspx.cs">
+      <DependentUpon>error.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="error.aspx.designer.cs">
+      <DependentUpon>error.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1221,6 +1233,11 @@
       <DependentUpon>static_google_map.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="service\as_tracker.aspx.cs">
       <DependentUpon>as_tracker.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1294,7 +1311,12 @@
       <Name>Wbs.Everdigm.Database</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

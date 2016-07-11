@@ -2,11 +2,13 @@
 using System.Linq;
 using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Database;
+using System.Configuration;
 
 namespace Wbs.Everdigm.Web
 {
     public partial class _default : BaseBLLPage
     {
+        private static string NOTIFY = ConfigurationManager.AppSettings["DBConnectExceptionNotified"];
         protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
@@ -125,7 +127,8 @@ namespace Wbs.Everdigm.Web
                 });
             }
             Session[Utility.SessionName] = account;
-
+            // 登录成功说明服务器数据库没问题，将全局标志改为未通知状态
+            Application[NOTIFY] = false;
             ShowNotification("../main/main.aspx", "Welcome <a>" + account.Name + "</a>, You have login successfully.");
             //Response.Redirect("./main/main.aspx");
         }

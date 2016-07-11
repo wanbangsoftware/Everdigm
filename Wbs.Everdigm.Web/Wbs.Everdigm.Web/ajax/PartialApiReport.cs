@@ -19,14 +19,21 @@ namespace Wbs.Everdigm.Web.ajax
             if (null != tmp && !string.IsNullOrEmpty(tmp.data))
             {
                 string base64 = HttpUtility.UrlDecode(tmp.data);
-                using (var bll = new SmsBLL())
+                try
                 {
-                    TB_SMS sms = bll.GetObject();
-                    sms.Data = base64;
-                    sms.Sender = tmp.name;
-                    sms.Type = SMSUtility.SMS_TRACKER;
-                    bll.Add(sms);
-                    ResponseData(0, "Data saved");
+                    using (var bll = new SmsBLL())
+                    {
+                        TB_SMS sms = bll.GetObject();
+                        sms.Data = base64;
+                        sms.Sender = tmp.name;
+                        sms.Type = SMSUtility.SMS_TRACKER;
+                        bll.Add(sms);
+                        ResponseData(0, "Data saved");
+                    }
+                }
+                catch (Exception e)
+                {
+                    ResponseData(-1, string.Format("Can not handle your [report] request: {0}", e.Message));
                 }
             }
             else
