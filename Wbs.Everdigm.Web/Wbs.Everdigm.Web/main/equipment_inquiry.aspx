@@ -21,7 +21,10 @@
             <input type="hidden" runat="server" value="0" id="hidPageIndex" />
             <input type="hidden" runat="server" id="hidTotalPages" value="0" />
             <!-- Default panel contents -->
-            <div class="panel-heading"><strong>Equipment: Inquiry</strong></div>
+            <div class="panel-heading">
+                <strong>Equipment: Inquiry</strong>
+                <span id="toExcel" class="label label-primary" style="cursor: pointer;"><i class="fa fa-file-excel-o"></i> Export to Excel</span>
+            </div>
             <div class="panel-body">
                 <!--默认查询新品库存列表-->
                 <input type="hidden" id="hidQueryType" runat="server" value="N" />
