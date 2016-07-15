@@ -317,6 +317,7 @@
     <Content Include="scripts\main\equipment.command.js" />
     <Content Include="scripts\main\equipment.delivery.js" />
     <Content Include="scripts\main\equipment.info.js" />
+    <Content Include="scripts\main\equipment.inquiry.js" />
     <Content Include="scripts\main\equipment.map.js" />
     <Content Include="scripts\main\equipment.new.product.js" />
     <Content Include="scripts\main\equipment.overhaul.js" />
@@ -328,6 +329,7 @@
     <Content Include="scripts\main\equipment.storage.js" />
     <Content Include="scripts\main\equipment.terminal.base.js" />
     <Content Include="scripts\main\equipment.work.js" />
+    <Content Include="scripts\main\export.to.excel.js" />
     <Content Include="scripts\main\pagination.js" />
     <Content Include="scripts\main\terminal.bind.equipment.js" />
     <Content Include="main\EquipmentInfo.Master" />
@@ -383,6 +385,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ajax\api.ashx" />
+    <Content Include="files\everdigm.equipment.list.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="files\everdigm.terminal.list.xlsx" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -653,7 +659,6 @@
     <Compile Include="common\BasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="common\EquipmentFunctional.cs" />
     <Compile Include="common\ErrorChart.cs" />
     <Compile Include="common\OfficeConvert.cs" />
     <Compile Include="common\PredicateExtensions.cs" />

@@ -123,7 +123,16 @@ namespace Wbs.Everdigm.Web.ajax
                     ret = HandleQueryEquipmentWorkTime2Excel();
                     break;
                 case "worktime2excelquery":
+                    // 查询excel导出状态
                     ret = HandleQueryWorkTime2ExcelStatus();
+                    break;
+                case "equipments2excel":
+                    // 设备列表导出到excel
+                    ret = HandleExportEquipmentListToExcel();
+                    break;
+                case "terminals2excel":
+                    // 终端列表导出到excel
+                    ret = HandleExportTerminalListToExcel();
                     break;
                 default:
                     ret = "{\"status\":-1,\"desc\":\"No function to handle your request.\"}";

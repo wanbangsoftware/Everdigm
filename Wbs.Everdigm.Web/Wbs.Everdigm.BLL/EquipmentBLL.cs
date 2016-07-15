@@ -200,6 +200,19 @@ namespace Wbs.Everdigm.BLL
             if (voltage.IndexOf("G2") >= 0) return eng_on;
             return eng_off;
         }
+        /// <summary>
+        /// 获取发动机状态的文字描述
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public string GetEngineState(TB_Equipment obj)
+        {
+            if (obj.LockStatus == "40" || obj.LockStatus == "0F" || obj.LockStatus == "FF") return "Locked";
+            var voltage = obj.Voltage;
+            if (null == voltage) return "Off";
+            if (voltage.IndexOf("G2") >= 0) return "On";
+            return "Off";
+        }
         private static string alarm_none = "0000000000000000";
         //private static string alarm_available = "<span class=\"text-custom-attention\"><i class=\"fa fa-bell\"></i></span>";
         private static string alarm_invalid = "<span class=\"text-custom-gray\" title=\"No Alarm\"><i class=\"fa fa-bell-o\"></i></span>";

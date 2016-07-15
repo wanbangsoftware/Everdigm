@@ -152,6 +152,26 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="warningLoading" tabindex="-1" role="dialog" aria-labelledby="deletelLabel" data-backdrop="static" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header custom-modal-header btn-primary">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="warningLabel">Loading...</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12" id="loadingContent">
+                                <img alt="" src="../images/loading.gif" /><span style="margin-left: 10px;" id="loadingContentText">Loading data, please wait...</span>
+                            </div>
+                            <div class="col-lg-12" id="warningContent">
+                                <span style="margin-left: 10px;" id="warningContentText"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
     <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="../js/jquery.json-2.4.js"></script>
@@ -166,6 +186,8 @@
     <script type="text/javascript" src="../js/common.js"></script>
     <script type="text/javascript" src="../scripts/main/pagination.js"></script>
     <script type="text/javascript" src="../scripts/main/equipment.base.js"></script>
+    <script src="../scripts/main/export.to.excel.js"></script>
     <script type="text/javascript" src="../scripts/main/equipments.js"></script>
+    <script src="../scripts/main/equipment.inquiry.js"></script>
 </body>
 </html>

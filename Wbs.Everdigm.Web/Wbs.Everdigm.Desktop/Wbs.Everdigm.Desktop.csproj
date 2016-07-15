@@ -128,6 +128,7 @@
     <Compile Include="Handlers\PartialDataHandlerClient.cs" />
     <Compile Include="Handlers\PartialDataHandlerCommand.cs" />
     <Compile Include="Handlers\PartialDataHandlerDataHandler.cs" />
+    <Compile Include="Handlers\PartialDataHandlerExportExcel.cs" />
     <Compile Include="Handlers\PartialDataHandlerIridium.cs" />
     <Compile Include="Handlers\PartialDataHandlerSMS.cs" />
     <Compile Include="Handlers\PartialDataHandlerTracker.cs" />

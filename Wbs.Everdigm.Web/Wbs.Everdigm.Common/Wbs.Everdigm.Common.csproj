@@ -51,6 +51,9 @@
     <Compile Include="Command.cs" />
     <Compile Include="CommandStatus.cs" />
     <Compile Include="CommandUtility.cs" />
+    <Compile Include="EquipmentFunctional.cs" />
+    <Compile Include="EverdigmUtils.cs" />
+    <Compile Include="ExcelExportType.cs" />
     <Compile Include="JsonConverter.cs" />
     <Compile Include="LinkType.cs" />
     <Compile Include="PrintStatus.cs" />

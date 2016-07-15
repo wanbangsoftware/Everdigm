@@ -226,23 +226,6 @@
       <Column Name="ErrorMessage" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.TB_ExcelHandler" Member="TB_ExcelHandler">
-    <Type Name="TB_ExcelHandler">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Deleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Handled" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="[Work]" Member="Work" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Equipment" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="CreateDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="StartDate" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="EndDate" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Source" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Target" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="Data" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Association Name="TB_WorkDetail_TB_ExcelHandler" Member="TB_WorkDetail" ThisKey="Work" OtherKey="id" Type="TB_WorkDetail" IsForeignKey="true" DeleteRule="SET NULL" />
-      <Association Name="TB_Equipment_TB_ExcelHandler" Member="TB_Equipment" ThisKey="Equipment" OtherKey="id" Type="TB_Equipment" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.TB_HISTORIES" Member="TB_HISTORIES">
     <Type Name="TB_HISTORIES">
       <Column Name="id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -569,6 +552,25 @@
       <Association Name="TB_Terminal_TB_TerminalFlow" Member="TB_TerminalFlow" ThisKey="id" OtherKey="Terminal" Type="TB_TerminalFlow" />
       <Association Name="TB_Terminal_TB_Equipment" Member="TB_Equipment" ThisKey="id" OtherKey="Terminal" Type="TB_Equipment" />
       <Association Name="TB_Satellite_TB_Terminal" Member="TB_Satellite" ThisKey="Satellite" OtherKey="id" Type="TB_Satellite" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_ExcelHandler" Member="TB_ExcelHandler">
+    <Type Name="TB_ExcelHandler">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Deleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Handled" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="[Work]" Member="Work" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Equipment" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Status" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="Type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="CreateDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="StartDate" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="EndDate" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Source" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Target" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Data" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Association Name="TB_Equipment_TB_ExcelHandler" Member="TB_Equipment" ThisKey="Equipment" OtherKey="id" Type="TB_Equipment" IsForeignKey="true" />
+      <Association Name="TB_WorkDetail_TB_ExcelHandler" Member="TB_WorkDetail" ThisKey="Work" OtherKey="id" Type="TB_WorkDetail" IsForeignKey="true" DeleteRule="SET NULL" />
     </Type>
   </Table>
   <Function Name="dbo.sp_ClearOldLinks" Method="sp_ClearOldLinks">

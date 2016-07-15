@@ -1,6 +1,4 @@
-﻿var excelId;
-var excelStatusInterval = 3000;
-
+﻿
 $(document).ready(function () {
 
     $(".input-daterange").each(function () {
@@ -36,7 +34,10 @@ $(document).ready(function () {
     // 导出到excel
     $("#toExcel").click(function () {
         //showButton(false);
-        exportToExcel();
+        var key = $("[id$=\"hidKey\"]").val();
+        var d1 = $(".form-control:eq(0)").val();
+        var d2 = $(".form-control:eq(1)").val()
+        exportToExcel({ "type": "equipment", "cmd": "worktime2excel", "data": key, "date": d1, "date1": d2 });
     });
     // 初始化查询最近一个月的运转时间
     getWorktimes();
@@ -319,52 +320,3 @@ function printCanvas(canvas) {
     showButton(true);
 }
 
-function showWarning(warning, title, content, shown) {
-    $("#warningLabel").text(title);
-    if (warning) {
-        // 显示警告信息
-        $(".modal-header").removeClass("btn-primary").addClass("btn-warning");
-        $("#loadingContent").hide();
-        $("#warningContent").show();
-        $("#warningContentText").text(content);
-    } else {
-        // 显示数据加载提示信息
-        $(".modal-header").removeClass("btn-warning").addClass("btn-primary");
-        $("#loadingContent").show();
-        $("#warningContent").hide();
-        $("#loadingContentText").text(content);
-    }
-    $("#warningLoading").modal(shown);
-}
-
-function exportToExcel() {
-    showWarning(false, "Exporting...", "Prepare data & export into excel file, please wait...", "show");
-
-    var key = $("[id$=\"hidKey\"]").val();
-    var d1 = $(".form-control:eq(0)").val();
-    var d2 = $(".form-control:eq(1)").val()
-
-    GetJsonData("../ajax/query.ashx", { "type": "equipment", "cmd": "worktime2excel", "data": key, "date": d1, "date1": d2 }, function (data) {
-        if (data.status == 0) {
-            excelId = data.data;
-            // 每3秒一次轮询excel处理情况
-            setTimeout("getExportExcelStatus();", excelStatusInterval);
-        } else {
-            showWarning(true, "Operation fail", "Fail to export data into excel.", "show");
-        }
-    });
-}
-
-function getExportExcelStatus() {
-    GetJsonData("../ajax/query.ashx", { "type": "equipment", "cmd": "worktime2excelquery", "data": excelId }, function (data) {
-        if (data.status > 0) {
-            // 下载excel文件
-            document.location = data.data;
-            showWarning(false, "", "", "hide");
-        } else if (data.status < 0) {
-            showWarning(true, "Operation fail", data.desc);
-        } else {
-            setTimeout("getExportExcelStatus();", excelStatusInterval);
-        }
-    });
-}

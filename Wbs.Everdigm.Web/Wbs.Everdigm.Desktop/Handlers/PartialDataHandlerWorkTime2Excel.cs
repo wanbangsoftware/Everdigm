@@ -20,13 +20,13 @@ namespace Wbs.Everdigm.Desktop
         /// <summary>
         /// 处理web传过来的导出工作时间的请求
         /// </summary>
-        public void HandleWebRequestWorkTime2Excel()
+        public bool HandleWebRequestWorkTime2Excel()
         {
             try
             {
                 using (var bll = new ExcelHandlerBLL())
                 {
-                    var excel = bll.Find(f => f.Handled == false && f.Work == (int?)null && f.Deleted == false);
+                    var excel = bll.Find(f => f.Type == (byte)ExcelExportType.DailyWork && f.Handled == false && f.Deleted == false);
                     if (null != excel)
                     {
                         if (string.IsNullOrEmpty(excel.Data) || excel.Data.Equals("[]"))
@@ -36,6 +36,7 @@ namespace Wbs.Everdigm.Desktop
                         else
                         {
                             ExportWorkTimeToExcel(excel, bll);
+                            return true;
                         }
                     }
                 }
@@ -44,6 +45,7 @@ namespace Wbs.Everdigm.Desktop
             {
                 ShowUnhandledMessage(format("{0}Work time to Excel handler error: {1}{2}{3}", Now, e.Message, Environment.NewLine, e.StackTrace));
             }
+            return false;
         }
         /// <summary>
         /// 第一页开始行、结束行、页大小、页行数
@@ -52,7 +54,7 @@ namespace Wbs.Everdigm.Desktop
 
         private void ExportWorkTimeToExcel(TB_ExcelHandler excel, ExcelHandlerBLL bll)
         {
-            var source = "";
+            string source = "", data = "";
             Application app = null;
             Workbook book = null;
             Worksheet sheet = null;
@@ -61,6 +63,10 @@ namespace Wbs.Everdigm.Desktop
                 app = new Application();
                 book = app.Workbooks.Open(EXCEL_PATH + EXCEL_WORKTIME);
                 sheet = (Worksheet)book.ActiveSheet;
+                app.Visible = false;
+                app.AlertBeforeOverwriting = false;
+                app.DisplayAlerts = false;
+
                 var equipment = excel.TB_Equipment.TB_EquipmentModel.Code + excel.TB_Equipment.Number;
                 sheet.Name = equipment;
                 // 所属公司
@@ -158,6 +164,11 @@ namespace Wbs.Everdigm.Desktop
                 }
                 book.SaveAs(source);
             }
+            catch (Exception e)
+            {
+                data = e.StackTrace;
+                ShowUnhandledMessage(format("{0}Worktime to Excel handler error: {1}{2}{3}", Now, e.Message, Environment.NewLine, e.StackTrace));
+            }
             finally
             {
                 // 关闭book
@@ -181,7 +192,9 @@ namespace Wbs.Everdigm.Desktop
             bll.Update(f => f.id == excel.id, act =>
             {
                 act.Handled = true;
+                act.Status = (byte)(string.IsNullOrEmpty(data) ? 0 : 1);
                 act.Target = target;
+                act.Data = data;
             });
         }
     }

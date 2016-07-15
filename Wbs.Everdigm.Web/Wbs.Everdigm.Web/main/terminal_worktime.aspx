@@ -78,6 +78,12 @@
                             <button class="btn btn-danger" runat="server" type="button" id="refreshAll"><span class="glyphicon glyphicon-repeat"></span> Calculate all</button>
                         </div>
                     </li>
+                    <li role="presentation" class="tablist-item-input">
+                        <div style="margin-top: -3px; margin-bottom: 2px; margin-left: 2px;">
+                            <input type="checkbox" class="hidden" id="checkAnalyseAll" />
+                            <button class="btn btn-danger" runat="server" type="button" id="btAnalyseAll"><span class="glyphicon glyphicon-ban-circle"></span> Analyse all</button>
+                        </div>
+                    </li>
                 </ul>
 
                 <!-- Tab panes -->

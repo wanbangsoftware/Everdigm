@@ -1,6 +1,7 @@
 ﻿using System.Web;
 using System.Diagnostics;
 using Wbs.Everdigm.BLL;
+using Wbs.Everdigm.Common;
 
 namespace Wbs.Everdigm.Web.ajax
 {
@@ -71,12 +72,26 @@ namespace Wbs.Everdigm.Web.ajax
         private string SaveWorkHandlerRequest(int workId)
         {
             // 查找相同的工作是否已经有生成的文件
-            var obj = ExcelHandlerInstance.Find(f => f.Work == workId && f.Deleted == false);
+            var obj = ExcelHandlerInstance.Find(f => f.Type == (byte)ExcelExportType.TMSWork && f.Work == workId && f.Deleted == false);
             if (null == obj)
             {
                 obj = ExcelHandlerInstance.GetObject();
                 obj.Work = workId;
+                // 生成TMS工作指派导出任务
+                obj.Type = (byte)ExcelExportType.TMSWork;
                 ExcelHandlerInstance.Add(obj);
+            }
+            else
+            {
+                if (obj.Status != 0)
+                {
+                    ExcelHandlerInstance.Update(f => f.id == obj.id, act =>
+                    {
+                        act.Handled = false;
+                        act.Status = 0;
+                        act.Data = "";
+                    });
+                }
             }
             return GetFormatedJson(0, "SUCESS", obj.id.ToString());
         }
@@ -95,7 +110,14 @@ namespace Wbs.Everdigm.Web.ajax
                 {
                     // 更新已删除状态
                     //ExcelHandlerInstance.Update(f => f.id == obj.id, act => { act.Deleted = true; });
-                    return GetFormatedJson(1, "SUCCESS", obj.Target);
+                    if (obj.Status == 0)
+                    {
+                        return GetFormatedJson(1, "SUCCESS", obj.Target);
+                    }
+                    else
+                    {
+                        return GetFormatedJson(-1, "FAILED", obj.Data);
+                    }
                 }
                 else
                 {

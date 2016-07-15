@@ -31,22 +31,22 @@ namespace Wbs.Everdigm.Web.main {
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden cookieName;
         
         /// <summary>
-        /// selSate 控件。
+        /// hidTotalPages 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlSelect selSate;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidTotalPages;
         
         /// <summary>
-        /// selBind 控件。
+        /// hidPageIndex 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlSelect selBind;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidPageIndex;
         
         /// <summary>
         /// hidJson 控件。
@@ -58,22 +58,58 @@ namespace Wbs.Everdigm.Web.main {
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidJson;
         
         /// <summary>
-        /// ddlEquipmentType 控件。
+        /// spanSatellite 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlEquipmentType;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl spanSatellite;
         
         /// <summary>
-        /// selModel 控件。
+        /// selectedSatellite 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlSelect selModel;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden selectedSatellite;
+        
+        /// <summary>
+        /// spanEquipment 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl spanEquipment;
+        
+        /// <summary>
+        /// selectedEquipment 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden selectedEquipment;
+        
+        /// <summary>
+        /// menuEquipmentType 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl menuEquipmentType;
+        
+        /// <summary>
+        /// hidEquipmentType 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidEquipmentType;
         
         /// <summary>
         /// txtNumber 控件。
@@ -83,15 +119,6 @@ namespace Wbs.Everdigm.Web.main {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtNumber;
-        
-        /// <summary>
-        /// hidPageIndex 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidPageIndex;
         
         /// <summary>
         /// btQuery 控件。

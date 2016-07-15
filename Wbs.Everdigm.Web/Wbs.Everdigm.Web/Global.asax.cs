@@ -54,7 +54,7 @@ namespace Wbs.Everdigm.Web
                     if (content.Contains("(provider: Named Pipes Provider, error: 40 ") ||
                         content.Contains("The timeout period elapsed prior to obtaining a connection"))
                     {
-                        content = "Cannot connect Database Server, please contact System Administrator.";
+                        content = "Cannot connect Database Server, please contact your Network Administrator.";
                     }
                     error.DialogContent = content;
                 }

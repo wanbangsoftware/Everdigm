@@ -18,11 +18,13 @@ namespace Wbs.Everdigm.BLL
                 Handled = false,
                 Source = "",
                 Target = "",
-                Work = (int?)null,
+                Type = 0,
+                Work = null,
                 id = 0,
+                Status = 0,
                 Data = "",
                 EndDate = "",
-                Equipment = (int?)null,
+                Equipment = null,
                 StartDate = ""
             };
         }

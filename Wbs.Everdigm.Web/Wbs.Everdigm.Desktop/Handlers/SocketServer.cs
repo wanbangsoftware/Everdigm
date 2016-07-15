@@ -311,7 +311,11 @@ namespace Wbs.Everdigm.Desktop
                                 if (!_handler.HandleWebRequestExcel2pdf())
                                 {
                                     // 处理导出work time到excel请求
-                                    _handler.HandleWebRequestWorkTime2Excel();
+                                    if (!_handler.HandleWebRequestWorkTime2Excel())
+                                    {
+                                        // 处理导出设备列表或终端列表到excel的请求
+                                        _handler.HandleWebRequestEquipmentsOrTerminalsToExcel();
+                                    }
                                 }
                             }
 

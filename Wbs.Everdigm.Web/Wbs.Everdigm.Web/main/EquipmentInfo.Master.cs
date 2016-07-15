@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Wbs.Everdigm.Common;
 using Wbs.Everdigm.BLL;
 
 namespace Wbs.Everdigm.Web.main

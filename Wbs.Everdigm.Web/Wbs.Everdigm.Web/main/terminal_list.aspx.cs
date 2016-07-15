@@ -35,14 +35,16 @@ namespace Wbs.Everdigm.Web.main
         {
             var t = new EquipmentTypeBLL();
             var tlist = t.FindList(f => f.Delete == false).OrderBy(o => o.Name);
-            ddlEquipmentType.Items.Clear();
-            ddlEquipmentType.Items.Add(new ListItem() { Text = "Equipment Type:", Value = "" });
+            //ddlEquipmentType.Items.Clear();
+            //ddlEquipmentType.Items.Add(new ListItem() { Text = "Equipment Type:", Value = "" });
+            string html = "";
             foreach (var v in tlist)
             {
-                ddlEquipmentType.Items.Add(new ListItem() { Text = v.Name, Value = v.id.ToString() });
+                html += "<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"" + v.id.ToString() + "\" href=\"#\">" + v.Name + "</a></li>";
             }
+            menuEquipmentType.InnerHtml = html;
             var m = new EquipmentModelBLL();
-            var mlist = m.FindList(f => f.Delete == false).OrderBy(o => o.Name).ToList();
+            var mlist = m.FindList(f => f.Delete == false).OrderBy(o => o.Type).ThenBy(b => b.Name).ToList();
             hidJson.Value = JsonConverter.ToJson(mlist);
         }
         /// <summary>
@@ -53,7 +55,7 @@ namespace Wbs.Everdigm.Web.main
         /// <returns></returns>
         private string CheckQueryString(string obj)
         {
-            var replace= txtNumber.Value;
+            var replace = txtNumber.Value;
             return string.IsNullOrEmpty(replace) ? obj : obj.Replace(replace, ("<span style=\"color: #FF0000;\">" + replace + "</span>"));
         }
 
@@ -61,10 +63,10 @@ namespace Wbs.Everdigm.Web.main
         {
             if (null == equipment)
                 return "<a href=\"./equipment_terminal.aspx?key=" + Utility.UrlEncode(Utility.Encrypt(terminal.id.ToString())) + "\">bind</a>";
-            
+
             if (string.IsNullOrEmpty(terminal.Sim))
                 return "no sim card";
-            
+
             return "<a href=\"#unbind_" + terminal.id + "\">" + EquipmentInstance.GetFullNumber(equipment) + "</a>";
         }
         /// <summary>
@@ -73,13 +75,14 @@ namespace Wbs.Everdigm.Web.main
         private void ShowQuery()
         {
             var number = txtNumber.Value.Trim();
-            //var simcard = txtSimcard.Value.Trim();
             // 模糊查询时页码置为空
             if (!string.IsNullOrEmpty(number)) { hidPageIndex.Value = ""; }
 
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
 
-            if (selBind.SelectedIndex == 0)
+            var selEquipment = int.Parse(selectedEquipment.Value);
+            // -1:ignore,0:not bind,1:bound
+            if (selEquipment != 1)
             {
                 ShowTerminalsNotBind(pageIndex);
             }
@@ -88,7 +91,15 @@ namespace Wbs.Everdigm.Web.main
                 ShowTerminalsBinded(pageIndex);
             }
         }
-
+        private string GotSelectedType(int type)
+        {
+            switch (type)
+            {
+                case -1: return "Ignore";
+                case 0: return "Not bind";
+                default: return "Bound";
+            }
+        }
         private void ShowTerminalsNotBind(int pageIndex)
         {
             var totalRecords = 0;
@@ -96,16 +107,31 @@ namespace Wbs.Everdigm.Web.main
             // 表达式
             Expression<Func<TB_Terminal, bool>> expression = PredicateExtensions.True<TB_Terminal>();
 
-            expression = expression.And(a => a.Delete == false && a.HasBound == false);
-            // 是否绑定卫星
-            var sat = selSate.SelectedIndex;
-            if (sat > 0)
+            expression = expression.And(a => a.Delete == false);
+            // 是否绑定卫星 -1:ignore,0:not,1:bound
+            var sat = int.Parse(selectedSatellite.Value);
+            spanSatellite.InnerHtml = "Satellite:" + GotSelectedType(sat);
+            if (sat >= 0)
             {
-                if (sat == 1) { expression = expression.And(a => a.Satellite == (int?)null); }
+                if (sat == 0)
+                {
+                    expression = expression.And(a => a.Satellite == (int?)null);
+                }
                 else
-                { expression = expression.And(a => a.Satellite != (int?)null); }
+                {
+                    expression = expression.And(a => a.Satellite != (int?)null);
+                }
             }
-
+            // 是否绑定设备-1:ignore,0:not,1:bound
+            var equ = int.Parse(selectedEquipment.Value);
+            spanEquipment.InnerHtml = "Equipment:" + GotSelectedType(equ);
+            if (equ >= 0)
+            {
+                if (equ == 0)
+                {
+                    expression = expression.And(a => a.HasBound == false);
+                }
+            }
             // 模糊查询
             var query = txtNumber.Value.Trim();
             if (!string.IsNullOrEmpty(query))
@@ -119,7 +145,7 @@ namespace Wbs.Everdigm.Web.main
             string html = "";
             if (totalRecords < 1)
             {
-                html = "<tr><td colspan=\"13\">No records, You can change condition and try again or " +
+                html = "<tr><td colspan=\"11\">No records, You can change condition and try again or " +
                     " <a href=\"./terminal_register.aspx\">ADD</a> new one.</td></tr>";
             }
             else
@@ -130,21 +156,23 @@ namespace Wbs.Everdigm.Web.main
                 {
                     cnt++;
                     var id = Utility.UrlEncode(Utility.Encrypt(obj.id.ToString()));
+                    //-1:ignore,0:not,1:bound
                     var equipment = EquipmentInstance.Find(f => f.TB_Terminal.id == obj.id && f.Deleted == false);
+                    //if(equ==0&&equi)
                     html += "<tr>" +
-                        "<td style=\"text-align: center;\"><input type=\"checkbox\" id=\"cb_" + id + "\" /></td>" +
-                        "<td style=\"text-align: center;\">" + cnt + "</td>" +
-                        "<td><a href=\"./terminal_register.aspx?key=" + id + "\" >" + CheckQueryString(obj.Number) + "</a></td>" +
-                        "<td>" + CheckQueryString(TerminalInstance.GetSatellite(obj, true)) + "</td>" +
-                        "<td>" + obj.Firmware + "</td>" +
-                        "<td style=\"text-align: center;\">" + obj.Revision.ToString() + "</td>" +
-                        "<td style=\"text-align: center;\">" + TerminalTypes.GetTerminalType(obj.Type.Value) + "</td>" +
-                        "<td>" + obj.ProductionDate.Value.ToString("yyyy/MM/dd") + "</td>" +
-                        "<td style=\"text-align: center;\">" + (obj.HasBound == true ? "yes" : "no") + "</td>" +
-                        "<td>" + CheckQueryString(GetEquipment(obj, equipment)) + "</td>" +
-                        "<td>" + Utility.GetOnlineStyle(obj.OnlineStyle, false) + "</td>" +
-                        "<td>" + obj.Sim + "</td>" +
-                        "<td></td>" +
+                        //"<td class=\"in-tab-txt-rb\"><input type=\"checkbox\" id=\"cb_" + id + "\" /></td>" +
+                        "<td class=\"in-tab-txt-rb\">" + cnt + "</td>" +
+                        "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\"><a href=\"./terminal_register.aspx?key=" + id + "\" >" + CheckQueryString(obj.Number) + "</a></td>" +
+                        "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\">" + CheckQueryString(TerminalInstance.GetSatellite(obj, true)) + "</td>" +
+                        "<td class=\"in-tab-txt-rb\">" + obj.Firmware + "</td>" +
+                        "<td class=\"in-tab-txt-rb\">" + obj.Revision.ToString() + "</td>" +
+                        "<td style=\"text-align: left !important;\" class=\"in-tab-txt-rb\">" + TerminalTypes.GetTerminalType(obj.Type.Value) + "</td>" +
+                        "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\">" + obj.ProductionDate.Value.ToString("yyyy/MM/dd") + "</td>" +
+                        "<td class=\"in-tab-txt-rb\">" + (obj.HasBound == true ? "yes" : "no") + "</td>" +
+                        "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\">" + CheckQueryString(GetEquipment(obj, equipment)) + "</td>" +
+                        "<td class=\"in-tab-txt-b\">" + Utility.GetOnlineStyle(obj.OnlineStyle, false) + "</td>" +
+                        //"<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\">" + obj.Sim + "</td>" +
+                        "<td class=\"in-tab-txt-b\"></td>" +
                         "</tr>";
                 }
             }
@@ -160,23 +188,30 @@ namespace Wbs.Everdigm.Web.main
             expression = expression.And(f => f.Deleted == false && f.Terminal != (int?)null);
 
             // 设备type
-            var type = ddlEquipmentType.SelectedValue;
-            if (!string.IsNullOrEmpty(type))
-            {
-                expression = expression.And(a => a.TB_EquipmentModel.Type == ParseInt(type));
-            }
+            //var type = ddlEquipmentType.SelectedValue;
+            //if (!string.IsNullOrEmpty(type))
+            //{
+            //    expression = expression.And(a => a.TB_EquipmentModel.Type == ParseInt(type));
+            //}
 
             // 设备model
-            var model = selModel.Value;
-            if (!string.IsNullOrEmpty(model)) { expression = expression.And(a => a.Model == ParseInt(model)); }
+            //var model = selModel.Value;
+            //if (!string.IsNullOrEmpty(model)) { expression = expression.And(a => a.Model == ParseInt(model)); }
 
             // 是否绑定卫星
-            var sat = selSate.SelectedIndex;
-            if (sat > 0)
+            // 是否绑定卫星 -1:ignore,0:not,1:bound
+            var sat = int.Parse(selectedSatellite.Value);
+            spanSatellite.InnerHtml = "Satellite:" + GotSelectedType(sat);
+            if (sat >= 0)
             {
-                if (sat == 1) { expression = expression.And(a => a.TB_Terminal.Satellite == (int?)null); }
+                if (sat == 0)
+                {
+                    expression = expression.And(a => a.TB_Terminal.Satellite == (int?)null);
+                }
                 else
-                { expression = expression.And(a => a.TB_Terminal.Satellite != (int?)null); }
+                {
+                    expression = expression.And(a => a.TB_Terminal.Satellite != (int?)null);
+                }
             }
 
             // 号码查询
@@ -203,19 +238,19 @@ namespace Wbs.Everdigm.Web.main
                     cnt++;
                     var id = Utility.UrlEncode(Utility.Encrypt(obj.id.ToString()));
                     html += "<tr>" +
-                        "<td style=\"text-align: center;\"><input type=\"checkbox\" id=\"cb_" + id + "\" /></td>" +
-                        "<td style=\"text-align: center;\">" + cnt + "</td>" +
-                        "<td><a href=\"./terminal_register.aspx?key=" + id + "\" >" + CheckQueryString(obj.TB_Terminal.Number) + "</a></td>" +
-                        "<td>" + CheckQueryString(TerminalInstance.GetSatellite(obj.TB_Terminal, true)) + "</td>" +
-                        "<td>" + obj.TB_Terminal.Firmware + "</td>" +
-                        "<td style=\"text-align: center;\">" + obj.TB_Terminal.Revision.ToString() + "</td>" +
-                        "<td style=\"text-align: center;\">" + TerminalTypes.GetTerminalType(obj.TB_Terminal.Type.Value) + "</td>" +
-                        "<td>" + obj.TB_Terminal.ProductionDate.Value.ToString("yyyy/MM/dd") + "</td>" +
-                        "<td style=\"text-align: center;\">yes</td>" +
-                        "<td>" + CheckQueryString(GetEquipment(obj.TB_Terminal, obj)) + "</td>" +
-                        "<td>" + Utility.GetOnlineStyle(obj.OnlineStyle, false) + "</td>" +
-                        "<td>" + obj.TB_Terminal.Sim + "</td>" +
-                        "<td></td>" +
+                        //"<td style=\"text-align: center;\" class=\"in-tab-txt-rb\"><input type=\"checkbox\" id=\"cb_" + id + "\" /></td>" +
+                        "<td style=\"text-align: center;\" class=\"in-tab-txt-rb\">" + cnt + "</td>" +
+                        "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\"><a href=\"./terminal_register.aspx?key=" + id + "\" >" + CheckQueryString(obj.TB_Terminal.Number) + "</a></td>" +
+                        "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\">" + CheckQueryString(TerminalInstance.GetSatellite(obj.TB_Terminal, true)) + "</td>" +
+                        "<td class=\"in-tab-txt-rb\">" + obj.TB_Terminal.Firmware + "</td>" +
+                        "<td class=\"in-tab-txt-rb\">" + obj.TB_Terminal.Revision.ToString() + "</td>" +
+                        "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\">" + TerminalTypes.GetTerminalType(obj.TB_Terminal.Type.Value) + "</td>" +
+                        "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\">" + obj.TB_Terminal.ProductionDate.Value.ToString("yyyy/MM/dd") + "</td>" +
+                        "<td class=\"in-tab-txt-rb\">yes</td>" +
+                        "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\">" + CheckQueryString(GetEquipment(obj.TB_Terminal, obj)) + "</td>" +
+                        "<td class=\"in-tab-txt-b\">" + Utility.GetOnlineStyle(obj.OnlineStyle, false) + "</td>" +
+                        //"<td class=\"in-tab-txt-rb\">" + obj.TB_Terminal.Sim + "</td>" +
+                        "<td class=\"in-tab-txt-b\"></td>" +
                         "</tr>";
                 }
             }
