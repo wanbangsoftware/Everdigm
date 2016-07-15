@@ -85,22 +85,13 @@ namespace Wbs.Everdigm.Web.main {
         protected global::System.Web.UI.WebControls.Button btQuery;
         
         /// <summary>
-        /// buttonRefreshAll 控件。
+        /// checkAnalyseDailyWork 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button buttonRefreshAll;
-        
-        /// <summary>
-        /// refreshAll 控件。
-        /// </summary>
-        /// <remarks>
-        /// 自动生成的字段。
-        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlButton refreshAll;
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox checkAnalyseDailyWork;
         
         /// <summary>
         /// btAnalyseAll 控件。
@@ -110,6 +101,24 @@ namespace Wbs.Everdigm.Web.main {
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlButton btAnalyseAll;
+        
+        /// <summary>
+        /// liRefreshAll 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liRefreshAll;
+        
+        /// <summary>
+        /// buttonRefreshAll 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button buttonRefreshAll;
         
         /// <summary>
         /// tbodySummary 控件。

@@ -72,16 +72,16 @@
                             </span>
                         </div>
                     </li>
-                    <li role="presentation" class="tablist-item-input">
+                    <li role="presentation" class="tablist-item-input" style="width: 165px !important; text-align:center;">
                         <div style="margin-top: -3px; margin-bottom: 2px; margin-left: 2px;">
-                            <asp:Button ID="buttonRefreshAll" CssClass="hidden" runat="server" Text="" OnClick="buttonRefreshAll_Click" />
-                            <button class="btn btn-danger" runat="server" type="button" id="refreshAll"><span class="glyphicon glyphicon-repeat"></span> Calculate all</button>
+                            <input type="checkbox" class="hidden" id="checkAnalyseDailyWork" runat="server" />
+                            <button class="btn btn-primary" runat="server" type="button" id="btAnalyseAll"><i class="fa fa-square-o" aria-hidden="true"></i> Analyse daily work</button>
                         </div>
                     </li>
-                    <li role="presentation" class="tablist-item-input">
+                    <li role="presentation" class="tablist-item-input" style="width: 125px !important; text-align:center;" id="liRefreshAll" runat="server">
                         <div style="margin-top: -3px; margin-bottom: 2px; margin-left: 2px;">
-                            <input type="checkbox" class="hidden" id="checkAnalyseAll" />
-                            <button class="btn btn-danger" runat="server" type="button" id="btAnalyseAll"><span class="glyphicon glyphicon-ban-circle"></span> Analyse all</button>
+                            <asp:Button ID="buttonRefreshAll" CssClass="hidden" runat="server" Text="" OnClick="buttonRefreshAll_Click" />
+                            <button class="btn btn-danger" type="button" id="refreshAll"><span class="glyphicon glyphicon-repeat"></span> Calculate all</button>
                         </div>
                     </li>
                 </ul>
@@ -216,7 +216,12 @@
     <script type="text/javascript" src="../js/javascript.date.pattern.js"></script>
     <script type="text/javascript" src="../js/common.js"></script>
     <script type="text/javascript">
+        function setDailyWorkAnalyseStatus(toStatus) {
+            $("#checkAnalyseDailyWork").prop("checked", toStatus);
+            $("#btAnalyseAll").children("i:eq(0)").attr("class", toStatus ? "fa fa-check-square" : "fa fa-square-o");
+        }
         $(document).ready(function () {
+            setDailyWorkAnalyseStatus($("#checkAnalyseDailyWork").is(":checked"));
             $(".input-daterange").each(function () {
                 var inputs = $(this).children(".input-md");
                 if (isStringNull($(inputs[0]).val())) {
@@ -257,6 +262,10 @@
                 $("#tbodySummary").html(loading);
                 $("#buttonRefreshAll").click();
                 $("#modalRefreshing").modal("show");
+            });
+            $("#btAnalyseAll").click(function () {
+                var checked = $("#checkAnalyseDailyWork").is(":checked");
+                setDailyWorkAnalyseStatus(!checked);
             });
         });
     </script>

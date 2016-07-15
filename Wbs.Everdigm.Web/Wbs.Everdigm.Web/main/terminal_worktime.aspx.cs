@@ -20,7 +20,7 @@ namespace Wbs.Everdigm.Web.main
             {
                 tbodyBody.InnerHtml = "<tr><td colspan=\"13\">Input your equipment number to query.</td></tr>";
             }
-            refreshAll.Visible = null != Account && Account.Code.ToLower().Equals("leekwok");
+            liRefreshAll.Visible = null != Account && Account.Code.ToLower().Equals("leekwok");
         }
 
         protected void btQuery_Click(object sender, EventArgs e)
@@ -190,7 +190,10 @@ namespace Wbs.Everdigm.Web.main
                         }
                     }
                 }
-                //tbodyBody.InnerHtml = html;
+                if (checkAnalyseDailyWork.Checked)
+                {
+                    tbodyBody.InnerHtml = html;
+                }
             }
         }
     }
