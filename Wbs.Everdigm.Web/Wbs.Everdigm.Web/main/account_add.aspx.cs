@@ -49,7 +49,7 @@ namespace Wbs.Everdigm.Web.main
             obj.Code = txtCode.Value.Trim();
             obj.Department = ParseInt(hidDepartment.Value);
             if (obj.Department < 0) {
-                obj.Department = (int?)null;
+                obj.Department = null;
                 // 获取默认部门
                 var dept = DepartmentInstance.Find(f => f.IsDefault == true && f.Delete == false);
                 if (null != dept)

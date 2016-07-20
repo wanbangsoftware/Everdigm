@@ -25,7 +25,7 @@ namespace Wbs.Everdigm.BLL
                 Locked = false,
                 Code = "",
                 LoginTimes = 0,
-                Tracker = 0,
+                Tracker = null,
                 Question = "",
                 DeviceLoginId = "",
                 Answer = "",
