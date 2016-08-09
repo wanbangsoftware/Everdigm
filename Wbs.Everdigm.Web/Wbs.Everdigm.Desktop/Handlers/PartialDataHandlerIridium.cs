@@ -153,7 +153,7 @@ namespace Wbs.Everdigm.Desktop
                                             act.Longitude = location.Longitude;
                                         }
                                         // 更新启动与否状态 2015/08/31
-                                        act.Voltage = location.EngFlag == "On" ? "G2400" : "G0000";
+                                        act.Voltage = location.EngFlag.Equals("On") ? "G2400" : "G0000";
 
                                         // 更新总运转时间
                                         act.Runtime = equipment.Runtime;
@@ -188,7 +188,34 @@ namespace Wbs.Everdigm.Desktop
                                         //    }
                                         //}
                                         // 锁车状态 2015/08/14
-                                        if (act.LockStatus != locks) { act.LockStatus = locks; }
+                                        if (act.LockStatus != locks)
+                                        {
+                                            act.LockStatus = locks;
+                                        }
+                                        // 判断锁车的有效状态
+                                        if (locks.Equals("40") || locks.Equals("0F") || locks.Equals("FF"))
+                                        {
+                                            // 锁车时还有开机状态
+                                            if (location.EngFlag.Equals("On"))
+                                            {
+                                                // 锁车了，但未关机，还在工作中
+                                                if (act.LockEffected == (byte)LockEffect.Locked)
+                                                {
+                                                    act.LockEffected = (byte)LockEffect.LockedAndStillWork;
+                                                }
+                                                else if (act.LockEffected == (byte)LockEffect.LockedAndEngineOff)
+                                                {
+                                                    // 锁车了且已关机了，此时再开机则需要报警(没锁住车)
+                                                    act.LockEffected = (byte)LockEffect.LockedAndNoEffect;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                // 锁车了，且已关机了
+                                                if (act.LockEffected == (byte)LockEffect.Locked)
+                                                { act.LockEffected = (byte)LockEffect.LockedAndEngineOff; }
+                                            }
+                                        }
                                     });
                                     if (compensated && interval > 0)
                                     {

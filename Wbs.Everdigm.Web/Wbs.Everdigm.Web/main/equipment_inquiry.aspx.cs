@@ -90,6 +90,13 @@ namespace Wbs.Everdigm.Web.main
                     var id = Utility.UrlEncode(Utility.Encrypt(obj.id.ToString()));
                     bool sat = n != obj.Terminal && n != obj.TB_Terminal.Satellite;
 
+                    // 锁车状态和报警信息
+                    string arms = EquipmentInstance.GetLockEffectedStatus(obj);
+                    if (string.IsNullOrEmpty(arms))
+                    {
+                        arms = EquipmentInstance.GetAlarmStatus(obj.Alarm);
+                    }
+
                     html += "<tr>" +
                         "<td class=\"in-tab-txt-b\">" + cnt + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + (n == obj.Model ? "-" : obj.TB_EquipmentModel.TB_EquipmentType.Code) + "</td>" +
@@ -105,7 +112,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td class=\"in-tab-txt-rb textoverflow\" style=\"text-align: left !important;\" title=\"" + (n == obj.Customer ? "-" : obj.TB_Customer.Name) + "\">" + (n == obj.Customer ? "-" : obj.TB_Customer.Name) + "</td>" +
                         //"<td class=\"in-tab-txt-b\">" + ((byte?)null == obj.Signal ? "-" : obj.Signal.ToString()) + "</td>" +
                         "<td class=\"in-tab-txt-b\">" + EquipmentInstance.GetOnlineStyle(obj) + "</td>" +
-                        "<td class=\"in-tab-txt-b\">" + EquipmentInstance.GetAlarmStatus(obj.Alarm) + "</td>" +
+                        "<td class=\"in-tab-txt-b\">" + arms + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\">" + ((DateTime?)null == obj.LastActionTime ? "" : obj.LastActionTime.Value.ToString("yyyy/MM/dd HH:mm")) + "</td>" +
                         "<td class=\"in-tab-txt-b textoverflow\" title=\"" + EquipmentInstance.GetTerinalTitleInfo(obj) + "\">" + (n == obj.Terminal ? "-" : obj.TB_Terminal.Number) + "</td>" +
                         "<td class=\"in-tab-txt-rb\" title=\"" + EquipmentInstance.GetSatelliteTitleInfo(obj) + "\"><span class=\"glyphicon glyphicon-" + (sat ? "ok" : "remove") + " text-" + (sat ? "success" : "danger") + "\" aria-hidden=\"true\"></span></td>" +

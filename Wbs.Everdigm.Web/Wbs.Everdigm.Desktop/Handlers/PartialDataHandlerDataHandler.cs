@@ -564,6 +564,8 @@ namespace Wbs.Everdigm.Desktop
                     bll.Update(f => f.id == equipment.id, act =>
                     {
                         act.LockStatus = CustomConvert.GetHex(x3000.Type);
+                        // 存储锁车状态
+                        act.LockEffected = (byte)((x3000.Type == 0x40 || x3000.Type == 0x0F || x3000.Type == 0xFF) ? 1 : 0);
                         if (x3000.GPSInfo.Available)
                         {
                             act.Latitude = x3000.GPSInfo.Latitude;

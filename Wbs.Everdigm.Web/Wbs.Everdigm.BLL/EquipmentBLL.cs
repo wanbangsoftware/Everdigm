@@ -5,6 +5,32 @@ using Wbs.Everdigm.Database;
 namespace Wbs.Everdigm.BLL
 {
     /// <summary>
+    /// 锁车影响状态
+    /// </summary>
+    public enum LockEffect : byte
+    {
+        /// <summary>
+        /// 未锁车
+        /// </summary>
+        NotLock = 0x00,
+        /// <summary>
+        /// 已锁
+        /// </summary>
+        Locked = 0x01,
+        /// <summary>
+        /// 已锁且已关机
+        /// </summary>
+        LockedAndEngineOff = 0x02,
+        /// <summary>
+        /// 已锁但设备还在工作中
+        /// </summary>
+        LockedAndStillWork = 0x03,
+        /// <summary>
+        /// 已锁但未影响设备
+        /// </summary>
+        LockedAndNoEffect = 0x04
+    }
+    /// <summary>
     /// 设备仓储业务处理
     /// </summary>
     public class EquipmentBLL : BaseService<TB_Equipment>
@@ -35,6 +61,7 @@ namespace Wbs.Everdigm.BLL
                 Latitude = 0.0,
                 StoreTimes = 0,
                 LockStatus = "00",
+                LockEffected = 0,
                 Longitude = 0.0,
                 Rpm = 0,
                 Model = null,
@@ -194,11 +221,37 @@ namespace Wbs.Everdigm.BLL
         /// <returns></returns>
         public string GetEngStatus(TB_Equipment obj)
         {
-            if (obj.LockStatus == "40" || obj.LockStatus == "0F" || obj.LockStatus == "FF") return eng_lock;
+            string lk = obj.LockStatus;
+            if (lk.Equals("40") || lk.Equals("0F") || lk.Equals("FF")) return eng_lock;
             var voltage = obj.Voltage;
             if (null == voltage) return eng_off;
             if (voltage.IndexOf("G2") >= 0) return eng_on;
             return eng_off;
+        }
+        /// <summary>
+        /// 获取设备的锁车状态
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public string GetLockEffectedStatus(TB_Equipment obj)
+        {
+            string result = null;
+            LockEffect state = (LockEffect)obj.LockEffected.Value;
+            switch (state) {
+                case LockEffect.Locked:// 锁车
+                case LockEffect.LockedAndEngineOff:// 锁车且已关机
+                    result = eng_lock;
+                    break;
+                case LockEffect.LockedAndStillWork:// 锁车，但还未关机
+                    result = "<span class=\"text-custom-warning\" title=\"Locked and equipment is still working\"><i class=\"fa fa-exclamation-triangle\"></i></span>";
+                    break;
+                case LockEffect.LockedAndNoEffect:
+                    result = "<span class=\"text-custom-attention\" title=\"Locked but has no effect to equipment\"><i class=\"fa fa-exclamation-triangle faa-flash animated\"></i></span>";
+                    break;
+                default:
+                    break;
+            }
+            return result;
         }
         /// <summary>
         /// 获取发动机状态的文字描述

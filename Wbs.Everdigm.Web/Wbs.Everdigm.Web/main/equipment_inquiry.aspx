@@ -8,6 +8,7 @@
     <title></title>
     <link href="../bootstrap3/css/bootstrap.css" rel="stylesheet" />
     <link href="../bootstrap3/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="../css/font-awesome-animation.min.css" rel="stylesheet" />
     <link href="../bootstrap3/models/css/bootstrap-dialog.min.css" rel="stylesheet" />
     <link href="../bootstrap3/bootstrap-datepicker-1.3.0/css/datepicker3.css" rel="stylesheet" />
     <link href="../mobile/css/style.css" rel="stylesheet" />
@@ -66,7 +67,7 @@
                     </li>
                     <li role="presentation" class="tablist-item-input">
                         <div class="input-group">
-                            <input type="text" id="txtQueryNumber" runat="server" class="form-control" placeholder="number">
+                            <input type="text" id="txtQueryNumber" runat="server" class="form-control" placeholder="number" />
                             <asp:Button ID="btQuery" CssClass="hidden" runat="server" Text="Query" Width="0" Height="0" OnClick="btQuery_Click" />
                             <span class="input-group-btn">
                                 <button class="btn btn-warning" type="button" id="query"><span class="glyphicon glyphicon-search"></span></button>
