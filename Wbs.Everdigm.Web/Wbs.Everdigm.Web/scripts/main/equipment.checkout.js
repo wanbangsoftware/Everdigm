@@ -12,7 +12,7 @@ $(document).ready(function () {
         todayHighlight: true,
         autoclose: true
     });
-    $("#number").typeahead({
+    $("#customerNumber").typeahead({
         items: 5,
         minLength: 4,
         source: function (query, process) {
@@ -28,7 +28,7 @@ $(document).ready(function () {
     });
 
     $("#queryCustomer").click(function () {
-        var num = $("#number").val();
+        var num = $("#customerNumber").val();
         var item = jLinq.from(customerList).equals("Code", num).select();
         var tbody = $("#popupTbody");
         if (item.length > 0) {

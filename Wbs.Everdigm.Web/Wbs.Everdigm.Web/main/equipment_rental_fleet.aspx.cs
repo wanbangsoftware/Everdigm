@@ -129,7 +129,13 @@ namespace Wbs.Everdigm.Web.main
                     // 保存之前的状态
                     history.Status = exist.Status;
                     // 保存入库信息
-                    history.Stocktime = DateTime.Now;
+                    var idate = inDate.Value;
+                    DateTime dt = DateTime.Now;
+                    if (!string.IsNullOrEmpty(idate))
+                    {
+                        try { dt = DateTime.Parse(idate); } catch { }
+                    }
+                    history.Stocktime = dt;
                     // 入库次数加1
                     history.StoreTimes = exist.StoreTimes;
                     history.Warehouse = exist.Warehouse;

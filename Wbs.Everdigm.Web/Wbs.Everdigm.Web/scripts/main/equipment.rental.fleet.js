@@ -6,7 +6,13 @@
         // 2手、租赁入库
         displayOldOutStoredEquipment(e.currentTarget);
     }).children("tr").css("cursor", "pointer");
-
+    $("[id$=\"inDate\"]").datepicker({
+        format: "yyyy/mm/dd",
+        weekStart: 0,
+        todayBtn: true,
+        todayHighlight: true,
+        autoclose: true
+    });
     // 2手、租赁入库确认按钮
     $("#oldInStorageSave").click(function () { oldInStorageSave(); });
 });
@@ -27,6 +33,7 @@ function displayOldOutStoredEquipment(obj) {
         var href = $(obj).children("td:eq(2)").children("a:eq(0)").attr("href");
         href = href.substr(href.indexOf("=") + 1);
         $("[id$=hidOldInstorage]").val(href);
+        $("[id$=\"inDate\"]").val("");
     } else {
         tbody.children("tr:eq(0)").children("td:eq(1)").html("");
         tbody.children("tr:eq(1)").children("td:eq(1)").html("");

@@ -97,10 +97,10 @@
                                             <input type="hidden" id="hidWarehouse" runat="server" value="0" />
                                         </li>
                                         <li role="presentation" class="tablist-item-input">
-                                            <input class="form-control" runat="server" style="z-index: 9999 !important; width: 120px; margin-top: 3px;" id="ccDate" name="ccDate" placeholder="C.C. date">
+                                            <input class="form-control" runat="server" style="z-index: 9999 !important; width: 120px; margin-top: 3px;" id="ccDate" name="ccDate" placeholder="C.C. date" />
                                         </li>
                                         <li role="presentation" class="tablist-item-input">
-                                            <input class="form-control" runat="server" style="z-index: 9999 !important; width: 120px; margin-top: 3px; margin-left: 5px;" id="inDate" name="inDate" placeholder="In Store date">
+                                            <input class="form-control" runat="server" style="z-index: 9999 !important; width: 120px; margin-top: 3px; margin-left: 5px;" id="inDate" name="inDate" placeholder="In Store date" />
                                         </li>
                                     </ul>
                                 </td>

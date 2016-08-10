@@ -61,7 +61,7 @@
     <div class="modal fade" id="modalOldProduct" tabindex="-1" role="dialog" aria-labelledby="NewStorageIn" data-backdrop="static" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header custom-modal-header bg-success">
+                <div class="modal-header custom-modal-header bg-primary">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <h4 class="modal-title"><strong>Rental Fleet storage: </strong></h4>
                 </div>
@@ -88,8 +88,8 @@
                                             <td class="popup-td" colspan="3"></td>
                                         </tr>
                                         <tr>
-                                            <td class="popup-td right">Store In:</td>
-                                            <td class="popup-td">
+                                            <td class="popup-td right" style="vertical-align: middle;">Store In:</td>
+                                            <td class="popup-td" style="vertical-align: middle;">
                                                 <div role="presentation" class="dropdown" id="ddWarehouseOld">
                                                     <a id="dropWarehouseOld" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Warehouse:</span><span class="caret"></span>
                                                     </a>
@@ -99,8 +99,10 @@
                                                     <input type="hidden" runat="server" id="hiddenOldWarehouse" />
                                                 </div>
                                             </td>
-                                            <td class="popup-td right"></td>
-                                            <td class="popup-td"></td>
+                                            <td class="popup-td right" style="vertical-align: middle;">In date:</td>
+                                            <td class="popup-td" style="vertical-align: middle;">
+                                                <input class="form-control" runat="server" style="z-index: 9999 !important; width: 120px; margin-top: 3px;" id="inDate" name="inDate" placeholder="in date" />
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -119,5 +121,6 @@
     </div>
 </asp:Content>
 <asp:Content ContentPlaceHolderID="ContentPlaceHolderFooter" runat="server">
+    <script type="text/javascript" src="../bootstrap3/bootstrap-datepicker-1.3.0/js/bootstrap-datepicker.js"></script>
     <script type="text/javascript" src="../scripts/main/equipment.rental.fleet.js"></script>
 </asp:Content>
