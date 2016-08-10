@@ -240,13 +240,13 @@ namespace Wbs.Everdigm.BLL
             switch (state) {
                 case LockEffect.Locked:// 锁车
                 case LockEffect.LockedAndEngineOff:// 锁车且已关机
-                    result = eng_lock;
+                    result = eng_lock;//.Replace("glyphicon-lock", "glyphicon-lock faa-horizontal animated");
                     break;
                 case LockEffect.LockedAndStillWork:// 锁车，但还未关机
-                    result = "<span class=\"text-custom-warning\" title=\"Locked and equipment is still working\"><i class=\"fa fa-exclamation-triangle\"></i></span>";
+                    result = "<span class=\"text-custom-warning\" title=\"Locked, but still working since it began lock until now\"><i class=\"fa fa-exclamation-triangle faa-shake animated\"></i></span>";
                     break;
                 case LockEffect.LockedAndNoEffect:
-                    result = "<span class=\"text-custom-attention\" title=\"Locked but has no effect to equipment\"><i class=\"fa fa-exclamation-triangle faa-flash animated\"></i></span>";
+                    result = "<span class=\"text-custom-attention\" title=\"Locked, but take no effect\"><i class=\"fa fa-exclamation-triangle faa-flash animated\"></i></span>";
                     break;
                 default:
                     break;
@@ -279,7 +279,7 @@ namespace Wbs.Everdigm.BLL
             if (string.IsNullOrEmpty(alarm)) return alarm_invalid;
             string arms = Protocol.TX300.Analyse._0x2000.GetAlarm(alarm, true);
             if (alarm.Equals(alarm_none) || arms.Equals("No Alarm")) return alarm_invalid;
-            return "<span class=\"text-custom-attention\" title=\"" + arms + "\"><i class=\"fa fa-bell\"></i></span>";
+            return "<span class=\"text-custom-attention\" title=\"" + arms + "\"><i class=\"fa fa-bell faa-ring animated\"></i></span>";
         }
         /// <summary>
         /// 获取链接状态
