@@ -104,7 +104,10 @@ namespace Wbs.Everdigm.Desktop
                 StopService();
                 Win32.TimeDelay(2000);
                 // 停止timer
-                _timerSave.Change(Timeout.Infinite, Timeout.Infinite);
+                if (null != _timerSave)
+                {
+                    _timerSave.Change(Timeout.Infinite, Timeout.Infinite);
+                }
                 SaveFile();
                 Win32.TimeDelay(5000);
             }

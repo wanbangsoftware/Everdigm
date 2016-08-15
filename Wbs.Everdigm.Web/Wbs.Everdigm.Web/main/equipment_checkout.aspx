@@ -236,6 +236,6 @@
     <script type="text/javascript" src="../scripts/main/pagination.js"></script>
     <script type="text/javascript" src="../scripts/main/equipment.base.js"></script>
     <script type="text/javascript" src="../scripts/main/equipments.js"></script>
-    <script type="text/javascript" src="../scripts/main/equipment.checkout.js"></script>
+    <script type="text/javascript" src="../scripts/main/equipment.checkout.js?v=20160815" ></script>
 </body>
 </html>

@@ -74,5 +74,10 @@ namespace Wbs.Everdigm.Web.main
             if (totalRecords > 0)
                 ShowPaggings(pageIndex, totalPages, totalRecords, "./terminals.aspx", divPagging);
         }
+
+        protected void btQuery_Click(object sender, EventArgs e)
+        {
+            ShowTerminals();
+        }
     }
 }

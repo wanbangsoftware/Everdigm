@@ -12,6 +12,7 @@
     <link href="../bootstrap3/bootstrap-datepicker-1.3.0/css/datepicker3.css" rel="stylesheet" />
     <link href="../css/body_equipment.css" rel="stylesheet" />
     <link href="../css/pagging.css" rel="stylesheet" />
+    <link href="../css/body.css" rel="stylesheet" type="text/css" />
     <style type="text/css">
         #tbodyBody tr {
             cursor: pointer;
@@ -24,6 +25,7 @@
             <input type="hidden" value="" id="cookieName" runat="server" />
             <input type="hidden" runat="server" value="0" id="hidPageIndex" />
             <input type="hidden" runat="server" id="hidTotalPages" value="0" />
+            <asp:Button ID="btQuery" CssClass="hidding" runat="server" Text="Query" OnClick="btQuery_Click" />
             <div class="panel-heading">
                 <span class="input-group-btn">
                     <button class="btn btn-primary" type="button"><span class="glyphicon glyphicon-floppy-open"></span><span>Select & Bind</span></button>

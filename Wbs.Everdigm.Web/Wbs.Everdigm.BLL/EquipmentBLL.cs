@@ -319,15 +319,17 @@ namespace Wbs.Everdigm.BLL
                     var span = DateTime.Now.Subtract(obj.OnlineTime.Value).Duration().TotalMinutes;
                     var cls = "primary";
                     var title = "";
-                    if (span > 60 * 24 * 5)
+                    // 大于3天没有信号则改变颜色  2016/08/15 15:17
+                    if (span > 60 * 24 * 3)
                     {
                         cls = "danger";
                         title = "(Activated 5 days ago)";
                     }
-                    else if (span > 60 * 24 * 3)
+                    else if (span > 60 * 3)
                     {
+                        // 超过3小时没有信号则警示  2016/08/15 15:17
                         cls = "warning";
-                        title = "(Activated 3 days ago)";
+                        title = "(Activated 3 hours ago)";
                     }
                     ret = "<span class=\"label label-" + cls + "\" title=\"Satellite" + title + "\">" + (forShort ? "SAT" : "Satellite") + "</span>";
                     break;

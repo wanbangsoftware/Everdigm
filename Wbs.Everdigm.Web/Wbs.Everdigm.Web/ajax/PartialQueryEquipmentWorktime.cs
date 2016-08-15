@@ -87,6 +87,21 @@ namespace Wbs.Everdigm.Web.ajax
                             {
                                 // 差值
                                 wt.interval = !gps ? 0 : (wt.worktime - list[cnt - 1].worktime);
+                                // 计算运转时间之间的差值  2016/08/15 15:00
+                                if (wt.interval > 0)
+                                {
+                                    uint hour = (uint)r.receive_time.Value.Hour, min = (uint)r.receive_time.Value.Minute;
+                                    // 凌晨0点的运转时间需要分开到两个日期里
+                                    if (hour == 0)
+                                    {
+                                        // 时间间隔大于0点已过的分钟数，则需要把时间差分开到两个日期里
+                                        if (wt.interval > min)
+                                        {
+                                            list[cnt - 1].interval += wt.interval - min;
+                                            wt.interval = min;
+                                        }
+                                    }
+                                }
                                 // 补偿的分钟
                                 if (wt.interval > 0)
                                 {
@@ -149,14 +164,18 @@ namespace Wbs.Everdigm.Web.ajax
                     // 加入补偿
                     foreach (var w in work)
                     {
-                        w.y += w.y > 0 ? per : 0;
-                        if (averagable) { w.y = Math.Round(w.y, 2); }
+                        //if (!averagable)
+                        {
+                            w.y += w.y > 0 ? per : 0;
+                            // 如果超过24小时则直接设为24小时  2016/08/15 15:16
+                            if (w.y >= 24) { w.y = 24; }
+                        }
+                        if(averagable) { w.y = Math.Round(w.y, 2); }
                     }
 
                     // 计算平均值
                     var avgg = Math.Round(work.Sum(s => s.y) * 1.0 / work.Count, 2);
-                    foreach (var a in avg)
-                    { a.y = avgg; }
+                    foreach (var a in avg) { a.y = avgg; }
 
                 }
                 if (averagable)
@@ -173,9 +192,21 @@ namespace Wbs.Everdigm.Web.ajax
             /// 日期
             /// </summary>
             public string date;
+            /// <summary>
+            /// 总工作时间，单位分
+            /// </summary>
             public uint worktime = 0;
+            /// <summary>
+            /// 工作时间与前一条之间的差值，单位分
+            /// </summary>
             public uint interval = 0;
+            /// <summary>
+            /// 补偿的分钟数
+            /// </summary>
             public uint added = 0;
+            /// <summary>
+            /// 所用的小时数
+            /// </summary>
             public uint hours = 0;
         }
     }

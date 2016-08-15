@@ -16,7 +16,7 @@
         }
     });
     $("a[href=\"#bind\"]").click(function () {
-        // 打开新窗口来添加卫星模块
+        // 打开新窗口来选择终端
         showDialogWindows("./terminals.aspx?key=" + $("[id$=\"oldFunc\"]").val(), function (data) {
             if (typeof (data) == "undefined" || null == data) { } else {
                 if (data.ids != "") {
@@ -27,7 +27,7 @@
                     }
                 }
             }
-        }, 600, 500);
+        }, 600, 550);
     });
     $("a[href=\"#unbind\"]").click(function () {
         $("#analyseModal").modal("show");
