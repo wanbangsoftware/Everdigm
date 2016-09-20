@@ -68,6 +68,9 @@ namespace Wbs.Everdigm.Web.ajax
                         // 汇报数据
                         HandleReportData(apiObject);
                         break;
+                    case "GetMessage":
+                        HandleFetchingMessage(apiObject);
+                        break;
                     default:
                         ResponseData(-1, string.Format("Can not handle your request command: {0}", apiObject.cmd));
                         break;

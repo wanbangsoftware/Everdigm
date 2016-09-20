@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Configuration;
 
 using Wbs.Sockets;
 using System.Threading;
@@ -20,6 +21,10 @@ namespace Wbs.Everdigm.Desktop
         /// 铱星要发送命令的事件
         /// </summary>
         public EventHandler<IridiumDataEvent> OnIridiumSend;
+        /// <summary>
+        /// Tracker的消息推送事件
+        /// </summary>
+        public EventHandler<TrackerChatEvent> OnTrackerChating;
         /// <summary>
         /// 提供TCP/UDP服务
         /// </summary>
@@ -88,6 +93,8 @@ namespace Wbs.Everdigm.Desktop
         private void InitializeThreadPool()
         {
             var count = Environment.ProcessorCount;
+            // 限定2个线程处理
+            if (count > 2) { count = 2; }
             for (int i = 0; i < count; i++)
             {
                 ThreadPool.QueueUserWorkItem(ThreadHandlePorc, i);
@@ -190,6 +197,10 @@ namespace Wbs.Everdigm.Desktop
         {
             OnIridiumSend?.Invoke(this, e);
         }
+        private void DataHandler_OnTrackerChating(object sender, TrackerChatEvent e)
+        {
+            OnTrackerChating?.Invoke(this, e);
+        }
         private string format(string format, params object[] args)
         {
             return DataHandler.format(format, args);
@@ -199,6 +210,7 @@ namespace Wbs.Everdigm.Desktop
         /// </summary>
         private void ThreadHandlePorc(Object state)
         {
+            var gpsHandlerInterval = int.Parse(ConfigurationManager.AppSettings["FETCHING_ADDRESS_INTERVAL"]);
             var stat = (int)state;
             AsyncUserDataBuffer obj;
             IridiumData iridium;
@@ -206,6 +218,7 @@ namespace Wbs.Everdigm.Desktop
             DataHandler _handler = new DataHandler();
             _handler.OnUnhandledMessage += new EventHandler<UIEventArgs>(DataHandler_OnUnhandledMessage);
             _handler.OnIridiumSend += new EventHandler<IridiumDataEvent>(DataHandler_OnIridiumSend);
+            _handler.OnTrackerChating += new EventHandler<TrackerChatEvent>(DataHandler_OnTrackerChating);
             _handler.Server = _server;
             int timer = 0, sleeper = 10, gpsHandler = 0;
 
@@ -326,6 +339,7 @@ namespace Wbs.Everdigm.Desktop
                                 {
                                     _handler.CheckGSMCommand();
                                     _handler.CheckIridiumCommand();
+                                    _handler.CheckTrackerChat();
                                 }
                                 catch (Exception e)
                                 {
@@ -334,7 +348,7 @@ namespace Wbs.Everdigm.Desktop
                             }
 
                             // 10秒处理一次获取GPS地理位置
-                            if (gpsHandler % sleeper == 0) {
+                            if (gpsHandler % gpsHandlerInterval == 0) {
                                 gpsHandler = 0;
                                 // 处理一次定位信息
                                 if (stat == 0)

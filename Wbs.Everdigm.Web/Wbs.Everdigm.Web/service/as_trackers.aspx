@@ -66,6 +66,7 @@
                             <thead>
                                 <tr>
                                     <th class="in-tab-title-b bg-primary" style="width: 50px;">#</th>
+                                    <th class="in-tab-title-b bg-primary" style="width: 60px; text-align: left;">Director</th>
                                     <th class="in-tab-title-b bg-primary" style="width: 80px; text-align: left;">Number</th>
                                     <th class="in-tab-title-b bg-primary" style="width: 30px; text-align: left;"></th>
                                     <th class="in-tab-title-b bg-primary" style="width: 30px; text-align: left;"></th>
@@ -74,7 +75,6 @@
                                     <th class="in-tab-title-b bg-primary" style="width: 130px; text-align: left;">Battery use up</th>
                                     <th class="in-tab-title-b bg-primary" style="width: 130px; text-align: left;">Parking timeout</th>
                                     <th class="in-tab-title-b bg-primary" style="width: 100px; text-align: left;">Vehicle</th>
-                                    <th class="in-tab-title-b bg-primary" style="width: 60px; text-align: left;">Director</th>
                                     <th class="in-tab-title-b bg-primary" style="text-align: left;">Address</th>
                                     <th class="in-tab-title-b bg-primary"></th>
                                 </tr>
@@ -92,13 +92,13 @@
                                 <tr>
                                     <td class="in-tab-txt-b">1</td>
                                     <td class="in-tab-txt-b" style="text-align: left;">95471420</td>
+                                    <td class="in-tab-txt-b">Tomas Andersen</td>
                                     <td class="in-tab-txt-b"><span class="text-custom-success" title="Eng. On"><span class="signal cell-engine" style="font-size: 130%;"></span></span></td>
                                     <td class="in-tab-txt-b"><span class="text-custom-success" title="Eng. On"><span class="signal cell-engine" style="font-size: 130%;"></span></span></td>
                                     <td class="in-tab-txt-b">2015/06/11 19:53:12</td>
                                     <td class="in-tab-txt-b">2015/06/11 19:53:12</td>
                                     <td class="in-tab-txt-b">2015/06/11 19:53:12</td>
                                     <td class="in-tab-txt-b">2015/06/11 19:53:12</td>
-                                    <td class="in-tab-txt-b">12345678</td>
                                     <td class="in-tab-txt-b">12345678</td>
                                     <td class="in-tab-txt-b textoverflow" style="text-align: left;" title="Asian Highway 3, Songino Khairkhan, Ulaanbaatar, Mongolia">Asian Highway 3, Songino Khairkhan, Ulaanbaatar, Mongolia</td>
                                     <td class="in-tab-txt-b"></td>

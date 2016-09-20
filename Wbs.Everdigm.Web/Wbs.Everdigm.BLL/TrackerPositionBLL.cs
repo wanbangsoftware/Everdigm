@@ -21,6 +21,7 @@ namespace Wbs.Everdigm.BLL
                 CarNumber = "",
                 GPSTime = DateTime.Now,
                 id = 0,
+                TrackerPlan = null,
                 Provider = "",
                 Latitude = 0.0,
                 SimCard = "",

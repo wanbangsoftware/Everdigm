@@ -27,6 +27,7 @@ namespace Wbs.Everdigm.Desktop
                 _server = new SocketServer(port);
                 _server.OnMessage += new EventHandler<UIEventArgs>(OnServerMessage);
                 _server.OnIridiumSend += new EventHandler<IridiumDataEvent>(OnIridiumSend);
+                _server.OnTrackerChating += new EventHandler<TrackerChatEvent>(Mqtt_Publish);
                 _server.StartUDP = true;
                 _server.Start();
                 tsmiStartService.Enabled = !_server.Started;

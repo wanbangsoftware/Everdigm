@@ -23,6 +23,7 @@ namespace Wbs.Everdigm.BLL
                 ChargingAlarm = null,
                 Deleted = false,
                 Director = "",
+                Period = 10,
                 DeviceId = "",
                 CSQ = 0,
                 id = 0,

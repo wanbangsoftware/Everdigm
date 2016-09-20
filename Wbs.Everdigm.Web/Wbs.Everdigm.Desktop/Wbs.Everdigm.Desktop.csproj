@@ -132,9 +132,11 @@
     <Compile Include="Handlers\PartialDataHandlerIridium.cs" />
     <Compile Include="Handlers\PartialDataHandlerSMS.cs" />
     <Compile Include="Handlers\PartialDataHandlerTracker.cs" />
+    <Compile Include="Handlers\PartialDataHandlerTrackerChat.cs" />
     <Compile Include="Handlers\PartialDataHandlerWebRequeste.cs" />
     <Compile Include="Handlers\PartialDataHandlerWorkTime2Excel.cs" />
     <Compile Include="Handlers\SocketServer.cs" />
+    <Compile Include="Handlers\TrackerChatEvent.cs" />
     <Compile Include="Iridium\IridiumDataEvent.cs" />
     <Compile Include="Iridium\IridiumPackage.cs" />
     <Compile Include="Iridium\IridiumServer.cs" />

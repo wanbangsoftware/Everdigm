@@ -80,6 +80,26 @@ namespace Wbs.Everdigm.Desktop
         {
             ShowHistory("Mqtt client has connected: " + e.Message.ToString(), true);
         }
+        /// <summary>
+        /// Mqtt推送
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Mqtt_Publish(object sender, TrackerChatEvent e)
+        {
+            if (null != mqtt && mqtt.IsConnected)
+            {
+                try
+                {
+                    ShowHistory("Try to publish message to " + e.Target + ": " + e.Content, true);
+                    mqtt.Publish(e.Target, Encoding.ASCII.GetBytes(e.Content));
+                }
+                catch (Exception ignore)
+                {
+                    ShowHistory("Publish data to " + e.Target + "(" + e.Content + ") failed: " + ignore.Message + Environment.NewLine + ignore.StackTrace, true);
+                }
+            }
+        }
 
         /// <summary>
         /// 连接、订阅mqtt

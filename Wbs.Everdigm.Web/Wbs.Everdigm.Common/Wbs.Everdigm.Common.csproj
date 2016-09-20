@@ -60,6 +60,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProtocolItems.cs" />
     <Compile Include="SMSUtility.cs" />
+    <Compile Include="TrackerChatStatus.cs" />
     <Compile Include="WorktimeChart.cs" />
   </ItemGroup>
   <ItemGroup>

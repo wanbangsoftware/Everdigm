@@ -65,6 +65,26 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bootstrap-calendar\components\bootstrap3\css\bootstrap-theme.min.css" />
+    <Content Include="bootstrap-calendar\components\bootstrap3\css\bootstrap.min.css" />
+    <Content Include="bootstrap-calendar\components\bootstrap3\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="bootstrap-calendar\components\bootstrap3\js\bootstrap.min.js" />
+    <Content Include="bootstrap-calendar\components\underscore\underscore-min.js" />
+    <Content Include="bootstrap-calendar\css\calendar.min.css" />
+    <Content Include="bootstrap-calendar\img\dark_wood.png" />
+    <Content Include="bootstrap-calendar\img\slide-bg.png" />
+    <Content Include="bootstrap-calendar\img\tick.png" />
+    <Content Include="bootstrap-calendar\js\calendar.js" />
+    <Content Include="bootstrap-calendar\js\calendar.min.js" />
+    <Content Include="bootstrap-calendar\tmpls\day.html" />
+    <Content Include="bootstrap-calendar\tmpls\events-list.html" />
+    <Content Include="bootstrap-calendar\tmpls\modal.html" />
+    <Content Include="bootstrap-calendar\tmpls\month-day.html" />
+    <Content Include="bootstrap-calendar\tmpls\month.html" />
+    <Content Include="bootstrap-calendar\tmpls\week-days.html" />
+    <Content Include="bootstrap-calendar\tmpls\week.html" />
+    <Content Include="bootstrap-calendar\tmpls\year-month.html" />
+    <Content Include="bootstrap-calendar\tmpls\year.html" />
     <Content Include="bootstrap3\bootstrap-datepicker-1.3.0\css\datepicker3.css" />
     <Content Include="bootstrap3\bootstrap-datepicker-1.3.0\js\bootstrap-datepicker.js" />
     <Content Include="bootstrap3\bootstrap3-dialog\css\bootstrap-dialog.css" />
@@ -364,6 +384,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="files\everdigm.terminal.list.xlsx" />
+    <Content Include="bootstrap-calendar\components\bootstrap3\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="bootstrap-calendar\components\bootstrap3\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="bootstrap-calendar\components\bootstrap3\fonts\glyphicons-halflings-regular.woff" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -527,6 +550,7 @@
     <Content Include="scripts\main\testing.js" />
     <Content Include="scripts\main\testing_content.js" />
     <Content Include="scripts\service\as.common.js" />
+    <Content Include="scripts\service\as.tracker.calendar.js" />
     <Content Include="scripts\service\as.tracker.js" />
     <Content Include="scripts\service\as.trackers.js" />
     <Content Include="scripts\service\as.work.details.js" />
@@ -534,6 +558,7 @@
     <Content Include="scripts\wbs\semi.test.js" />
     <Content Include="service\as_tracker.aspx" />
     <Content Include="service\as_trackers.aspx" />
+    <Content Include="service\as_tracker_calendar.aspx" />
     <Content Include="service\as_work_details.aspx" />
     <Content Include="service\as_work_dispatch.aspx" />
     <Content Include="sms_test.aspx" />
@@ -573,7 +598,7 @@
     </Compile>
     <Compile Include="ajax\PartialApiAccount.cs" />
     <Compile Include="ajax\PartialApiClasses.cs" />
-    <Compile Include="ajax\PartialApiReport.cs" />
+    <Compile Include="ajax\PartialApiDataHandler.cs" />
     <Compile Include="ajax\PartialApiTracker.cs" />
     <Compile Include="ajax\PartialApiUpdate.cs" />
     <Compile Include="ajax\PartialPrintIridium.cs" />
@@ -1231,6 +1256,13 @@
     </Compile>
     <Compile Include="service\as_trackers.aspx.designer.cs">
       <DependentUpon>as_trackers.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="service\as_tracker_calendar.aspx.cs">
+      <DependentUpon>as_tracker_calendar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="service\as_tracker_calendar.aspx.designer.cs">
+      <DependentUpon>as_tracker_calendar.aspx</DependentUpon>
     </Compile>
     <Compile Include="service\as_work_details.aspx.cs">
       <DependentUpon>as_work_details.aspx</DependentUpon>

@@ -36,6 +36,7 @@ namespace Wbs.Everdigm.Desktop
 
         private string MAP_URL = ConfigurationManager.AppSettings["FETCH_MAP_URL"];
 
+        private bool navigatorChanged = false;
         /// <summary>
         /// 显示历史记录
         /// </summary>
@@ -51,7 +52,16 @@ namespace Wbs.Everdigm.Desktop
                         // 捕获位置信息
                         if (!tsmiStopFetchingAddress.Checked)
                         {
-                            browser.Navigate(MAP_URL + history.Replace("position: ", "") + "&time=" + DateTime.Now.Ticks);
+                            string url = MAP_URL + history.Replace("position: ", "") + "&time=" + DateTime.Now.Ticks;
+                            if (navigatorChanged)
+                            {
+                                browser1.Navigate(url);
+                            }
+                            else
+                            {
+                                browser2.Navigate(url);
+                            }
+                            navigatorChanged = !navigatorChanged;
                         }
                     }
                     else

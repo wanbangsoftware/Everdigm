@@ -62,7 +62,8 @@
             this.tsmiStopService = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.browser = new System.Windows.Forms.WebBrowser();
+            this.browser1 = new System.Windows.Forms.WebBrowser();
+            this.browser2 = new System.Windows.Forms.WebBrowser();
             this.tsMain.SuspendLayout();
             this.ssMain.SuspendLayout();
             this.cmsNotifyMenu.SuspendLayout();
@@ -322,21 +323,31 @@
             this.tsmiExit.Text = "Exit";
             this.tsmiExit.Click += new System.EventHandler(this.tsmiExit_Click);
             // 
-            // browser
+            // browser1
             // 
-            this.browser.Location = new System.Drawing.Point(474, 157);
-            this.browser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.browser.Name = "browser";
-            this.browser.Size = new System.Drawing.Size(250, 250);
-            this.browser.TabIndex = 3;
-            this.browser.Visible = false;
+            this.browser1.Location = new System.Drawing.Point(133, 97);
+            this.browser1.MinimumSize = new System.Drawing.Size(20, 20);
+            this.browser1.Name = "browser1";
+            this.browser1.Size = new System.Drawing.Size(250, 250);
+            this.browser1.TabIndex = 3;
+            this.browser1.Visible = false;
+            // 
+            // browser2
+            // 
+            this.browser2.Location = new System.Drawing.Point(407, 97);
+            this.browser2.MinimumSize = new System.Drawing.Size(20, 20);
+            this.browser2.Name = "browser2";
+            this.browser2.Size = new System.Drawing.Size(250, 250);
+            this.browser2.TabIndex = 4;
+            this.browser2.Visible = false;
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(998, 432);
-            this.Controls.Add(this.browser);
+            this.Controls.Add(this.browser2);
+            this.Controls.Add(this.browser1);
             this.Controls.Add(this.rtbHistory);
             this.Controls.Add(this.ssMain);
             this.Controls.Add(this.tsMain);
@@ -374,7 +385,7 @@
         private System.Windows.Forms.ToolStripMenuItem tsmiStopService;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem tsmiExit;
-        private System.Windows.Forms.WebBrowser browser;
+        private System.Windows.Forms.WebBrowser browser1;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem tsmiStopFetchingAddress;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
@@ -393,6 +404,7 @@
         private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton1;
         private System.Windows.Forms.ToolStripMenuItem tsmiFlushMtQueue;
         private System.Windows.Forms.ToolStripMenuItem tsmiShowIridiumPackage;
+        private System.Windows.Forms.WebBrowser browser2;
     }
 }
 

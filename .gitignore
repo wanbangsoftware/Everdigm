@@ -182,3 +182,17 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 /Wbs.Everdigm.Web/Wbs.Everdigm.Web/files/xls
+/Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/less
+/Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/js/language
+/Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/js/app.js
+/Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/README.md
+/Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/package.json
+/Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/LICENSE
+/Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/index.html
+/Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/index-bs3.html
+/Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/Gruntfile.js
+/Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/events.json.php
+/Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/CONTRIBUTING.md
+/Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/composer.json
+/Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/bower.json
+/Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/.gitignore

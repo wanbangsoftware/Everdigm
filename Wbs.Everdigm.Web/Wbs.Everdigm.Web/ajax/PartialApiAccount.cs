@@ -50,7 +50,11 @@ namespace Wbs.Everdigm.Web.ajax
                                 {
                                     string uuid = Guid.NewGuid().ToString();
                                     // 每次绑定账户都生成一个新的session id
-                                    bll.Update(u => u.id == account.id, act => { act.DeviceLoginId = uuid; });
+                                    bll.Update(u => u.id == account.id, act =>
+                                    {
+                                        act.DeviceLoginId = uuid;
+                                        act.TB_Tracker.LastActionAt = DateTime.Now;
+                                    });
                                     // 返回当前已经登录过的用户信息
                                     ResponseData(0, JsonConverter.ToJson(new Account()
                                     {
@@ -142,6 +146,8 @@ namespace Wbs.Everdigm.Web.ajax
                             session = uuid
                         }), true);
                     }
+                    // 更新在线时间
+                    bll.Update(f => f.id == tracker.id, act => { act.LastActionAt = DateTime.Now; });
                 }
                 else
                 {

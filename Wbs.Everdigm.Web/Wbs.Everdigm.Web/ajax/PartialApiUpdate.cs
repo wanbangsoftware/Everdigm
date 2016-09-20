@@ -88,6 +88,7 @@ namespace Wbs.Everdigm.Web.ajax
                                 resp.session = user.DeviceLoginId;
                             }
                             resp.data = tracker.SimCard;
+                            bll.Update(f => f.id == tracker.id, act => { act.LastActionAt = DateTime.Now; });
                         }
 
                         // get parameter的时候只返回设备与sim卡之间的绑定关系，没有账户的信息

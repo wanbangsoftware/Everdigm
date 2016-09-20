@@ -64,7 +64,8 @@ namespace Wbs.Everdigm.Web.service
                     var user = obj.TB_Account.Count > 0 ? obj.TB_Account.FirstOrDefault(f => f.Tracker == obj.id) : null;
                     html += "<tr>" +
                         "<td class=\"in-tab-txt-b\">" + cnt + "</td>" +
-                        td + "<a href=\"./as_tracker.aspx?key=" + id + "\">" + obj.SimCard + "</a></td>" +
+                        "<td class=\"in-tab-txt-b textoverflow\" style=\"text-align: left;\"><a href=\"./as_tracker_calendar.aspx?key=" + id + "\">" + (null == user ? "-" : user.Name) + "</a></td>" +
+                        td + obj.SimCard + "</td>" +
                         td + "<a href=\"#sett_" + id + "\"><span class=\"text-custom-" + setting + "\" title=\"" + settingTitle + "\"><span class=\"fa fa-cog\" style=\"font-size:130%;\" aria-hidden=\"true\"></span></span></a></td>" +
                         td + "<a href=\"" + chatLink + "\"><span class=\"text-custom-" + chat + "\" title=\"" + chattitle + "\"><span class=\"fa fa-comments\" style=\"font-size: 130%;\" aria-hidden=\"true\"></span></span></a></td>" +
                         td + (d == obj.LastActionAt ? "-" : obj.LastActionAt.Value.ToString(fmt)) + "</td>" +
@@ -72,7 +73,6 @@ namespace Wbs.Everdigm.Web.service
                         td + (d == obj.BatteryAlarm ? "-" : obj.BatteryAlarm.Value.ToString(fmt)) + "</td>" +
                         td + (d == obj.ParkingAlarm ? "-" : obj.ParkingAlarm.Value.ToString(fmt)) + "</td>" +
                         td + obj.CarNumber + "</td>" +
-                        "<td class=\"in-tab-txt-b textoverflow\" style=\"text-align: left;\">" + (null == user ? "-" : user.Name) + "</td>" +
                         td + obj.Address + "</td>" +
                         "<td class=\"in-tab-txt-b\"></td>" +
                         "</tr>";
