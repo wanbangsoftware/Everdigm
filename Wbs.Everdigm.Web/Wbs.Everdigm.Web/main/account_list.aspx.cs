@@ -68,7 +68,7 @@ namespace Wbs.Everdigm.Web.main
             var list = AccountInstance.FindPageList<TB_Account>(pageIndex, PageSize, out totalRecords,
                 f => (f.Name.IndexOf(txtName.Value.Trim()) >= 0) &&
                     (roles.Contains(f.Role.Value) || f.Role == (int?)null) &&
-                    (depts.Contains(f.Department.Value) || f.Department == (int?)null), "Name");
+                    (depts.Contains(f.Department.Value) || f.Department == (int?)null) && f.Delete == false, "Name");
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
 
             string html = "";
@@ -96,7 +96,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td>" + ("<a href=\"#r" + (null == obj.Role ? "" : obj.Role.ToString()) + "\" >" +
                             (null == obj.Role ? "-" : obj.TB_Role.Name) + "</a>") + "</td>" +
                         "<td>" + obj.LoginTimes.ToString() + "</td>" +
-                        "<td>" + ((System.DateTime?)null == obj.LastLoginTime ? "never" : obj.LastLoginTime.Value.ToString("yyyy-MM-dd HH:mm:ss")) + "</td>" +
+                        "<td>" + (null == obj.LastLoginTime ? "never" : obj.LastLoginTime.Value.ToString("yyyy-MM-dd HH:mm:ss")) + "</td>" +
                         "<td>" + obj.LastLoginIp + "</td>" +
                         "<td></td>" +
                         "</tr>";

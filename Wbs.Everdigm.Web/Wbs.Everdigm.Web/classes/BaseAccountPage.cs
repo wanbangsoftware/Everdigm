@@ -28,6 +28,7 @@ namespace Wbs.Everdigm.Web
         {
             AccountInstance.Update(f => f.id == obj.id, action =>
             {
+                action.Delete = obj.Delete;
                 action.Answer = obj.Answer;
                 action.Code = obj.Code;
                 action.Department = obj.Department;

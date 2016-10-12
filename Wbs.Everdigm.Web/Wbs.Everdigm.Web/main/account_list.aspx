@@ -49,7 +49,7 @@
                                     <th style="width: 40px; text-align: center;">
                                         <input type="checkbox" id="cbAll" /></th>
                                     <th style="width: 60px; text-align: center;">ID</th>
-                                    <th style="width: 100px;">Name</th>
+                                    <th style="width: 150px;">Name</th>
                                     <th style="width: 100px;">Code</th>
                                     <th style="width: 120px;">Register Date</th>
                                     <th style="width: 50px;">Status</th>

@@ -80,9 +80,13 @@ namespace Wbs.Everdigm.Web.main
                     if (dash > 0)
                     {
                         number = query.Substring(dash + 1);
-                        mode = query.Substring(0, dash);
+                        mode = query.Replace(number, "");
+                        expression = expression.And(a => a.Number.Equals(number) && a.TB_EquipmentModel.Code.Equals(mode));
                     }
-                    expression = expression.And(a => a.Number.Equals(number) && a.TB_EquipmentModel.Code.Equals(mode));
+                    else
+                    {
+                        expression = expression.And(a => a.Number.Equals(number));
+                    }
                 }
                 var list = bll.FindList(expression);
                 if (null != list && list.Count() > 0)
