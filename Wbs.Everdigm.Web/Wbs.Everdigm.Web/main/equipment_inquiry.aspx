@@ -47,19 +47,29 @@
                         </ul>
                         <input type="hidden" id="selectedModels" runat="server" value="0" />
                     </li>
-                    <li role="presentation" class="dropdown" id="ddWarehouses">
+                    <li role="presentation" class="dropdown" id="ddCustomers">
+                        <a id="dropCustomers" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Customer:</span><span class="caret"></span>
+                        </a>
+                        <ul id="menuCustomers" class="dropdown-menu" role="menu" aria-labelledby="dropCustomers">
+                            <li role="presentation"><a role="menuitem" tabindex="1" href="#">Ignore(default)</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="2" href="#">Bound</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="3" href="#">None</a></li>
+                        </ul>
+                        <input type="hidden" id="hiddenCustomer" runat="server" value="1" />
+                    </li>
+                    <!--<li role="presentation" class="dropdown" id="ddWarehouses">
                         <a id="dropWarehouses" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Warehouse:</span><span class="caret"></span>
                         </a>
                         <ul id="menuWarehouses" class="dropdown-menu" role="menu" aria-labelledby="dropWarehouses">
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="#">No Items</a></li>
                         </ul>
                         <input type="hidden" id="hidQueryWarehouse" runat="server" value="0" />
-                    </li>
+                    </li>-->
                     <li role="presentation" class="dropdown" id="ddTerminals">
                         <a id="dropTerminals" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Terminal:</span><span class="caret"></span>
                         </a>
                         <ul id="menuTerminals" class="dropdown-menu" role="menu" aria-labelledby="dropTerminals">
-                            <li role="presentation"><a role="menuitem" tabindex="1" href="#">Ignore</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="1" href="#">Ignore(default)</a></li>
                             <li role="presentation"><a role="menuitem" tabindex="2" href="#">Installed</a></li>
                             <li role="presentation"><a role="menuitem" tabindex="3" href="#">None</a></li>
                         </ul>

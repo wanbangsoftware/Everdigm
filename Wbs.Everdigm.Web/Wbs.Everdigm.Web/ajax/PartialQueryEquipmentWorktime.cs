@@ -46,9 +46,19 @@ namespace Wbs.Everdigm.Web.ajax
                 if (null != runtimes)
                 {
                     long today = 0;
+                    long timeInterval = 0;
                     foreach (var r in runtimes)
                     {
                         bool gps = r.command_id.Equals("0x1000");
+                        if (today == 0)
+                        {
+                            dt = r.receive_time.Value;
+                        }
+                        else
+                        {
+                            // 计算与上一条数据的实际接收时间之间的时间差
+                            timeInterval = (long)(r.receive_time.Value - dt).TotalSeconds;
+                        }
                         var t = Utility.DateTimeToJavascriptDate(r.receive_time.Value.Date);
                         // 日期不同则重置日期和运转时间
                         if (today != t) { today = t; }
@@ -87,6 +97,12 @@ namespace Wbs.Everdigm.Web.ajax
                             {
                                 // 差值
                                 wt.interval = !gps ? 0 : (wt.worktime - list[cnt - 1].worktime);
+                                // 计算差值与实际两条数据的接收时间差值的对比
+                                if (wt.interval > timeInterval)
+                                {
+                                    // 如果运转时间差超过了这两条数据接收时间的差值，则记为0
+                                    wt.interval = 0;
+                                }
                                 // 计算运转时间之间的差值  2016/08/15 15:00
                                 if (wt.interval > 0)
                                 {
@@ -170,7 +186,7 @@ namespace Wbs.Everdigm.Web.ajax
                             // 如果超过24小时则直接设为24小时  2016/08/15 15:16
                             if (w.y >= 24) { w.y = 24; }
                         }
-                        if(averagable) { w.y = Math.Round(w.y, 2); }
+                        if (averagable) { w.y = Math.Round(w.y, 2); }
                     }
 
                     // 计算平均值

@@ -37,28 +37,28 @@
                             <tr>
                                 <td class="td_right">Name:</td>
                                 <td class="td_left">
-                                    <input type="text" runat="server" maxlength="20" class="text-input important-input" id="txtName" />
+                                    <input type="text" runat="server" maxlength="100" class="text-input important-input" id="txtName" />
                                     <input type="hidden" runat="server" id="hidID" />
                                 </td>
                                 <td class="td_right">Customer code:</td>
                                 <td class="td_left">
-                                    <input type="text" runat="server" maxlength="20" class="text-input important-input" id="txtCode" />
+                                    <input type="text" runat="server" maxlength="50" class="text-input important-input" id="txtCode" />
                                 </td>
                             </tr>
                             <tr>
                                 <td class="td_right">Phone:</td>
                                 <td class="td_left">
-                                    <input type="text" runat="server" maxlength="20" class="text-input" id="txtPhone" />
+                                    <input type="text" runat="server" maxlength="30" class="text-input" id="txtPhone" />
                                 </td>
                                 <td class="td_right">ID card:</td>
                                 <td class="td_left">
-                                    <input type="text" runat="server" maxlength="20" class="text-input" id="txtIdCard" />
+                                    <input type="text" runat="server" maxlength="50" class="text-input" id="txtIdCard" />
                                 </td>
                             </tr>
                             <tr>
                                 <td class="td_right">Address:</td>
                                 <td class="td_left" colspan="3">
-                                    <input type="text" runat="server" maxlength="50" class="text-input" id="txtAddress" /></td>
+                                    <input type="text" runat="server" maxlength="100" class="text-input" id="txtAddress" /></td>
                             </tr>
                         </table>
                         <p>

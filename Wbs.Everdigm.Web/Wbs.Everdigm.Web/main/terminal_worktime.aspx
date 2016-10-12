@@ -78,6 +78,12 @@
                             <button class="btn btn-primary" runat="server" type="button" id="btAnalyseAll"><i class="fa fa-square-o" aria-hidden="true"></i> Analyse daily work</button>
                         </div>
                     </li>
+                    <li role="presentation" class="tablist-item-input" style="width: 115px !important; text-align:center;">
+                        <div style="margin-top: -3px; margin-bottom: 2px; margin-left: 2px;">
+                            <input type="checkbox" class="hidden" id="checkDirectlySave" runat="server" />
+                            <button class="btn btn-primary" runat="server" type="button" id="btDirectlySave"><i class="fa fa-square-o" aria-hidden="true"></i> Direct save</button>
+                        </div>
+                    </li>
                     <li role="presentation" class="tablist-item-input" style="width: 125px !important; text-align:center;" id="liRefreshAll" runat="server">
                         <div style="margin-top: -3px; margin-bottom: 2px; margin-left: 2px;">
                             <asp:Button ID="buttonRefreshAll" CssClass="hidden" runat="server" Text="" OnClick="buttonRefreshAll_Click" />
@@ -220,6 +226,10 @@
             $("#checkAnalyseDailyWork").prop("checked", toStatus);
             $("#btAnalyseAll").children("i:eq(0)").attr("class", toStatus ? "fa fa-check-square" : "fa fa-square-o");
         }
+        function setDirectlySaveStatus(toStatus) {
+            $("#checkDirectlySave").prop("checked", toStatus);
+            $("#btDirectlySave").children("i:eq(0)").attr("class", toStatus ? "fa fa-check-square" : "fa fa-square-o");
+        }
         $(document).ready(function () {
             setDailyWorkAnalyseStatus($("#checkAnalyseDailyWork").is(":checked"));
             $(".input-daterange").each(function () {
@@ -266,6 +276,10 @@
             $("#btAnalyseAll").click(function () {
                 var checked = $("#checkAnalyseDailyWork").is(":checked");
                 setDailyWorkAnalyseStatus(!checked);
+            });
+            $("#btDirectlySave").click(function () {
+                var checked = $("#checkDirectlySave").is(":checked");
+                setDirectlySaveStatus(!checked);
             });
         });
     </script>

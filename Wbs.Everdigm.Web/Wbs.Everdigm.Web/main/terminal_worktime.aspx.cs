@@ -29,7 +29,13 @@ namespace Wbs.Everdigm.Web.main
             var time1 = DateTime.Parse(start.Value.Trim() + " 00:00:00");
             var time2 = DateTime.Parse(end.Value.Trim() + " 23:59:59");
             var query = txtQuery.Value.Trim();
-            Query(new Work() { Id = 0, MacId = query, Time1 = time1, Time2 = time2 });
+            bool chk = checkDirectlySave.Checked;
+            if (chk)
+            { Query(query); }
+            else
+            {
+                Query(new Work() { Id = (chk ? 1 : 0), MacId = query, Time1 = time1, Time2 = time2 });
+            }
         }
         private class Work
         {
@@ -52,11 +58,33 @@ namespace Wbs.Everdigm.Web.main
         }
         protected void buttonRefreshAll_Click(object sender, EventArgs e)
         {
+            Query("");
+        }
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="query"></param>
+        private void Query(string query)
+        {
             tbodySummary.InnerHtml = "";
             List<Work> macs = new List<Work>();
             using (var bll = new EquipmentBLL())
             {
-                var list = bll.FindList(f => f.Deleted == false && f.TB_Terminal.Version == 1);
+                Expression<Func<TB_Equipment, bool>> expression = PredicateExtensions.True<TB_Equipment>();
+                expression = expression.And(a => a.Deleted == false && a.TB_Terminal.Version == 1);
+                if (!string.IsNullOrEmpty(query))
+                {
+                    string number = query;
+                    string mode = "";
+                    int dash = query.LastIndexOf('-');
+                    if (dash > 0)
+                    {
+                        number = query.Substring(dash + 1);
+                        mode = query.Substring(0, dash);
+                    }
+                    expression = expression.And(a => a.Number.Equals(number) && a.TB_EquipmentModel.Code.Equals(mode));
+                }
+                var list = bll.FindList(expression);
                 if (null != list && list.Count() > 0)
                 {
                     foreach (var obj in list)
@@ -108,12 +136,27 @@ namespace Wbs.Everdigm.Web.main
                 else
                 {
                     uint lastworktime = 0;
+                    string macid = "";
+                    byte maccount = 0;
                     for (int i = 0, len = list.Count(); i < len; i++)
                     {
                         var obj = list[i];
+                        if (!macid.Equals(obj.mac_id))
+                        {
+                            macid = obj.mac_id;
+                            maccount++;
+                        }
                         var data = CustomConvert.GetBytes(obj.message_content);
                         var worktime = BitConverter.ToUInt32(data, obj.command_id.Equals("0x1000") ? 13 : 0);
                         int interval = (int)(i == 0 ? 0 : (worktime - lastworktime));
+                        // 两条数据之间接收时间之差
+                        long minInterval = (long)((i == 0) ? 0 : (obj.receive_time.Value - list[i - 1].receive_time.Value).TotalSeconds);
+                        if (interval > minInterval)
+                        {
+                            // 如果这条数据与上一条数据的工作时间之差大于了这两条数据的接收时间之差则将其算做0
+                            interval = 0;
+                        }
+
                         TotalWorkedMinutes += obj.command_id.Equals("0x600B") ? 0 : (interval > 0 ? interval : 0);
                         var bin = obj.command_id.Equals("0x600B") ? "00000000" : CustomConvert.IntToDigit(data[4], CustomConvert.BIN, 8);
                         string eng, engflag;
@@ -172,8 +215,11 @@ namespace Wbs.Everdigm.Web.main
                             tbodySummary.InnerHtml += summary;
                             if (query.Id > 0)
                             {
-                                new EquipmentBLL().Update(f => f.id == query.Id, act =>
+                                // 只查询到一个设备时才更新统计数据，否则不需要更新
+                                if (maccount <= 1)
                                 {
+                                    new EquipmentBLL().Update(f => f.id == query.Id, act =>
+                                    {
                                     // 实际工作小时数
                                     act.WorkHours = TotalWorkedMinutes / 60.0;
                                     // 粗略计算工作小时数
@@ -184,8 +230,9 @@ namespace Wbs.Everdigm.Web.main
                                     act.AddedHours = TotalAddedMinutes / 60.0;
                                     // 实际补偿的小时数
                                     act.CompensatedHours = finalAdded;
-                                    
-                                });
+
+                                    });
+                                }
                             }
                         }
                     }

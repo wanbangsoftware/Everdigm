@@ -35,8 +35,9 @@ namespace Wbs.Everdigm.Web.main
             pageIndex = (0 >= pageIndex ? 1 : pageIndex);
             var type = ParseInt(selectedTypes.Value);
             var model = ParseInt(selectedModels.Value);
-            var house = ParseInt(hidQueryWarehouse.Value);
+            var house = 0;//ParseInt(hidQueryWarehouse.Value);
             var query = txtQueryNumber.Value.Trim();
+            var customer = ParseInt(hiddenCustomer.Value);
 
             // 表达式
             Expression<Func<TB_Equipment, bool>> expression = PredicateExtensions.True<TB_Equipment>();
@@ -47,7 +48,26 @@ namespace Wbs.Everdigm.Web.main
             // 仓库
             if (house > 0) { expression = expression.And(a => a.Warehouse == house); }
             // 查询号码
-            if (!string.IsNullOrEmpty(query)) { expression = expression.And(a => a.Number.Contains(query)); }
+            if (!string.IsNullOrEmpty(query)) { expression = expression.And(a => a.Number.Contains(query) || a.TB_Customer.Code.Contains(query)); }
+            // 客户号码
+            switch (customer)
+            {
+                case 3:
+                    // None
+                    expression = expression.And(a => a.Customer == (int?)null);
+                    break;
+                case 2:
+                    // Bound
+                    expression = expression.And(a => a.Customer != (int?)null);
+                    //if (!string.IsNullOrEmpty(query))
+                    //{
+                    //    expression = expression.And(a => a.TB_Customer.Code.Contains(query));
+                    //}
+                    break;
+                default:
+                    // Default
+                    break;
+            }
             // 终端绑定状态
             var terminal = ParseInt(hiddenTerminal.Value.Trim());
             switch (terminal)

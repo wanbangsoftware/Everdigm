@@ -74,7 +74,7 @@
                                             <input type="hidden" id="selectedModel" runat="server" value="0" />
                                         </li>
                                         <li role="presentation" class="tablist-item-input">
-                                            <input class="form-control" runat="server" id="number" style="width: 150px; margin-top: 3px;" placeholder="number" maxlength="5" />
+                                            <input class="form-control" runat="server" id="number" style="width: 150px; margin-top: 3px;" placeholder="number" maxlength="10" />
                                         </li>
                                         <li role="presentation" class="tablist-item-input">
                                             <a><span id="fullNumber"></span></a>
