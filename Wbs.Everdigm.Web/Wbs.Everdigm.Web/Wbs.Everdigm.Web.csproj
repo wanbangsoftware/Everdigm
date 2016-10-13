@@ -332,6 +332,7 @@
     <Content Include="scripts\main\command.base.js" />
     <Content Include="scripts\main\customers.js" />
     <Content Include="scripts\main\equipment.alarm.js" />
+    <Content Include="scripts\main\equipment.as.js" />
     <Content Include="scripts\main\equipment.base.js" />
     <Content Include="scripts\main\equipment.change.warehouse.js" />
     <Content Include="scripts\main\equipment.checkout.js" />

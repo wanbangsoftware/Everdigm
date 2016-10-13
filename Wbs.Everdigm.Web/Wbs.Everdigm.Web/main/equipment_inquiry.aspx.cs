@@ -30,13 +30,16 @@ namespace Wbs.Everdigm.Web.main
 
         private void ShowEquipments()
         {
+            var query = txtQueryNumber.Value.Trim();
+            // 模糊查询时页码置为空
+            if (!string.IsNullOrEmpty(query)) { hidPageIndex.Value = ""; }
+
             var totalRecords = 0;
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             pageIndex = (0 >= pageIndex ? 1 : pageIndex);
             var type = ParseInt(selectedTypes.Value);
             var model = ParseInt(selectedModels.Value);
             var house = 0;//ParseInt(hidQueryWarehouse.Value);
-            var query = txtQueryNumber.Value.Trim();
             var customer = ParseInt(hiddenCustomer.Value);
 
             // 表达式

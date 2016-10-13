@@ -17,38 +17,6 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="TitleContentPlaceHolder" runat="server">Equipment: Work</asp:Content>
-<asp:Content ID="Content3" ContentPlaceHolderID="NavigatorContentPlaceHolder" runat="server">
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist" id="functionBar">
-        <li role="presentation">
-            <a href="equipment_command.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Command</a>
-        </li>
-        <li role="presentation">
-            <a href="equipment_security.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Security</a>
-        </li>
-        <li role="presentation">
-            <a href="equipment_alarm.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Alarm</a>
-        </li>
-        <li role="presentation">
-            <a href="equipment_position.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Map</a>
-        </li>
-        <li role="presentation" class="active">
-            <a href="#" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Work<span class="caret"></span></a>
-        </li>
-        <li role="presentation">
-            <a href="equipment_as.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">A/S History</a>
-        </li>
-        <li role="presentation">
-            <a href="equipment_storage.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Storage History</a>
-        </li>
-        <li role="presentation">
-            <a href="equipment_setting.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Setting</a>
-        </li>
-        <li role="presentation" style="float: right; cursor: pointer !important;" title="close">
-            <a href="./equipment_inquiry.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">&times;</a>
-        </li>
-    </ul>
-</asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
     <!--Daily working time-->
     <div class="panel panel-default" id="printDailyWorkTime" style="margin-top: 2px; margin-bottom: 2px;">

@@ -5,6 +5,7 @@ using System.Linq;
 using Wbs.Protocol.TX300;
 using Wbs.Protocol.TX300.Analyse;
 using Wbs.Everdigm.Database;
+using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Common;
 using Wbs.Protocol;
 using Wbs.Utilities;
@@ -37,14 +38,39 @@ namespace Wbs.Everdigm.Web.ajax
             Sim = n == obj.Terminal ? "" : obj.TB_Terminal.Sim;
             Satellite = n == obj.Terminal ? "" : (n == obj.TB_Terminal.Satellite ? "" : obj.TB_Terminal.TB_Satellite.CardNo);
             Functional = Utility.GetEquipmentFunctional(obj.Functional.Value);
-            Worktime = BLL.EquipmentBLL.GetRuntime(obj.Runtime + obj.InitializedRuntime, obj.CompensatedHours.Value, true);
+            Worktime = EquipmentBLL.GetRuntime(obj.Runtime + obj.InitializedRuntime, obj.CompensatedHours.Value, true);
             Latitude = obj.Latitude.Value;
             Longitude = obj.Longitude.Value;
             Online = Utility.GetOnlineStyle(obj.OnlineStyle, false);
             Lock = obj.LockStatus;
-            Acttime = null == obj.LastActionTime ? 0 : Utilities.CustomConvert.DateTimeToJavascriptDate(obj.LastActionTime.Value);
+            Acttime = null == obj.LastActionTime ? 0 : CustomConvert.DateTimeToJavascriptDate(obj.LastActionTime.Value);
             Voltage = obj.Voltage;
             Alarm = obj.Alarm;
+        }
+    }
+    public class TempAsHistory {
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public string Time { get; set; }
+        /// <summary>
+        /// 操作者
+        /// </summary>
+        public string User { get; set; }
+        /// <summary>
+        /// 动作名称
+        /// </summary>
+        public string Action { get; set; }
+        /// <summary>
+        /// 描述对象
+        /// </summary>
+        public string Description { get; set; }
+        public TempAsHistory(TB_AccountHistory entity)
+        {
+            Time = null == entity.ActionTime ? "-" : entity.ActionTime.Value.ToString("yyyy/MM/dd HH:mm:ss");
+            User = entity.TB_Account.Name;
+            Action = entity.TB_AccountAction.Name;
+            Description = entity.ObjectA;
         }
     }
     /// <summary>
@@ -134,11 +160,38 @@ namespace Wbs.Everdigm.Web.ajax
                     // 终端列表导出到excel
                     ret = HandleExportTerminalListToExcel();
                     break;
+                case "as":
+                    // 查询以设备号码为基准的终端安装、拆卸历史记录
+                    ret = HandleEquipmentBindHistory();
+                    break;
                 default:
                     ret = "{\"status\":-1,\"desc\":\"No function to handle your request.\"}";
                     break;
             }
             ResponseJson(ret);
+        }
+        /// <summary>
+        /// 查询以设备号码为基准的绑定、解绑历史记录
+        /// </summary>
+        /// <returns></returns>
+        private string HandleEquipmentBindHistory()
+        {
+            var ret = "[]";
+            try
+            {
+                using (var bll = new HistoryBLL())
+                {
+                    var list = bll.FindList<TB_AccountHistory>(f => (f.ActionId == 38 || f.ActionId == 47) && f.ObjectA.Contains(data), "ActionTime");
+                    var tmp = new List<TempAsHistory>();
+                    foreach (var obj in list)
+                    {
+                        tmp.Add(new TempAsHistory(obj));
+                    }
+                    ret = JsonConverter.ToJson(tmp);
+                }
+            }
+            catch { }
+            return ret;
         }
         /// <summary>
         /// 处理查询设备EPOS报警历史记录的请求

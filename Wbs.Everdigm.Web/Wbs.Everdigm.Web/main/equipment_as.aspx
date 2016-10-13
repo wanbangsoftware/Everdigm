@@ -3,44 +3,12 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="header" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="TitleContentPlaceHolder" runat="server">Equipment: A/S History</asp:Content>
-<asp:Content ID="Content3" ContentPlaceHolderID="NavigatorContentPlaceHolder" runat="server">
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist" id="functionBar">
-        <li role="presentation">
-            <a href="equipment_command.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Command</a>
-        </li>
-        <li role="presentation">
-            <a href="equipment_security.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Security</a>
-        </li>
-        <li role="presentation">
-            <a href="equipment_alarm.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Alarm</a>
-        </li>
-        <li role="presentation">
-            <a href="equipment_position.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Map</a>
-        </li>
-        <li role="presentation">
-            <a href="equipment_work.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Work</a>
-        </li>
-        <li role="presentation" class="active">
-            <a href="#" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">A/S History<span class="caret"></span></a>
-        </li>
-        <li role="presentation">
-            <a href="equipment_storage.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Storage History</a>
-        </li>
-        <li role="presentation">
-            <a href="equipment_setting.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">Setting</a>
-        </li>
-        <li role="presentation" style="float: right; cursor: pointer !important;" title="close">
-            <a href="./equipment_inquiry.aspx" class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">&times;</a>
-        </li>
-    </ul>
-</asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
     <!--Repair History-->
     <div class="panel panel-default" style="margin-top: 2px; margin-bottom: 2px;">
         <div class="panel-heading">
             <span>Repair History</span>
-            <div class="input-group" style="float: right; margin-top: -7px;">
+            <div class="input-group" style="float: right; margin-top: -7px; display: none;">
                 <div class="input-group" style="float: left; margin-left: 2px;">
                     <div class="input-daterange input-group" style="float: left; margin-left: 2px;">
                         <input type="text" class="input-md form-control little-input click-input" runat="server" />
@@ -53,25 +21,33 @@
                 </div>
             </div>
         </div>
-        <div class="panel-body" style="min-height: 120px;">
+        <div class="panel-body" style="min-height: 400px;">
             <table class="table table-hover">
-                <tbody id="tbodyWorktimes">
-                    <tr>
-                        <td class="panel-body-td" style="text-align: center;">
-                            
-                        </td>
+                <thead>
+                    <tr class="alert-info">
+                        <th class="panel-body-td" style="width: 30px; text-align: center;">#</th>
+                        <th class="panel-body-td" style="width: 150px;">Time</th>
+                        <th class="panel-body-td" style="width: 150px;">User</th>
+                        <th class="panel-body-td" style="width: 80px;">Action</th>
+                        <th class="panel-body-td">Description</th>
                     </tr>
+                </thead>
+                <tbody id="tbodyBody">
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td style="height: 2px;" class="panel-body-td"></td>
+                        <td style="height: 2px;" colspan="5" class="panel-body-td"></td>
                     </tr>
                 </tfoot>
             </table>
+            <nav style="margin-top: 2px !important; margin-bottom: 2px !important; float: right;">
+                <ul class="pagination-sm" style="margin: 0px !important;">
+                </ul>
+            </nav>
         </div>
     </div>
-    <!--Command History-->
-    <div class="panel panel-default" style="margin-top: 2px;">
+    <!--Service History-->
+    <div class="panel panel-default" style="margin-top: 2px; display: none;">
         <div class="panel-heading">
             <span>Service History:</span>
             <div class="input-group" style="float: right; margin-top: -7px;">
@@ -90,4 +66,6 @@
     </div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="FooterContentPlaceHolder" runat="server">
+    <script src="../js/twbsPagination/jquery.twbsPagination.js"></script>
+    <script src="../scripts/main/equipment.as.js"></script>
 </asp:Content>

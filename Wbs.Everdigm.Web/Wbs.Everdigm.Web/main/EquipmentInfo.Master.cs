@@ -29,11 +29,62 @@ namespace Wbs.Everdigm.Web.main
                     else
                     {
                         hidKey.Value = Utility.UrlEncode(_key);
+                        ShowNavigator();
                         ShowEquipmentInfo();
                     }
                 }
             }
         }
+        private static string MENU_ITEM = "<li role=\"presentation\"  class=\"#class#\"><a href =\"#url#\" class=\"dropdown-toggle\" aria-haspopup=\"true\" aria-expanded=\"false\">#menu##caret#</a></li>";
+        private const string URL_CMD = "equipment_command.aspx";
+        private const string URL_SEC = "equipment_security.aspx";
+        private const string URL_ARM = "equipment_alarm.aspx";
+        private const string URL_POS = "equipment_position.aspx";
+        private const string URL_WORK = "equipment_work.aspx";
+        private const string URL_AS = "equipment_as.aspx";
+        private const string URL_STOC = "equipment_storage.aspx";
+        private const string URL_SETT = "equipment_setting.aspx";
+        /// <summary>
+        /// 显示导航栏
+        /// </summary>
+        private void ShowNavigator()
+        {
+            string url = Request.Url.AbsolutePath;
+            int index = url.LastIndexOf('/');
+            url = url.Substring(index + 1);
+
+            // command
+            bool b = url.Contains(URL_CMD);
+            string html = MENU_ITEM.Replace("#class#", b ? "active" : "").Replace("#url#", URL_CMD).Replace("#menu#", "Command").Replace("#caret#", b ? "<span class=\"caret\"></span>" : "");
+            // security
+            b = url.Contains(URL_SEC);
+            html += MENU_ITEM.Replace("#class#", b ? "active" : "").Replace("#url#", URL_SEC).Replace("#menu#", "Security").Replace("#caret#", b ? "<span class=\"caret\"></span>" : "");
+            // alarm
+            b = url.Contains(URL_ARM);
+            html += MENU_ITEM.Replace("#class#", b ? "active" : "").Replace("#url#", URL_ARM).Replace("#menu#", "Alarm").Replace("#caret#", b ? "<span class=\"caret\"></span>" : "");
+            // position
+            b = url.Contains(URL_POS);
+            html += MENU_ITEM.Replace("#class#", b ? "active" : "").Replace("#url#", URL_POS).Replace("#menu#", "Position").Replace("#caret#", b ? "<span class=\"caret\"></span>" : "");
+            // work
+            b = url.Contains(URL_WORK);
+            html += MENU_ITEM.Replace("#class#", b ? "active" : "").Replace("#url#", URL_WORK).Replace("#menu#", "Work").Replace("#caret#", b ? "<span class=\"caret\"></span>" : "");
+            // as
+            b = url.Contains(URL_AS);
+            html += MENU_ITEM.Replace("#class#", b ? "active" : "").Replace("#url#", URL_AS).Replace("#menu#", "A/S History").Replace("#caret#", b ? "<span class=\"caret\"></span>" : "");
+            // storage
+            b = url.Contains(URL_STOC);
+            html += MENU_ITEM.Replace("#class#", b ? "active" : "").Replace("#url#", URL_STOC).Replace("#menu#", "Storage History").Replace("#caret#", b ? "<span class=\"caret\"></span>" : "");
+            // setting
+            b = url.Contains(URL_SETT);
+            html += MENU_ITEM.Replace("#class#", b ? "active" : "").Replace("#url#", URL_SETT).Replace("#menu#", "Setting").Replace("#caret#", b ? "<span class=\"caret\"></span>" : "");
+
+            html += MENU_ITEM.Replace("#class#", "").Replace("#url#", "./equipment_inquiry.aspx").Replace("#menu#", "&times;").Replace("#caret#", "");
+
+            functionBar.InnerHtml = html;
+        }
+        /// <summary>
+        /// 显示设备的基本信息
+        /// </summary>
         private void ShowEquipmentInfo()
         {
             var n = (int?)null;
