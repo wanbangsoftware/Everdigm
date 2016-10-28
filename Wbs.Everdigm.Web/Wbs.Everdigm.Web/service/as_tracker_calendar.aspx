@@ -23,9 +23,11 @@
 <body>
     <form id="form1" runat="server">
         <div class="panel panel-default">
+            <input type="hidden" id="hidKey" runat="server" />
             <!-- Default panel contents -->
             <div class="panel-heading">
-                <strong>A/S: Tracker Daily Work for <span>89100004</span></strong> (<span id="datetime"></span>)
+                <strong>A/S: Tracker Daily Work for <span id="spanTrackerNumber" runat="server">89100004</span></strong> (<span id="datetime"></span>) 
+                <span id="spanTrackerToMap" class="label label-primary" style="cursor: pointer;"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>Map</span>
                 <div class="pull-right form-inline" style="margin-top: -7px !important;">
                     <div class="btn-group">
                         <button class="btn btn-primary" data-calendar-nav="prev">&lt;&lt; Prev</button>
@@ -72,6 +74,9 @@
     <script src="../scripts/service/as.tracker.calendar.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            $("#spanTrackerToMap").click(function () {
+                document.location = "as_tracker.aspx?key=" + $("#hidKey").val();
+            });
             //var calendar = $("#calendar").calendar({
             //    tmpl_path: "../bootstrap-calendar/tmpls/",
             //    language: 'zh-CN',

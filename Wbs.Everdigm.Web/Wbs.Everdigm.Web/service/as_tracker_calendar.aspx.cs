@@ -1,17 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace Wbs.Everdigm.Web.service
 {
-    public partial class as_tracker_calendar : System.Web.UI.Page
+    public partial class as_tracker_calendar : BaseTrackerPage
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void Page_Load(object sender, EventArgs e)
         {
+            base.Page_Load(sender, e);
+            if (!HasSessionLose)
+            {
+                hidKey.Value = Utility.UrlEncode(_key);
+                ShowTrackerInformation();
+            }
+        }
 
+        private void ShowTrackerInformation() {
+            int id= ParseInt(Utility.Decrypt(hidKey.Value));
+            var tracker = TrackerInstance.Find(f => f.id == id && f.Deleted == false);
+            if (null != tracker)
+            {
+                spanTrackerNumber.InnerText = tracker.SimCard;
+            }
         }
     }
 }
