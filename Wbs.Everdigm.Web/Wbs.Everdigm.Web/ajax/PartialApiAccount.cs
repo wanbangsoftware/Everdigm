@@ -17,13 +17,20 @@ namespace Wbs.Everdigm.Web.ajax
         private void HandleAccountBinder(Api obj)
         {
             var acnt = ParseJson<Account>(obj.content);
-            if (null == acnt) { ResponseData(-1, "Can not bind your account with error object."); }
-            else if (string.IsNullOrEmpty(acnt.device)) { ResponseData(-1, "Can not bind your account with error parameter."); }
+            if (null == acnt)
+            {
+                ResponseData(-1, "Can not bind your account with error object.");
+            }
+            else if (string.IsNullOrEmpty(acnt.device))
+            {
+                ResponseData(-1, "Can not bind your account with error parameter.");
+            }
+            else
             {
                 var name = acnt.name;
                 if (name.Length >= 30)
                     name = name.Substring(0, 30);
-                
+
                 var pwd = acnt.md5.ToLower();
                 try
                 {
@@ -60,6 +67,7 @@ namespace Wbs.Everdigm.Web.ajax
                                     {
                                         name = acnt.name,
                                         data = account.TB_Tracker.SimCard,
+                                        device = account.Belong,
                                         // 新的session id
                                         session = uuid
                                     }), true);
@@ -114,6 +122,7 @@ namespace Wbs.Everdigm.Web.ajax
                         if (null != user)
                         {
                             abll.Update(u => u.id == user.id, act => { act.DeviceLoginId = uuid; });
+                            exist.device = user.Belong;
                             // 返回当前已经登录过的用户信息
                             ResponseData(0, JsonConverter.ToJson(exist), true);
                         }
@@ -142,6 +151,7 @@ namespace Wbs.Everdigm.Web.ajax
                         {
                             name = account.Code,
                             data = tracker.SimCard,
+                            device = account.Belong,
                             // 每次绑定账户都生成新的session id
                             session = uuid
                         }), true);
@@ -158,6 +168,7 @@ namespace Wbs.Everdigm.Web.ajax
                     {
                         name = account.Code,
                         data = tracker.SimCard,
+                        device = account.Belong,
                         // 每次绑定账户都生成新的session id
                         session = uuid
                     }), true);

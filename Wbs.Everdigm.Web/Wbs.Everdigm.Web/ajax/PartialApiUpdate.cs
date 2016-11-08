@@ -80,12 +80,15 @@ namespace Wbs.Everdigm.Web.ajax
                             {
                                 // 没有绑定用户时session为空
                                 resp.session = "";
+                                resp.device = "";
                             }
                             else
                             {
                                 resp.name = user.Code;
                                 // 已绑定过的用户返回session
                                 resp.session = user.DeviceLoginId;
+                                // 返回用户所在区域
+                                resp.device = user.Belong;
                             }
                             resp.data = tracker.SimCard;
                             bll.Update(f => f.id == tracker.id, act => { act.LastActionAt = DateTime.Now; });

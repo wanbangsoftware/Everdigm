@@ -94,6 +94,36 @@ namespace Wbs.Everdigm.Desktop
             }
         }
         /// <summary>
+        /// 判断Tracker的定位类型
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private string GetTrackerProvider(byte type)
+        {
+            string bin = CustomConvert.IntToDigit(type, CustomConvert.BIN, 8);
+            return GetTrackerProvider(bin[0]);
+        }
+        /// <summary>
+        /// 判断Tracker的定位类型
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private string GetTrackerProvider(char type)
+        {
+            switch (type)
+            {
+                default:
+                    // GPS定位
+                    return "gps";
+                case '1':
+                    // 网络定位
+                    return "network";
+                case '2':
+                    // 百度定位
+                    return "baidu";
+            }
+        }
+        /// <summary>
         /// 处理报警信息
         /// </summary>
         /// <param name="obj"></param>
@@ -147,9 +177,8 @@ namespace Wbs.Everdigm.Desktop
             }
             string provider = "gps";
             if (obj.TerminalType == TerminalTypes.TX10GAPP) {
-                // tx10g app 的 packageid和packagelength两个字节可以当作provider来区分
-                string bin = CustomConvert.IntToDigit(obj.PackageID, CustomConvert.BIN, 8);
-                provider = bin[0] == '0' ? "gps" : "network";
+                // tx10g app 的 packageid 和 packagelength 两个字节可以当作 provider 来区分
+                provider = GetTrackerProvider(obj.PackageID);
             }
             if (x7020.Position.Available)
             {
@@ -174,7 +203,7 @@ namespace Wbs.Everdigm.Desktop
             {
                 if (pos.Available)
                 {
-                    provider = bin[cnt] == '0' ? "gps" : "network";
+                    provider = GetTrackerProvider(bin[cnt]);//bin[cnt] == '0' ? "gps" : "network";
                     SaveTrackerPosition(obj.TerminalID, (null == tracker ? "" : tracker.CarNumber),
                       (null == tracker ? -1 : tracker.id), provider, pos, "Tracking", tracker.LastActionAt.Value);
                 }

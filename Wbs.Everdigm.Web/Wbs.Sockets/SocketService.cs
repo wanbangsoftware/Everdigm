@@ -274,8 +274,11 @@ namespace Wbs.Sockets
             byte ret = 0;
             try
             {
-                EndPoint ep = new IPEndPoint(IPAddress.Parse(ip), port);
-                udpSocket.SendTo(buffer, ep);
+                IPEndPoint iep = new IPEndPoint(IPAddress.Parse(ip), port);
+                Socket socket = new Socket(iep.Address.AddressFamily, SocketType.Dgram, ProtocolType.Udp);
+                socket.SendTo(buffer, buffer.Length, SocketFlags.None, iep);
+                socket.Close();
+                //udpSocket.SendTo(buffer, iep);
                 ret = 1;
             }
             catch

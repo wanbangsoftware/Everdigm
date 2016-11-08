@@ -64,16 +64,12 @@ namespace Wbs.Everdigm.Desktop
                     case AsyncUserDataType.ReceivedData:
                         var len = data.Buffer.Length;
                         // 如果收到的数据长度小于TX300的包头则不用处理数据了
-                        if (len >= Protocol.TX300.TX300Items.header_length &&
-                            Protocol.ProtocolTypes.IsTX300(data.Buffer[2]) &&
-                            Protocol.TerminalTypes.IsTX300(data.Buffer[3]))
+                        if (len >= Protocol.TX300.TX300Items.header_length && Protocol.ProtocolTypes.IsTX300(data.Buffer[2]) && Protocol.TerminalTypes.IsTX300(data.Buffer[3]))
                         {
                             handled = true;
                             if (data.Buffer[0] != len)
                             {
-                                HandleException("Data length(package length: " +
-                                    data.Buffer[0] + ", buffer length: " +
-                                    len + ") error.", CustomConvert.GetHex(data.Buffer));
+                                HandleException("Data length(package length: " + data.Buffer[0] + ", buffer length: " + len + ") error.", CustomConvert.GetHex(data.Buffer));
                             }
                             else
                             {
