@@ -48,8 +48,8 @@
                 $("#hidBoundSatellite").val(id);
                 var tnumber = $(this).parent().prev().children("a:eq(0)").text();
                 var sate = $(this).parent().text().replace(/[^0-9]/ig, "");
-                $("#warningContentText").html("Are you sure wanna unbind this satellite(<font color='#FF0000'>" + sate + "</font>) & terminal(<font color='#FF0000'>" + tnumber + "</font>)?");
-                $("#warningLoading").modal("show");
+                $("#warningUnbindingContentText").html("Are you sure wanna unbind this satellite(<font color='#FF0000'>" + sate + "</font>) & terminal(<font color='#FF0000'>" + tnumber + "</font>)?");
+                $("#warningUnbinding").modal("show");
                 e.stopPropagation();
                 //if (confirm("Are you sure to unbind the satellite and terminal?")) {
                 //    $("#hidBoundSatellite").val(id);
