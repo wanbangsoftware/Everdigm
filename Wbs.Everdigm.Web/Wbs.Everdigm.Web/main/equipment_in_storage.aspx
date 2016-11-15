@@ -35,7 +35,7 @@
     </li>
     <li role="presentation" class="tablist-item-input">
         <div class="input-group">
-            <input type="text" id="txtQueryNumber" runat="server" class="form-control" placeholder="number">
+            <input type="text" id="txtQueryNumber" runat="server" class="form-control" placeholder="number" />
             <asp:Button ID="btQuery" CssClass="hidden" runat="server" Text="Query" Width="0" Height="0" OnClick="btQuery_Click" />
             <span class="input-group-btn">
                 <button class="btn btn-warning" type="button" id="query"><span class="glyphicon glyphicon-search"></span></button>

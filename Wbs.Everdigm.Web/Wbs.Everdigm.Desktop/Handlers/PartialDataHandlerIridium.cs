@@ -493,7 +493,7 @@ namespace Wbs.Everdigm.Desktop
                     IMEI = obj.TB_Terminal.TB_Satellite.CardNo,
                     MTMSN = GetIridiumMTMSN()
                 };
-                e.Data.Payload[2] = Protocol.ProtocolTypes.SATELLITE;
+                e.Data.Payload[2] = ProtocolTypes.SATELLITE;
                 OnIridiumSend(this, e);
                 // 更新命令发送状态
                 bll.Update(f => f.id == obj.id, act =>

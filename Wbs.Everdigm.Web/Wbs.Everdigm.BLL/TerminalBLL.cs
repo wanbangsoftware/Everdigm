@@ -56,7 +56,7 @@ namespace Wbs.Everdigm.BLL
             if (n == obj.Satellite) {
                 return wantAdd ? "<a href=\"#add_" + obj.id + "\">add</a>" : "-";
             }
-            return obj.TB_Satellite.CardNo + (wantAdd ? (" (<a href=\"#del_" + obj.id + "\">Unbind</a>)") : "");
+            return "<span class=\"satellite\">" + obj.TB_Satellite.CardNo + "</span>" + (wantAdd ? (" (<a href=\"#del_" + obj.id + "\">Unbind</a>)") : "");
         }
         /// <summary>
         /// 将终端实例显示为字符串

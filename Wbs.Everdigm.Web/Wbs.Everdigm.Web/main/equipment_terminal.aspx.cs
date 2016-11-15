@@ -45,7 +45,7 @@ namespace Wbs.Everdigm.Web.main
 
                 terminalinfo.Rows[2].Cells[1].InnerText = terminal.Firmware;
                 terminalinfo.Rows[2].Cells[3].InnerText = (DateTime?)null == terminal.OnlineTime ? "-" : terminal.OnlineTime.Value.ToString("yyyy/MM/dd HH:mm:ss");
-                terminalinfo.Rows[2].Cells[5].InnerHtml = Utility.GetOnlineStyle(terminal.OnlineStyle, false);
+                terminalinfo.Rows[2].Cells[5].InnerHtml = Utility.GetOnlineStyle(terminal.OnlineStyle, terminal.OnlineTime, false);
             }
         }
         /// <summary>

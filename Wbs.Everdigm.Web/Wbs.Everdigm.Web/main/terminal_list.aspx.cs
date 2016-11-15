@@ -115,11 +115,11 @@ namespace Wbs.Everdigm.Web.main
             {
                 if (sat == 0)
                 {
-                    expression = expression.And(a => a.Satellite == (int?)null);
+                    expression = expression.And(a => a.Satellite == null);
                 }
                 else
                 {
-                    expression = expression.And(a => a.Satellite != (int?)null);
+                    expression = expression.And(a => a.Satellite != null);
                 }
             }
             // 是否绑定设备-1:ignore,0:not,1:bound
@@ -163,14 +163,14 @@ namespace Wbs.Everdigm.Web.main
                         //"<td class=\"in-tab-txt-rb\"><input type=\"checkbox\" id=\"cb_" + id + "\" /></td>" +
                         "<td class=\"in-tab-txt-rb\">" + cnt + "</td>" +
                         "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\"><a href=\"./terminal_register.aspx?key=" + id + "\" >" + CheckQueryString(obj.Number) + "</a></td>" +
-                        "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\">" + CheckQueryString(TerminalInstance.GetSatellite(obj, true)) + "</td>" +
+                        "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important; cursor: pointer;\" title=\"Click to show advanced options\">" + CheckQueryString(TerminalInstance.GetSatellite(obj, true)) + "</td>" +
                         "<td class=\"in-tab-txt-rb\">" + obj.Firmware + "</td>" +
                         "<td class=\"in-tab-txt-rb\">" + obj.Revision.ToString() + "</td>" +
                         "<td style=\"text-align: left !important;\" class=\"in-tab-txt-rb\">" + TerminalTypes.GetTerminalType(obj.Type.Value) + "</td>" +
                         "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\">" + obj.ProductionDate.Value.ToString("yyyy/MM/dd") + "</td>" +
                         "<td class=\"in-tab-txt-rb\">" + (obj.HasBound == true ? "yes" : "no") + "</td>" +
                         "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\">" + CheckQueryString(GetEquipment(obj, equipment)) + "</td>" +
-                        "<td class=\"in-tab-txt-b\">" + Utility.GetOnlineStyle(obj.OnlineStyle, false) + "</td>" +
+                        "<td class=\"in-tab-txt-b\">" + Utility.GetOnlineStyle(obj.OnlineStyle, obj.OnlineTime, false) + "</td>" +
                         //"<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\">" + obj.Sim + "</td>" +
                         "<td class=\"in-tab-txt-b\"></td>" +
                         "</tr>";
@@ -206,11 +206,11 @@ namespace Wbs.Everdigm.Web.main
             {
                 if (sat == 0)
                 {
-                    expression = expression.And(a => a.TB_Terminal.Satellite == (int?)null);
+                    expression = expression.And(a => a.TB_Terminal.Satellite == null);
                 }
                 else
                 {
-                    expression = expression.And(a => a.TB_Terminal.Satellite != (int?)null);
+                    expression = expression.And(a => a.TB_Terminal.Satellite != null);
                 }
             }
 
@@ -241,14 +241,14 @@ namespace Wbs.Everdigm.Web.main
                         //"<td style=\"text-align: center;\" class=\"in-tab-txt-rb\"><input type=\"checkbox\" id=\"cb_" + id + "\" /></td>" +
                         "<td style=\"text-align: center;\" class=\"in-tab-txt-rb\">" + cnt + "</td>" +
                         "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\"><a href=\"./terminal_register.aspx?key=" + id + "\" >" + CheckQueryString(obj.TB_Terminal.Number) + "</a></td>" +
-                        "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\">" + CheckQueryString(TerminalInstance.GetSatellite(obj.TB_Terminal, true)) + "</td>" +
+                        "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important; cursor: pointer;\" title=\"Click to show advanced options\">" + CheckQueryString(TerminalInstance.GetSatellite(obj.TB_Terminal, true)) + "</td>" +
                         "<td class=\"in-tab-txt-rb\">" + obj.TB_Terminal.Firmware + "</td>" +
                         "<td class=\"in-tab-txt-rb\">" + obj.TB_Terminal.Revision.ToString() + "</td>" +
                         "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\">" + TerminalTypes.GetTerminalType(obj.TB_Terminal.Type.Value) + "</td>" +
                         "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\">" + obj.TB_Terminal.ProductionDate.Value.ToString("yyyy/MM/dd") + "</td>" +
                         "<td class=\"in-tab-txt-rb\">yes</td>" +
                         "<td class=\"in-tab-txt-rb\" style=\"text-align: left !important;\">" + CheckQueryString(GetEquipment(obj.TB_Terminal, obj)) + "</td>" +
-                        "<td class=\"in-tab-txt-b\">" + Utility.GetOnlineStyle(obj.OnlineStyle, false) + "</td>" +
+                        "<td class=\"in-tab-txt-b\">" + Utility.GetOnlineStyle(obj.OnlineStyle, obj.OnlineTime, false) + "</td>" +
                         //"<td class=\"in-tab-txt-rb\">" + obj.TB_Terminal.Sim + "</td>" +
                         "<td class=\"in-tab-txt-b\"></td>" +
                         "</tr>";
@@ -259,12 +259,12 @@ namespace Wbs.Everdigm.Web.main
 
         private void ShowFooter(int totalRecords, int pageIndex, int totalPages, string html)
         {
-            tbodyBody.InnerHtml = html;
+            tbodyBodies.InnerHtml = html;
             divPagging.InnerHtml = "";
             if (totalRecords > 0)
                 ShowPaggings(pageIndex, totalPages, totalRecords, "./terminal_list.aspx", divPagging);
         }
-        
+
         protected void btQuery_Click(object sender, EventArgs e)
         {
             if (!HasSessionLose)
@@ -320,7 +320,7 @@ namespace Wbs.Everdigm.Web.main
                         act.SatelliteStatus = false;
                     });
                     // 更新设备的链接为OFF
-                    EquipmentInstance.Update(f => f.Terminal == t.id, act => 
+                    EquipmentInstance.Update(f => f.Terminal == t.id, act =>
                     {
                         if (act.OnlineStyle == (byte)LinkType.SATELLITE)
                         {
@@ -340,7 +340,7 @@ namespace Wbs.Everdigm.Web.main
                 }
             }
         }
-        private void SendDD02Command(bool bound,TB_Terminal terminal)
+        private void SendDD02Command(bool bound, TB_Terminal terminal)
         {
             // 查看是否允许服务器自动修改卫星绑定关系
             var ctrl = int.Parse(ConfigurationManager.AppSettings["SatelliteControl"]);
@@ -380,7 +380,8 @@ namespace Wbs.Everdigm.Web.main
             if (string.IsNullOrEmpty(value)) return;
             // 为终端绑定卫星模块
             var index = value.IndexOf(',');
-            if (index < 0) {
+            if (index < 0)
+            {
                 // 没有,分割的是解绑卫星模块
                 UnboundSatellite();
                 return;
@@ -465,7 +466,8 @@ namespace Wbs.Everdigm.Web.main
                 act.Voltage = "G0000";
             });
             // 更新终端的绑定状态为false
-            TerminalInstance.Update(f => f.id == id, act => {
+            TerminalInstance.Update(f => f.id == id, act =>
+            {
                 act.HasBound = false;
             });
             // 保存解绑终端历史
@@ -523,6 +525,33 @@ namespace Wbs.Everdigm.Web.main
                         }
                     }
                     else ShowNotification("./terminal_list.aspx", "Terminal is not exist.", false);
+                }
+            }
+        }
+
+        protected void btnSatelliteStopping_Click(object sender, EventArgs e)
+        {
+            var value = hidBoundSatellite.Value.Trim();
+            if (string.IsNullOrEmpty(value))
+            {
+                ShowNotification("./terminal_list.aspx", "Cannot find object with null parameter.", false);
+            }
+            else
+            {
+                var id = int.Parse(value);
+                var terminal = TerminalInstance.Find(f => f.id == id);
+                if (null == terminal)
+                {
+                    ShowNotification("./terminal_list.aspx", "Terminal is not exist.", false);
+                }
+                else
+                {
+                    // 更新终端的连接为卫星停止状态
+                    TerminalInstance.Update(f => f.id == terminal.id, act => { act.OnlineStyle = (byte)LinkType.SATELLITE_STOP; });
+                    // 更新设备的连接为卫星停止状态
+                    EquipmentInstance.Update(f => f.Terminal == terminal.id, act => { act.OnlineStyle = (byte)LinkType.SATELLITE_STOP; });
+
+                    ShowNotification("./terminal_list.aspx", "You have stopped satellite " + terminal.TB_Satellite.CardNo, true);
                 }
             }
         }

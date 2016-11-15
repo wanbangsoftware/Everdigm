@@ -94,7 +94,7 @@ namespace Wbs.Everdigm.Desktop
                         sheet.Cells[x, 9] = n == obj.Customer ? "-" : obj.TB_Customer.Code;
                         sheet.Cells[x, 10] = n == obj.Customer ? "-" : obj.TB_Customer.Name;
                         // 终端
-                        var link = ebll.GetOnlineStyle(obj, false);
+                        var link = EverdigmUtils.GetOnlineStyle(obj.OnlineStyle, obj.OnlineTime, false);
                         link = link.Substring(link.IndexOf('>') + 1);
                         link = link.Substring(0, link.IndexOf('<'));
                         sheet.Cells[x, 11] = string.IsNullOrEmpty(link) ? "-" : link;

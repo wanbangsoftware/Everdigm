@@ -32,6 +32,10 @@ public enum LinkType : byte
     /// </summary>
     SATELLITE = 0x60,
     /// <summary>
+    /// 卫星通信暂停状态
+    /// </summary>
+    SATELLITE_STOP = 0x61,
+    /// <summary>
     /// 其他
     /// </summary>
     OTHER = 0xFF,

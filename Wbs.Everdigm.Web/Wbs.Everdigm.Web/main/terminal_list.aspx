@@ -13,6 +13,24 @@
     <link href="../mobile/css/style.css" rel="stylesheet" />
     <link href="../css/body_equipment.css" rel="stylesheet" />
     <link href="../css/pagging.css" rel="stylesheet" />
+    <style type="text/css">
+        .custom-modal-header {
+            -webkit-border-top-left-radius: 5px;
+            -webkit-border-top-right-radius: 5px;
+            -moz-border-radius-topleft: 5px;
+            -moz-border-radius-topright: 5px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        body.modal-open .datepicker {
+            z-index: 1200 !important;
+        }
+
+        .satellite:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -67,7 +85,7 @@
                         </div>
                     </li>
                     <li role="presentation" class="tablist-item-input" style="margin-left: 5px !important;">
-                        <button class="btn btn-primary" type="button" id="btAdd"><span class="glyphicon glyphicon-plus"></span> Add</button>
+                        <button class="btn btn-primary" type="button" id="btAdd"><span class="glyphicon glyphicon-plus"></span>Add</button>
                     </li>
                 </ul>
                 <div class="tab-content">
@@ -84,17 +102,17 @@
                                 </td>
                             </tr>
                         </table>
-                        
+
                         <!--<th style="width: 40px; text-align: center;" class="in-tab-title-rb bg-primary"><input type="checkbox" id="cbAll" /></th>-->
                         <table id="tbTable" class="table table-hover">
                             <thead>
                                 <tr>
                                     <th style="width: 40px; text-align: center;" class="in-tab-title-rb bg-primary">#</th>
-                                    <th style="width: 100px;" class="in-tab-title-rb bg-primary">Number</th>
-                                    <th style="width: 180px;" class="in-tab-title-rb bg-primary">Satellite</th>
+                                    <th style="width: 100px; text-align: left;" class="in-tab-title-rb bg-primary">Number</th>
+                                    <th style="width: 180px; text-align: left;" class="in-tab-title-rb bg-primary">Satellite</th>
                                     <th style="width: 70px;" class="in-tab-title-rb bg-primary">Firmware</th>
                                     <th style="width: 30px; text-align: center;" class="in-tab-title-rb bg-primary">Rev</th>
-                                    <th style="width: 120px; text-align: center;" class="in-tab-title-rb bg-primary">Type</th>
+                                    <th style="width: 120px; text-align: left;" class="in-tab-title-rb bg-primary">Type</th>
                                     <th style="width: 70px;" class="in-tab-title-rb bg-primary">Register</th>
                                     <th style="width: 80px; text-align: center;" class="in-tab-title-rb bg-primary">Bound?</th>
                                     <th style="width: 140px;" class="in-tab-title-rb bg-primary">Equipment</th>
@@ -112,30 +130,62 @@
                                     </td>
                                 </tr>
                             </tfoot>
-                            <tbody id="tbodyBody" runat="server">
+                            <tbody id="tbodyBodies" runat="server">
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <div class="modal fade" id="warningLoading" tabindex="-1" role="dialog" aria-labelledby="deletelLabel" data-backdrop="static" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header custom-modal-header btn-primary">
+                    <div class="modal-header custom-modal-header btn-warning">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="warningLabel">Loading...</h4>
+                        <h4 class="modal-title" id="warningLabel">Warning!</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-lg-12" id="loadingContent">
-                                <img alt="" src="../images/loading.gif" /><span style="margin-left: 10px;" id="loadingContentText">Loading data, please wait...</span>
-                            </div>
                             <div class="col-lg-12" id="warningContent">
                                 <span style="margin-left: 10px;" id="warningContentText"></span>
                             </div>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="satUnbind" type="button" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-ok"></span> Yes, UNBIND them!
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="warningStopping" tabindex="-1" role="dialog" aria-labelledby="deletelLabel" data-backdrop="static" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header custom-modal-header btn-danger">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Temporarily stop using this satellite model</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <span style="margin-left: 10px;" id="warningStoppingContentText"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <span style="margin-left: 10px; font-style: italic;">The data link will be resume when you re-use it again.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <asp:Button ID="btnSatelliteStopping" runat="server" CssClass="hidden" OnClick="btnSatelliteStopping_Click" />
+                        <button id="satStopping" type="button" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-ok"></span> Yes, STOP it!
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -155,7 +205,7 @@
     <script type="text/javascript" src="../scripts/main/pagination.js"></script>
     <script type="text/javascript" src="../scripts/main/common.js"></script>
     <script src="../scripts/main/export.to.excel.js"></script>
-    <script type="text/javascript" src="../scripts/main/terminals.js"></script>
+    <script type="text/javascript" src="../scripts/main/terminals.js?d=201611141445"></script>
     <script type="text/javascript">
         //得到select项的个数   
         jQuery.fn.size = function () {
@@ -288,12 +338,12 @@
             $("[id^=\"dd\"] ul").on("click", "li a", (function () {
                 var index = $(this).prop("tabindex");
                 //if (index > -1) {
-                    var title = $(this).parent().parent().prev().children("span:eq(0)");
-                    var text = $(title).text();
-                    text = text.substr(0, text.indexOf(":") + 1);
-                    $(title).text(text + $(this).text());
-                    //$(this).parent().parent().prev().children("span:eq(0)").text($(this).text());
-                    $(this).parent().parent().next().val(index);
+                var title = $(this).parent().parent().prev().children("span:eq(0)");
+                var text = $(title).text();
+                text = text.substr(0, text.indexOf(":") + 1);
+                $(title).text(text + $(this).text());
+                //$(this).parent().parent().prev().children("span:eq(0)").text($(this).text());
+                $(this).parent().parent().next().val(index);
                 //}
             }));
         });

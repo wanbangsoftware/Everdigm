@@ -41,7 +41,7 @@ namespace Wbs.Everdigm.Web.ajax
             Worktime = EquipmentBLL.GetRuntime(obj.Runtime + obj.InitializedRuntime, obj.CompensatedHours.Value, true);
             Latitude = obj.Latitude.Value;
             Longitude = obj.Longitude.Value;
-            Online = Utility.GetOnlineStyle(obj.OnlineStyle, false);
+            Online = Utility.GetOnlineStyle(obj.OnlineStyle, obj.OnlineTime, false);
             Lock = obj.LockStatus;
             Acttime = null == obj.LastActionTime ? 0 : CustomConvert.DateTimeToJavascriptDate(obj.LastActionTime.Value);
             Voltage = obj.Voltage;

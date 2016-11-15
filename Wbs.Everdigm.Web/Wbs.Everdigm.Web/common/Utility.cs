@@ -416,9 +416,9 @@ namespace Wbs.Everdigm.Web
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static string GetOnlineStyle(byte? type, bool forShort = true)
+        public static string GetOnlineStyle(byte? type, DateTime? time, bool forShort = true)
         {
-            return Common.EverdigmUtils.GetOnlineStyle(type, null, forShort);
+            return Common.EverdigmUtils.GetOnlineStyle(type, time, forShort);
         }
         
         /// <summary>
