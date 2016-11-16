@@ -74,7 +74,7 @@ namespace Wbs.Everdigm.Common
                         {
                             // 超过3小时没有信号则警示  2016/08/15 15:17
                             cls = "warning";
-                            title = "(Activated 3 days ago)";
+                            title = "(Activated 3 hours ago)";
                         }
                         ret = "<span class=\"label label-" + cls + "\" title=\"Satellite" + title + "\">" + (forShort ? "SAT" : "Satellite") + "</span>";
                         break;
