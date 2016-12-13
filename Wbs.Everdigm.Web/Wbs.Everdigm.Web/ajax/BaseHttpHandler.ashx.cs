@@ -88,10 +88,11 @@ namespace Wbs.Everdigm.Web.ajax
             type = GetParamenter("type");
             cmd = GetParamenter("cmd");
             force = GetParamenter("by");
-            if (!string.IsNullOrEmpty(force) && force.Equals("sms"))
+            // 客户端指定为normal方式发送命令时，为自动检测终端连接方式，否则直接SMS方式
+            if (!string.IsNullOrEmpty(force) && force.Equals("normal"))
             {
                 // 坚持客户端的命令发送方式要求，默认为自动检测方式
-                forceType = ForceType.SMS;
+                forceType = ForceType.AutoDetect;
             }
             data = GetParamenter("data");
         }

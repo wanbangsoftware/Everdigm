@@ -14,6 +14,14 @@ namespace Wbs.Everdigm.Common
     public class SMSUtility
     {
         /// <summary>
+        /// 采用URL连接的方式提交短信（Everdigm）
+        /// </summary>
+        public static byte SUBMIT_BY_URL = 0;
+        /// <summary>
+        /// 采用存入数据库方式提交短信（等待SMS处理过程来发送）
+        /// </summary>
+        public static byte SUBMIT_BY_DB = 1;
+        /// <summary>
         /// 终端GSM汇报回来的SMS消息
         /// </summary>
         public static byte SMS_TERMINAL = 0x00;

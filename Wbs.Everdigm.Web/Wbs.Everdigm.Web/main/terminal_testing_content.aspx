@@ -18,6 +18,7 @@
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
         }
+        html { overflow-x:hidden; }
     </style>
 </head>
 <body>
@@ -76,6 +77,21 @@
                 </div>
             </div>
             <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingFifteen">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFifteen" aria-expanded="false" aria-controls="collapseFifteen">Retrieve Worktime(Loader/Electric)
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseFifteen" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFifteen">
+                    <div class="panel-body">
+                        <button type="button" id="bt_ld_worktime" data-loading-text="Testing [worktime retrieve] progress..." data-complete-text="testing finished!" class="btn btn-default" autocomplete="off">
+                            Retrieve Worktime(Loader/Electric)
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingTwelve">
                     <h4 class="panel-title">
                         <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwelve" aria-expanded="false" aria-controls="collapseTwelve">Security: Lock(Loader/Electric)
@@ -99,8 +115,23 @@
                 </div>
                 <div id="collapseThirteen" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThirteen">
                     <div class="panel-body">
-                        <button type="button" id="bt_ldunlock" data-loading-text="Testing reset to satellite progress..." data-complete-text="testing finished!" class="btn btn-default" autocomplete="off">
+                        <button type="button" id="bt_ldunlock" data-loading-text="Testing [security unlock] progress..." data-complete-text="testing finished!" class="btn btn-default" autocomplete="off">
                             Security: Unlock(Loader/Electric)
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingFourteen">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFourteen" aria-expanded="false" aria-controls="collapseFourteen">Security: Worktime Initialize(Loader/Electric)
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseFourteen" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFourteen">
+                    <div class="panel-body">
+                        <button type="button" id="bt_ld_initial" data-loading-text="Testing [worktime initialize] progress..." data-complete-text="testing finished!" class="btn btn-default" autocomplete="off">
+                            Security: Worktime Initialize(Loader/Electric)
                         </button>
                     </div>
                 </div>
@@ -211,7 +242,7 @@
                     </div>
                 </div>
             </div>
-            <!--<div class="panel panel-default">
+            <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingTen">
                     <h4 class="panel-title">
                         <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTen" aria-expanded="false" aria-controls="collapseTen">Security: Satellite disable
@@ -240,7 +271,7 @@
                         </button>
                     </div>
                 </div>
-            </div>-->
+            </div>
         </div>
     </form>
     <!-- Modal -->
@@ -300,6 +331,37 @@
             </div>
         </div>
     </div>
+    <!--终端运转时间初始化对话框-->
+    <div class="modal fade" id="alertModalWorktime" tabindex="-1" role="dialog" aria-labelledby="alertModalLabelWork" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header custom-modal-header btn-warning">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="alertModalLabelWork">Loader Work Time initialize</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1" style="width: 90px;">Hours:</span>
+                                <input type="text" id="txtHour" class="form-control" placeholder="hour" aria-describedby="basic-addon1" />
+                            </div>
+                        </div>
+                        <div class="col-lg-8" style="margin-top: 5px;">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon2" style="width: 90px;">Minutes:</span>
+                                <input type="text" id="txtMinute" class="form-control" placeholder="minute" aria-describedby="basic-addon2" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="initializeWorktime" data-dismiss="modal"><span class="glyphicon glyphicon-ok"></span>Send</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="../js/jquery.json-2.4.js"></script>
     <script type="text/javascript" src="../bootstrap3/js/bootstrap.js"></script>
@@ -307,7 +369,7 @@
     <script type="text/javascript" src="../js/jquery.timer.js"></script>
     <script type="text/javascript" src="../js/common.js"></script>
     <script type="text/javascript" src="../scripts/main/command.base.js"></script>
-    <script type="text/javascript" src="../scripts/main/testing_content.js"></script>
+    <script type="text/javascript" src="../scripts/main/testing_content.js?v=20161213"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             var type = $.getUrlParam("type");

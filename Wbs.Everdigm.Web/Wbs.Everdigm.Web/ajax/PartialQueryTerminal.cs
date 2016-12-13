@@ -159,7 +159,8 @@ namespace Wbs.Everdigm.Web.ajax
             else {
                 var dt = new DateTime(t);
                 // 查询指定时间之后的通讯记录
-                var his = DataInstance.FindList(f => f.terminal_id.Equals(data + "000") && f.receive_time >= dt);
+                var tid = data.Length > 10 ? data : data + "000";
+                var his = DataInstance.FindList(f => f.terminal_id.Equals(tid) && f.receive_time >= dt);
                 ret = "{\"Time\":" + time + ",\"Data\":" + JsonConverter.ToJson(his) + "}";
             }
             return ret;

@@ -343,7 +343,7 @@ namespace Wbs.Everdigm.Desktop
                                 }
                                 catch (Exception e)
                                 {
-                                    HandleDisplayMessage(format("{0} Can not handle CheckTcpCommand/CheckIridiumCommand: {1}, Trace: {2}", Now, e.Message, e.StackTrace));
+                                    HandleDisplayMessage(format("{0}Can not handle CheckTcpCommand/CheckIridiumCommand: {1}, Trace: {2}", Now, e.Message, e.StackTrace));
                                 }
                             }
 

@@ -35,6 +35,7 @@ namespace Wbs.Everdigm.Desktop
             var bll = new CommandBLL();
             try
             {
+                // 取出当前30s内的新命令
                 var list = bll.FindList(f => f.ScheduleTime >= DateTime.Now.AddSeconds(-30) &&
                     GsmStatus.Take(2).Contains(f.Status.Value) &&
                     f.TB_Terminal.OnlineStyle != (byte)LinkType.SATELLITE).ToList();
@@ -46,7 +47,7 @@ namespace Wbs.Everdigm.Desktop
                     byte ret = 0;
                     CommandStatus cs = (CommandStatus)cmd.Status;
                     // 所有GSM命令都强制SMS方式发送
-                    if (cs == CommandStatus.WaitingForSMS || cs == CommandStatus.Waiting)
+                    if (cs == CommandStatus.WaitingForSMS)
                     {
                         // 强制SMS发送的
                         ret = 3;
@@ -56,21 +57,36 @@ namespace Wbs.Everdigm.Desktop
                         if (cmd.TB_Terminal.OnlineStyle == (byte)LinkType.TCP)
                         {
                             // 0==链接不存在1=发送成功2=网络处理错误
-                            ret = _server.Send(cmd.TB_Terminal.Socket.Value, Wbs.Utilities.CustomConvert.GetBytes(cmd.Content));
+                            ret = _server.Send(cmd.TB_Terminal.Socket.Value, CustomConvert.GetBytes(cmd.Content));
                         }
                     }
                     if (ret != 1)
                     {
-                        // TCP链接丢失，重新用SMS方式发送
-                        bool b = CommandUtility.SendSMSCommand(cmd);
-                        if (b)
+                        // 非强制SMS发送时，先保存一下命令的发送状态为等待SMS发送状态
+                        if (ret < 3)
                         {
-                            SaveTerminalData((int?)null == cmd.Terminal ? -1 : cmd.Terminal.Value, sim, AsyncDataPackageType.SMS, 1, false, DateTime.Now);
+                            UpdateGsmCommand(cmd, CommandStatus.WaitingForSMS, bll);
+                            ShowUnhandledMessage(Now + "Send Command(TCP: Fail, force this command to SMS): " + cmd.Content);
                         }
-                        ShowUnhandledMessage(Now + "Send Command(SMS: " + (b ? "Success" : "Fail") + "): " + cmd.Content);
+                        else
+                        {
+                            // url直链方式发送短信时，直接可以发送
+                            byte type = byte.Parse(ConfigurationManager.AppSettings["SMS_SUBMIT_TYPE"]);
+                            if (type == SMSUtility.SUBMIT_BY_URL)
+                            {
+                                // TCP链接丢失，重新用SMS方式发送
+                                bool b = CommandUtility.SendSMSCommand(cmd);
+                                if (b)
+                                {
+                                    SaveTerminalData((int?)null == cmd.Terminal ? -1 : cmd.Terminal.Value, sim, AsyncDataPackageType.SMS, 1, false, DateTime.Now);
+                                }
+                                ShowUnhandledMessage(Now + "Send Command(SMS: " + (b ? "Success" : "Fail") + "): " + cmd.Content);
+                            }
+                        }
                     }
                     else
                     {
+                        // 保存TCP方式的命令发送结果
                         SaveTerminalData((int?)null == cmd.Terminal ? -1 : cmd.Terminal.Value, sim, AsyncDataPackageType.TCP, cmd.Content.Length / 2, false, DateTime.Now);
                         ShowUnhandledMessage(Now + "Send command(" + (1 == ret ? CommandStatus.SentByTCP : CommandStatus.TCPNetworkError) + "): " + cmd.Content);
                         UpdateGsmCommand(cmd, (1 == ret ? CommandStatus.SentByTCP : CommandStatus.TCPNetworkError), bll);

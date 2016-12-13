@@ -15,19 +15,50 @@ $(document).ready(function () {
     });
 
     $("[id^=\"bt_\"]").on("click", function () {
-        $("[id^=\"bt_\"]").prop("disabled", true);
         var text = $(this).text();
-        var $btn = $(this).button("loading");
         var cmd = $(this).prop("id").replace("bt_", "");
+
+        if (cmd == "ld_initial") {
+            if (!isInTestProgress) {
+                // 终端时间初始化
+                $("#alertModalWorktime").modal("show");
+            } else {
+                // 显示正在进行的命令发送流程
+                $("#analyseModal").modal("show");
+            }
+        } else {
+            $(this).button("loading");
+            performSendCommand(cmd, "", text);
+        }
+    });
+
+    $("#initializeWorktime").on("click", function () {
+        // 终端运转时间初始化
+        var text = $("#txtHour").val();
+        text = (null == text || "" == text) ? "0" : text;
+        var hour = parseInt(text);
+        hour = isNaN(hour) ? 0 : hour;
+        text = $("#txtMinute").val();
+        text = (null == text || "" == text) ? "0" : text;
+        var minute = parseInt(text);
+        minute = isNaN(minute) ? 0 : minute;
+        // 当前按钮为loading状态
+        $("#bt_ld_initial").button("loading");
+        performSendCommand("ld_initial", (hour * 60 + minute), $("#bt_ld_initial").text());
+    });
+
+    function performSendCommand(cmd, param, text) {
+        // 禁用其他命令按钮
+        $("[id^=\"bt_\"]").prop("disabled", true);
 
         $("#analyseModal").modal("show");
         if (!isInTestProgress) {
             currentTestingCommand = cmd;
             currentTestCommandTitle = text;
             $(".modal-title:eq(0)").text("Testing " + text + ", please wait...");
-            sendTerminalCommand(cmd);
+            sendTerminalCommand(cmd, param);
         }
-    })
+    }
 
     $("#terminalInfo").popover({
         animation: true,
@@ -57,11 +88,11 @@ $(document).ready(function () {
     });
 });
 
-function sendTerminalCommand(cmd) {
+function sendTerminalCommand(cmd, param) {
     $("#analyseModal.modal-header").removeClass("btn-danger").addClass("btn-primary");
     var ter = $("#terminalInfo").html();
     var force = $("input:radio[name =\"options\"]:checked").val();
-    GetJsonData("../ajax/command.ashx", { "type": "terminal", "cmd": cmd, "by": force, "data": ter }, function (data) {
+    GetJsonData("../ajax/command.ashx", { "type": "terminal", "cmd": cmd, "by": force, "data": ter, "param": param }, function (data) {
         if (data.status == 0) {
             // 标记已进入测试环节，再点击其他按钮不会再发命令
             isInTestProgress = true;
