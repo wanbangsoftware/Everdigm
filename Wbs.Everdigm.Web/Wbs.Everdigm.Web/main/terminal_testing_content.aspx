@@ -293,6 +293,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button class="btn" type="button" id="btnClear">Clear</button>
                     <button id="satWarning" type="button" class="btn btn-warning" style="display: none;">
                         <span class="glyphicon glyphicon-time"></span>Satellite mode may take more time to wait the result
                     </button>
@@ -399,6 +400,10 @@
             } else {
                 $("#printLabel").hide();
             }
+
+            $("#btnClear").on("click", function () {
+                $(".bs-callout:eq(1)").html("");
+            });
         });
     </script>
 </body>

@@ -43,7 +43,8 @@ namespace Wbs.Everdigm.Web.main
                     var mac = t.TB_Equipment.FirstOrDefault();
                     terminalInfo.InnerHtml = t.Number;
                     var link = (LinkType)t.OnlineStyle;
-                    terminalContent.Value = "Sim card: " + t.Sim + "<br />Satellite: " + t.Satellite + "<br />Equipment: " +
+                    terminalContent.Value = "Sim card: " + t.Sim + "<br />Satellite: " + 
+                        ((null == t.Satellite) ? "not install" : t.TB_Satellite.CardNo) + "<br />Equipment: " +
                         (null == mac ? "" : EquipmentInstance.GetFullNumber(mac)) + "<br />Link: " + link;
                     terminalCardNumber.Value = t.Sim;
                 }
