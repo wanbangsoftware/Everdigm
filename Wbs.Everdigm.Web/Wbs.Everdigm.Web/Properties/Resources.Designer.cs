@@ -85,5 +85,23 @@ namespace Wbs.Everdigm.Web.Properties {
                 return ResourceManager.GetString("mail_content", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 {&quot;code&quot;:&quot;000000&quot;,&quot;data&quot;:{&quot;totalPages&quot;:4,&quot;pageSize&quot;:10,&quot;total&quot;:37,&quot;pageNumber&quot;:1,&quot;list&quot;:[{&quot;name&quot;:&quot;测试啦&quot;,&quot;id&quot;:&quot;58ba5a4037db4820dcb67c7f&quot;,&quot;content&quot;:&quot;我是测试内容&quot;,&quot;serNum&quot;:21},{&quot;name&quot;:&quot;测试啦&quot;,&quot;id&quot;:&quot;58ba5a4d37db4820dcb67c80&quot;,&quot;content&quot;:&quot;我是测试内容&quot;,&quot;serNum&quot;:21},{&quot;name&quot;:&quot;测试啦&quot;,&quot;id&quot;:&quot;58ba5a4d37db4820dcb67c81&quot;,&quot;content&quot;:&quot;我是测试内容&quot;,&quot;serNum&quot;:21},{&quot;name&quot;:&quot;测试啦&quot;,&quot;id&quot;:&quot;58ba5a4d37db4820dcb67c82&quot;,&quot;content&quot;:&quot;我是测试内容&quot;,&quot;serNum&quot;:21},{&quot;name&quot;:&quot;测试啦&quot;,&quot;id&quot;:&quot;58ba5a4e37db4820dcb67c83&quot;,&quot;content&quot;:&quot;我是测试内容&quot;,&quot;serNum&quot;:21},{&quot;name&quot;:&quot;测试啦&quot;,&quot;id&quot;:&quot;58ba5a4e37db48 [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        /// </summary>
+        internal static string testQueryJson {
+            get {
+                return ResourceManager.GetString("testQueryJson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 {&quot;code&quot;:&quot;000000&quot;,&quot;data&quot;:{&quot;_id&quot;:&quot;123456&quot;,&quot;name&quot;:&quot;test&quot;,&quot;loginId&quot;:&quot;1234&quot;,&quot;phone&quot;:&quot;13999999999&quot;,&quot;email&quot;:&quot;asdf@asdf.com&quot;,&quot;password&quot;:&quot;123456&quot;,&quot;createDate&quot;:&quot;2017-04-15 20:30:28&quot;}} 的本地化字符串。
+        /// </summary>
+        internal static string testSingleJson {
+            get {
+                return ResourceManager.GetString("testSingleJson", resourceCulture);
+            }
+        }
     }
 }

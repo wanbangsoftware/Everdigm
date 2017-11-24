@@ -44,9 +44,18 @@ namespace Wbs.Everdigm.Web.main
             var exist = EquipmentInstance.Find(f => f.Model == equipment.Model && f.Number.Equals(equipment.Number) && f.Deleted == false);
             if (null == exist)
             {
+                var model = ModelInstance.Find(f => f.id == equipment.Model);
                 var newOne = EquipmentInstance.GetObject();
                 newOne.Model = equipment.Model;
-                newOne.Status = StatusInstance.Find(f => f.IsItInventory == true).id;
+                if (model.TB_EquipmentType.IsVehicle == true)
+                {
+                    // 新增的设备是普通车辆时，直接划为车辆，不参与出库/入库流程
+                    newOne.Status = StatusInstance.Find(f => f.IsItVehicle == true).id;
+                }
+                else
+                {
+                    newOne.Status = StatusInstance.Find(f => f.IsItInventory == true).id;
+                }
                 newOne.Warehouse = equipment.Warehouse;
                 newOne.Number = equipment.Number;
                 newOne.StoreTimes = equipment.StoreTimes;

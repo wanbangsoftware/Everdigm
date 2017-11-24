@@ -172,4 +172,12 @@
 &lt;/html&gt;</value>
     <comment>邮件内容</comment>
   </data>
+  <data name="testQueryJson" xml:space="preserve">
+    <value>{"code":"000000","data":{"totalPages":4,"pageSize":10,"total":37,"pageNumber":1,"list":[{"name":"测试啦","id":"58ba5a4037db4820dcb67c7f","content":"我是测试内容","serNum":21},{"name":"测试啦","id":"58ba5a4d37db4820dcb67c80","content":"我是测试内容","serNum":21},{"name":"测试啦","id":"58ba5a4d37db4820dcb67c81","content":"我是测试内容","serNum":21},{"name":"测试啦","id":"58ba5a4d37db4820dcb67c82","content":"我是测试内容","serNum":21},{"name":"测试啦","id":"58ba5a4e37db4820dcb67c83","content":"我是测试内容","serNum":21},{"name":"测试啦","id":"58ba5a4e37db4820dcb67c84","content":"我是测试内容","serNum":21},{"name":"测试啦","id":"58ba5a4e37db4820dcb67c85","content":"我是测试内容","serNum":21},{"name":"测试啦","id":"58ba5a4f37db4820dcb67c86","content":"我是测试内容","serNum":21},{"name":"测试啦","id":"58ba5a4f37db4820dcb67c87","content":"我是测试内容","serNum":21},{"name":"测试啦","id":"58ba5a5037db4820dcb67c88","content":"我是测试内容","serNum":21}]}}</value>
+    <comment>查询列表</comment>
+  </data>
+  <data name="testSingleJson" xml:space="preserve">
+    <value>{"code":"000000","data":{"_id":"123456","name":"test","loginId":"1234","phone":"13999999999","email":"asdf@asdf.com","password":"123456","createDate":"2017-04-15 20:30:28"}}</value>
+    <comment>查询单个对象</comment>
+  </data>
 </root>

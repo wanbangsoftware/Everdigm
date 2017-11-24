@@ -135,7 +135,7 @@ namespace Wbs.Everdigm.BLL
             if (entity.TB_EquipmentStatusName.IsItTesting == true)
                 return "<span class=\"label label-warning\">" + entity.TB_EquipmentStatusName.Code + "</span>";
             // 等待
-            if(entity.TB_EquipmentStatusName.IsItWaiting==true)
+            if (entity.TB_EquipmentStatusName.IsItWaiting == true || entity.TB_EquipmentStatusName.IsItVehicle == true)
                 return "<span class=\"label label-default\">" + entity.TB_EquipmentStatusName.Code + "</span>";
 
             return "<span class=\"label label-success\">" + entity.TB_EquipmentStatusName.Code + "</span>";

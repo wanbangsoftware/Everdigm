@@ -177,22 +177,6 @@
       <Association Name="TB_EquipmentStatusName_TB_EquipmentStatusCode" Member="TB_EquipmentStatusName" ThisKey="Status" OtherKey="id" Type="TB_EquipmentStatusName" IsForeignKey="true" DeleteRule="SET DEFAULT" />
     </Type>
   </Table>
-  <Table Name="dbo.TB_EquipmentStatusName" Member="TB_EquipmentStatusName">
-    <Type Name="TB_EquipmentStatusName">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="IsItWaiting" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsItInventory" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsItOutstorage" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsItOverhaul" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsItRental" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsItTesting" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Code" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
-      <Association Name="TB_EquipmentStatusName_TB_EquipmentStatusCode" Member="TB_EquipmentStatusCode" ThisKey="id" OtherKey="Status" Type="TB_EquipmentStatusCode" />
-      <Association Name="TB_EquipmentStatusName_TB_EquipmentStockHistory" Member="TB_EquipmentStockHistory" ThisKey="id" OtherKey="Status" Type="TB_EquipmentStockHistory" />
-      <Association Name="TB_EquipmentStatusName_TB_Equipment" Member="TB_Equipment" ThisKey="id" OtherKey="Status" Type="TB_Equipment" />
-    </Type>
-  </Table>
   <Table Name="dbo.TB_EquipmentStockHistory" Member="TB_EquipmentStockHistory">
     <Type Name="TB_EquipmentStockHistory">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -203,19 +187,9 @@
       <Column Name="Stocktime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Savetime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="StockNumber" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Association Name="TB_EquipmentStatusName_TB_EquipmentStockHistory" Member="TB_EquipmentStatusName" ThisKey="Status" OtherKey="id" Type="TB_EquipmentStatusName" IsForeignKey="true" DeleteRule="SET NULL" />
       <Association Name="TB_Warehouse_TB_EquipmentStockHistory" Member="TB_Warehouse" ThisKey="Warehouse" OtherKey="id" Type="TB_Warehouse" IsForeignKey="true" />
       <Association Name="TB_Equipment_TB_EquipmentStockHistory" Member="TB_Equipment" ThisKey="Equipment" OtherKey="id" Type="TB_Equipment" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.TB_EquipmentType" Member="TB_EquipmentType">
-    <Type Name="TB_EquipmentType">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="Code" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
-      <Column Name="Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Image" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Association Name="TB_EquipmentType_TB_EquipmentModel" Member="TB_EquipmentModel" ThisKey="id" OtherKey="Type" Type="TB_EquipmentModel" />
+      <Association Name="TB_EquipmentStatusName_TB_EquipmentStockHistory" Member="TB_EquipmentStatusName" ThisKey="Status" OtherKey="id" Type="TB_EquipmentStatusName" IsForeignKey="true" DeleteRule="SET NULL" />
     </Type>
   </Table>
   <Table Name="dbo.TB_Error" Member="TB_Error">
@@ -515,9 +489,9 @@
       <Association Name="TB_Equipment_TB_ExcelHandler" Member="TB_ExcelHandler" ThisKey="id" OtherKey="Equipment" Type="TB_ExcelHandler" />
       <Association Name="TB_Customer_TB_Equipment" Member="TB_Customer" ThisKey="Customer" OtherKey="id" Type="TB_Customer" IsForeignKey="true" DeleteRule="SET DEFAULT" />
       <Association Name="TB_EquipmentModel_TB_Equipment" Member="TB_EquipmentModel" ThisKey="Model" OtherKey="id" Type="TB_EquipmentModel" IsForeignKey="true" DeleteRule="SET DEFAULT" />
-      <Association Name="TB_EquipmentStatusName_TB_Equipment" Member="TB_EquipmentStatusName" ThisKey="Status" OtherKey="id" Type="TB_EquipmentStatusName" IsForeignKey="true" DeleteRule="SET NULL" />
       <Association Name="TB_Terminal_TB_Equipment" Member="TB_Terminal" ThisKey="Terminal" OtherKey="id" Type="TB_Terminal" IsForeignKey="true" DeleteRule="SET DEFAULT" />
       <Association Name="TB_Warehouse_TB_Equipment" Member="TB_Warehouse" ThisKey="Warehouse" OtherKey="id" Type="TB_Warehouse" IsForeignKey="true" DeleteRule="SET DEFAULT" />
+      <Association Name="TB_EquipmentStatusName_TB_Equipment" Member="TB_EquipmentStatusName" ThisKey="Status" OtherKey="id" Type="TB_EquipmentStatusName" IsForeignKey="true" DeleteRule="SET NULL" />
     </Type>
   </Table>
   <Table Name="dbo.TB_Tracker_Position" Member="TB_Tracker_Position">
@@ -577,6 +551,34 @@
       <Column Name="Content" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
       <Association Name="TB_Account_TB_TrackerChat" Member="TB_Account" ThisKey="Deliver" OtherKey="id" Type="TB_Account" IsForeignKey="true" />
       <Association Name="TB_Tracker_TB_TrackerChat" Member="TB_Tracker" ThisKey="Receiver" OtherKey="id" Type="TB_Tracker" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_EquipmentStatusName" Member="TB_EquipmentStatusName">
+    <Type Name="TB_EquipmentStatusName">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IsItWaiting" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsItInventory" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsItOutstorage" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsItOverhaul" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsItRental" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsItTesting" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsItVehicle" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Code" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
+      <Association Name="TB_EquipmentStatusName_TB_EquipmentStatusCode" Member="TB_EquipmentStatusCode" ThisKey="id" OtherKey="Status" Type="TB_EquipmentStatusCode" />
+      <Association Name="TB_EquipmentStatusName_TB_EquipmentStockHistory" Member="TB_EquipmentStockHistory" ThisKey="id" OtherKey="Status" Type="TB_EquipmentStockHistory" />
+      <Association Name="TB_EquipmentStatusName_TB_Equipment" Member="TB_Equipment" ThisKey="id" OtherKey="Status" Type="TB_Equipment" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TB_EquipmentType" Member="TB_EquipmentType">
+    <Type Name="TB_EquipmentType">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="[Delete]" Member="Delete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsVehicle" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Code" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Image" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="TB_EquipmentType_TB_EquipmentModel" Member="TB_EquipmentModel" ThisKey="id" OtherKey="Type" Type="TB_EquipmentModel" />
     </Type>
   </Table>
   <Function Name="dbo.sp_ClearOldLinks" Method="sp_ClearOldLinks">

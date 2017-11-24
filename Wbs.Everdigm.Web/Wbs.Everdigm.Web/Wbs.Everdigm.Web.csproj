@@ -21,6 +21,7 @@
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -114,6 +115,8 @@
     <Content Include="css\style_font.css" />
     <Content Include="error.aspx" />
     <Content Include="google_map.aspx" />
+    <Content Include="images\equipments\icon_business.png" />
+    <Content Include="images\equipments\icon_car.png" />
     <Content Include="images\equipments\icon_hex.png" />
     <Content Include="images\equipments\icon_adt.png" />
     <Content Include="images\equipments\icon_cdrl.png" />
@@ -281,6 +284,7 @@
     <Content Include="js\js.marker.clusterer\src\markerclusterer.min.js" />
     <Content Include="js\js.marker.clusterer\src\markerclusterer_compiled.js" />
     <Content Include="js\js.marker.clusterer\src\markerclusterer_packaged.js" />
+    <Content Include="js\sha1.js" />
     <Content Include="js\twbsPagination\jquery.twbsPagination.js" />
     <Content Include="js\twbsPagination\jquery.twbsPagination.min.js" />
     <Content Include="main\account_actions.aspx" />
@@ -388,6 +392,7 @@
     <Content Include="bootstrap-calendar\components\bootstrap3\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="bootstrap-calendar\components\bootstrap3\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="bootstrap-calendar\components\bootstrap3\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="ajax\test.ashx" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -563,6 +568,8 @@
     <Content Include="service\as_work_details.aspx" />
     <Content Include="service\as_work_dispatch.aspx" />
     <Content Include="sms_test.aspx" />
+    <Content Include="test.aspx" />
+    <Content Include="test.html" />
     <Content Include="tree_images\dash.gif" />
     <Content Include="tree_images\dashminus.gif" />
     <Content Include="tree_images\dashplus.gif" />
@@ -619,6 +626,9 @@
     <Compile Include="ajax\PartialQueryTerminal.cs" />
     <Compile Include="ajax\satellite.ashx.cs">
       <DependentUpon>satellite.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="ajax\test.ashx.cs">
+      <DependentUpon>test.ashx</DependentUpon>
     </Compile>
     <Compile Include="ajax\work.ashx.cs">
       <DependentUpon>work.ashx</DependentUpon>
@@ -1285,6 +1295,13 @@
     </Compile>
     <Compile Include="sms_test.aspx.designer.cs">
       <DependentUpon>sms_test.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="test.aspx.cs">
+      <DependentUpon>test.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="test.aspx.designer.cs">
+      <DependentUpon>test.aspx</DependentUpon>
     </Compile>
     <Compile Include="wbs\semi_terminal_test.aspx.cs">
       <DependentUpon>semi_terminal_test.aspx</DependentUpon>

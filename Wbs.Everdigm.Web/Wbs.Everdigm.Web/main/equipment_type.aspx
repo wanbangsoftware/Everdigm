@@ -41,31 +41,42 @@
                                 </td>
                                 <td class="td_right" rowspan="2">Clipart:</td>
                                 <td class="td_left" rowspan="2">
-                                    <img alt="equipment sketch" style="width: 41px; cursor: pointer;" title="Click to select the clipart" class="img-rounded" id="imgImage" runat="server" src="~/images/equipments/icon_hex.png"/>
+                                    <img alt="equipment sketch" style="width: 41px; cursor: pointer;" title="Click to select the clipart" class="img-rounded" id="imgImage" runat="server" src="~/images/equipments/icon_hex.png" />
                                     <input type="hidden" id="hidImage" runat="server" />
                                 </td>
                             </tr>
                             <tr>
                                 <td class="td_right">Code:</td>
                                 <td class="td_left">
-                                    <input type="text" runat="server" class="text-input important-input" id="txtCode" /></td>
+                                    <input type="text" runat="server" class="text-input important-input" id="txtCode" maxlength="5" style="text-transform: uppercase;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td_right">Normal Vehicle:</td>
+                                <td class="td_left">
+                                    <label style="margin-top: 10px;">
+                                        <asp:CheckBox ID="cbNormalVehicle" runat="server" />&nbsp;Identification of normal vehicle
+                                    </label>
+                                </td>
                             </tr>
                         </table>
                         <table id="tbTable" width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #ccc; margin-top: 2px;">
                             <thead>
                                 <tr>
                                     <th style="width: 40px; text-align: center;">
-                                        <input type="checkbox" id="cbAll" /></th>
+                                        <input type="checkbox" id="cbAll" />
+                                    </th>
                                     <th style="width: 40px; text-align: center;">ID</th>
                                     <th style="width: 300px;">Name</th>
                                     <th style="width: 180px;">Code</th>
+                                    <th style="width: 100px;">Vehicle</th>
                                     <th style="width: 100px;">Clipart</th>
                                     <th>-</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="6">
+                                    <td colspan="7">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>

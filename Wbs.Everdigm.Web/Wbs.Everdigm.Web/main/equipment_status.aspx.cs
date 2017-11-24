@@ -50,6 +50,9 @@ namespace Wbs.Everdigm.Web.main
 
             var testing = StatusInstance.Find(f => f.IsItTesting == true);
             cbIsTesting.Enabled = null == testing;
+
+            var normal = StatusInstance.Find(f => f.IsItVehicle == true);
+            cbIsNormal.Enabled = null == normal;
         }
 
         private void ShowEdit()
@@ -82,6 +85,10 @@ namespace Wbs.Everdigm.Web.main
                 cbIsTesting.Checked = s.IsItTesting.Value;
                 if (s.IsItTesting == true)
                     cbIsTesting.Enabled = true;
+
+                cbIsNormal.Checked = s.IsItVehicle.Value;
+                if (s.IsItVehicle == true)
+                    cbIsNormal.Enabled = true;
             }
             else
             {
@@ -99,6 +106,7 @@ namespace Wbs.Everdigm.Web.main
             obj.IsItWaiting = cbIsWaiting.Checked;
             obj.IsItRental = cbIsRental.Checked;
             obj.IsItTesting = cbIsTesting.Checked;
+            obj.IsItVehicle = cbIsNormal.Checked;
         }
 
         private void NewStatus()
@@ -163,7 +171,7 @@ namespace Wbs.Everdigm.Web.main
             string html = "";
             if (totalRecords < 1)
             {
-                html = "<tr><td colspan=\"9\">No records, you can change condition and try again, or " +
+                html = "<tr><td colspan=\"12\">No records, you can change condition and try again, or " +
                     " <a>Add</a> some new one.</td></tr>";
             }
             else
@@ -185,6 +193,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td>" + (obj.IsItWaiting == true ? "Yes" : "-") + "</td>" +
                         "<td>" + (obj.IsItRental == true ? "Yes" : "-") + "</td>" +
                         "<td>" + (obj.IsItTesting == true ? "Yes" : "-") + "</td>" +
+                        "<td>" + (obj.IsItVehicle == true ? "Yes" : "-") + "</td>" +
                         "<td></td>" +
                         "</tr>";
                 }

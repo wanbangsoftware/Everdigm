@@ -196,3 +196,5 @@ FakesAssemblies/
 /Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/composer.json
 /Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/bower.json
 /Wbs.Everdigm.Web/Wbs.Everdigm.Web/bootstrap-calendar/.gitignore
+
+.vs/

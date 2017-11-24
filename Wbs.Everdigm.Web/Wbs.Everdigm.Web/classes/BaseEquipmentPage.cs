@@ -84,6 +84,7 @@ namespace Wbs.Everdigm.Web
                 act.Code = obj.Code;
                 act.Name = obj.Name;
                 act.Image = obj.Image;
+                act.IsVehicle = obj.IsVehicle;
             });
         }
         /// <summary>
@@ -113,6 +114,7 @@ namespace Wbs.Everdigm.Web
                 act.IsItWaiting = obj.IsItWaiting;
                 act.IsItRental = obj.IsItRental;
                 act.IsItTesting = obj.IsItTesting;
+                act.IsItVehicle = obj.IsItVehicle;
             });
         }
         /// <summary>

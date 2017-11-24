@@ -20,16 +20,16 @@ namespace Wbs.Everdigm.BLL
         {
             return new TB_Command()
             {
-                ActualSendTime = (DateTime?)null,
+                ActualSendTime = null,
                 Command = "",
                 Content = "",
                 IridiumMTMSN = 0,
                 TimeUsed = 0,
                 DataType = 2,
-                Terminal = (int?)null,
+                Terminal = null,
                 DestinationNo = "",
                 ScheduleTime = DateTime.Now,
-                SendUser = (int?)null,
+                SendUser = null,
                 Status = 0
             };
         }

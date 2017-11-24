@@ -54,6 +54,8 @@ namespace Wbs.Everdigm.Web
                 sms.SendTime = dt;
                 sms.Sender = sender;
                 sms.Data = text;
+                // 这里接收到的都是终端汇报回来的信息
+                sms.Type = Common.SMSUtility.SMS_TERMINAL;
                 SMSInstance.Add(sms);
 
             }

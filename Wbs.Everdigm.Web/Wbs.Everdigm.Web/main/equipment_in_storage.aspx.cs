@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Linq.Expressions;
 using Wbs.Everdigm.BLL;
 using Wbs.Everdigm.Database;
 
@@ -45,12 +45,30 @@ namespace Wbs.Everdigm.Web.main
             var totalRecords = 0;
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             pageIndex = (0 >= pageIndex ? 1 : pageIndex);
+            var type = ParseInt(selectedTypes.Value);
             var model = ParseInt(selectedModels.Value);
             var house = ParseInt(hidQueryWarehouse.Value);
-            var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
-                f => (model <= 0 ? f.Model >= 0 : f.Model == model) && f.Deleted == false && f.Terminal != (int?)null &&
-                    (house <= 0 ? f.Warehouse >= 0 : f.Warehouse == house) && f.Number.Contains(query) &&
-                    f.StoreTimes == 1 && f.TB_EquipmentStatusName.IsItInventory == true, null);
+            // 表达式
+            Expression<Func<TB_Equipment, bool>> expression = PredicateExtensions.True<TB_Equipment>();
+            expression = expression.And(a => a.TB_EquipmentStatusName.IsItInventory == true && a.Deleted == false && a.StoreTimes == 1 && a.Terminal != (int?)null);
+            if (type > 0)
+            {
+                expression = expression.And(a => a.TB_EquipmentModel.Type == type);
+            }
+            if (model > 0)
+            {
+                expression = expression.And(a => a.Model == model);
+            }
+            if (house > 0)
+            {
+                expression = expression.And(a => a.Warehouse == house);
+            }
+            if (!string.IsNullOrEmpty(query))
+            {
+                pageIndex = 1;
+                expression = expression.And(a => a.Number.Contains(query));
+            }
+            var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords, expression, null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             hidTotalPages.Value = totalPages.ToString();
 

@@ -47,6 +47,7 @@ namespace Wbs.Everdigm.Web.main
             var query = txtQueryNumber.Value.Trim();
             // 模糊查询时页码置为空
             if (!string.IsNullOrEmpty(query)) { hidPageIndex.Value = ""; }
+            var type = ParseInt(selectedTypes.Value);
             var model = ParseInt(selectedModels.Value);
             var house = ParseInt(hidQueryWarehouse.Value);
 
@@ -57,6 +58,10 @@ namespace Wbs.Everdigm.Web.main
             // 表达式
             Expression<Func<TB_Equipment, bool>> expression = PredicateExtensions.True<TB_Equipment>();
             expression = expression.And(a => a.TB_EquipmentStatusName.IsItInventory == true && a.Deleted == false && a.Terminal != (int?)null);
+            if (type > 0)
+            {
+                expression = expression.And(a => a.TB_EquipmentModel.Type == type);
+            }
             if (model > 0)
             {
                 expression = expression.And(a => a.Model == model);
@@ -139,7 +144,15 @@ namespace Wbs.Everdigm.Web.main
 
                 EquipmentInstance.Update(f => f.id == equipment.id, act =>
                 {
-                    act.Status = int.Parse(ddlOuttype.SelectedValue);
+                    // 出厂时，如果是普通车辆，则直接划为车辆状态，不参与出库/入库流程
+                    if (act.TB_EquipmentModel.TB_EquipmentType.IsVehicle == true)
+                    {
+                        act.Status = StatusInstance.Find(f => f.IsItVehicle == true).id;
+                    }
+                    else
+                    {
+                        act.Status = int.Parse(ddlOuttype.SelectedValue);
+                    }
                     act.Customer = int.Parse(hidCheckCustomerId.Value);
                     // 出库时的总运转时间
                     act.OutdoorWorktime = equipment.Runtime;

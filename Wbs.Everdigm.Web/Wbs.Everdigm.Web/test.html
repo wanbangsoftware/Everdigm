@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>计算网易云header</title>
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/sha1.js"></script>
+</head>
+<body>
+    <button id="button">计算</button><br />
+    APP_SECURITY: <span id="app_security">f24f167753dc</span><br />
+    nonce: <span id="nonce"></span><br />
+    timespan: <span id="timespan"></span><br />
+    value: <span id="value"></span><br />
+    checksum: <span id="checksum"></span><br /><br />
+    response: <br />
+    data: <span id="response"></span><br />
+    status: <span id="status"></span>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("button").click(function () {
+                var time = new Date().getTime();
+                var security = "f24f167753dc";
+                var random = parseInt(Math.random() * 1000000000);
+                var value = security + "" + random + "" + time;
+                var sha1_result = hex_sha1(value);
+                $("#nonce").text(random);
+                $("#timespan").text(time);
+                $("#value").text(value);
+                $("#checksum").text(sha1_result);
+                var formData = new FormData();
+                formData.append("accid", "58f4c1492f5735666cc3d9c5");
+                formData.append("name", "哈哈哈");
+                formData.append("token", "W%2BIXQ8No1zA7236WQWpzRg%3D%3D");
+                $.ajax({
+                    type: "POST",
+                    url: "https://api.netease.im/nimserver/user/create.action",
+                    data: "accid=58fe2e0f2f57354690490ba8&name=小小果&token=W%2BIXQ8No1zA7236WQWpzRg%3D%3D",
+                    //processData: false,
+                    headers: {
+                        "AppKey": "3c9e1b9e424ccd215d6a828602d20407",
+                        "Nonce": random,
+                        "CurTime": time,
+                        "CheckSum": sha1_result,
+                        "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
+                    },
+                    success: function (data, status, xhr) {
+                        $("#status").text(status);
+                        $("#response").text(JSON.stringify(data));
+                    },
+                    error: function (xhr, status, err) {
+                        $("#status").text(status);
+                        $("#response").text(err);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

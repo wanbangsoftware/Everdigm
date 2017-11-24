@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Text;
+using System.Configuration;
 
 using Wbs.Protocol.TX300;
 using Wbs.Protocol.TX300.Analyse;
 using Wbs.Protocol.WbsDateTime;
+using Wbs.Everdigm.Common;
 using Wbs.Everdigm.Database;
 using Wbs.Everdigm.BLL;
 using Wbs.Utilities;
@@ -151,10 +153,21 @@ namespace Wbs.Everdigm.Desktop
                     // 不要处理0xBB0F的命令返回数据
                     HandleGsmCommandResponsed(x300);
                 }
+                // 是否需要返回包
+                bool isNeedResponse = false;
                 // SMS消息不需要返回包
-                if (x300.ProtocolType > Protocol.ProtocolTypes.SMS) return;
-
-                if (null != _server)
+                if (x300.ProtocolType > Protocol.ProtocolTypes.SMS)
+                {
+                    if (x300.CommandID == 0xCC00 || x300.CommandID == 0xBB0F)
+                    {
+                        isNeedResponse = true;
+                    }
+                }
+                else
+                {
+                    isNeedResponse = true;
+                }
+                if (null != _server && isNeedResponse)
                 {
                     if (x300.CommandID == 0xCC00)
                     {
@@ -166,10 +179,36 @@ namespace Wbs.Everdigm.Desktop
                             ret = _server.Send(Port, IP, cc00);
                         if (1 != ret)
                         {
-                            ShowUnhandledMessage(format("{0}Cannot send data to ip:{1}({2}): {3} [{4}]", 
+                            ShowUnhandledMessage(format("{0}Cannot send data to ip:{1}({2}): {3} [{4}]",
                                 Now, IP, Port, CustomConvert.GetHex(cc00), data.PackageType));
                         }
                         cc00 = null;
+                    }
+                    else if (x300.CommandID == 0xBB0F)
+                    {
+                        byte smsType = byte.Parse(ConfigurationManager.AppSettings["SMS_SUBMIT_TYPE"]);
+                        // 0xBB0F命令需要服务器发送时
+                        // 2600200A0FBB1001000000000000000101383938363030363631353039313130303136343302
+                        if (smsType == SMSUtility.SUBMIT_BY_DB)
+                        {
+                            string sender = x300.TerminalID;
+                            // 170020140FBB10FFFF0139535986930101089001495000
+                            string cmd = "170020" + CustomConvert.GetHex(x300.TerminalType) + "0FBB10FFFF0" + sender + "01010" + sender;
+                            using (var bll = new TerminalBLL())
+                            {
+                                var terminal = bll.Find(f => f.Sim.Equals(sender));
+                                using (var cbll = new CommandBLL())
+                                {
+                                    var obj = cbll.GetObject();
+                                    obj.DestinationNo = sender;
+                                    obj.Status = (byte)CommandStatus.Waiting;
+                                    obj.Content = cmd;
+                                    obj.Terminal = null == terminal ? (int?)null : terminal.id;
+                                    obj.SendUser = null;
+                                    obj = cbll.Add(obj);
+                                }
+                            }
+                        }
                     }
                     else
                     {
@@ -737,6 +776,11 @@ namespace Wbs.Everdigm.Desktop
                         // 装载机的总运转时间初始化时，将其特定的初始化时间设为0
                         if (act.InitializedRuntime > 0)
                             act.InitializedRuntime = 0;
+                        // 更改运转时间时，同时清空补偿的运转时间  2017/11/24 10:40
+                        if (act.CompensatedHours > 0)
+                        {
+                            act.CompensatedHours = 0;
+                        }
                     });
                 }
             }

@@ -45,37 +45,53 @@
                             <tr>
                                 <td class="td_right">Code:</td>
                                 <td class="td_left">
-                                    <input type="text" runat="server" class="text-input important-input" id="txtCode" /></td>
+                                    <input type="text" runat="server" class="text-input important-input" id="txtCode" maxlength="5" style="text-transform: uppercase;" /></td>
                                 <td class="td_right">&nbsp;</td>
                                 <td class="td_left">&nbsp;</td>
                             </tr>
                             <tr>
                                 <td class="td_right">Is It Inventory:</td>
                                 <td class="td_left">
-                                    <label><asp:CheckBox ID="cbIsInventory" runat="server" />&nbsp;Set situation as inventory</label>
+                                    <label style="margin-top: 10px;">
+                                        <asp:CheckBox ID="cbIsInventory" runat="server" />&nbsp;Set situation as inventory</label>
                                 </td>
                                 <td class="td_right">Is It Delivered:</td>
                                 <td class="td_left">
-                                    <label><asp:CheckBox ID="cbIsOutstorage" runat="server" />&nbsp;Set situation as delivered</label>
+                                    <label style="margin-top: 10px;">
+                                        <asp:CheckBox ID="cbIsOutstorage" runat="server" />&nbsp;Set situation as delivered</label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="td_right">Is It Overhaul:</td>
                                 <td class="td_left">
-                                    <label><asp:CheckBox ID="cbIsOverhaul" runat="server" />&nbsp;Set situation as overhaul</label>
+                                    <label style="margin-top: 10px;">
+                                        <asp:CheckBox ID="cbIsOverhaul" runat="server" />&nbsp;Set situation as overhaul</label>
                                 </td>
                                 <td class="td_right">Is It Waiting:</td>
                                 <td class="td_left">
-                                    <label><asp:CheckBox ID="cbIsWaiting" runat="server" />&nbsp;Set situation as waiting storage in</label>
+                                    <label style="margin-top: 10px;">
+                                        <asp:CheckBox ID="cbIsWaiting" runat="server" />&nbsp;Set situation as waiting storage in</label>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="td_right">Is It Rental:</td>
                                 <td class="td_left">
-                                    <label><asp:CheckBox ID="cbIsRental" runat="server" />&nbsp;Set situation as rental</label>
+                                    <label style="margin-top: 10px;">
+                                        <asp:CheckBox ID="cbIsRental" runat="server" />&nbsp;Set situation as rental</label>
                                 </td>
                                 <td class="td_right">Is It Testing:</td>
-                                <td class="td_left"><label><asp:CheckBox ID="cbIsTesting" runat="server" />&nbsp;Set situation as testing</label></td>
+                                <td class="td_left">
+                                    <label style="margin-top: 10px;">
+                                        <asp:CheckBox ID="cbIsTesting" runat="server" />&nbsp;Set situation as testing</label></td>
+                            </tr>
+                            <tr>
+                                <td class="td_right">Normal Vehicle:</td>
+                                <td class="td_left">
+                                    <label style="margin-top: 10px;">
+                                        <asp:CheckBox ID="cbIsNormal" runat="server" />&nbsp;Set situation as normal vehicle</label>
+                                </td>
+                                <td class="td_right"></td>
+                                <td class="td_left"></td>
                             </tr>
                         </table>
                         <table id="tbTable" width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #ccc; margin-top: 2px;">
@@ -85,19 +101,20 @@
                                         <input type="checkbox" id="cbAll" /></th>
                                     <th style="width: 40px; text-align: center;">ID</th>
                                     <th style="width: 200px;">Name</th>
-                                    <th style="width: 180px;">Code</th>
-                                    <th>Is it Inventory?</th>
-                                    <th>Is it Out Storage?</th>
-                                    <th>Is it Overhaul?</th>
-                                    <th>Is it Waiting?</th>
-                                    <th>Is it Rental?</th>
-                                    <th>Is it Testing?</th>
+                                    <th style="width: 50px;">Code</th>
+                                    <th>Inventory?</th>
+                                    <th>Out Storage?</th>
+                                    <th>Overhaul?</th>
+                                    <th>Waiting?</th>
+                                    <th>Rental?</th>
+                                    <th>Testing?</th>
+                                    <th>Vehicle?</th>
                                     <th>-</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <td colspan="11">
+                                    <td colspan="12">
                                         <div class="pagging" id="divPagging" runat="server">
                                         </div>
                                         <div class="clear"></div>
@@ -109,8 +126,8 @@
                         </table>
                         <p>
                             <b>Explanation</b>:<br />
-                            <span style="color:#ff0000;">DO NOT CHANGE those CODE if you haven't a full grasp</span><br />
-                            <span style="color:#ff0000;">Each situation can only exist one in the system.</span>
+                            <span style="color: #ff0000;">DO NOT CHANGE those CODE if you haven't a full grasp</span><br />
+                            <span style="color: #ff0000;">Each situation can only exist one in the system.</span>
                         </p>
                     </div>
                 </div>

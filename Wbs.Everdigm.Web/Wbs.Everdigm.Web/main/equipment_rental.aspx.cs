@@ -28,11 +28,16 @@ namespace Wbs.Everdigm.Web.main
             var totalRecords = 0;
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             pageIndex = (0 >= pageIndex ? 1 : pageIndex);
+            var type = ParseInt(selectedTypes.Value);
             var model = ParseInt(selectedModels.Value);
             var house = ParseInt(hidQueryWarehouse.Value);
 
             // 表达式
             Expression<Func<TB_Equipment, bool>> expression = PredicateExtensions.True<TB_Equipment>();
+            if (type > 0)
+            {
+                expression = expression.And(a => a.TB_EquipmentModel.Type == type);
+            }
             if (model > 0)
             {
                 expression = expression.And(a => a.Model == model);

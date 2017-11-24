@@ -1,6 +1,7 @@
 ﻿using System;
 using Wbs.Everdigm.Database;
 using Wbs.Everdigm.BLL;
+using System.Linq.Expressions;
 
 namespace Wbs.Everdigm.Web.main
 {
@@ -37,14 +38,32 @@ namespace Wbs.Everdigm.Web.main
             var totalRecords = 0;
             var pageIndex = "" == hidPageIndex.Value ? 1 : int.Parse(hidPageIndex.Value);
             pageIndex = (0 >= pageIndex ? 1 : pageIndex);
+            var type = ParseInt(selectedTypes.Value);
             var model = ParseInt(selectedModels.Value);
             var house = ParseInt(hidQueryWarehouse.Value);
-            var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords,
-                f => (model <= 0 ? f.Model >= 0 : f.Model == model) &&
-                    //(house <= 0 ? f.Warehouse >= 0 : f.Warehouse == house) &&
-                    f.Number.Contains(number) &&
-                    (f.TB_EquipmentStatusName.IsItOutstorage == true || f.TB_EquipmentStatusName.IsItRental == true)
-                     && f.Deleted == false, null);
+
+            // 表达式
+            Expression<Func<TB_Equipment, bool>> expression = PredicateExtensions.True<TB_Equipment>();
+            expression = expression.And(a => (a.TB_EquipmentStatusName.IsItOutstorage == true || a.TB_EquipmentStatusName.IsItRental == true) && 
+                a.Deleted == false && a.Terminal != (int?)null);
+            if (type > 0)
+            {
+                expression = expression.And(a => a.TB_EquipmentModel.Type == type);
+            }
+            if (model > 0)
+            {
+                expression = expression.And(a => a.Model == model);
+            }
+            if (house > 0)
+            {
+                expression = expression.And(a => a.Warehouse == house);
+            }
+            if (!string.IsNullOrEmpty(number))
+            {
+                pageIndex = 1;
+                expression = expression.And(a => a.Number.Contains(number));
+            }
+            var list = EquipmentInstance.FindPageList<TB_Equipment>(pageIndex, PageSize, out totalRecords, expression, null);
             var totalPages = totalRecords / PageSize + (totalRecords % PageSize > 0 ? 1 : 0);
             hidTotalPages.Value = totalPages.ToString();
 

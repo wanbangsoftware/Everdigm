@@ -37,8 +37,10 @@ namespace Wbs.Everdigm.Web.main
                 txtName.Value = t.Name;
                 imgImage.Src = t.Image;
                 hidImage.Value = t.Image;
+                cbNormalVehicle.Checked = t.IsVehicle == true;
             }
-            else {
+            else
+            {
                 ShowNotification("./equipment_type.aspx", "Error: Cannot edit null object of <a>Equipment Type</a>.", false);
             }
         }
@@ -48,6 +50,7 @@ namespace Wbs.Everdigm.Web.main
             obj.Code = txtCode.Value.Trim();
             obj.Name = txtName.Value.Trim();
             obj.Image = hidImage.Value;
+            obj.IsVehicle = cbNormalVehicle.Checked;
         }
 
         private void NewType()
@@ -137,6 +140,7 @@ namespace Wbs.Everdigm.Web.main
                         "<td style=\"width: 40px; text-align: center;\">" + cnt + "</td>" +
                         "<td><a href=\"./equipment_type.aspx?key=" + id + "\" >" + ("" == obj.Name ? "-" : obj.Name) + "</a></td>" +
                         "<td>" + obj.Code + "</td>" +
+                        "<td>" + (obj.IsVehicle.Value ? "Yes" : "-") + "</td>" +
                         "<td><img alt=\"clipart\" style=\"width: 41px;\" class=\"img-rounded\" src=\"" + obj.Image + "\"/></td>" +
                         "<td></td>" +
                         "</tr>";
