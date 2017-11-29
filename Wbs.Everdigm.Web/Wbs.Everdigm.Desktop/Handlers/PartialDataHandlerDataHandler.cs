@@ -788,7 +788,7 @@ namespace Wbs.Everdigm.Desktop
         /// <summary>
         /// 一天的分钟数
         /// </summary>
-        private static int day = 60 * 24;
+        private static int day = 60 * 24, max = 60 * 100000;
         private void HandleEquipmentRuntime(TB_Equipment equipment, uint newTime)
         {
             if (null != equipment)
@@ -799,18 +799,22 @@ namespace Wbs.Everdigm.Desktop
                 if (time > old)
                 {
                     int interval = time - old;
-                    // 更新旧时间为新的时间
-                    equipment.AccumulativeRuntime = time;
-                    // 如果新旧时间之差大于1天则说明可能是修改了终端的运转时间了
-                    if (interval > day)
+                    // 时间差小于10万小时才更新，否则有可能是错误的运转时间   2017/11/29 08:31
+                    if (interval < max)
                     {
-                        // 修改真实的总运转时间为当前新时间
-                        equipment.Runtime = time;
-                    }
-                    else
-                    {
-                        // 真实的总运转时间累计新旧时间之差
-                        equipment.Runtime += interval;
+                        // 更新旧时间为新的时间
+                        equipment.AccumulativeRuntime = time;
+                        // 如果新旧时间之差大于1天则说明可能是修改了终端的运转时间了
+                        if (interval > day)
+                        {
+                            // 修改真实的总运转时间为当前新时间
+                            equipment.Runtime = time;
+                        }
+                        else
+                        {
+                            // 真实的总运转时间累计新旧时间之差
+                            equipment.Runtime += interval;
+                        }
                     }
                 }
                 else
