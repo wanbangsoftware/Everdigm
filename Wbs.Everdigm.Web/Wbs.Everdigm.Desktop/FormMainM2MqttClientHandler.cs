@@ -44,7 +44,7 @@ namespace Wbs.Everdigm.Desktop
 
         private void Mqtt_MqttMsgSubscribed(object sender, MqttMsgSubscribedEventArgs e)
         {
-            ShowHistory(string.Format("Subscribed, msgId: {0}, QoS: {1}", e.MessageId, e.GrantedQoSLevels), true);
+			ShowHistory(string.Format("Subscribed, msgId: {0}, QoS: {1}", e.MessageId, Protocol.ProtocolItems.GetHex(e.GrantedQoSLevels)), true);
         }
 
         private void Mqtt_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
