@@ -53,14 +53,18 @@ namespace Wbs.Everdigm.Desktop
                         if (!tsmiStopFetchingAddress.Checked)
                         {
                             string url = MAP_URL + history.Replace("position: ", "") + "&time=" + DateTime.Now.Ticks;
-                            if (navigatorChanged)
-                            {
-                                browser1.Navigate(url);
-                            }
-                            else
-                            {
-                                browser2.Navigate(url);
-                            }
+
+							if (!string.IsNullOrEmpty(MAP_URL))
+							{
+								if (navigatorChanged)
+								{
+									browser1.Navigate(url);
+								}
+								else
+								{
+									browser2.Navigate(url);
+								}
+							}
                             navigatorChanged = !navigatorChanged;
                         }
                     }
