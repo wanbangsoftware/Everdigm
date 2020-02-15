@@ -134,11 +134,19 @@ namespace Wbs.Everdigm.Desktop
         /// <param name="data"></param>
         private void HandleException(string trace, string data)
         {
-            var bll = new ErrorBLL();
-            var obj = bll.GetObject();
-            obj.ErrorData = data;
-            obj.ErrorMessage = trace;
-            bll.Add(obj);
+            try
+            {
+                var bll = new ErrorBLL();
+                var obj = bll.GetObject();
+                obj.ErrorData = data;
+                obj.ErrorMessage = trace;
+                bll.Add(obj);
+            }
+            catch (Exception e)
+            {
+                // 保存异常数据出错时显示历史记录
+                ShowUnhandledMessage(Now + e.Message + Environment.NewLine + e.StackTrace);
+            }
         }
         /// <summary>
         /// 处理接受且还未处理地址信息的定位记录
